@@ -21,8 +21,8 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -418,7 +418,7 @@ public:
     */
    virtual void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write out the class version number and other data members to
@@ -428,7 +428,7 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * The node iterator iterates over the elements of a node
@@ -464,7 +464,7 @@ private:
 
    int d_depth;
 
-   boost::shared_ptr<ArrayData<TYPE> > d_data;
+   std::shared_ptr<ArrayData<TYPE> > d_data;
 
 };
 

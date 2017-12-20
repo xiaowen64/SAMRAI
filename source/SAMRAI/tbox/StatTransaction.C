@@ -22,7 +22,7 @@ namespace SAMRAI {
 namespace tbox {
 
 StatTransaction::StatTransaction(
-   const boost::shared_ptr<Statistic>& stat,
+   const std::shared_ptr<Statistic>& stat,
    int src_proc_id,
    int dst_proc_id):
    d_stat(stat),

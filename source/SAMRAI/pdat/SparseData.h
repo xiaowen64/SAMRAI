@@ -295,7 +295,7 @@ public:
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write out the specialized data to the restart Database.
@@ -307,7 +307,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Returns the attribute ID associated with the named

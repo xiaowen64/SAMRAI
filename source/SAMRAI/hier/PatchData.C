@@ -42,7 +42,7 @@ PatchData::~PatchData()
 
 void
 PatchData::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -70,7 +70,7 @@ PatchData::getFromRestart(
 
 void
 PatchData::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 

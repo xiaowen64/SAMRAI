@@ -131,11 +131,11 @@ OuterfaceDoubleConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<OuterfaceData<double> > cdata(
-      BOOST_CAST<OuterfaceData<double>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<double> > cdata(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<OuterfaceData<double> > fdata(
-      BOOST_CAST<OuterfaceData<double>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<double> > fdata(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&fine_overlap);

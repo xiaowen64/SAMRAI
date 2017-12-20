@@ -31,17 +31,17 @@ PatchNodeDataOpsInteger::~PatchNodeDataOpsInteger()
 
 void
 PatchNodeDataOpsInteger::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::NodeData<int> > d1(
-      BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<int> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::NodeData<int> > d2(
-      BOOST_CAST<pdat::NodeData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<int> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -55,7 +55,7 @@ PatchNodeDataOpsInteger::swapData(
 
 void
 PatchNodeDataOpsInteger::printData(
-   const boost::shared_ptr<pdat::NodeData<int> >& data,
+   const std::shared_ptr<pdat::NodeData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {

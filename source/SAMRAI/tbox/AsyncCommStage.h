@@ -506,7 +506,7 @@ private:
     */
    void
    setCommunicationWaitTimer(
-      const boost::shared_ptr<Timer>& communication_timer)
+      const std::shared_ptr<Timer>& communication_timer)
    {
       d_communication_timer = communication_timer;
    }
@@ -746,7 +746,7 @@ private:
     * @brief Timer for communicaiton wait, set by
     * setCommunicationWaitTimer().
     */
-   boost::shared_ptr<Timer> d_communication_timer;
+   std::shared_ptr<Timer> d_communication_timer;
 
 };
 

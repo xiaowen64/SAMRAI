@@ -32,7 +32,7 @@ using namespace std;
 OuternodeDataTest::OuternodeDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -87,7 +87,7 @@ OuternodeDataTest::~OuternodeDataTest()
 }
 
 void OuternodeDataTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -169,14 +169,14 @@ void OuternodeDataTest::registerVariables(
 }
 
 void OuternodeDataTest::setLinearData(
-   boost::shared_ptr<pdat::NodeData<double> > data,
+   std::shared_ptr<pdat::NodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
@@ -216,7 +216,7 @@ void OuternodeDataTest::setLinearData(
 }
 
 void OuternodeDataTest::setLinearData(
-   boost::shared_ptr<pdat::OuternodeData<double> > data,
+   std::shared_ptr<pdat::OuternodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -231,8 +231,8 @@ void OuternodeDataTest::setLinearData(
    }
 #endif
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
@@ -277,7 +277,7 @@ void OuternodeDataTest::setLinearData(
 
 void OuternodeDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -285,22 +285,22 @@ void OuternodeDataTest::initializeDataOnPatch(
    NULL_USE(level_number);
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   std::vector<boost::shared_ptr<hier::Variable> >& variables(
+   std::vector<std::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
       for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
-         boost::shared_ptr<hier::PatchData> data(
+         std::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
 
-         boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            boost::dynamic_pointer_cast<pdat::OuternodeData<double>,
+         std::shared_ptr<pdat::OuternodeData<double> > onode_data(
+            std::dynamic_pointer_cast<pdat::OuternodeData<double>,
                                         hier::PatchData>(data));
-         boost::shared_ptr<pdat::NodeData<double> > node_data(
-            boost::dynamic_pointer_cast<pdat::NodeData<double>,
+         std::shared_ptr<pdat::NodeData<double> > node_data(
+            std::dynamic_pointer_cast<pdat::NodeData<double>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
@@ -318,14 +318,14 @@ void OuternodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
-         boost::shared_ptr<hier::PatchData> data(
+         std::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
-         boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            boost::dynamic_pointer_cast<pdat::OuternodeData<double>,
+         std::shared_ptr<pdat::OuternodeData<double> > onode_data(
+            std::dynamic_pointer_cast<pdat::OuternodeData<double>,
                                         hier::PatchData>(data));
-         boost::shared_ptr<pdat::NodeData<double> > node_data(
-            boost::dynamic_pointer_cast<pdat::NodeData<double>,
+         std::shared_ptr<pdat::NodeData<double> > node_data(
+            std::dynamic_pointer_cast<pdat::NodeData<double>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
@@ -344,9 +344,9 @@ void OuternodeDataTest::initializeDataOnPatch(
 }
 
 void OuternodeDataTest::checkPatchInteriorData(
-   const boost::shared_ptr<pdat::OuternodeData<double> >& data,
+   const std::shared_ptr<pdat::OuternodeData<double> >& data,
    const hier::Box& interior,
-   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
+   const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
    TBOX_ASSERT(data);
 
@@ -412,7 +412,7 @@ void OuternodeDataTest::setPhysicalBoundaryConditions(
  */
 bool OuternodeDataTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    NULL_USE(hierarchy);
@@ -430,7 +430,7 @@ bool OuternodeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::NodeData<double> > solution(
+      std::shared_ptr<pdat::NodeData<double> > solution(
          new pdat::NodeData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -445,8 +445,8 @@ bool OuternodeDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
-         boost::shared_ptr<pdat::NodeData<double> > node_data(
-            BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::NodeData<double> > node_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables_dst[i], getDataContext())));
          TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();

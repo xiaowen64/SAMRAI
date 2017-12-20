@@ -88,8 +88,8 @@ using namespace std;
 ConvDiff::ConvDiff(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> input_db,
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
+   std::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<geom::CartesianGridGeometry> grid_geom):
    algs::MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
@@ -385,8 +385,8 @@ void ConvDiff::initializeDataOnPatch(
 
    if (initial_time) {
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 
@@ -394,8 +394,8 @@ void ConvDiff::initializeDataOnPatch(
       const double* xlo = patch_geom->getXLower();
       const double* xhi = patch_geom->getXUpper();
 
-      boost::shared_ptr<pdat::CellData<double> > primitive_vars(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > primitive_vars(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
       TBOX_ASSERT(primitive_vars);
@@ -448,8 +448,8 @@ double ConvDiff::computeStableDtOnPatch(
 {
    NULL_USE(time);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -503,16 +503,16 @@ void ConvDiff::singleStep(
    const double beta) const
 {
 
-   boost::shared_ptr<pdat::CellData<double> > prim_var_updated(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > prim_var_updated(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
-   boost::shared_ptr<pdat::CellData<double> > prim_var_fixed(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > prim_var_fixed(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
-   boost::shared_ptr<pdat::CellData<double> > function_eval(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > function_eval(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_function_eval, getInteriorContext())));
    TBOX_ASSERT(prim_var_updated);
    TBOX_ASSERT(prim_var_fixed);
@@ -522,8 +522,8 @@ void ConvDiff::singleStep(
    const hier::Index ifirst = pbox.lower();
    const hier::Index ilast = pbox.upper();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -615,11 +615,11 @@ void ConvDiff::tagGradientDetectorCells(
    NULL_USE(initial_error);
    NULL_USE(uses_richardson_extrapolation_too);
 
-   boost::shared_ptr<pdat::CellData<int> > tags(
-      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<int> > tags(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
-   boost::shared_ptr<pdat::CellData<double> > primitive_vars(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > primitive_vars(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(primitive_vars);
@@ -668,8 +668,8 @@ void ConvDiff::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   boost::shared_ptr<pdat::CellData<double> > primitive_vars(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > primitive_vars(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
    TBOX_ASSERT(primitive_vars);
@@ -780,7 +780,7 @@ void ConvDiff::setPhysicalBoundaryConditions(
 
 #ifdef HAVE_HDF5
 void ConvDiff::registerVisItDataWriter(
-   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
+   std::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
    TBOX_ASSERT(viz_writer);
    d_visit_writer = viz_writer;
@@ -880,7 +880,7 @@ void ConvDiff::printClassData(
  *************************************************************************
  */
 void ConvDiff::getFromInput(
-   boost::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
    TBOX_ASSERT(input_db);
@@ -934,7 +934,7 @@ void ConvDiff::getFromInput(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
-      boost::shared_ptr<tbox::Database> init_data_db(
+      std::shared_ptr<tbox::Database> init_data_db(
          input_db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
@@ -989,7 +989,7 @@ void ConvDiff::getFromInput(
       }
 
       if (input_db->keyExists("Boundary_data")) {
-         boost::shared_ptr<tbox::Database> boundary_db(
+         std::shared_ptr<tbox::Database> boundary_db(
             input_db->getDatabase("Boundary_data"));
 
          if (d_dim == tbox::Dimension(2)) {
@@ -1025,7 +1025,7 @@ void ConvDiff::getFromInput(
  */
 
 void ConvDiff::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -1071,14 +1071,14 @@ void ConvDiff::putToRestart(
 void ConvDiff::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   std::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in the restart file.");
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("CONV_DIFF_VERSION");
    if (ver != CONV_DIFF_VERSION) {
@@ -1124,7 +1124,7 @@ void ConvDiff::getFromRestart()
  */
 
 void ConvDiff::readDirichletBoundaryDataEntry(
-   const boost::shared_ptr<tbox::Database>& db,
+   const std::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1145,7 +1145,7 @@ void ConvDiff::readDirichletBoundaryDataEntry(
 }
 
 void ConvDiff::readNeumannBoundaryDataEntry(
-   const boost::shared_ptr<tbox::Database>& db,
+   const std::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {
@@ -1166,7 +1166,7 @@ void ConvDiff::readNeumannBoundaryDataEntry(
 }
 
 void ConvDiff::readStateDataEntry(
-   boost::shared_ptr<tbox::Database> db,
+   std::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
    std::vector<double>& val)
@@ -1211,8 +1211,8 @@ void ConvDiff::checkBoundaryData(
    }
 #endif
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =

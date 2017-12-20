@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {

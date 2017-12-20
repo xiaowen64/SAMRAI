@@ -52,7 +52,7 @@ public:
    /**
     * Build a new Database object.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    allocate(
       const std::string& name);
 };

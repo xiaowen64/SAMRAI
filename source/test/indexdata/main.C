@@ -23,8 +23,8 @@
 #include "SAMRAI/pdat/IndexDataFactory.h"
 #include "SAMRAI/pdat/IndexDataFactory.C"
 
-#include "boost/shared_ptr.hpp"
 #include <list>
+#include <memory>
 
 using namespace SAMRAI;
 using namespace hier;
@@ -79,12 +79,12 @@ public:
    }
 
    void putToRestart(
-      boost::shared_ptr<tbox::Database> dbase)
+      std::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
    void getFromRestart(
-      boost::shared_ptr<tbox::Database> dbase)
+      std::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
@@ -550,7 +550,7 @@ int main(
 
       int size = 100;
       {
-         boost::shared_ptr<tbox::Timer> timer(
+         std::shared_ptr<tbox::Timer> timer(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemSequential", true));
 
@@ -589,7 +589,7 @@ int main(
       }
 
       {
-         boost::shared_ptr<tbox::Timer> timer(
+         std::shared_ptr<tbox::Timer> timer(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemPointerSequential", true));
 
@@ -628,7 +628,7 @@ int main(
       int num_inserts = 100000;
 
       {
-         boost::shared_ptr<tbox::Timer> timer(
+         std::shared_ptr<tbox::Timer> timer(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemRandom", true));
 
@@ -668,7 +668,7 @@ int main(
       }
 
       {
-         boost::shared_ptr<tbox::Timer> timer(
+         std::shared_ptr<tbox::Timer> timer(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemPointerRandom", true));
 
@@ -707,7 +707,7 @@ int main(
       size = 100;
 
       {
-         boost::shared_ptr<tbox::Timer> timer(
+         std::shared_ptr<tbox::Timer> timer(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataReplace", true));
 

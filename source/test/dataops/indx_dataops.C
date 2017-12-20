@@ -33,7 +33,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 using namespace SAMRAI;
 
@@ -124,14 +124,14 @@ int main(
       fine_domain.pushBack(fine0);
       fine_domain.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
@@ -143,11 +143,11 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_domain.size();
 
-      boost::shared_ptr<hier::BoxLevel> layer0(
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> layer0(
+         std::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel> layer1(
-         boost::make_shared<hier::BoxLevel>(ratio, geometry));
+      std::shared_ptr<hier::BoxLevel> layer1(
+         std::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
@@ -181,11 +181,11 @@ int main(
        * the variable database.
        */
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> cxt(
+      std::shared_ptr<hier::VariableContext> cxt(
          variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
 
-      boost::shared_ptr<pdat::IndexVariable<SampleIndexData,
+      std::shared_ptr<pdat::IndexVariable<SampleIndexData,
                                             pdat::CellGeometry> > data(
          new pdat::IndexVariable<SampleIndexData, pdat::CellGeometry>(
             dim, "sample"));
@@ -206,7 +206,7 @@ int main(
       int counter = 0;
       std::ostream& os = tbox::plog;
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
          // allocate "sample" data
@@ -216,13 +216,13 @@ int main(
          // loop over patches on level
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            boost::shared_ptr<hier::Patch> patch(*ip);
+            std::shared_ptr<hier::Patch> patch(*ip);
             os << "Patch: " << patch->getLocalId() << std::endl;
 
             // access sample data from patch
-            boost::shared_ptr<pdat::IndexData<SampleIndexData,
+            std::shared_ptr<pdat::IndexData<SampleIndexData,
                                               pdat::CellGeometry> > sample(
-               BOOST_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
+               SAMRAI_SHARED_PTR_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
                           hier::PatchData>(
                   patch->getPatchData(data_id)));
             TBOX_ASSERT(sample);

@@ -65,8 +65,8 @@ public:
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      boost::shared_ptr<hier::BoxLevel>& fill_box_level,
-      boost::shared_ptr<hier::Connector>& dst_to_fill,
+      std::shared_ptr<hier::BoxLevel>& fill_box_level,
+      std::shared_ptr<hier::Connector>& dst_to_fill,
       const hier::BoxLevel& dst_box_level,
       const hier::IntVector& fill_ghost_width,
       bool data_on_patch_border);

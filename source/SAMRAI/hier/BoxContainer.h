@@ -1789,7 +1789,7 @@ private:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Read the BoxContainer from a restart database.
@@ -2155,7 +2155,7 @@ private:
 
    bool d_ordered;
 
-   mutable boost::shared_ptr<MultiblockBoxTree> d_tree;
+   mutable std::shared_ptr<MultiblockBoxTree> d_tree;
 };
 
 }

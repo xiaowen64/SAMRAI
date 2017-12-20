@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/EdgeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -35,7 +34,7 @@ EdgeVariable<TYPE>::EdgeVariable(
    int depth,
    const bool fine_boundary_represents_var):
    hier::Variable(name,
-                  boost::make_shared<EdgeDataFactory<TYPE> >(
+                  std::make_shared<EdgeDataFactory<TYPE> >(
                      depth,
                      // default zero ghost cells
                      hier::IntVector::getZero(dim),
@@ -52,8 +51,8 @@ EdgeVariable<TYPE>::~EdgeVariable()
 template<class TYPE>
 int EdgeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<EdgeDataFactory<TYPE> > factory(
-      BOOST_CAST<EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<EdgeDataFactory<TYPE> > factory(
+      SAMRAI_SHARED_PTR_CAST<EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

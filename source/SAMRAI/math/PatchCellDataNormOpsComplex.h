@@ -19,7 +19,8 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
+
 
 namespace SAMRAI {
 namespace math {
@@ -70,7 +71,7 @@ public:
     */
    size_t
    numberOfEntries(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box) const
    {
       TBOX_ASSERT(data);
@@ -87,8 +88,8 @@ public:
     */
    double
    sumControlVolumes(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<double> >& cvol,
       const hier::Box& box) const
    {
       TBOX_ASSERT(data && cvol);
@@ -109,8 +110,8 @@ public:
     */
    void
    abs(
-      const boost::shared_ptr<pdat::CellData<double> >& dst,
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
+      const std::shared_ptr<pdat::CellData<double> >& dst,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& src,
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
@@ -133,10 +134,10 @@ public:
     */
    double
    L1Norm(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -152,10 +153,10 @@ public:
     */
    double
    L2Norm(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -172,11 +173,11 @@ public:
     */
    double
    weightedL2Norm(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -191,10 +192,10 @@ public:
     */
    double
    RMSNorm(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -210,11 +211,11 @@ public:
     */
    double
    weightedRMSNorm(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -229,10 +230,10 @@ public:
     */
    double
    maxNorm(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -247,11 +248,11 @@ public:
     */
    dcomplex
    dot(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data1,
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data2,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data1,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data2,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Return the integral of the function represented by the data array.
@@ -263,9 +264,9 @@ public:
     */
    dcomplex
    integral(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& vol) const
+      const std::shared_ptr<pdat::CellData<double> >& vol) const
    {
       TBOX_ASSERT(data);
       TBOX_ASSERT(vol);

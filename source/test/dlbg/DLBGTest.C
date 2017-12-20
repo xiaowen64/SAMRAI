@@ -28,14 +28,14 @@ using namespace SAMRAI;
 DLBGTest::DLBGTest(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
-   boost::shared_ptr<tbox::Database> database):
+   std::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
+   std::shared_ptr<tbox::Database> database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(patch_hierarchy),
    d_sine_wall(object_name + ":tagger",
                d_dim,
-               database->getDatabaseWithDefault("sine_tagger", boost::shared_ptr<tbox::Database>())),
+               database->getDatabaseWithDefault("sine_tagger", std::shared_ptr<tbox::Database>())),
    d_time(0.5)
 {
    d_sine_wall.resetHierarchyConfiguration(patch_hierarchy, 0, 0);
@@ -80,7 +80,7 @@ void DLBGTest::deallocatePatchData(
 
 #ifdef HAVE_HDF5
 int DLBGTest::registerVariablesWithPlotter(
-   boost::shared_ptr<appu::VisItDataWriter> writer)
+   std::shared_ptr<appu::VisItDataWriter> writer)
 {
    if (writer) {
       d_sine_wall.registerVariablesWithPlotter(*writer);

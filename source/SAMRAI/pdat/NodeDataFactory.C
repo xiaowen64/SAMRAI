@@ -19,7 +19,6 @@
 #include "SAMRAI/pdat/OuternodeDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -59,13 +58,13 @@ NodeDataFactory<TYPE>::~NodeDataFactory()
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchDataFactory>
+std::shared_ptr<hier::PatchDataFactory>
 NodeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return boost::make_shared<NodeDataFactory<TYPE> >(
+   return std::make_shared<NodeDataFactory<TYPE> >(
              d_depth,
              ghosts,
              d_fine_boundary_represents_var);
@@ -80,13 +79,13 @@ NodeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchData>
+std::shared_ptr<hier::PatchData>
 NodeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-   return boost::make_shared<NodeData<TYPE> >(
+   return std::make_shared<NodeData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts);
@@ -101,13 +100,13 @@ NodeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::BoxGeometry>
+std::shared_ptr<hier::BoxGeometry>
 NodeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   return boost::make_shared<NodeGeometry>(box, d_ghosts);
+   return std::make_shared<NodeGeometry>(box, d_ghosts);
 }
 
 template<class TYPE>
@@ -151,7 +150,7 @@ NodeDataFactory<TYPE>::getSizeOfMemory(
 template<class TYPE>
 bool
 NodeDataFactory<TYPE>::validCopyTo(
-   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
+   const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
@@ -161,8 +160,8 @@ NodeDataFactory<TYPE>::validCopyTo(
     * Valid options are NodeData and OuternodeData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<NodeDataFactory<TYPE> > ndf(
-         boost::dynamic_pointer_cast<NodeDataFactory<TYPE>,
+      std::shared_ptr<NodeDataFactory<TYPE> > ndf(
+         std::dynamic_pointer_cast<NodeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (ndf) {
          valid_copy = true;
@@ -170,8 +169,8 @@ NodeDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
-         boost::dynamic_pointer_cast<OuternodeDataFactory<TYPE>,
+      std::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
+         std::dynamic_pointer_cast<OuternodeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));
       if (ondf) {

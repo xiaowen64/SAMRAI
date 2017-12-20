@@ -42,7 +42,7 @@ HierarchyNeighbors::HierarchyNeighbors(
    d_coarser_level_nbrs.resize(num_levels);
 
    for (int ln = finest_level; ln >= coarsest_level; --ln) {
-      const boost::shared_ptr<PatchLevel>& current_level =
+      const std::shared_ptr<PatchLevel>& current_level =
          hierarchy.getPatchLevel(ln);
 
       /*
@@ -50,7 +50,7 @@ HierarchyNeighbors::HierarchyNeighbors(
        */
       if (ln != finest_level) {
 
-         boost::shared_ptr<PatchLevel> finer_level(
+         std::shared_ptr<PatchLevel> finer_level(
             hierarchy.getPatchLevel(ln+1));
 
          hier::IntVector connector_width(
@@ -72,7 +72,7 @@ HierarchyNeighbors::HierarchyNeighbors(
          for (PatchLevel::iterator ip(current_level->begin());
               ip != current_level->end(); ++ip) {
 
-            const boost::shared_ptr<Patch>& patch = *ip;
+            const std::shared_ptr<Patch>& patch = *ip;
             const Box& box = patch->getBox();
             const BoxId& box_id = box.getBoxId();
             BoxContainer& finer_nbrs = d_finer_level_nbrs[ln][box_id];
@@ -88,7 +88,7 @@ HierarchyNeighbors::HierarchyNeighbors(
        */
       if (ln != coarsest_level) {
 
-         boost::shared_ptr<PatchLevel> coarser_level(
+         std::shared_ptr<PatchLevel> coarser_level(
             hierarchy.getPatchLevel(ln-1));
 
          const Connector& fine_to_coarse =
@@ -101,7 +101,7 @@ HierarchyNeighbors::HierarchyNeighbors(
          for (PatchLevel::iterator ip(current_level->begin());
               ip != current_level->end(); ++ip) {
 
-            const boost::shared_ptr<Patch>& patch = *ip;
+            const std::shared_ptr<Patch>& patch = *ip;
             const Box& box = patch->getBox();
             const BoxId& box_id = box.getBoxId();
             BoxContainer& coarser_nbrs = d_coarser_level_nbrs[ln][box_id];
@@ -125,7 +125,7 @@ HierarchyNeighbors::HierarchyNeighbors(
 
          for (PatchLevel::iterator ip(current_level->begin());
               ip != current_level->end(); ++ip) {
-            const boost::shared_ptr<Patch>& patch = *ip;
+            const std::shared_ptr<Patch>& patch = *ip;
             const Box& box = patch->getBox();
             const BoxId& box_id = box.getBoxId();
             BoxContainer& same_level_nbrs = d_same_level_nbrs[ln][box_id];

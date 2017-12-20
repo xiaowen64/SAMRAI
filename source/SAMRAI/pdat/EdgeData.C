@@ -695,7 +695,7 @@ EdgeData<TYPE>::printAxis(
 template<class TYPE>
 void
 EdgeData<TYPE>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -709,7 +709,7 @@ EdgeData<TYPE>::getFromRestart(
 
    d_depth = restart_db->getInteger("d_depth");
 
-   boost::shared_ptr<tbox::Database> array_database;
+   std::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = restart_db->getDatabase(array_name);
@@ -729,7 +729,7 @@ EdgeData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 EdgeData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -739,7 +739,7 @@ EdgeData<TYPE>::putToRestart(
 
    restart_db->putInteger("d_depth", d_depth);
 
-   boost::shared_ptr<tbox::Database> array_database;
+   std::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = restart_db->putDatabase(array_name);

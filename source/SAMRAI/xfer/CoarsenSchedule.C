@@ -41,11 +41,11 @@ bool CoarsenSchedule::s_extra_debug = false;
 bool CoarsenSchedule::s_barrier_and_time = false;
 bool CoarsenSchedule::s_read_static_input = false;
 
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_schedule;
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
-boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
+std::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_schedule;
+std::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
+std::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
+std::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_dlbg;
+std::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarse_data_fill;
 
 tbox::StartupShutdownManager::Handler
 CoarsenSchedule::s_initialize_finalize_handler(
@@ -92,10 +92,10 @@ CoarsenSchedule::setScheduleGenerationMethod(
  */
 
 CoarsenSchedule::CoarsenSchedule(
-   const boost::shared_ptr<hier::PatchLevel>& crse_level,
-   const boost::shared_ptr<hier::PatchLevel>& fine_level,
-   const boost::shared_ptr<CoarsenClasses>& coarsen_classes,
-   const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
+   const std::shared_ptr<hier::PatchLevel>& crse_level,
+   const std::shared_ptr<hier::PatchLevel>& fine_level,
+   const std::shared_ptr<CoarsenClasses>& coarsen_classes,
+   const std::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
    CoarsenPatchStrategy* patch_strategy,
    bool fill_coarse_data):
    d_number_coarsen_items(0),
@@ -211,10 +211,10 @@ CoarsenSchedule::getFromInput()
 {
    if (!s_read_static_input) {
       s_read_static_input = true;
-      boost::shared_ptr<tbox::Database> idb(
+      std::shared_ptr<tbox::Database> idb(
          tbox::InputManager::getInputDatabase());
       if (idb && idb->isDatabase("CoarsenSchedule")) {
-         boost::shared_ptr<tbox::Database> csdb(
+         std::shared_ptr<tbox::Database> csdb(
             idb->getDatabase("CoarsenSchedule"));
          s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", s_extra_debug);
          s_barrier_and_time =
@@ -233,7 +233,7 @@ CoarsenSchedule::getFromInput()
 
 void
 CoarsenSchedule::reset(
-   const boost::shared_ptr<CoarsenClasses>& coarsen_classes)
+   const std::shared_ptr<CoarsenClasses>& coarsen_classes)
 {
    TBOX_ASSERT(coarsen_classes);
 
@@ -434,7 +434,7 @@ CoarsenSchedule::setupRefineAlgorithm()
          d_precoarsen_refine_algorithm->registerRefine(src_id,
             src_id,
             src_id,
-            boost::shared_ptr<hier::RefineOperator>());
+            std::shared_ptr<hier::RefineOperator>());
       }
 
       t_coarse_data_fill->stop();
@@ -712,7 +712,7 @@ hier::IntVector
 CoarsenSchedule::getMaxGhostsToGrow() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
-   boost::shared_ptr<hier::PatchDescriptor> pd(
+   std::shared_ptr<hier::PatchDescriptor> pd(
       d_temp_crse_level->getPatchDescriptor());
 
    /*
@@ -749,9 +749,9 @@ CoarsenSchedule::getMaxGhostsToGrow() const
 
 void
 CoarsenSchedule::constructScheduleTransactions(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
    const hier::Box& dst_box,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
    const hier::Box& src_box)
 {
    TBOX_ASSERT(dst_level);
@@ -779,9 +779,9 @@ CoarsenSchedule::constructScheduleTransactions(
                  << std::endl;
    }
 
-   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
+   std::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
       dst_level->getPatchDescriptor());
-   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
+   std::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
       src_level->getPatchDescriptor());
 
    const int num_equiv_classes =
@@ -837,7 +837,7 @@ CoarsenSchedule::constructScheduleTransactions(
     */
    if (src_block_id != dst_block_id) {
 
-      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
+      std::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_crse_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
@@ -865,7 +865,7 @@ CoarsenSchedule::constructScheduleTransactions(
    }
 
    const int num_coarsen_items = d_coarsen_classes->getNumberOfCoarsenItems();
-   std::vector<boost::shared_ptr<tbox::Transaction> > transactions(
+   std::vector<std::shared_ptr<tbox::Transaction> > transactions(
       num_coarsen_items);
 
    for (int nc = 0; nc < num_equiv_classes; ++nc) {
@@ -879,9 +879,9 @@ CoarsenSchedule::constructScheduleTransactions(
       const int rep_item_dst_id = rep_item.d_dst;
       const int rep_item_src_id = rep_item.d_src;
 
-      boost::shared_ptr<hier::PatchDataFactory> src_pdf(
+      std::shared_ptr<hier::PatchDataFactory> src_pdf(
          src_patch_descriptor->getPatchDataFactory(rep_item_src_id));
-      boost::shared_ptr<hier::PatchDataFactory> dst_pdf(
+      std::shared_ptr<hier::PatchDataFactory> dst_pdf(
          dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id));
 
       const hier::IntVector& dst_gcw(dst_pdf->getGhostCellWidth());
@@ -923,7 +923,7 @@ CoarsenSchedule::constructScheduleTransactions(
                     << std::endl;
       }
 
-      boost::shared_ptr<hier::BoxOverlap> overlap(
+      std::shared_ptr<hier::BoxOverlap> overlap(
          rep_item.d_var_fill_pattern->calculateOverlap(
             *dst_pdf->getBoxGeometry(unshifted_dst_box),
             *src_pdf->getBoxGeometry(unshifted_src_box),
@@ -1000,8 +1000,8 @@ CoarsenSchedule::coarsenSourceData(
 
    for (hier::PatchLevel::iterator p(d_fine_level->begin());
         p != d_fine_level->end(); ++p) {
-      const boost::shared_ptr<hier::Patch>& fine_patch = *p;
-      boost::shared_ptr<hier::Patch> temp_patch(
+      const std::shared_ptr<hier::Patch>& fine_patch = *p;
+      std::shared_ptr<hier::Patch> temp_patch(
          d_temp_crse_level->getPatch(fine_patch->getGlobalId()));
 
       const hier::Box& box = temp_patch->getBox();
@@ -1047,7 +1047,7 @@ CoarsenSchedule::coarsenSourceData(
 
 void
 CoarsenSchedule::setCoarsenItems(
-   const boost::shared_ptr<CoarsenClasses>& coarsen_classes)
+   const std::shared_ptr<CoarsenClasses>& coarsen_classes)
 {
 
    clearCoarsenItems();
@@ -1107,7 +1107,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
 {
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   boost::shared_ptr<hier::PatchDescriptor> pd(
+   std::shared_ptr<hier::PatchDescriptor> pd(
       d_crse_level->getPatchDescriptor());
 
    hier::IntVector user_gcw(dim, 0);

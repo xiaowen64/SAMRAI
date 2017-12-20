@@ -131,11 +131,11 @@ OuterfaceComplexConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<OuterfaceData<dcomplex> > cdata(
-      BOOST_CAST<OuterfaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<dcomplex> > cdata(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<OuterfaceData<dcomplex> > fdata(
-      BOOST_CAST<OuterfaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<dcomplex> > fdata(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&fine_overlap);

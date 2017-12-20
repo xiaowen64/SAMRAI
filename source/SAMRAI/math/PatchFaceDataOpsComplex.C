@@ -31,17 +31,17 @@ PatchFaceDataOpsComplex::~PatchFaceDataOpsComplex()
 
 void
 PatchFaceDataOpsComplex::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::FaceData<dcomplex> > d1(
-      BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<dcomplex> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::FaceData<dcomplex> > d2(
-      BOOST_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<dcomplex> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -55,7 +55,7 @@ PatchFaceDataOpsComplex::swapData(
 
 void
 PatchFaceDataOpsComplex::printData(
-   const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+   const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -69,8 +69,8 @@ PatchFaceDataOpsComplex::printData(
 
 void
 PatchFaceDataOpsComplex::copyData(
-   const boost::shared_ptr<pdat::FaceData<dcomplex> >& dst,
-   const boost::shared_ptr<pdat::FaceData<dcomplex> >& src,
+   const std::shared_ptr<pdat::FaceData<dcomplex> >& dst,
+   const std::shared_ptr<pdat::FaceData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

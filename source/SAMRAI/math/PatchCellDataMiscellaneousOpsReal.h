@@ -17,7 +17,8 @@
 #include "SAMRAI/math/ArrayDataMiscellaneousOpsReal.h"
 #include "SAMRAI/hier/Box.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
+
 
 namespace SAMRAI {
 namespace math {
@@ -77,11 +78,11 @@ public:
     */
    int
    computeConstrProdPos(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& data1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& data2,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1\f$
@@ -95,12 +96,12 @@ public:
     */
    void
    compareToScalar(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1/src_i\f$ if
@@ -115,11 +116,11 @@ public:
     */
    int
    testReciprocal(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::CellData<double> >& cvol =
-         boost::shared_ptr<pdat::CellData<double> >()) const;
+      const std::shared_ptr<pdat::CellData<double> >& cvol =
+         std::shared_ptr<pdat::CellData<double> >()) const;
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -140,8 +141,8 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& numer,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& denom,
+      const std::shared_ptr<pdat::CellData<TYPE> >& numer,
+      const std::shared_ptr<pdat::CellData<TYPE> >& denom,
       const hier::Box& box) const;
 
    /*!
@@ -164,8 +165,8 @@ public:
     */
    TYPE
    minPointwiseDivide(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& numer,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& denom,
+      const std::shared_ptr<pdat::CellData<TYPE> >& numer,
+      const std::shared_ptr<pdat::CellData<TYPE> >& denom,
       const hier::Box& box) const;
 
 private:

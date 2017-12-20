@@ -62,7 +62,7 @@ const int CascadePartitioner::s_default_data_id = -1;
 CascadePartitioner::CascadePartitioner(
    const tbox::Dimension& dim,
    const std::string& name,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -139,8 +139,8 @@ CascadePartitioner::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::CellDataFactory<double> > datafact(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
          hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
          getPatchDataFactory(data_id)));
 
@@ -172,7 +172,7 @@ void
 CascadePartitioner::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector* balance_to_reference,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -279,7 +279,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    d_workload_level.reset();
    t_load_balance_box_level->start();
 
-   d_pparams = boost::make_shared<PartitioningParams>(
+   d_pparams = std::make_shared<PartitioningParams>(
          *balance_box_level.getGridGeometry(),
          balance_box_level.getRefinementRatio(),
          min_size, max_size, bad_interval, effective_cut_factor,
@@ -309,7 +309,7 @@ CascadePartitioner::loadBalanceBoxLevel(
    if ((wrk_indx >= 0) && (hierarchy->getNumberOfLevels() > level_number)) {
 
       d_workload_level =
-         boost::make_shared<hier::PatchLevel>(balance_box_level,
+         std::make_shared<hier::PatchLevel>(balance_box_level,
                                               hierarchy->getGridGeometry(),
                                               hierarchy->getPatchDescriptor());
 
@@ -323,8 +323,8 @@ CascadePartitioner::loadBalanceBoxLevel(
        * d_workload_level is based on balance_box_level, the new Connectors
        * are effectively copies of balance_to_reference and its transpose.
        */
-      boost::shared_ptr<hier::Connector> workload_to_reference(
-         boost::make_shared<hier::Connector>(
+      std::shared_ptr<hier::Connector> workload_to_reference(
+         std::make_shared<hier::Connector>(
             *d_workload_level->getBoxLevel(),
             balance_to_reference->getHead(),
             balance_to_reference->getConnectorWidth()));
@@ -340,8 +340,8 @@ CascadePartitioner::loadBalanceBoxLevel(
          }
       }
 
-      boost::shared_ptr<hier::Connector> reference_to_workload(
-         boost::make_shared<hier::Connector>(
+      std::shared_ptr<hier::Connector> reference_to_workload(
+         std::make_shared<hier::Connector>(
             balance_to_reference->getHead(),
             *d_workload_level->getBoxLevel(),
             balance_to_reference->getTranspose().getConnectorWidth()));
@@ -368,7 +368,7 @@ CascadePartitioner::loadBalanceBoxLevel(
        * Find the Connectors between the current level of the hierarchy and
        * the reference level.
        */
-      boost::shared_ptr<hier::PatchLevel> current_level(
+      std::shared_ptr<hier::PatchLevel> current_level(
          hierarchy->getPatchLevel(level_number));
 
       const hier::Connector& current_to_reference = 
@@ -390,7 +390,7 @@ CascadePartitioner::loadBalanceBoxLevel(
        * bridge operations to connect the current and workload levels.
        */
       hier::OverlapConnectorAlgorithm oca;
-      boost::shared_ptr<hier::Connector> current_to_workload;
+      std::shared_ptr<hier::Connector> current_to_workload;
       oca.bridgeWithNesting(
          current_to_workload,
          current_to_reference,
@@ -401,7 +401,7 @@ CascadePartitioner::loadBalanceBoxLevel(
          false);
       current_level->cacheConnector(current_to_workload);
 
-      boost::shared_ptr<hier::Connector> workload_to_current;
+      std::shared_ptr<hier::Connector> workload_to_current;
       oca.bridgeWithNesting(
          workload_to_current,
          *workload_to_reference,
@@ -420,8 +420,8 @@ CascadePartitioner::loadBalanceBoxLevel(
    
       xfer::RefineAlgorithm fill_work_algorithm;
 
-      boost::shared_ptr<hier::RefineOperator> work_refine_op(
-         boost::make_shared<pdat::CellDoubleConstantRefine>());
+      std::shared_ptr<hier::RefineOperator> work_refine_op(
+         std::make_shared<pdat::CellDoubleConstantRefine>());
 
       fill_work_algorithm.registerRefine(wrk_indx,
          wrk_indx,
@@ -553,15 +553,15 @@ CascadePartitioner::partitionByCascade(
       tbox::plog << d_object_name << "::partitionByCascade: entered" << std::endl;
    }
 
-   boost::shared_ptr<TransitLoad> local_load;
-   boost::shared_ptr<TransitLoad> shipment;
+   std::shared_ptr<TransitLoad> local_load;
+   std::shared_ptr<TransitLoad> shipment;
    if (use_vouchers) {
-      local_load = boost::make_shared<VoucherTransitLoad>(*d_pparams);
-      shipment = boost::make_shared<VoucherTransitLoad>(*d_pparams);
+      local_load = std::make_shared<VoucherTransitLoad>(*d_pparams);
+      shipment = std::make_shared<VoucherTransitLoad>(*d_pparams);
       d_pparams->setUsingVouchers(true);
    } else {
-      local_load = boost::make_shared<BoxTransitSet>(*d_pparams);
-      shipment = boost::make_shared<BoxTransitSet>(*d_pparams);
+      local_load = std::make_shared<BoxTransitSet>(*d_pparams);
+      shipment = std::make_shared<BoxTransitSet>(*d_pparams);
    }
    local_load->setAllowBoxBreaking(true);
    local_load->setTimerPrefix(d_object_name);
@@ -834,7 +834,7 @@ CascadePartitioner::computeNonUniformWorkLoad(
    double load = 0.0;
    for (hier::PatchLevel::iterator ip(patch_level.begin());
         ip != patch_level.end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       double patch_work =
          BalanceUtilities::computeNonUniformWorkload(patch,
@@ -856,7 +856,7 @@ CascadePartitioner::computeNonUniformWorkLoad(
 
 void
 CascadePartitioner::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
 
    if (input_db) {

@@ -46,17 +46,17 @@ PatchNodeDataOpsReal<TYPE>::~PatchNodeDataOpsReal()
 template<class TYPE>
 void
 PatchNodeDataOpsReal<TYPE>::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::NodeData<TYPE> > d1(
-      BOOST_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<TYPE> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::NodeData<TYPE> > d2(
-      BOOST_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<TYPE> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -71,7 +71,7 @@ PatchNodeDataOpsReal<TYPE>::swapData(
 template<class TYPE>
 void
 PatchNodeDataOpsReal<TYPE>::printData(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -86,8 +86,8 @@ PatchNodeDataOpsReal<TYPE>::printData(
 template<class TYPE>
 void
 PatchNodeDataOpsReal<TYPE>::copyData(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -100,7 +100,7 @@ PatchNodeDataOpsReal<TYPE>::copyData(
 template<class TYPE>
 void
 PatchNodeDataOpsReal<TYPE>::setToScalar(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

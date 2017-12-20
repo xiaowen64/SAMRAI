@@ -97,7 +97,7 @@ public:
       return *d_workload_level;
    }
 
-   void setWorkloadPatchLevel(boost::shared_ptr<hier::PatchLevel>& level) {
+   void setWorkloadPatchLevel(std::shared_ptr<hier::PatchLevel>& level) {
       TBOX_ASSERT(level.get());
       d_workload_level = level;
    }
@@ -143,7 +143,7 @@ private:
    /*!
     * @brief Pointer to level holding nonuniform workload
     */
-   boost::shared_ptr<hier::PatchLevel> d_workload_level;
+   std::shared_ptr<hier::PatchLevel> d_workload_level;
 };
 
 }

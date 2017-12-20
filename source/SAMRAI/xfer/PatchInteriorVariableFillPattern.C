@@ -52,7 +52,7 @@ PatchInteriorVariableFillPattern::~PatchInteriorVariableFillPattern()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 PatchInteriorVariableFillPattern::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -79,7 +79,7 @@ PatchInteriorVariableFillPattern::calculateOverlap(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::BoxContainer& unfilled_node_boxes,

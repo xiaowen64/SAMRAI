@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -143,7 +143,7 @@ public:
     *
     * @pre getBox().getDim() == src_mask.getDim()
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -175,7 +175,7 @@ public:
     * @brief Set up a SideOverlap object based on the given boxes and the
     * transformation.
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -223,7 +223,7 @@ private:
     * @pre src_mask.getDim() == transformation.getOffset().getDim()
     * @pre dst_geometry.getDirectionVector() == src_geometry.getDirectionVector()
     */
-   static boost::shared_ptr<hier::BoxOverlap>
+   static std::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const SideGeometry& dst_geometry,
       const SideGeometry& src_geometry,

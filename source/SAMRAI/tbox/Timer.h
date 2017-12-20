@@ -16,9 +16,9 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 
 #ifdef HAVE_TAU
 #if (PROFILING_ON || TRACING_ON)
@@ -294,7 +294,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<Database>& restart_db) const;
+      const std::shared_ptr<Database>& restart_db) const;
 
    /**
     * Read restarted times from restart database.
@@ -303,7 +303,7 @@ public:
     */
    void
    getFromRestart(
-      const boost::shared_ptr<Database>& restart_db);
+      const std::shared_ptr<Database>& restart_db);
 
 protected:
    /**

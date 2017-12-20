@@ -48,7 +48,7 @@ partitionBoxes(
  */
 void
 shrinkBoxLevel(
-   boost::shared_ptr<hier::BoxLevel>& small_box_level,
+   std::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
    const std::vector<hier::BlockId::block_t>& unshrunken_blocks);
@@ -150,7 +150,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      std::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -160,7 +160,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -187,7 +187,7 @@ int main(
          TBOX_ERROR("BoxLevelConnectorUtils test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
+      std::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -312,7 +312,7 @@ int main(
        * Generate the "small" BoxLevel by shrinking the big one
        * back at its boundary.
        */
-      boost::shared_ptr<hier::BoxLevel> small_box_level;
+      std::shared_ptr<hier::BoxLevel> small_box_level;
       shrinkBoxLevel(small_box_level,
          big_box_level,
          shrinkage,
@@ -437,9 +437,9 @@ int main(
           * nothing.  Thus small_to_nothing should map
           * small_box_level to nothing.
           */
-         boost::shared_ptr<hier::BoxLevel> everything;
-         boost::shared_ptr<hier::BoxLevel> nothing;
-         boost::shared_ptr<hier::MappingConnector> small_to_everything,
+         std::shared_ptr<hier::BoxLevel> everything;
+         std::shared_ptr<hier::BoxLevel> nothing;
+         std::shared_ptr<hier::MappingConnector> small_to_everything,
                                                    small_to_nothing;
          mblcu.computeExternalParts(
             nothing,
@@ -530,8 +530,8 @@ int main(
           * parts of big_box_level have the same index space.
           */
 
-         boost::shared_ptr<hier::BoxLevel> internal_box_level;
-         boost::shared_ptr<hier::MappingConnector> big_to_internal;
+         std::shared_ptr<hier::BoxLevel> internal_box_level;
+         std::shared_ptr<hier::MappingConnector> big_to_internal;
          mblcu.computeInternalParts(
             internal_box_level,
             big_to_internal,
@@ -597,8 +597,8 @@ int main(
           * - check that big_box_level \ { small_box_level, external parts }
           *   is empty.
           */
-         boost::shared_ptr<hier::BoxLevel> external_box_level;
-         boost::shared_ptr<hier::MappingConnector> big_to_external;
+         std::shared_ptr<hier::BoxLevel> external_box_level;
+         std::shared_ptr<hier::MappingConnector> big_to_external;
          mblcu.computeExternalParts(
             external_box_level,
             big_to_external,
@@ -732,7 +732,7 @@ void partitionBoxes(
    load_balancer.loadBalanceBoxLevel(
       box_level,
       dummy_connector,
-      boost::shared_ptr<hier::PatchHierarchy>(),
+      std::shared_ptr<hier::PatchHierarchy>(),
       0,
       min_box_size,
       max_box_size,
@@ -742,12 +742,12 @@ void partitionBoxes(
 }
 
 void shrinkBoxLevel(
-   boost::shared_ptr<hier::BoxLevel>& small_box_level,
+   std::shared_ptr<hier::BoxLevel>& small_box_level,
    const hier::BoxLevel& big_box_level,
    const hier::IntVector& shrinkage,
    const std::vector<hier::BlockId::block_t>& unshrunken_blocks)
 {
-   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
+   const std::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       big_box_level.getGridGeometry());
 
    const int local_rank = big_box_level.getMPI().getRank();

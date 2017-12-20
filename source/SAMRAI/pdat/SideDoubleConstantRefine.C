@@ -123,11 +123,11 @@ SideDoubleConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<SideData<double> > cdata(
-      BOOST_CAST<SideData<double>, hier::PatchData>(
+   std::shared_ptr<SideData<double> > cdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<SideData<double> > fdata(
-      BOOST_CAST<SideData<double>, hier::PatchData>(
+   std::shared_ptr<SideData<double> > fdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap =

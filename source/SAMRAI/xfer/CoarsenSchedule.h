@@ -25,8 +25,8 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -84,16 +84,16 @@ public:
     * cell width and and they must be filled with valid data before calling
     * coarsenData().
     *
-    * @param[in] crse_level      boost::shared_ptr to coarse (destination)
+    * @param[in] crse_level      std::shared_ptr to coarse (destination)
     *                            patch level.
-    * @param[in] fine_level      boost::shared_ptr to fine (source) patch level.
-    * @param[in] coarsen_classes boost::shared_ptr to structure containing
+    * @param[in] fine_level      std::shared_ptr to fine (source) patch level.
+    * @param[in] coarsen_classes std::shared_ptr to structure containing
     *                            patch data and operator information.  In
     *                            general, this is constructed by the calling
     *                            CoarsenAlgorithm object.
-    * @param[in] transaction_factory  boost::shared_ptr to a factory object
+    * @param[in] transaction_factory  std::shared_ptr to a factory object
     *                                 that will create data transactions.
-    * @param[in] patch_strategy  boost::shared_ptr to a coarsen patch strategy
+    * @param[in] patch_strategy  std::shared_ptr to a coarsen patch strategy
     *                            object that provides user-defined coarsen
     *                            operations.  This pointer may be null, in
     *                            which case no user-defined coarsen operations
@@ -109,10 +109,10 @@ public:
     * @pre crse_level->getDim() == fine_level->getDim()
     */
    CoarsenSchedule(
-      const boost::shared_ptr<hier::PatchLevel>& crse_level,
-      const boost::shared_ptr<hier::PatchLevel>& fine_level,
-      const boost::shared_ptr<CoarsenClasses>& coarsen_classes,
-      const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
+      const std::shared_ptr<hier::PatchLevel>& crse_level,
+      const std::shared_ptr<hier::PatchLevel>& fine_level,
+      const std::shared_ptr<CoarsenClasses>& coarsen_classes,
+      const std::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
       CoarsenPatchStrategy* patch_strategy,
       bool fill_coarse_data);
 
@@ -136,7 +136,7 @@ public:
     * coarsen_classes argument rather than the data it has previously been
     * set to operate on.
     *
-    * @param[in] coarsen_classes  boost::shared_ptr to structure containing
+    * @param[in] coarsen_classes  std::shared_ptr to structure containing
     *                             patch data and operator information.  In
     *                             general, this is constructed by the calling
     *                             CoarsenAlgorithm object.  This pointer must
@@ -146,7 +146,7 @@ public:
     */
    void
    reset(
-      const boost::shared_ptr<CoarsenClasses>& coarsen_classes);
+      const std::shared_ptr<CoarsenClasses>& coarsen_classes);
 
    /*!
     * @brief Execute the stored communication schedule and perform the data
@@ -158,7 +158,7 @@ public:
    /*!
     * @brief Return the coarsen equivalence classes used in the schedule.
     */
-   const boost::shared_ptr<CoarsenClasses>&
+   const std::shared_ptr<CoarsenClasses>&
    getEquivalenceClasses() const
    {
       return d_coarsen_classes;
@@ -344,9 +344,9 @@ private:
     */
    void
    constructScheduleTransactions(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
       const hier::Box& dst_box,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
       const hier::Box& src_box);
 
    /*!
@@ -383,7 +383,7 @@ private:
     */
    void
    setCoarsenItems(
-      const boost::shared_ptr<CoarsenClasses>& coarsen_classes);
+      const std::shared_ptr<CoarsenClasses>& coarsen_classes);
 
    /*!
     * @brief Utility function to clear local copies of coarsen items.
@@ -428,7 +428,7 @@ private:
    /*!
     * @brief Structures that store coarsen data items.
     */
-   boost::shared_ptr<CoarsenClasses> d_coarsen_classes;
+   std::shared_ptr<CoarsenClasses> d_coarsen_classes;
 
    /*!
     * @brief number of coarsen data items
@@ -443,15 +443,15 @@ private:
    /*!
     * @brief Cached pointers to the coarse, fine, and temporary patch levels.
     */
-   boost::shared_ptr<hier::PatchLevel> d_crse_level;
-   boost::shared_ptr<hier::PatchLevel> d_fine_level;
-   boost::shared_ptr<hier::PatchLevel> d_temp_crse_level;
+   std::shared_ptr<hier::PatchLevel> d_crse_level;
+   std::shared_ptr<hier::PatchLevel> d_fine_level;
+   std::shared_ptr<hier::PatchLevel> d_temp_crse_level;
 
    /*!
     * @brief Connector from coarse box_level to temporary
     * (coarsened fine) box_level.
     */
-   boost::shared_ptr<hier::Connector> d_coarse_to_temp;
+   std::shared_ptr<hier::Connector> d_coarse_to_temp;
 
    /*!
     * @brief Object supporting interface to user-defined spatial data
@@ -463,7 +463,7 @@ private:
     * @brief Factory object used to create data transactions when schedule is
     * constructed.
     */
-   boost::shared_ptr<CoarsenTransactionFactory> d_transaction_factory;
+   std::shared_ptr<CoarsenTransactionFactory> d_transaction_factory;
 
    /*!
     * @brief Cached ratio between source (fine) level and destination (coarse)
@@ -480,7 +480,7 @@ private:
     * @brief Level-to-level communication schedule between the temporary coarse
     * level and (actual) destination level.
     */
-   boost::shared_ptr<tbox::Schedule> d_schedule;
+   std::shared_ptr<tbox::Schedule> d_schedule;
 
    /*!
     * @brief Boolean indicating whether source data on the coarse temporary
@@ -493,13 +493,13 @@ private:
     * @brief Algorithm used to set up schedule to fill temporary level if
     * d_fill_coarse_data is true.
     */
-   boost::shared_ptr<RefineAlgorithm> d_precoarsen_refine_algorithm;
+   std::shared_ptr<RefineAlgorithm> d_precoarsen_refine_algorithm;
 
    /*!
     * @brief Schedule used to fill temporary level if d_fill_coarse_data is
     * true.
     */
-   boost::shared_ptr<RefineSchedule> d_precoarsen_refine_schedule;
+   std::shared_ptr<RefineSchedule> d_precoarsen_refine_schedule;
 
    //@{
 
@@ -511,11 +511,11 @@ private:
    /*!
     * @name Timer objects for performance measurement.
     */
-   static boost::shared_ptr<tbox::Timer> t_coarsen_schedule;
-   static boost::shared_ptr<tbox::Timer> t_coarsen_data;
-   static boost::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
-   static boost::shared_ptr<tbox::Timer> t_gen_sched_dlbg;
-   static boost::shared_ptr<tbox::Timer> t_coarse_data_fill;
+   static std::shared_ptr<tbox::Timer> t_coarsen_schedule;
+   static std::shared_ptr<tbox::Timer> t_coarsen_data;
+   static std::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
+   static std::shared_ptr<tbox::Timer> t_gen_sched_dlbg;
+   static std::shared_ptr<tbox::Timer> t_coarse_data_fill;
 
    //*}
 

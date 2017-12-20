@@ -15,8 +15,8 @@
 
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

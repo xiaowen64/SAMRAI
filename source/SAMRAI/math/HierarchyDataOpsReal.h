@@ -13,10 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include <iostream>
-
-#include "boost/shared_ptr.hpp"
 #include "SAMRAI/hier/PatchHierarchy.h"
+
+#include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -64,7 +64,7 @@ public:
    virtual
    void
    setPatchHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) = 0;
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy) = 0;
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -78,7 +78,7 @@ public:
     * Return const pointer to patch hierarchy associated with operations.
     */
    virtual
-   const boost::shared_ptr<hier::PatchHierarchy>
+   const std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const = 0;
 
    /**

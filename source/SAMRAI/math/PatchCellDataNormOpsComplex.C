@@ -24,9 +24,9 @@ PatchCellDataNormOpsComplex::~PatchCellDataNormOpsComplex()
 
 double
 PatchCellDataNormOpsComplex::L1Norm(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -46,9 +46,9 @@ PatchCellDataNormOpsComplex::L1Norm(
 
 double
 PatchCellDataNormOpsComplex::L2Norm(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -68,10 +68,10 @@ PatchCellDataNormOpsComplex::L2Norm(
 
 double
 PatchCellDataNormOpsComplex::weightedL2Norm(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -95,9 +95,9 @@ PatchCellDataNormOpsComplex::weightedL2Norm(
 
 double
 PatchCellDataNormOpsComplex::RMSNorm(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -115,10 +115,10 @@ PatchCellDataNormOpsComplex::RMSNorm(
 
 double
 PatchCellDataNormOpsComplex::weightedRMSNorm(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -136,9 +136,9 @@ PatchCellDataNormOpsComplex::weightedRMSNorm(
 
 double
 PatchCellDataNormOpsComplex::maxNorm(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -158,10 +158,10 @@ PatchCellDataNormOpsComplex::maxNorm(
 
 dcomplex
 PatchCellDataNormOpsComplex::dot(
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data1,
-   const boost::shared_ptr<pdat::CellData<dcomplex> >& data2,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data1,
+   const std::shared_ptr<pdat::CellData<dcomplex> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data1, *data2, box);

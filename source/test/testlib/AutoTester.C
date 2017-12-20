@@ -19,7 +19,7 @@
 AutoTester::AutoTester(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> input_db):
+   std::shared_ptr<tbox::Database> input_db):
    d_dim(dim),
    d_base_name("unnamed")
 #ifdef HAVE_HDF5
@@ -86,10 +86,10 @@ AutoTester::~AutoTester()
  */
 int AutoTester::evalTestData(
    int iter,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-   const boost::shared_ptr<algs::TimeRefinementIntegrator> tri,
-   const boost::shared_ptr<algs::HyperbolicLevelIntegrator> hli,
-   const boost::shared_ptr<mesh::GriddingAlgorithm> ga)
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<algs::TimeRefinementIntegrator> tri,
+   const std::shared_ptr<algs::HyperbolicLevelIntegrator> hli,
+   const std::shared_ptr<mesh::GriddingAlgorithm> ga)
 {
    NULL_USE(ga);
 
@@ -110,7 +110,7 @@ int AutoTester::evalTestData(
        * determine level.
        */
       int nlevels = hierarchy->getNumberOfLevels() - 1;
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          hierarchy->getPatchLevel(nlevels));
 
       /*
@@ -226,7 +226,7 @@ int AutoTester::evalTestData(
                d_test_patch_boxes_step_count,
                2);
          std::cout << std::endl;
-         boost::shared_ptr<tbox::Database> step_db(
+         std::shared_ptr<tbox::Database> step_db(
             d_hdf_db.getDatabase(step_name));
 
          /*
@@ -239,9 +239,9 @@ int AutoTester::evalTestData(
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
-            boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+            std::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            boost::shared_ptr<tbox::Database> level_db(
+            std::shared_ptr<tbox::Database> level_db(
                step_db->getDatabase(level_name));
             hier::BoxLevel correct_box_level(d_dim, *level_db, grid_geometry);
 
@@ -260,16 +260,16 @@ int AutoTester::evalTestData(
                d_test_patch_boxes_step_count,
                2);
          std::cout << std::endl;
-         boost::shared_ptr<tbox::Database> step_db(
+         std::shared_ptr<tbox::Database> step_db(
             d_hdf_db.putDatabase(step_name));
 
          for (int ln = 0; ln < num_levels; ++ln) {
-            boost::shared_ptr<hier::PatchLevel> level(
+            std::shared_ptr<hier::PatchLevel> level(
                hierarchy->getPatchLevel(ln));
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
-            boost::shared_ptr<tbox::Database> level_db(
+            std::shared_ptr<tbox::Database> level_db(
                step_db->putDatabase(level_name));
             level->getBoxLevel()->putToRestart(level_db);
          }
@@ -297,10 +297,10 @@ int AutoTester::evalTestData(
  */
 int AutoTester::evalTestData(
    int iter,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    double time,
-   const boost::shared_ptr<algs::MethodOfLinesIntegrator> mol,
-   const boost::shared_ptr<mesh::GriddingAlgorithm> ga)
+   const std::shared_ptr<algs::MethodOfLinesIntegrator> mol,
+   const std::shared_ptr<mesh::GriddingAlgorithm> ga)
 {
    NULL_USE(ga);
 
@@ -321,7 +321,7 @@ int AutoTester::evalTestData(
        * determine level.
        */
       int nlevels = hierarchy->getNumberOfLevels() - 1;
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          hierarchy->getPatchLevel(nlevels));
 
       /*
@@ -408,16 +408,16 @@ int AutoTester::evalTestData(
                d_test_patch_boxes_step_count,
                2);
          std::cout << std::endl;
-         boost::shared_ptr<tbox::Database> step_db(
+         std::shared_ptr<tbox::Database> step_db(
             d_hdf_db.getDatabase(step_name));
 
          for (int ln = 0; ln < num_levels; ++ln) {
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
-            boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+            std::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                hierarchy->getGridGeometry());
-            boost::shared_ptr<tbox::Database> level_db(
+            std::shared_ptr<tbox::Database> level_db(
                step_db->getDatabase(level_name));
             hier::BoxLevel correct_box_level(d_dim, *level_db, grid_geometry);
 
@@ -440,16 +440,16 @@ int AutoTester::evalTestData(
                d_test_patch_boxes_step_count,
                2);
          std::cout << std::endl;
-         boost::shared_ptr<tbox::Database> step_db(
+         std::shared_ptr<tbox::Database> step_db(
             d_hdf_db.putDatabase(step_name));
 
          for (int ln = 0; ln < num_levels; ++ln) {
-            boost::shared_ptr<hier::PatchLevel> level(
+            std::shared_ptr<hier::PatchLevel> level(
                hierarchy->getPatchLevel(ln));
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
-            boost::shared_ptr<tbox::Database> level_db(
+            std::shared_ptr<tbox::Database> level_db(
                step_db->putDatabase(level_name));
             level->getBoxLevel()->putToRestart(level_db);
          }
@@ -465,18 +465,18 @@ int AutoTester::evalTestData(
 }
 
 int AutoTester::testHierarchyNeighbors(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    int num_failures = 0;
    int num_levels = hierarchy->getNumberOfLevels();
    hier::HierarchyNeighbors hier_nbrs(*hierarchy, 0, num_levels-1);
    for (int ln = 0; ln < num_levels; ++ln) {
-      const boost::shared_ptr<hier::PatchLevel>& current_level =
+      const std::shared_ptr<hier::PatchLevel>& current_level =
          hierarchy->getPatchLevel(ln);
 
       if (ln < num_levels-1) {
 
-         boost::shared_ptr<hier::PatchLevel> finer_level(
+         std::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(ln+1));
 
          const hier::Connector& coarse_to_fine =
@@ -511,7 +511,7 @@ int AutoTester::testHierarchyNeighbors(
 
       if (ln > 0) {
 
-         boost::shared_ptr<hier::PatchLevel> coarser_level(
+         std::shared_ptr<hier::PatchLevel> coarser_level(
             hierarchy->getPatchLevel(ln-1));
 
          const hier::Connector& fine_to_coarse =
@@ -580,13 +580,13 @@ int AutoTester::testHierarchyNeighbors(
 }
 
 int AutoTester::testFlattenedHierarchy(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    int num_failures = 0;
    int num_levels = hierarchy->getNumberOfLevels();
    hier::FlattenedHierarchy flat_hier(*hierarchy, 0, num_levels-1);
 
-   const boost::shared_ptr<hier::PatchLevel>& level_zero =
+   const std::shared_ptr<hier::PatchLevel>& level_zero =
       hierarchy->getPatchLevel(0);
 
    double level_zero_size =
@@ -637,11 +637,11 @@ int AutoTester::testFlattenedHierarchy(
  */
 
 void AutoTester::getFromInput(
-   boost::shared_ptr<tbox::Database> input_db)
+   std::shared_ptr<tbox::Database> input_db)
 {
-   boost::shared_ptr<tbox::Database> tester_db(
+   std::shared_ptr<tbox::Database> tester_db(
       input_db->getDatabase(d_object_name));
-   boost::shared_ptr<tbox::Database> main_db(
+   std::shared_ptr<tbox::Database> main_db(
       input_db->getDatabase("Main"));
 
    /*
@@ -712,14 +712,14 @@ void AutoTester::getFromInput(
 }
 
 int AutoTester::checkHierarchyBoxes(
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::BoxLevel& correct_box_level,
    int iter)
 {
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const std::shared_ptr<hier::PatchLevel> patch_level(
       hierarchy->getPatchLevel(level_number));
    const hier::BoxLevel& box_level = *patch_level->getBoxLevel();
 

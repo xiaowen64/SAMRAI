@@ -12,7 +12,6 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -55,7 +54,7 @@ OuternodeGeometry::~OuternodeGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -77,7 +76,7 @@ OuternodeGeometry::calculateOverlap(
    const OuternodeGeometry* t_src_onode =
       dynamic_cast<const OuternodeGeometry *>(&src_geometry);
 
-   boost::shared_ptr<hier::BoxOverlap> over;
+   std::shared_ptr<hier::BoxOverlap> over;
    if ((t_src_onode != 0) && (t_dst_node != 0)) {
       over = doOverlap(*t_dst_node, *t_src_onode, src_mask, fill_box,
             overwrite_interior,
@@ -109,7 +108,7 @@ OuternodeGeometry::calculateOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const NodeGeometry& dst_geometry,
    const OuternodeGeometry& src_geometry,
@@ -205,7 +204,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the outernode overlap data object using the boxes and source shift
 
-   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
+   return std::make_shared<NodeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -219,7 +218,7 @@ OuternodeGeometry::doOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const OuternodeGeometry& dst_geometry,
    const NodeGeometry& src_geometry,
@@ -314,7 +313,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   return boost::make_shared<NodeOverlap>(src_boxes, transformation);
+   return std::make_shared<NodeOverlap>(src_boxes, transformation);
 }
 
 /*
@@ -328,7 +327,7 @@ OuternodeGeometry::doOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const OuternodeGeometry& dst_geometry,
    const OuternodeGeometry& src_geometry,
@@ -452,7 +451,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
+   return std::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 
@@ -463,7 +462,7 @@ OuternodeGeometry::doOverlap(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -477,7 +476,7 @@ OuternodeGeometry::setUpOverlap(
    }
 
    // Create the node overlap data object using the boxes and source shift
-   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
+   return std::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 

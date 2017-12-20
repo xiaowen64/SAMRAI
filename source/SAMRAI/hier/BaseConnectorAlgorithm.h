@@ -43,7 +43,7 @@ protected:
       const tbox::SAMRAI_MPI& mpi,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
-      const boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
+      const std::shared_ptr<tbox::Timer>& mpi_wait_timer,
       int& operation_mpi_tag,
       bool print_steps) const;
 
@@ -70,7 +70,7 @@ protected:
       const std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int>* all_comms,
       tbox::AsyncCommStage& comm_stage,
-      const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
+      const std::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
       bool print_steps) const;
 
 private:

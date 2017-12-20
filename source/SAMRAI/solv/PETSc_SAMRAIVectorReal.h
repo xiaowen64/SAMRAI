@@ -38,7 +38,7 @@
 #include "SAMRAI/solv/PETScAbstractVectorReal.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -87,7 +87,7 @@ public:
     */
    static Vec
    createPETScVector(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
       MPI_Comm comm = PETSC_COMM_SELF);
 
    /**
@@ -107,7 +107,7 @@ public:
     *
     * @pre petsc_vec && petsc_vec->data
     */
-   static boost::shared_ptr<SAMRAIVectorReal<TYPE> >
+   static std::shared_ptr<SAMRAIVectorReal<TYPE> >
    getSAMRAIVector(
       Vec petsc_vec);
 
@@ -125,7 +125,7 @@ protected:
     * (i.e., clone) operation, but not otherwise.
     */
    PETSc_SAMRAIVectorReal(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vector,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vector,
       bool vector_created_via_duplicate,
       MPI_Comm comm);
 
@@ -141,7 +141,7 @@ private:
    /*
     * Return SAMRAI vector owned by this SAMRAI_PETScVector object.
     */
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> >
+   std::shared_ptr<SAMRAIVectorReal<TYPE> >
    getSAMRAIVector();
 
    /*
@@ -373,7 +373,7 @@ private:
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> > d_samrai_vector;
+   std::shared_ptr<SAMRAIVectorReal<TYPE> > d_samrai_vector;
 
    /*
     * Boolean flag to control whether SAMRAI vector is destroyed when

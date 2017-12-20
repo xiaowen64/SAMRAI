@@ -17,7 +17,8 @@
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "boost/shared_ptr.hpp"
+
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

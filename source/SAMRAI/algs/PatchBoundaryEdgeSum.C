@@ -18,7 +18,6 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {
@@ -51,7 +50,7 @@ PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
    const std::string& object_name):
    d_setup_called(false),
    d_num_reg_sum(0),
-   d_sum_transaction_factory(boost::make_shared<OuteredgeSumTransactionFactory>())
+   d_sum_transaction_factory(std::make_shared<OuteredgeSumTransactionFactory>())
 {
    TBOX_ASSERT(!object_name.empty());
 
@@ -135,8 +134,8 @@ PatchBoundaryEdgeSum::registerSum(
 
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-   boost::shared_ptr<pdat::EdgeDataFactory<double> > edge_factory(
-      BOOST_CAST<pdat::EdgeDataFactory<double>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::EdgeDataFactory<double> > edge_factory(
+      SAMRAI_SHARED_PTR_CAST<pdat::EdgeDataFactory<double>, hier::PatchDataFactory>(
          var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id)));
 
    TBOX_ASSERT(edge_factory);
@@ -262,7 +261,7 @@ PatchBoundaryEdgeSum::registerSum(
 
 void
 PatchBoundaryEdgeSum::setupSum(
-   const boost::shared_ptr<hier::PatchLevel>& level)
+   const std::shared_ptr<hier::PatchLevel>& level)
 {
    TBOX_ASSERT(level);
 
@@ -277,7 +276,7 @@ PatchBoundaryEdgeSum::setupSum(
       single_level_sum_algorithm.registerRefine(d_oedge_dst_id[i],  // dst data
          d_oedge_src_id[i],                                         // src data
          d_oedge_dst_id[i],                                         // scratch data
-         boost::shared_ptr<hier::RefineOperator>());
+         std::shared_ptr<hier::RefineOperator>());
    }
 
    d_single_level_sum_schedule =
@@ -324,21 +323,21 @@ PatchBoundaryEdgeSum::computeSum() const
 
 void
 PatchBoundaryEdgeSum::doLevelSum(
-   const boost::shared_ptr<hier::PatchLevel>& level) const
+   const std::shared_ptr<hier::PatchLevel>& level) const
 {
    TBOX_ASSERT(level);
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       int array_size = static_cast<int>(d_user_edge_data_id.size());
       for (int i = 0; i < array_size; ++i) {
-         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(d_user_edge_data_id[i])));
-         boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-            BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                patch->getPatchData(d_oedge_src_id[i])));
 
          TBOX_ASSERT(edge_data);
@@ -353,15 +352,15 @@ PatchBoundaryEdgeSum::doLevelSum(
 
    for (hier::PatchLevel::iterator ip2(level->begin());
         ip2 != level->end(); ++ip2) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip2;
+      const std::shared_ptr<hier::Patch>& patch = *ip2;
 
       int array_size = static_cast<int>(d_user_edge_data_id.size());
       for (int i = 0; i < array_size; ++i) {
-         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(d_user_edge_data_id[i])));
-         boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-            BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                patch->getPatchData(d_oedge_dst_id[i])));
 
          TBOX_ASSERT(edge_data);

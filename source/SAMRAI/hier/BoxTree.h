@@ -16,9 +16,9 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Timer.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -306,16 +306,16 @@ private:
    BlockId d_block_id;
 
    /*!
-    * boost::shared_ptrs to familial boxes.
+    * std::shared_ptrs to familial boxes.
     */
-   boost::shared_ptr<BoxTree> d_left_child;
-   boost::shared_ptr<BoxTree> d_right_child;
+   std::shared_ptr<BoxTree> d_left_child;
+   std::shared_ptr<BoxTree> d_right_child;
 
    /*!
     * @brief A tree for Boxes that are not given to the left or
     * right children.
     */
-   boost::shared_ptr<BoxTree> d_center_child;
+   std::shared_ptr<BoxTree> d_center_child;
 
    /*!
     * @brief Boxes that are contained within the physical domain
@@ -333,8 +333,8 @@ private:
    /*
     * Timers are static to keep the objects light-weight.
     */
-   static boost::shared_ptr<tbox::Timer> t_build_tree[SAMRAI::MAX_DIM_VAL];
-   static boost::shared_ptr<tbox::Timer> t_search[SAMRAI::MAX_DIM_VAL];
+   static std::shared_ptr<tbox::Timer> t_build_tree[SAMRAI::MAX_DIM_VAL];
+   static std::shared_ptr<tbox::Timer> t_search[SAMRAI::MAX_DIM_VAL];
 
    static unsigned int s_num_build[SAMRAI::MAX_DIM_VAL];
    static unsigned int s_num_generate[SAMRAI::MAX_DIM_VAL];

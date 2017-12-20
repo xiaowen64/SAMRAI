@@ -18,8 +18,8 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;
@@ -39,17 +39,17 @@ public:
    }
 
    void putToRestart(
-      const boost::shared_ptr<tbox::Database>& db) const
+      const std::shared_ptr<tbox::Database>& db) const
    {
       writeTestData(db);
    }
 
    void getFromRestart()
    {
-      boost::shared_ptr<tbox::Database> root_db(
+      std::shared_ptr<tbox::Database> root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
 
-      boost::shared_ptr<tbox::Database> db;
+      std::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
       }
@@ -88,7 +88,7 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::HDFDatabase> database(
+      std::shared_ptr<tbox::HDFDatabase> database(
          new tbox::HDFDatabase("SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".hdf5";
@@ -115,7 +115,7 @@ int main(
 
       database->close();
 
-      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
+      restart_manager->setRootDatabase(std::shared_ptr<tbox::Database>());
 
       H5Fclose(file_id);
 
@@ -134,7 +134,7 @@ int main(
 
       database->close();
 
-      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
+      restart_manager->setRootDatabase(std::shared_ptr<tbox::Database>());
 
       H5Fclose(file_id);
 

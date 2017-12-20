@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Complex.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 /*
  *************************************************************************

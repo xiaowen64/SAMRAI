@@ -115,11 +115,11 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<pdat::OutersideData<double> > fdata(
-      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OutersideData<double> > fdata(
+      SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::OutersideData<double> > cdata(
-      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OutersideData<double> > cdata(
+      SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);

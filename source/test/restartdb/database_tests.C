@@ -30,7 +30,7 @@ void setupTestData(
  * Write database and test contents.
  */
 void writeTestData(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    if (!db) {
       tbox::perr << "FAILED: - Test #0-write: database to write to is null"
@@ -42,17 +42,17 @@ void writeTestData(
     * Build database hierarchy and test.
     */
 
-   boost::shared_ptr<tbox::Database> arraydb(db->putDatabase("Array Entries"));
+   std::shared_ptr<tbox::Database> arraydb(db->putDatabase("Array Entries"));
 
-   boost::shared_ptr<tbox::Database> scalardb(
+   std::shared_ptr<tbox::Database> scalardb(
       db->putDatabase("Scalar Entries"));
-   boost::shared_ptr<tbox::Database> scalardb_empty(
+   std::shared_ptr<tbox::Database> scalardb_empty(
       scalardb->putDatabase("Empty"));
-   boost::shared_ptr<tbox::Database> scalardb_full(
+   std::shared_ptr<tbox::Database> scalardb_full(
       scalardb->putDatabase("Full"));
-   boost::shared_ptr<tbox::Database> defaultdb(db->putDatabase("Default"));
-   boost::shared_ptr<tbox::Database> namesdb(db->putDatabase("Name Entries"));
-   boost::shared_ptr<tbox::Database> vectordb(db->putDatabase("stl_vector"));
+   std::shared_ptr<tbox::Database> defaultdb(db->putDatabase("Default"));
+   std::shared_ptr<tbox::Database> namesdb(db->putDatabase("Name Entries"));
+   std::shared_ptr<tbox::Database> vectordb(db->putDatabase("stl_vector"));
 
    NULL_USE(defaultdb);
 
@@ -172,7 +172,7 @@ void writeTestData(
  * Read database and test contents.
  */
 void readTestData(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    testDatabaseContents(db, "read");
 }
@@ -181,7 +181,7 @@ void readTestData(
  * Test contents of database.
  */
 void testDatabaseContents(
-   boost::shared_ptr<tbox::Database> db,
+   std::shared_ptr<tbox::Database> db,
    const string& tag)
 {
 
@@ -191,19 +191,19 @@ void testDatabaseContents(
       ++number_of_failures;
    }
 
-   boost::shared_ptr<tbox::Database> arraydb(db->getDatabase("Array Entries"));
+   std::shared_ptr<tbox::Database> arraydb(db->getDatabase("Array Entries"));
 
-   boost::shared_ptr<tbox::Database> scalardb(
+   std::shared_ptr<tbox::Database> scalardb(
       db->getDatabase("Scalar Entries"));
-   boost::shared_ptr<tbox::Database> scalardb_empty(
+   std::shared_ptr<tbox::Database> scalardb_empty(
       scalardb->getDatabase("Empty"));
-   boost::shared_ptr<tbox::Database> scalardb_full(
+   std::shared_ptr<tbox::Database> scalardb_full(
       scalardb->getDatabase("Full"));
-   boost::shared_ptr<tbox::Database> defaultdb(db->getDatabase("Default"));
+   std::shared_ptr<tbox::Database> defaultdb(db->getDatabase("Default"));
 
-   boost::shared_ptr<tbox::Database> namesdb(db->getDatabase("Name Entries"));
+   std::shared_ptr<tbox::Database> namesdb(db->getDatabase("Name Entries"));
 
-   boost::shared_ptr<tbox::Database> vectordb(db->getDatabase("stl_vector"));
+   std::shared_ptr<tbox::Database> vectordb(db->getDatabase("stl_vector"));
 
    if (!arraydb) {
       tbox::perr << "FAILED: - Test #1a-" << tag

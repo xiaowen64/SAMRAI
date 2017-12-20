@@ -123,11 +123,11 @@ OuternodeDoubleInjection::coarsen(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<OuternodeData<double> > fdata(
-      BOOST_CAST<OuternodeData<double>, hier::PatchData>(
+   std::shared_ptr<OuternodeData<double> > fdata(
+      SAMRAI_SHARED_PTR_CAST<OuternodeData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<OuternodeData<double> > cdata(
-      BOOST_CAST<OuternodeData<double>, hier::PatchData>(
+   std::shared_ptr<OuternodeData<double> > cdata(
+      SAMRAI_SHARED_PTR_CAST<OuternodeData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

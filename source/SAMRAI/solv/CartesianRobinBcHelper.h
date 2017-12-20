@@ -22,7 +22,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -463,8 +463,8 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   boost::shared_ptr<tbox::Timer> t_set_boundary_values_in_cells;
-   boost::shared_ptr<tbox::Timer> t_use_set_bc_coefs;
+   std::shared_ptr<tbox::Timer> t_set_boundary_values_in_cells;
+   std::shared_ptr<tbox::Timer> t_use_set_bc_coefs;
 };
 
 }

@@ -64,7 +64,7 @@ int main(
 
       fstream file("user.log", fstream::out);
 
-      boost::shared_ptr<tbox::Logger::Appender> appender(
+      std::shared_ptr<tbox::Logger::Appender> appender(
          new StreamAppender(&file));
 
       tbox::Logger::getInstance()->setWarningAppender(appender);

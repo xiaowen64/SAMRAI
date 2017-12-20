@@ -13,7 +13,6 @@
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -49,11 +48,11 @@ StandardRefineTransactionFactory::setTransactionTime(
  *************************************************************************
  */
 
-boost::shared_ptr<tbox::Transaction>
+std::shared_ptr<tbox::Transaction>
 StandardRefineTransactionFactory::allocate(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
    const RefineClasses::Data** refine_data,
@@ -69,7 +68,7 @@ StandardRefineTransactionFactory::allocate(
 
    if (use_time_interpolation) {
 
-      return boost::make_shared<RefineTimeTransaction>(
+      return std::make_shared<RefineTimeTransaction>(
                 dst_level,
                 src_level,
                 overlap,
@@ -81,7 +80,7 @@ StandardRefineTransactionFactory::allocate(
 
    } else {
 
-      return boost::make_shared<RefineCopyTransaction>(
+      return std::make_shared<RefineCopyTransaction>(
                 dst_level,
                 src_level,
                 overlap,
@@ -95,7 +94,7 @@ StandardRefineTransactionFactory::allocate(
 
 void
 StandardRefineTransactionFactory::preprocessScratchSpace(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {

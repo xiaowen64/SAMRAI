@@ -15,8 +15,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -120,14 +119,14 @@ public:
    /**
     * Returns a pointer to the null database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
    /**
     * Returns a pointer to the null database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 

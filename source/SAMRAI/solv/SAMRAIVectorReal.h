@@ -20,9 +20,9 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -127,7 +127,7 @@ public:
     */
    SAMRAIVectorReal(
       const std::string& name,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -188,7 +188,7 @@ public:
    /**
     * Return pointer to patch hierarchy associated with the vector.
     */
-   boost::shared_ptr<hier::PatchHierarchy>
+   std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -214,7 +214,7 @@ public:
     *
     * @pre (comp_id >= 0) && (comp_id < getNumberOfComponents())
     */
-   boost::shared_ptr<hier::PatchData>
+   std::shared_ptr<hier::PatchData>
    getComponentPatchData(
       const int comp_id,
       const hier::Patch& patch) const;
@@ -225,9 +225,9 @@ public:
     * @pre var
     * @pre d_variableid_2_vectorcomponent_map[var->getInstanceIdentifier()] >= 0
     */
-   boost::shared_ptr<hier::PatchData>
+   std::shared_ptr<hier::PatchData>
    getComponentPatchData(
-      const boost::shared_ptr<hier::Variable>& var,
+      const std::shared_ptr<hier::Variable>& var,
       const hier::Patch& patch) const;
 
    /**
@@ -235,7 +235,7 @@ public:
     *
     * @pre (component >= 0) && (component < getNumberOfComponents())
     */
-   boost::shared_ptr<hier::Variable>
+   std::shared_ptr<hier::Variable>
    getComponentVariable(
       const int component) const;
 
@@ -276,7 +276,7 @@ public:
     * If an empty std::string is passed in, the name of this vector object
     * is used for the new vector.
     */
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> >
+   std::shared_ptr<SAMRAIVectorReal<TYPE> >
    cloneVector(
       const std::string& name) const;
 
@@ -310,11 +310,11 @@ public:
     */
    void
    addComponent(
-      const boost::shared_ptr<hier::Variable>& var,
+      const std::shared_ptr<hier::Variable>& var,
       const int comp_data_id,
       const int control_vol_id = -1,
-      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
-         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
+      const std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
+         std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
 
    /**
     * Allocate data storage for all components of this vector object.
@@ -354,7 +354,7 @@ public:
     */
    void
    copyVector(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& src_vec,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& src_vec,
       const bool interior_only = true);
 
    /**
@@ -363,7 +363,7 @@ public:
     */
    void
    swapVectors(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& other);
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& other);
 
    //@{
    /*!
@@ -384,7 +384,7 @@ public:
    void
    scale(
       const TYPE& alpha,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const bool interior_only = true);
 
    /**
@@ -392,7 +392,7 @@ public:
     */
    void
    addScalar(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const TYPE& alpha,
       const bool interior_only = true);
 
@@ -401,8 +401,8 @@ public:
     */
    void
    add(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -410,8 +410,8 @@ public:
     */
    void
    subtract(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -420,8 +420,8 @@ public:
     */
    void
    multiply(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -430,8 +430,8 @@ public:
     */
    void
    divide(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -440,7 +440,7 @@ public:
     */
    void
    reciprocal(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const bool interior_only = true);
 
    /**
@@ -450,9 +450,9 @@ public:
    void
    linearSum(
       const TYPE& alpha,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const TYPE& beta,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -462,8 +462,8 @@ public:
    void
    axpy(
       const TYPE& alpha,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& y,
       const bool interior_only = true);
 
    /**
@@ -472,7 +472,7 @@ public:
     */
    void
    abs(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const bool interior_only = true);
 
    /**
@@ -544,7 +544,7 @@ public:
     */
    double
    weightedL2Norm(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const;
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const;
 
    /**
     * Return discrete root mean squared norm of this vector.  If control
@@ -571,7 +571,7 @@ public:
     */
    double
    weightedRMSNorm(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const;
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& wgt) const;
 
    /**
     * Return the @f$ \max @f$ -norm of this vector.  If control volumes are defined
@@ -597,7 +597,7 @@ public:
     */
    TYPE
    dot(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       bool local_only = false) const;
 
    /**
@@ -611,7 +611,7 @@ public:
     */
    int
    computeConstrProdPos(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x) const;
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x) const;
 
    /**
     * Wherever @f$ cvol_i > 0 @f$  in the set of vector data indices, set @f$ w_i = 1 @f$
@@ -623,7 +623,7 @@ public:
     */
    void
    compareToScalar(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x,
       const TYPE& alpha);
 
    /**
@@ -636,7 +636,7 @@ public:
     */
    int
    testReciprocal(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& x);
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& x);
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -653,7 +653,7 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const;
+      const std::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const;
 
    //@}
 
@@ -691,43 +691,43 @@ private:
     * @post d_component_operations[comp_id]
     */
 #ifdef _MSC_VER
-   boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > _bug_in_msvc;
+   std::shared_ptr<math::HierarchyDataOpsReal<TYPE> > _bug_in_msvc;
 #endif
    void
    setComponent(
       const int comp_id,
-      const boost::shared_ptr<hier::Variable>& var,
+      const std::shared_ptr<hier::Variable>& var,
       const int data_id,
       const int control_vol_id = -1,
-      const boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
-         boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
+      const std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >& vop =
+         std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >());
 
    static int s_instance_counter[SAMRAI::MAX_DIM_VAL];
 
    // shared data operations for variaous array-based types...
-   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+   static std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
    s_cell_ops[SAMRAI::MAX_DIM_VAL];
-   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+   static std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
    s_edge_ops[SAMRAI::MAX_DIM_VAL];
-   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+   static std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
    s_face_ops[SAMRAI::MAX_DIM_VAL];
-   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+   static std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
    s_node_ops[SAMRAI::MAX_DIM_VAL];
-   static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
+   static std::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
    s_side_ops[SAMRAI::MAX_DIM_VAL];
 
    std::string d_vector_name;
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
    int d_number_components;
 
    // arrays for component information whose size is the number of components
-   std::vector<boost::shared_ptr<hier::Variable> > d_component_variable;
+   std::vector<std::shared_ptr<hier::Variable> > d_component_variable;
    std::vector<int> d_component_data_id;
-   std::vector<boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> > >
+   std::vector<std::shared_ptr<math::HierarchyDataOpsReal<TYPE> > >
    d_component_operations;
    std::vector<int> d_control_volume_data_id;
 

@@ -21,8 +21,8 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 using namespace std;
 
@@ -105,14 +105,14 @@ public:
     * Grid geometry access operations.
     */
    void setGridGeometry(
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom)
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geom)
    {
       TBOX_ASSERT(grid_geom);
       d_grid_geometry = grid_geom;
    }
 
    ///
-   boost::shared_ptr<geom::CartesianGridGeometry> getGridGeometry() const
+   std::shared_ptr<geom::CartesianGridGeometry> getGridGeometry() const
    {
       return d_grid_geometry;
    }
@@ -121,14 +121,14 @@ public:
     * Utility functions for managing patch data context.
     */
    void setDataContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      std::shared_ptr<hier::VariableContext> context)
    {
       TBOX_ASSERT(context);
       d_data_context = context;
    }
 
    ///
-   boost::shared_ptr<hier::VariableContext> getDataContext() const
+   std::shared_ptr<hier::VariableContext> getDataContext() const
    {
       return d_data_context;
    }
@@ -143,7 +143,7 @@ public:
     */
    void
    readVariableInput(
-      boost::shared_ptr<tbox::Database> db);
+      std::shared_ptr<tbox::Database> db);
 
    /**
     * Virtual functions in interface to user-supplied boundary conditions,
@@ -207,7 +207,7 @@ public:
    virtual void
    initializeDataOnPatch(
       const hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       char src_or_dst) = 0;
    /**
@@ -218,7 +218,7 @@ public:
    virtual bool
    verifyResults(
       const hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number) = 0;
 
    virtual void
@@ -230,10 +230,10 @@ public:
    virtual bool
    verifyCompositeBoundaryData(
       const hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int data_id,
       int level_number,
-      const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data)
+      const std::vector<std::shared_ptr<hier::PatchData> >& bdry_data)
    {
       NULL_USE(patch);
       NULL_USE(hierarchy);
@@ -257,9 +257,9 @@ protected:
    std::vector<std::string> d_variable_refine_op;
 
 private:
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
-   boost::shared_ptr<hier::VariableContext> d_data_context;
+   std::shared_ptr<hier::VariableContext> d_data_context;
 
 };
 

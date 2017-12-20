@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {

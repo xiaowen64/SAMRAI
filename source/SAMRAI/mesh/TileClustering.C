@@ -36,7 +36,7 @@ int TileClustering::s_first_data_length = 1000;
  */
 TileClustering::TileClustering(
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_tile_size(hier::IntVector(d_dim, 8)),
    d_allow_remote_tile_extent(true),
@@ -69,7 +69,7 @@ TileClustering::~TileClustering()
 
 void
 TileClustering::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
 
@@ -123,9 +123,9 @@ TileClustering::getFromInput(
  */
 void
 TileClustering::findBoxesContainingTags(
-   boost::shared_ptr<hier::BoxLevel>& new_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_new,
-   const boost::shared_ptr<hier::PatchLevel>& tag_level,
+   std::shared_ptr<hier::BoxLevel>& new_box_level,
+   std::shared_ptr<hier::Connector>& tag_to_new,
+   const std::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_data_index,
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
@@ -395,7 +395,7 @@ void
 TileClustering::clusterWithinProcessBoundaries(
    hier::BoxLevel& new_box_level,
    hier::Connector& tag_to_tile,
-   const boost::shared_ptr<hier::PatchLevel>& tag_level,
+   const std::shared_ptr<hier::PatchLevel>& tag_level,
    const hier::BoxContainer& bound_boxes,
    int tag_data_index,
    int tag_val)
@@ -433,8 +433,8 @@ TileClustering::clusterWithinProcessBoundaries(
 
       if (patch.getBox().intersects(bounding_box)) {
 
-         boost::shared_ptr<pdat::CellData<int> > tag_data(
-            BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
+         std::shared_ptr<pdat::CellData<int> > tag_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
          hier::BoxContainer tiles;
          int num_coarse_tags =
@@ -496,9 +496,9 @@ TileClustering::clusterWithinProcessBoundaries(
 void
 TileClustering::clusterWholeTiles(
    hier::BoxLevel& tile_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_tile,
+   std::shared_ptr<hier::Connector>& tag_to_tile,
    int& local_tiles_have_remote_extent,
-   const boost::shared_ptr<hier::PatchLevel>& tag_level,
+   const std::shared_ptr<hier::PatchLevel>& tag_level,
    const hier::BoxContainer& bound_boxes,
    int tag_data_index,
    int tag_val)
@@ -558,14 +558,14 @@ TileClustering::clusterWholeTiles(
          continue;
       }
 
-      boost::shared_ptr<pdat::CellData<int> > tag_data(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
+      std::shared_ptr<pdat::CellData<int> > tag_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
       if (d_print_steps) {
          tbox::plog << "TileClustering::clusterWholeTiles: making coarsened tags." << std::endl;
       }
 
-      boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
+      std::shared_ptr<pdat::CellData<int> > coarsened_tag_data =
          makeCoarsenedTagData(*tag_data, tag_val);
 
       const hier::Box& coarsened_tag_box = coarsened_tag_data->getBox();
@@ -841,7 +841,7 @@ TileClustering::removeDuplicateTiles(
  */
 void
 TileClustering::detectSemilocalEdges(
-   boost::shared_ptr<hier::Connector>& tag_to_tile)
+   std::shared_ptr<hier::Connector>& tag_to_tile)
 {
 
    if (d_print_steps) {
@@ -902,7 +902,7 @@ TileClustering::shearTilesAtBlockBoundaries(
    const hier::BoxLevel& tag_box_level = tag_to_tile.getBase();
    hier::Connector& tile_to_tag = tag_to_tile.getTranspose();
 
-   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geom =
+   const std::shared_ptr<const hier::BaseGridGeometry>& grid_geom =
       tag_box_level.getGridGeometry();
 
    hier::LocalId last_used_id = tile_box_level.getLastLocalId();
@@ -1074,14 +1074,14 @@ TileClustering::findTilesContainingTags(
  ***********************************************************************
  ***********************************************************************
  */
-boost::shared_ptr<pdat::CellData<int> >
+std::shared_ptr<pdat::CellData<int> >
 TileClustering::makeCoarsenedTagData(const pdat::CellData<int>& tag_data,
                                      int tag_val) const
 {
    hier::Box coarsened_box(tag_data.getBox());
    coarsened_box.coarsen(d_tile_size);
 
-   boost::shared_ptr<pdat::CellData<int> > coarsened_tag_data(
+   std::shared_ptr<pdat::CellData<int> > coarsened_tag_data(
       new pdat::CellData<int>(coarsened_box,
                               1,
                               hier::IntVector::getZero(tag_data.getDim())));
@@ -1129,7 +1129,7 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int>& tag_data,
 void
 TileClustering::coalesceClusters(
    hier::BoxLevel& tile_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_tile,
+   std::shared_ptr<hier::Connector>& tag_to_tile,
    int tiles_have_remote_extent)
 {
    /*
@@ -1374,7 +1374,7 @@ TileClustering::coalesceBoxes(
 void
 TileClustering::coalesceClusters(
    hier::BoxLevel& tile_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_tile)
+   std::shared_ptr<hier::Connector>& tag_to_tile)
 {
    if (d_print_steps) {
       tbox::plog << "TileClustering::coalesceClusters: entered." << std::endl;

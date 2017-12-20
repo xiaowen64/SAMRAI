@@ -174,9 +174,9 @@ public:
    MblkHyperbolicLevelIntegrator(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      const boost::shared_ptr<tbox::Database> input_db,
+      const std::shared_ptr<tbox::Database> input_db,
       MblkHyperbolicPatchStrategy* patch_strategy,
-      const boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy,
       const bool use_time_refinement = true);
 
    /**
@@ -196,7 +196,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg);
+      const std::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg);
 
    /**
     * Determine time increment to advance data on level and return that
@@ -214,7 +214,7 @@ public:
     */
    virtual double
    getLevelDt(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const double dt_time,
       const bool initial_time);
 
@@ -332,8 +332,8 @@ public:
 
    virtual double
    advanceLevel(
-      const boost::shared_ptr<hier::PatchLevel>& level,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double current_time,
       const double new_time,
       const bool first_step,
@@ -356,7 +356,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -370,7 +370,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -399,7 +399,7 @@ public:
     */
    virtual void
    synchronizeNewLevels(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -413,7 +413,7 @@ public:
     */
    virtual void
    resetTimeDependentData(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const double new_time,
       const bool can_be_refined);
 
@@ -426,7 +426,7 @@ public:
     */
    virtual void
    resetDataToPreadvanceState(
-      const boost::shared_ptr<hier::PatchLevel>& level);
+      const std::shared_ptr<hier::PatchLevel>& level);
 
    /**
     * Initialize data on a new level after it is inserted into an AMR patch
@@ -464,12 +464,12 @@ public:
     */
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level,
+      const std::shared_ptr<hier::PatchLevel>& old_level,
       const bool allocate_data = true);
 
    /**
@@ -490,7 +490,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -517,7 +517,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -556,7 +556,7 @@ public:
     */
    virtual void
    applyRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const double error_data_time,
       const int tag_index,
       const double deltat,
@@ -579,9 +579,9 @@ public:
     */
    virtual void
    coarsenDataForRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const boost::shared_ptr<hier::PatchLevel>& coarse_level,
+      const std::shared_ptr<hier::PatchLevel>& coarse_level,
       const double coarsen_data_time,
       const bool before_advance);
 
@@ -598,15 +598,15 @@ public:
     */
    virtual void
    registerVariable(
-      const boost::shared_ptr<hier::Variable> var,
+      const std::shared_ptr<hier::Variable> var,
       const hier::IntVector ghosts,
       const HYP_VAR_TYPE h_v_type,
-      const boost::shared_ptr<hier::CoarsenOperator> coarsen_op =
-         boost::shared_ptr<hier::CoarsenOperator>(),
-      const boost::shared_ptr<hier::RefineOperator> refine_op =
-         boost::shared_ptr<hier::RefineOperator>(),
-      const boost::shared_ptr<hier::TimeInterpolateOperator> time_int =
-         boost::shared_ptr<hier::TimeInterpolateOperator>());
+      const std::shared_ptr<hier::CoarsenOperator> coarsen_op =
+         std::shared_ptr<hier::CoarsenOperator>(),
+      const std::shared_ptr<hier::RefineOperator> refine_op =
+         std::shared_ptr<hier::RefineOperator>(),
+      const std::shared_ptr<hier::TimeInterpolateOperator> time_int =
+         std::shared_ptr<hier::TimeInterpolateOperator>());
 
    /**
     * Print class data representation for hyperbolic level integrator object.
@@ -624,14 +624,14 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Return pointer to "current" variable context used by integrator.
     * Current data corresponds to state data at the beginning of a
     * timestep, or when a new level is initialized.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getCurrentContext() const;
 
    /**
@@ -639,7 +639,7 @@ public:
     * New data corresponds to advanced state data at the end of a timestep.
     * The data is one timestep later than the "current" data.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getNewContext() const;
 
    /**
@@ -652,7 +652,7 @@ public:
     * estimation, such as Richardson extrapolation, is the returned
     * pointer will non-null.  See contructor for more information.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getOldContext() const;
 
    /**
@@ -661,7 +661,7 @@ public:
     * in the concrete HyperbolicPatchStrategy object manipulate;
     * in particular, scratch data contains ghost cells.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getScratchContext() const;
 
    /**
@@ -669,7 +669,7 @@ public:
     * context corresponds to the data storage that should be written
     * to plot files.  Typically, this is the same as the "current" context.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getPlotContext() const;
 
    /**
@@ -690,7 +690,7 @@ protected:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /**
@@ -731,7 +731,7 @@ protected:
     */
    virtual void
    preprocessFluxData(
-      const boost::shared_ptr<hier::PatchLevel> level,
+      const std::shared_ptr<hier::PatchLevel> level,
       const double cur_time,
       const double new_time,
       const bool regrid_advance,
@@ -749,7 +749,7 @@ protected:
     */
    virtual void
    postprocessFluxData(
-      const boost::shared_ptr<hier::PatchLevel> level,
+      const std::shared_ptr<hier::PatchLevel> level,
       const bool regrid_advance,
       const bool first_step,
       const bool last_step);
@@ -762,9 +762,9 @@ protected:
     */
    virtual void
    copyTimeDependentData(
-      const boost::shared_ptr<hier::PatchLevel> level,
-      const boost::shared_ptr<hier::VariableContext> src_context,
-      const boost::shared_ptr<hier::VariableContext> dst_context);
+      const std::shared_ptr<hier::PatchLevel> level,
+      const std::shared_ptr<hier::VariableContext> src_context,
+      const std::shared_ptr<hier::VariableContext> dst_context);
 
    /**
     * Apply the standard AMR hyperbolic flux synchronization process preserve
@@ -784,8 +784,8 @@ protected:
     */
    virtual void
    synchronizeLevelWithCoarser(
-      const boost::shared_ptr<hier::PatchLevel> fine,
-      const boost::shared_ptr<hier::PatchLevel> coarse,
+      const std::shared_ptr<hier::PatchLevel> fine,
+      const std::shared_ptr<hier::PatchLevel> coarse,
       const double sync_time,
       const double coarse_sim_time);
 
@@ -856,8 +856,8 @@ private:
     * and INPUT data at specified time. TIME_DEP data in patch interiors
     * will be filled with CURRENT_VAR values.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance;
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_mblk_bdry_sched_advance;
 
    /*
@@ -875,8 +875,8 @@ private:
     * with values corresponding to NEW descriptor indices.  See notes
     * accompanying MblkHyperbolicLevelIntegrator::advanceLevel.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_new;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_new;
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_mblk_bdry_sched_advance_new;
 
    /*
@@ -887,26 +887,26 @@ private:
     * data is required only when three time levels are used
     * (i.e. d_number_time_data_levels=3).
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_old;
+   std::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_old;
 
    /*
     * Coarsen algorithms for conservative data synchronization
     * (e.g., flux correction or refluxing).
     */
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_mblk_coarsen_fluxsum;
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_mblk_coarsen_sync_data;
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_mblk_sync_initial_data;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_mblk_coarsen_fluxsum;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_mblk_coarsen_sync_data;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_mblk_sync_initial_data;
 
    /*
     * Coarsen algorithms for Richardson extrapolation.
     */
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_init;
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_final;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_init;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_rich_extrap_final;
 
    /*
     * Algorithm for filling a new patch level in the hierarchy.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_fill_new_level;
+   std::shared_ptr<xfer::RefineAlgorithm> d_mblk_fill_new_level;
 
    /*
     * Number of levels of time-dependent data that must be maintained
@@ -924,16 +924,16 @@ private:
     * and component selectors are set in the registerVariable() function.
     */
 
-   boost::shared_ptr<hier::VariableContext> d_scratch;
-   boost::shared_ptr<hier::VariableContext> d_current;
-   boost::shared_ptr<hier::VariableContext> d_new;
-   boost::shared_ptr<hier::VariableContext> d_old;
-   boost::shared_ptr<hier::VariableContext> d_plot_context;
+   std::shared_ptr<hier::VariableContext> d_scratch;
+   std::shared_ptr<hier::VariableContext> d_current;
+   std::shared_ptr<hier::VariableContext> d_new;
+   std::shared_ptr<hier::VariableContext> d_old;
+   std::shared_ptr<hier::VariableContext> d_plot_context;
 
-   std::list<boost::shared_ptr<hier::Variable> > d_all_variables;
-   std::list<boost::shared_ptr<hier::Variable> > d_time_dep_variables;
-   std::list<boost::shared_ptr<hier::Variable> > d_flux_variables;
-   std::list<boost::shared_ptr<hier::Variable> > d_fluxsum_variables;
+   std::list<std::shared_ptr<hier::Variable> > d_all_variables;
+   std::list<std::shared_ptr<hier::Variable> > d_time_dep_variables;
+   std::list<std::shared_ptr<hier::Variable> > d_flux_variables;
+   std::list<std::shared_ptr<hier::Variable> > d_fluxsum_variables;
 
    /*
     * SCRATCH descriptor indices for (non-TEMPORARY) variables
@@ -990,25 +990,25 @@ private:
    /*
     * Timers interspersed throughout the class.
     */
-   boost::shared_ptr<tbox::Timer> t_advance_bdry_fill_comm;
-   boost::shared_ptr<tbox::Timer> t_error_bdry_fill_create;
-   boost::shared_ptr<tbox::Timer> t_error_bdry_fill_comm;
-   boost::shared_ptr<tbox::Timer> t_mpi_reductions;
-   boost::shared_ptr<tbox::Timer> t_initialize_level_data;
-   boost::shared_ptr<tbox::Timer> t_fill_new_level_create;
-   boost::shared_ptr<tbox::Timer> t_fill_new_level_comm;
-   boost::shared_ptr<tbox::Timer> t_advance_bdry_fill_create;
-   boost::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_create;
-   boost::shared_ptr<tbox::Timer> t_apply_gradient_detector;
-   boost::shared_ptr<tbox::Timer> t_coarsen_rich_extrap;
-   boost::shared_ptr<tbox::Timer> t_get_level_dt;
-   boost::shared_ptr<tbox::Timer> t_get_level_dt_sync;
-   boost::shared_ptr<tbox::Timer> t_advance_level;
-   boost::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_comm;
-   boost::shared_ptr<tbox::Timer> t_patch_num_kernel;
-   boost::shared_ptr<tbox::Timer> t_advance_level_sync;
-   boost::shared_ptr<tbox::Timer> t_std_level_sync;
-   boost::shared_ptr<tbox::Timer> t_sync_new_levels;
+   std::shared_ptr<tbox::Timer> t_advance_bdry_fill_comm;
+   std::shared_ptr<tbox::Timer> t_error_bdry_fill_create;
+   std::shared_ptr<tbox::Timer> t_error_bdry_fill_comm;
+   std::shared_ptr<tbox::Timer> t_mpi_reductions;
+   std::shared_ptr<tbox::Timer> t_initialize_level_data;
+   std::shared_ptr<tbox::Timer> t_fill_new_level_create;
+   std::shared_ptr<tbox::Timer> t_fill_new_level_comm;
+   std::shared_ptr<tbox::Timer> t_advance_bdry_fill_create;
+   std::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_create;
+   std::shared_ptr<tbox::Timer> t_apply_gradient_detector;
+   std::shared_ptr<tbox::Timer> t_coarsen_rich_extrap;
+   std::shared_ptr<tbox::Timer> t_get_level_dt;
+   std::shared_ptr<tbox::Timer> t_get_level_dt_sync;
+   std::shared_ptr<tbox::Timer> t_advance_level;
+   std::shared_ptr<tbox::Timer> t_new_advance_bdry_fill_comm;
+   std::shared_ptr<tbox::Timer> t_patch_num_kernel;
+   std::shared_ptr<tbox::Timer> t_advance_level_sync;
+   std::shared_ptr<tbox::Timer> t_std_level_sync;
+   std::shared_ptr<tbox::Timer> t_sync_new_levels;
 
 };
 

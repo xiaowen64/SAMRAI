@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 using namespace SAMRAI;
 
@@ -39,8 +39,8 @@ public:
    MblkGeometry(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database>& input_db,
-      boost::shared_ptr<hier::BaseGridGeometry>& grid_geom);
+      std::shared_ptr<tbox::Database>& input_db,
+      std::shared_ptr<hier::BaseGridGeometry>& grid_geom);
 
    ~MblkGeometry();
 
@@ -104,7 +104,7 @@ public:
    tagOctantCells(
       hier::Patch& patch,
       const int xyz_id,
-      boost::shared_ptr<pdat::CellData<int> >& temp_tags,
+      std::shared_ptr<pdat::CellData<int> >& temp_tags,
       const double regrid_time,
       const int refine_tag_val);
 
@@ -114,7 +114,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /*
@@ -187,7 +187,7 @@ private:
    std::string d_geom_problem;
    std::string d_object_name;
 
-   boost::shared_ptr<hier::BaseGridGeometry> d_grid_geom;
+   std::shared_ptr<hier::BaseGridGeometry> d_grid_geom;
 
    const tbox::Dimension d_dim;
 

@@ -714,7 +714,7 @@ SparseData<BOX_GEOMETRY>::unpackStream(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -791,7 +791,7 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
 
       // get the next item
       if (restart_db->isDatabase(index_keyword)) {
-         boost::shared_ptr<tbox::Database> item_db(
+         std::shared_ptr<tbox::Database> item_db(
             restart_db->getDatabase(index_keyword));
 
          // unpack the index
@@ -864,7 +864,7 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
 template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -946,7 +946,7 @@ SparseData<BOX_GEOMETRY>::putToRestart(
          index_array[i] = index(i);
       }
 
-      boost::shared_ptr<tbox::Database> item_db(
+      std::shared_ptr<tbox::Database> item_db(
          restart_db->putDatabase(index_keyword));
 
       item_db->putIntegerVector(index_keyword, index_array);

@@ -15,9 +15,9 @@
 
 #include "SAMRAI/hier/BoxTree.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -249,7 +249,7 @@ private:
     * For each BlockId represented in the tree, there is
     * an entry in this container.
     */
-   std::map<BlockId, boost::shared_ptr<BoxTree> > d_single_block_trees;
+   std::map<BlockId, std::shared_ptr<BoxTree> > d_single_block_trees;
 
    const BaseGridGeometry* d_grid_geometry;
 };

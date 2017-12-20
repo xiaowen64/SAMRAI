@@ -15,7 +15,7 @@
 
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -52,7 +52,7 @@ public:
     */
    virtual void
    initialize(
-      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution) = 0;
+      const std::shared_ptr<SAMRAIVectorReal<double> >& solution) = 0;
 
    /**
     * Solve the nonlinear problem and return the integer code defined by the

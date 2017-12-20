@@ -121,11 +121,11 @@ FaceIntegerConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<FaceData<int> > cdata(
-      BOOST_CAST<FaceData<int>, hier::PatchData>(
+   std::shared_ptr<FaceData<int> > cdata(
+      SAMRAI_SHARED_PTR_CAST<FaceData<int>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<FaceData<int> > fdata(
-      BOOST_CAST<FaceData<int>, hier::PatchData>(
+   std::shared_ptr<FaceData<int> > fdata(
+      SAMRAI_SHARED_PTR_CAST<FaceData<int>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap =

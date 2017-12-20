@@ -1125,7 +1125,7 @@ public:
     */
    static void
    computeNeighborhoodDifferences(
-      boost::shared_ptr<Connector>& left_minus_right,
+      std::shared_ptr<Connector>& left_minus_right,
       const Connector& left_connector,
       const Connector& right_connector);
 
@@ -1305,8 +1305,8 @@ public:
     */
    void
    findOverlapErrors(
-      boost::shared_ptr<Connector>& missing,
-      boost::shared_ptr<Connector>& extra,
+      std::shared_ptr<Connector>& missing,
+      std::shared_ptr<Connector>& extra,
       bool ignore_self_overlap = false) const;
 
    //@}
@@ -1388,7 +1388,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db)
+      const std::shared_ptr<tbox::Database>& restart_db)
    {
       d_relationships.putToRestart(restart_db);
    }
@@ -1698,7 +1698,7 @@ private:
     * We don't use a pointer to the BoxLevel, because it would
     * become dangling when the BoxLevel goes out of scope.
     */
-   boost::shared_ptr<BoxLevelHandle> d_base_handle;
+   std::shared_ptr<BoxLevelHandle> d_base_handle;
 
    /*!
     * @brief Handle for access to the base BoxLevel.
@@ -1706,7 +1706,7 @@ private:
     * We don't use a pointer to the BoxLevel, because it would
     * become dangling when the BoxLevel goes out of scope.
     */
-   boost::shared_ptr<BoxLevelHandle> d_head_handle;
+   std::shared_ptr<BoxLevelHandle> d_head_handle;
 
    /*!
     * @brief Connector width for the base BoxLevel.
@@ -1800,9 +1800,9 @@ private:
 
    bool d_owns_transpose;
 
-   static boost::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
-   static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
-   static boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
+   static std::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
+   static std::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
+   static std::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

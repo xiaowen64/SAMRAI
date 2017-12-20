@@ -17,13 +17,13 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
 
 #include <vector>
+#include <memory>
 
 /*!
  * @brief Class SkeletonBoundaryUtilities2 is a utility class that
@@ -132,7 +132,7 @@ public:
    static void
    getFromInput(
       BoundaryUtilityStrategy* bdry_strategy,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       std::vector<int>& edge_conds,
       std::vector<int>& node_conds,
       const hier::IntVector& periodic);
@@ -155,7 +155,7 @@ public:
    static void
    fillEdgeBoundaryData(
       const string& varname,
-      boost::shared_ptr<pdat::CellData<double> >& vardata,
+      std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const std::vector<int>& bdry_edge_conds,
@@ -179,7 +179,7 @@ public:
    static void
    fillNodeBoundaryData(
       const string& varname,
-      boost::shared_ptr<pdat::CellData<double> >& vardata,
+      std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const std::vector<int>& bdry_node_conds,
@@ -241,13 +241,13 @@ private:
    static void
    read2dBdryEdges(
       BoundaryUtilityStrategy* bdry_strategy,
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       std::vector<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read2dBdryNodes(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       const std::vector<int>& edge_conds,
       std::vector<int>& node_conds,
       const hier::IntVector& periodic);

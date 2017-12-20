@@ -17,8 +17,8 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -76,10 +76,10 @@ public:
     * @param[in] transformation  the transformation from source to
     *                            destination index space.
     *
-    * @return                    boost::shared_ptr to the calculated overlap
+    * @return                    std::shared_ptr to the calculated overlap
     *                            object
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -108,9 +108,9 @@ public:
     * @param[in] patch_data_factory patch data factory for the data that is to
     *                               be filled
     *
-    * @return                boost::shared_ptr to the calculated overlap object
+    * @return                std::shared_ptr to the calculated overlap object
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
       const hier::BoxContainer& node_fill_boxes,

@@ -30,9 +30,9 @@
 #endif
 #include "hdf5.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -134,7 +134,7 @@ public:
     *
     * @pre !key.empty()
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -146,7 +146,7 @@ public:
     * @pre !key.empty()
     * @pre isDatabase(key)
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 

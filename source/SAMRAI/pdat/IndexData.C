@@ -888,7 +888,7 @@ IndexData<TYPE, BOX_GEOMETRY>::isElement(
 template<class TYPE, class BOX_GEOMETRY>
 void
 IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -910,7 +910,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
 
       if (restart_db->isDatabase(index_keyword)) {
 
-         boost::shared_ptr<tbox::Database> item_db(
+         std::shared_ptr<tbox::Database> item_db(
             restart_db->getDatabase(index_keyword));
 
          std::vector<int> index_array =
@@ -946,7 +946,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
 template<class TYPE, class BOX_GEOMETRY>
 void
 IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -968,7 +968,7 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
          index_array[i] = index(i);
       }
 
-      boost::shared_ptr<tbox::Database> item_db(
+      std::shared_ptr<tbox::Database> item_db(
          restart_db->putDatabase(index_keyword));
 
       item_db->putIntegerArray(index_keyword,

@@ -22,8 +22,8 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -66,8 +66,8 @@ public:
     */
    void
    copyData(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& dst,
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& src,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& dst,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& src,
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
@@ -79,15 +79,15 @@ public:
     * Swap pointers for patch data objects.  Objects are checked for
     * consistency of depth, box, and ghost box.
     *
-    * @pre patch->getPatchData(data1_id) is actually a boost::shared_ptr<pdat::CellData<dcomplex> >
-    * @pre patch->getPatchData(data2_id) is actually a boost::shared_ptr<pdat::CellData<dcomplex> >
+    * @pre patch->getPatchData(data1_id) is actually a std::shared_ptr<pdat::CellData<dcomplex> >
+    * @pre patch->getPatchData(data2_id) is actually a std::shared_ptr<pdat::CellData<dcomplex> >
     * @pre patch->getPatchData(data1_id)->getDepth() == patch->getPatchData(data2_id)->getDepth()
     * @pre patch->getPatchData(data1_id)->getBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getBox())
     * @pre patch->getPatchData(data1_id)->getGhostBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getGhostBox())
     */
    void
    swapData(
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -99,7 +99,7 @@ public:
     */
    void
    printData(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& data,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const
    {
@@ -118,7 +118,7 @@ public:
     */
    void
    setToScalar(
-      const boost::shared_ptr<pdat::CellData<dcomplex> >& dst,
+      const std::shared_ptr<pdat::CellData<dcomplex> >& dst,
       const dcomplex& alpha,
       const hier::Box& box) const
    {

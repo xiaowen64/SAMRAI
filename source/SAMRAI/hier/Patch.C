@@ -28,7 +28,7 @@ const int Patch::HIER_PATCH_VERSION = 2;
 
 Patch::Patch(
    const Box& box,
-   const boost::shared_ptr<PatchDescriptor>& descriptor):
+   const std::shared_ptr<PatchDescriptor>& descriptor):
    d_box(box),
    d_descriptor(descriptor),
    d_patch_data(d_descriptor->getMaxNumberRegisteredComponents()),
@@ -190,7 +190,7 @@ Patch::setTime(
 
 void
 Patch::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -232,14 +232,14 @@ Patch::getFromRestart(
             << "   patch data" << patch_data_name
             << " not found in restart database" << std::endl);
       }
-      boost::shared_ptr<tbox::Database> patch_data_database(
+      std::shared_ptr<tbox::Database> patch_data_database(
          restart_db->getDatabase(patch_data_name));
 
       patch_data_index = d_descriptor->mapNameToIndex(patch_data_name);
 
       if ((patch_data_index >= 0) &&
           (pdrm->isPatchDataRegisteredForRestart(patch_data_index))) {
-         boost::shared_ptr<PatchDataFactory> patch_data_factory(
+         std::shared_ptr<PatchDataFactory> patch_data_factory(
             d_descriptor->getPatchDataFactory(patch_data_index));
          d_patch_data[patch_data_index] = patch_data_factory->allocate(*this);
          d_patch_data[patch_data_index]->getFromRestart(patch_data_database);
@@ -276,7 +276,7 @@ Patch::getFromRestart(
  */
 void
 Patch::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -306,7 +306,7 @@ Patch::putToRestart(
       if (pdrm->isPatchDataRegisteredForRestart(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
-         boost::shared_ptr<tbox::Database> patch_data_database(
+         std::shared_ptr<tbox::Database> patch_data_database(
             restart_db->putDatabase(patch_data_name));
          (d_patch_data[i])->putToRestart(patch_data_database);
       }

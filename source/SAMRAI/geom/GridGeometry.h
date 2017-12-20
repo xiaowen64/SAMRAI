@@ -18,7 +18,7 @@
 #include "SAMRAI/tbox/Dimension.h"
 
 #include <string>
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace geom {
@@ -156,7 +156,7 @@ public:
    GridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool allow_multiblock = true);
 
    /*!
@@ -177,7 +177,7 @@ public:
     * @brief Construct a new coarsened/refined GridGeometry object with the
     * supplied domain.
     *
-    * This method is intended to be called only by boost::make_shared from the
+    * This method is intended to be called only by std::make_shared from the
     * make[Coarsened, Refined]GridGeometry methods to make a coarsened or
     * refined version of a given GridGeometry.
     *
@@ -190,7 +190,7 @@ public:
    GridGeometry(
       const std::string& object_name,
       hier::BoxContainer& domain,
-      const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
+      const std::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
 
    /*!
     * @brief Virtual destructor
@@ -214,7 +214,7 @@ public:
     * @pre getDim() == refine_ratio.getDim()
     * @pre refine_ratio > hier::IntVector::getZero(getDim())
     */
-   virtual boost::shared_ptr<hier::BaseGridGeometry>
+   virtual std::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const hier::IntVector& refine_ratio) const;
@@ -236,7 +236,7 @@ public:
     * @pre getDim() == coarsen_ratio.getDim()
     * @pre coarsen_ratio > hier::IntVector::getZero(getDim())
     */
-   virtual boost::shared_ptr<hier::BaseGridGeometry>
+   virtual std::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const hier::IntVector& coarsen_ratio) const;

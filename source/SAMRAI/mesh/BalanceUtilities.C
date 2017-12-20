@@ -811,7 +811,7 @@ void
 BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    hier::BoxContainer& out_boxes,
    std::list<double>& out_workloads,
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const hier::Box& in_box,
    double in_box_workload,
    int work_data_index,
@@ -956,15 +956,15 @@ BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
 
 double
 BalanceUtilities::computeNonUniformWorkload(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    int wrk_indx,
    const hier::Box& box)
 {
    TBOX_ASSERT(patch);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*patch, box);
 
-   const boost::shared_ptr<pdat::CellData<double> > work_data(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   const std::shared_ptr<pdat::CellData<double> > work_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch->getPatchData(wrk_indx)));
 
    TBOX_ASSERT(work_data);
@@ -985,7 +985,7 @@ BalanceUtilities::computeNonUniformWorkload(
 double
 BalanceUtilities::computeNonUniformWorkloadOnCorners(
    std::vector<double>& corner_weights,
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    int wrk_indx,
    const hier::Box& box)
 {
@@ -1418,7 +1418,7 @@ void
 BalanceUtilities::recursiveBisectionNonuniform(
    hier::BoxContainer& out_boxes,
    std::list<double>& out_workloads,
-   const boost::shared_ptr<hier::PatchLevel>& in_level,
+   const std::shared_ptr<hier::PatchLevel>& in_level,
    int work_id,
    double ideal_workload,
    const double workload_tolerance,
@@ -1446,7 +1446,7 @@ BalanceUtilities::recursiveBisectionNonuniform(
 
    for (hier::PatchLevel::iterator ip(in_level->begin());
         ip != in_level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       hier::Box box2chop = patch->getBox();
 
@@ -1800,7 +1800,7 @@ BalanceUtilities::sortDescendingBoxWorkloads(
 
 double
 BalanceUtilities::computeLoadBalanceEfficiency(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    std::ostream& os,
    int workload_data_id)
 {
@@ -1832,9 +1832,9 @@ BalanceUtilities::computeLoadBalanceEfficiency(
 
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
-         boost::shared_ptr<pdat::CellData<double> > weight(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         const std::shared_ptr<hier::Patch>& patch = *ip;
+         std::shared_ptr<pdat::CellData<double> > weight(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(workload_data_id)));
 
          TBOX_ASSERT(weight);

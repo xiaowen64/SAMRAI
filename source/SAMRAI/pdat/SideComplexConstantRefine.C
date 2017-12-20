@@ -122,11 +122,11 @@ void SideComplexConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<SideData<dcomplex> > cdata(
-      BOOST_CAST<SideData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<SideData<dcomplex> > cdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<SideData<dcomplex> > fdata(
-      BOOST_CAST<SideData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<SideData<dcomplex> > fdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&fine_overlap);

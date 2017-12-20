@@ -137,11 +137,11 @@ CartesianFaceFloatConservativeLinearRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
-   boost::shared_ptr<pdat::FaceData<float> > cdata(
-      BOOST_CAST<pdat::FaceData<float>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<float> > cdata(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::FaceData<float> > fdata(
-      BOOST_CAST<pdat::FaceData<float>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<float> > fdata(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const pdat::FaceOverlap* t_overlap =
@@ -160,11 +160,11 @@ CartesianFaceFloatConservativeLinearRefine::refine(
    const hier::Index& filo = fdata->getGhostBox().lower();
    const hier::Index& fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<CartesianPatchGeometry> cgeom(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<CartesianPatchGeometry> fgeom(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);

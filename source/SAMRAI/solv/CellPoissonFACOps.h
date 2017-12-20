@@ -45,8 +45,8 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -196,11 +196,11 @@ public:
     * @param input_db Input database
     */
    CellPoissonFACOps(
-      const boost::shared_ptr<CellPoissonHypreSolver>& hypre_solver,
+      const std::shared_ptr<CellPoissonHypreSolver>& hypre_solver,
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 #else
    /*!
     * @brief Constructor.
@@ -214,8 +214,8 @@ public:
    CellPoissonFACOps(
       const tbox::Dimension& dim,
       const std::string& object_name = std::string(),
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 #endif
 
    /*!
@@ -344,7 +344,7 @@ public:
     */
    void
    computeVectorWeights(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int weight_id,
       int coarsest_ln = -1,
       int finest_ln = -1) const;
@@ -486,13 +486,13 @@ protected:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
 private:
    // Internals of both constructors
    void
    buildObject(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    //@{
    /*!
@@ -790,7 +790,7 @@ private:
     * function argument lists.  We use it to enforce working on one
     * hierarchy at a time.
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Coarsest level for solve.
@@ -819,7 +819,7 @@ private:
     * hier::CoarseFineBoundary is a light object before
     * it is set for a level.
     */
-   std::vector<boost::shared_ptr<hier::CoarseFineBoundary> > d_cf_boundary;
+   std::vector<std::shared_ptr<hier::CoarseFineBoundary> > d_cf_boundary;
 
    //@}
 
@@ -891,7 +891,7 @@ private:
    /*!
     * @brief HYPRE coarse-level solver object.
     */
-   boost::shared_ptr<CellPoissonHypreSolver> d_hypre_solver;
+   std::shared_ptr<CellPoissonHypreSolver> d_hypre_solver;
 #endif
 
    /*!
@@ -905,19 +905,19 @@ private:
 
    //@{ @name Internal context and scratch data
 
-   static boost::shared_ptr<pdat::CellVariable<double> >
+   static std::shared_ptr<pdat::CellVariable<double> >
    s_cell_scratch_var[SAMRAI::MAX_DIM_VAL];
 
-   static boost::shared_ptr<pdat::SideVariable<double> >
+   static std::shared_ptr<pdat::SideVariable<double> >
    s_flux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
-   static boost::shared_ptr<pdat::OutersideVariable<double> >
+   static std::shared_ptr<pdat::OutersideVariable<double> >
    s_oflux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Default context of internally maintained hierarchy data.
     */
-   boost::shared_ptr<hier::VariableContext> d_context;
+   std::shared_ptr<hier::VariableContext> d_context;
 
    /*!
     * @brief ID of the solution-like scratch data.
@@ -959,41 +959,41 @@ private:
     */
 
    //! @brief Error prolongation (refinement) operator.
-   boost::shared_ptr<hier::RefineOperator> d_prolongation_refine_operator;
-   boost::shared_ptr<xfer::RefineAlgorithm> d_prolongation_refine_algorithm;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::shared_ptr<hier::RefineOperator> d_prolongation_refine_operator;
+   std::shared_ptr<xfer::RefineAlgorithm> d_prolongation_refine_algorithm;
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_prolongation_refine_schedules;
 
    //! @brief Solution restriction (coarsening) operator.
-   boost::shared_ptr<hier::CoarsenOperator> d_urestriction_coarsen_operator;
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_urestriction_coarsen_algorithm;
-   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> >
+   std::shared_ptr<hier::CoarsenOperator> d_urestriction_coarsen_operator;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_urestriction_coarsen_algorithm;
+   std::vector<std::shared_ptr<xfer::CoarsenSchedule> >
    d_urestriction_coarsen_schedules;
 
    //! @brief Residual restriction (coarsening) operator.
-   boost::shared_ptr<hier::CoarsenOperator> d_rrestriction_coarsen_operator;
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_rrestriction_coarsen_algorithm;
-   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> >
+   std::shared_ptr<hier::CoarsenOperator> d_rrestriction_coarsen_operator;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_rrestriction_coarsen_algorithm;
+   std::vector<std::shared_ptr<xfer::CoarsenSchedule> >
    d_rrestriction_coarsen_schedules;
 
    //! @brief Coarsen operator for outerflux-to-flux
-   boost::shared_ptr<hier::CoarsenOperator> d_flux_coarsen_operator;
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_flux_coarsen_algorithm;
-   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> >
+   std::shared_ptr<hier::CoarsenOperator> d_flux_coarsen_operator;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_flux_coarsen_algorithm;
+   std::vector<std::shared_ptr<xfer::CoarsenSchedule> >
    d_flux_coarsen_schedules;
 
    //! @brief Refine operator for cell-like data from coarser level.
-   boost::shared_ptr<hier::RefineOperator> d_ghostfill_refine_operator;
-   boost::shared_ptr<xfer::RefineAlgorithm> d_ghostfill_refine_algorithm;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::shared_ptr<hier::RefineOperator> d_ghostfill_refine_operator;
+   std::shared_ptr<xfer::RefineAlgorithm> d_ghostfill_refine_algorithm;
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_ghostfill_refine_schedules;
 
    //! @brief Refine operator for cell-like data from same level.
-   boost::shared_ptr<hier::RefineOperator>
+   std::shared_ptr<hier::RefineOperator>
    d_ghostfill_nocoarse_refine_operator;
-   boost::shared_ptr<xfer::RefineAlgorithm>
+   std::shared_ptr<xfer::RefineAlgorithm>
    d_ghostfill_nocoarse_refine_algorithm;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_ghostfill_nocoarse_refine_schedules;
 
    //@}
@@ -1041,23 +1041,23 @@ private:
    /*!
     * @brief Hierarchy cell operator used in debugging.
     */
-   boost::shared_ptr<math::HierarchyCellDataOpsReal<double> > d_hopscell;
+   std::shared_ptr<math::HierarchyCellDataOpsReal<double> > d_hopscell;
 
    /*!
     * @brief Hierarchy side operator used in debugging.
     */
-   boost::shared_ptr<math::HierarchySideDataOpsReal<double> > d_hopsside;
+   std::shared_ptr<math::HierarchySideDataOpsReal<double> > d_hopsside;
 
    /*!
     * @brief Timers for performance measurement.
     */
-   boost::shared_ptr<tbox::Timer> t_restrict_solution;
-   boost::shared_ptr<tbox::Timer> t_restrict_residual;
-   boost::shared_ptr<tbox::Timer> t_prolong;
-   boost::shared_ptr<tbox::Timer> t_smooth_error;
-   boost::shared_ptr<tbox::Timer> t_solve_coarsest;
-   boost::shared_ptr<tbox::Timer> t_compute_composite_residual;
-   boost::shared_ptr<tbox::Timer> t_compute_residual_norm;
+   std::shared_ptr<tbox::Timer> t_restrict_solution;
+   std::shared_ptr<tbox::Timer> t_restrict_residual;
+   std::shared_ptr<tbox::Timer> t_prolong;
+   std::shared_ptr<tbox::Timer> t_smooth_error;
+   std::shared_ptr<tbox::Timer> t_solve_coarsest;
+   std::shared_ptr<tbox::Timer> t_compute_composite_residual;
+   std::shared_ptr<tbox::Timer> t_compute_residual_norm;
 
    static tbox::StartupShutdownManager::Handler s_finalize_handler;
 };

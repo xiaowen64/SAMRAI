@@ -44,17 +44,17 @@ PatchCellDataOpsReal<TYPE>::~PatchCellDataOpsReal()
 template<class TYPE>
 void
 PatchCellDataOpsReal<TYPE>::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::CellData<TYPE> > d1(
-      BOOST_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<TYPE> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::CellData<TYPE> > d2(
-      BOOST_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<TYPE> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -69,7 +69,7 @@ PatchCellDataOpsReal<TYPE>::swapData(
 template<class TYPE>
 void
 PatchCellDataOpsReal<TYPE>::printData(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -84,8 +84,8 @@ PatchCellDataOpsReal<TYPE>::printData(
 template<class TYPE>
 void
 PatchCellDataOpsReal<TYPE>::copyData(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -97,7 +97,7 @@ PatchCellDataOpsReal<TYPE>::copyData(
 template<class TYPE>
 void
 PatchCellDataOpsReal<TYPE>::setToScalar(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

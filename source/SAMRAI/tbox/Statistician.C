@@ -20,7 +20,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace tbox {
@@ -181,7 +180,7 @@ Statistician::initRestartDatabase(
  *************************************************************************
  */
 
-boost::shared_ptr<Statistic>
+std::shared_ptr<Statistic>
 Statistician::getStatistic(
    const std::string& name,
    const std::string& stat_type)
@@ -189,7 +188,7 @@ Statistician::getStatistic(
    TBOX_ASSERT(!name.empty());
    TBOX_ASSERT(!stat_type.empty());
 
-   boost::shared_ptr<Statistic> stat;
+   std::shared_ptr<Statistic> stat;
 
    bool found = false;
 
@@ -251,7 +250,7 @@ Statistician::getStatistic(
 
 bool
 Statistician::checkStatisticExists(
-   boost::shared_ptr<Statistic>& stat,
+   std::shared_ptr<Statistic>& stat,
    const std::string& name) const
 {
    TBOX_ASSERT(!name.empty());
@@ -270,7 +269,7 @@ Statistician::checkStatisticExists(
 
 bool
 Statistician::checkProcStatExists(
-   boost::shared_ptr<Statistic>& stat,
+   std::shared_ptr<Statistic>& stat,
    const std::string& name) const
 {
    stat.reset();
@@ -289,7 +288,7 @@ Statistician::checkProcStatExists(
 
 bool
 Statistician::checkPatchStatExists(
-   boost::shared_ptr<Statistic>& stat,
+   std::shared_ptr<Statistic>& stat,
    const std::string& name) const
 {
    stat.reset();
@@ -347,7 +346,7 @@ Statistician::getProcStatId(
    int ret_val = -1;
 
    if (!name.empty()) {
-      boost::shared_ptr<Statistic> stat;
+      std::shared_ptr<Statistic> stat;
       if (checkProcStatExists(stat, name)) {
          ret_val = stat->getInstanceId();
       }
@@ -778,7 +777,7 @@ Statistician::getPatchStatId(
    int ret_val = -1;
 
    if (!name.empty()) {
-      boost::shared_ptr<Statistic> stat;
+      std::shared_ptr<Statistic> stat;
       if (checkPatchStatExists(stat, name)) {
          ret_val = stat->getInstanceId();
       }
@@ -1780,12 +1779,12 @@ Statistician::finalize(
        * These are only needed on processor 0 but we construct them on
        * all processors to avoid compiler warnings.
        */
-      std::vector<boost::shared_ptr<Statistic> >* global_proc_stats =
+      std::vector<std::shared_ptr<Statistic> >* global_proc_stats =
          d_num_proc_stats > 0 ?
-         new std::vector<boost::shared_ptr<Statistic> >[d_num_proc_stats] : 0;
-      std::vector<boost::shared_ptr<Statistic> >* global_patch_stats =
+         new std::vector<std::shared_ptr<Statistic> >[d_num_proc_stats] : 0;
+      std::vector<std::shared_ptr<Statistic> >* global_patch_stats =
          d_num_patch_stats > 0 ?
-         new std::vector<boost::shared_ptr<Statistic> >[d_num_patch_stats] : 0;
+         new std::vector<std::shared_ptr<Statistic> >[d_num_patch_stats] : 0;
 
       if (my_rank == 0) {
 
@@ -1853,7 +1852,7 @@ Statistician::finalize(
                      global_proc_stats[is][ip].reset(
                         new Statistic(sname, stype, is));
                      stat_schedule.addTransaction(
-                        boost::make_shared<StatTransaction>(
+                        std::make_shared<StatTransaction>(
                            global_proc_stats[is][ip], ip, 0));
                   }
                }
@@ -1867,7 +1866,7 @@ Statistician::finalize(
 
                for (is = 0; is < d_num_proc_stats; ++is) {
                   stat_schedule.addTransaction(
-                     boost::make_shared<StatTransaction>(
+                     std::make_shared<StatTransaction>(
                         d_proc_statistics[is], my_rank, 0));
                }
 
@@ -1892,7 +1891,7 @@ Statistician::finalize(
                      global_patch_stats[is][ip].reset(
                         new Statistic(sname, stype, is));
                      stat_schedule.addTransaction(
-                        boost::make_shared<StatTransaction>(
+                        std::make_shared<StatTransaction>(
                            global_patch_stats[is][ip], ip, 0));
                   }
                }
@@ -1906,7 +1905,7 @@ Statistician::finalize(
 
                for (is = 0; is < d_num_patch_stats; ++is) {
                   stat_schedule.addTransaction(
-                     boost::make_shared<StatTransaction>(
+                     std::make_shared<StatTransaction>(
                         d_patch_statistics[is], my_rank, 0));
                }
 
@@ -1935,7 +1934,7 @@ Statistician::finalize(
 
             for (ip = 0; ip < nnodes; ++ip) {
 
-               boost::shared_ptr<Statistic> stat(((ip == 0) ?
+               std::shared_ptr<Statistic> stat(((ip == 0) ?
                                                   d_proc_statistics[is] :
                                                   global_proc_stats[is][ip]));
 
@@ -1956,7 +1955,7 @@ Statistician::finalize(
 
             for (ip = 0; ip < nnodes; ++ip) {
 
-               boost::shared_ptr<Statistic> stat(((ip == 0) ?
+               std::shared_ptr<Statistic> stat(((ip == 0) ?
                                                   d_patch_statistics[is] :
                                                   global_patch_stats[is][ip]));
 
@@ -2577,7 +2576,7 @@ StatisticRestartDatabase::~StatisticRestartDatabase()
 }
 
 void StatisticRestartDatabase::putToRestart(
-   const boost::shared_ptr<Database>& restart_db) const
+   const std::shared_ptr<Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -2610,8 +2609,8 @@ void StatisticRestartDatabase::putToRestart(
    /*
     * Write procstat and patchstats to database.
     */
-   boost::shared_ptr<Statistic> stat;
-   boost::shared_ptr<Database> stat_database;
+   std::shared_ptr<Statistic> stat;
+   std::shared_ptr<Database> stat_database;
    int n;
    for (n = 0; n < number_of_procstats; ++n) {
       stat = statistician->d_proc_statistics[n];
@@ -2643,14 +2642,14 @@ void StatisticRestartDatabase::putToRestart(
 
 void StatisticRestartDatabase::getFromRestart()
 {
-   boost::shared_ptr<Database> root_db(
+   std::shared_ptr<Database> root_db(
       RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << std::endl);
    }
-   boost::shared_ptr<Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("TBOX_STATISTICRESTARTDATABASE_VERSION");
    if (ver != TBOX_STATISTICRESTARTDATABASE_VERSION) {
@@ -2680,9 +2679,9 @@ void StatisticRestartDatabase::getFromRestart()
     * Read in each stat from restart database.
     */
    Statistician* statistician = Statistician::getStatistician();
-   boost::shared_ptr<Database> sub_database;
+   std::shared_ptr<Database> sub_database;
    std::string sub_database_name;
-   boost::shared_ptr<Statistic> stat;
+   std::shared_ptr<Statistic> stat;
    int i;
    for (i = 0; i < number_of_procstats; ++i) {
       sub_database = db->getDatabase(proc_stat_names[i]);

@@ -21,8 +21,8 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -176,7 +176,7 @@ public:
     *                           properly process the patch data on coarse and
     *                           fine patch levels during the coarsening
     *                           process.
-    * @param[in] var_fill_pattern boost::shared_ptr to the variable fill
+    * @param[in] var_fill_pattern std::shared_ptr to the variable fill
     *                             pattern, which controls how box overlaps are
     *                             constructed.  If the NULL default is used,
     *                             then class BoxGeometryVariableFillPattern
@@ -188,10 +188,10 @@ public:
    registerCoarsen(
       const int dst,
       const int src,
-      const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
+      const std::shared_ptr<hier::CoarsenOperator>& opcoarsen,
       const hier::IntVector& gcw_to_coarsen,
-      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>());
+      const std::shared_ptr<VariableFillPattern>& var_fill_pattern =
+         std::shared_ptr<VariableFillPattern>());
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
@@ -203,9 +203,9 @@ public:
    registerCoarsen(
       const int dst,
       const int src,
-      const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
-      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>())
+      const std::shared_ptr<hier::CoarsenOperator>& opcoarsen,
+      const std::shared_ptr<VariableFillPattern>& var_fill_pattern =
+         std::shared_ptr<VariableFillPattern>())
    {
       registerCoarsen(dst, src, opcoarsen,
          hier::IntVector::getZero(d_dim), var_fill_pattern);
@@ -224,17 +224,17 @@ public:
     * Note that the schedule remains valid as long as the levels do not
     * change; thus, it can be used for multiple data communication cycles.
     *
-    * @return boost::shared_ptr to coarsen schedule that performs the data
+    * @return std::shared_ptr to coarsen schedule that performs the data
     *         transfers.
     *
-    * @param[in] crse_level     boost::shared_ptr to coarse (destination) level.
-    * @param[in] fine_level     boost::shared_ptr to fine (source) level.
-    * @param[in] coarsen_strategy boost::shared_ptr to a coarsen patch strategy
+    * @param[in] crse_level     std::shared_ptr to coarse (destination) level.
+    * @param[in] fine_level     std::shared_ptr to fine (source) level.
+    * @param[in] coarsen_strategy std::shared_ptr to a coarsen patch strategy
     *                           that provides user-defined coarsen operations.
     *                           If this patch strategy is null (default state),
     *                           then no user-defined coarsen operations will be
     *                           performed.
-    * @param[in] transaction_factory Optional boost::shared_ptr to a coarsen
+    * @param[in] transaction_factory Optional std::shared_ptr to a coarsen
     *                                transaction factory that creates data
     *                                transactions for the schedule.  If this
     *                                pointer is null default state), then a
@@ -245,13 +245,13 @@ public:
     * @pre (getDim() == crse_level->getDim()) &&
     *      (getDim() == fine_level->getDim())
     */
-   boost::shared_ptr<CoarsenSchedule>
+   std::shared_ptr<CoarsenSchedule>
    createSchedule(
-      const boost::shared_ptr<hier::PatchLevel>& crse_level,
-      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const std::shared_ptr<hier::PatchLevel>& crse_level,
+      const std::shared_ptr<hier::PatchLevel>& fine_level,
       CoarsenPatchStrategy* coarsen_strategy = 0,
-      const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
-         boost::shared_ptr<CoarsenTransactionFactory>());
+      const std::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
+         std::shared_ptr<CoarsenTransactionFactory>());
 
    /*!
     * @brief Given a previously-generated coarsen schedule, check for
@@ -266,14 +266,14 @@ public:
     *
     * @return true if schedule reset is valid; false otherwise.
     *
-    * @param[in] schedule  boost::shared_ptr to coarsen schedule, which cannot
+    * @param[in] schedule  std::shared_ptr to coarsen schedule, which cannot
     *                      be null.
     *
     * @pre schedule
     */
    bool
    checkConsistency(
-      const boost::shared_ptr<CoarsenSchedule>& schedule) const
+      const std::shared_ptr<CoarsenSchedule>& schedule) const
    {
       TBOX_ASSERT(schedule);
       return d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses());
@@ -291,7 +291,7 @@ public:
     * schedule originally, and this is enforced using a call to
     * checkConsistency().
     *
-    * @param[in,out] schedule  boost::shared_ptr to coarsen schedule, which
+    * @param[in,out] schedule  std::shared_ptr to coarsen schedule, which
     *                          cannot be null.
     *
     * @pre schedule
@@ -299,7 +299,7 @@ public:
     */
    void
    resetSchedule(
-      const boost::shared_ptr<CoarsenSchedule>& schedule) const;
+      const std::shared_ptr<CoarsenSchedule>& schedule) const;
 
    /*!
     * @brief Print the coarsen algorithm state to the specified data stream.
@@ -334,7 +334,7 @@ private:
    /*!
     * CoarsenClasses object holds all of the registered coarsen items.
     */
-   boost::shared_ptr<CoarsenClasses> d_coarsen_classes;
+   std::shared_ptr<CoarsenClasses> d_coarsen_classes;
 
    /*!
     * Tells if special behavior to pre-fill the temporary coarse level with

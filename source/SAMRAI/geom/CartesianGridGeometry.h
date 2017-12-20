@@ -21,8 +21,8 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace geom {
@@ -141,7 +141,7 @@ public:
    CartesianGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /**
     * Constructor for CartesianGridGeometry sets data members
@@ -162,7 +162,7 @@ public:
     * @brief Construct a new coarsened/refined CartesianGridGeometry object
     * with the supplied domain.
     *
-    * This method is intended to be called only by boost::make_shared from the
+    * This method is intended to be called only by std::make_shared from the
     * make[Coarsened, Refined]GridGeometry methods to make a coarsened or
     * refined version of a given CartesianGridGeometry.
     *
@@ -186,7 +186,7 @@ public:
       const double* x_lo,
       const double* x_up,
       hier::BoxContainer& domain,
-      const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
+      const std::shared_ptr<hier::TransferOperatorRegistry>& op_reg);
 
    /**
     * Destructor for CartesianGridGeometry deallocates
@@ -203,7 +203,7 @@ public:
     * @pre fine_geom_name != getObjectName()
     * @pre refine_ratio > hier::IntVector::getZero(getDim())
     */
-   boost::shared_ptr<hier::BaseGridGeometry>
+   std::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const hier::IntVector& refine_ratio) const;
@@ -216,7 +216,7 @@ public:
     * @pre coarse_geom_name != getObjectName()
     * @pre coarsen_ratio > hier::IntVector::getZero(getDim())
     */
-   boost::shared_ptr<hier::BaseGridGeometry>
+   std::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const hier::IntVector& coarsen_ratio) const;
@@ -291,7 +291,7 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
 protected:
    /*!
@@ -315,7 +315,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*

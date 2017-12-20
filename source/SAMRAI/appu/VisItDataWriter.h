@@ -32,10 +32,10 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <list>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace appu {
@@ -673,7 +673,7 @@ public:
     */
    void
    writePlotData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int time_step,
       double simulation_time = 0.0);
 
@@ -941,8 +941,8 @@ private:
       bool d_isa_species;
       std::string d_species_name;
       VisItItem* d_parent_material_pointer;
-      boost::shared_ptr<tbox::Database> d_species_HDFGroup;
-      boost::shared_ptr<tbox::Database> d_extents_species_HDFGroup;
+      std::shared_ptr<tbox::Database> d_species_HDFGroup;
+      std::shared_ptr<tbox::Database> d_extents_species_HDFGroup;
    };
 
    /*
@@ -980,7 +980,7 @@ private:
     */
    void
    writeHDFFiles(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       double simulation_time);
 
    /*
@@ -989,15 +989,15 @@ private:
     */
    void
    initializePlotVariableMinMaxInfo(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /*
     * Write variable data to HDF file.
     */
    void
    writeVisItVariablesToHDFFile(
-      const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<tbox::Database>& processor_HDFGroup,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarsest_level,
       int finest_level,
       double simulation_time);
@@ -1008,8 +1008,8 @@ private:
     */
    void
    packRegularAndDerivedData(
-      const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<tbox::Database>& patch_HDFGroup,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       hier::Patch& patch,
       double simulation_time);
@@ -1019,8 +1019,8 @@ private:
     */
    void
    packMaterialsData(
-      const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<tbox::Database>& patch_HDFGroup,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       hier::Patch& patch);
 
@@ -1030,7 +1030,7 @@ private:
     */
    void
    packSpeciesData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       hier::Patch& patch);
 
@@ -1053,7 +1053,7 @@ private:
     */
    int
    getGlobalPatchNumber(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const int patch_number);
 
@@ -1063,8 +1063,8 @@ private:
     */
    void
    writeParentChildInfoToSummaryHDFFile(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const boost::shared_ptr<tbox::Database>& basic_HDFGroup);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<tbox::Database>& basic_HDFGroup);
 
    /*
     *    Sort function for use by qsort to sort child_parent array
@@ -1090,7 +1090,7 @@ private:
    void
    writeSummaryToHDFFile(
       std::string dump_dir_name,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarsest_plot_level,
       int finest_plot_level,
       double simulation_time);
@@ -1102,7 +1102,7 @@ private:
     */
    void
    exchangeMinMaxPatchInformation(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_plot_level,
       const int finest_plot_level);
 
@@ -1112,7 +1112,7 @@ private:
     */
    void
    packPatchDataIntoDoubleBuffer(
-      const boost::shared_ptr<hier::PatchData>& pdata,
+      const std::shared_ptr<hier::PatchData>& pdata,
       const int depth_index,
       const variable_data_type type_of_data,
       const hier::Box patch_box,
@@ -1346,7 +1346,7 @@ private:
    std::vector<std::string> d_visit_expression_types;
 
    //! @brief Timer for writePlotData().
-   static boost::shared_ptr<tbox::Timer> t_write_plot_data;
+   static std::shared_ptr<tbox::Timer> t_write_plot_data;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.

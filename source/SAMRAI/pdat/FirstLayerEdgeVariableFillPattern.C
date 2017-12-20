@@ -13,7 +13,6 @@
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -55,7 +54,7 @@ FirstLayerEdgeVariableFillPattern::~FirstLayerEdgeVariableFillPattern()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FirstLayerEdgeVariableFillPattern::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -88,7 +87,7 @@ FirstLayerEdgeVariableFillPattern::calculateOverlap(
       dst_boxes[d].intersectBoxes(stencil_boxes[d]);
    }
 
-   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
+   return std::make_shared<EdgeOverlap>(dst_boxes, transformation);
 
 }
 
@@ -156,7 +155,7 @@ FirstLayerEdgeVariableFillPattern::computeStencilBoxes(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FirstLayerEdgeVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::BoxContainer& node_fill_boxes,
@@ -198,7 +197,7 @@ FirstLayerEdgeVariableFillPattern::computeFillBoxesOverlap(
       overlap_boxes[d].coalesce();
    }
 
-   return boost::make_shared<EdgeOverlap>(
+   return std::make_shared<EdgeOverlap>(
              overlap_boxes,
              hier::Transformation(hier::IntVector::getZero(dim)));
 }

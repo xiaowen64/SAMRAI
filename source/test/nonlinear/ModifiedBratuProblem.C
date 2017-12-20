@@ -65,8 +65,8 @@ using namespace SAMRAI;
 // Define for number of ghost cells on solution quantity
 #define NUM_GHOSTS_U (1)
 
-boost::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_copy_timer;
-boost::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
+std::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_copy_timer;
+std::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
 
 /*
  *************************************************************************
@@ -112,10 +112,10 @@ boost::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
 ModifiedBratuProblem::ModifiedBratuProblem(
    const string& object_name,
    const tbox::Dimension& dim,
-   const boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
-   boost::shared_ptr<tbox::Database> input_db,
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
-   boost::shared_ptr<appu::VisItDataWriter> visit_writer):
+   const std::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
+   std::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
+   std::shared_ptr<appu::VisItDataWriter> visit_writer):
    RefinePatchStrategy(),
    CoarsenPatchStrategy(),
    d_object_name(object_name),
@@ -308,7 +308,7 @@ ModifiedBratuProblem::ModifiedBratuProblem(
       grid_geometry->lookupCoarsenOperator(d_solution,
          "CONSERVATIVE_COARSEN");
 
-   boost::shared_ptr<CoarsenOperator> flux_coarsen_op(
+   std::shared_ptr<CoarsenOperator> flux_coarsen_op(
       grid_geometry->lookupCoarsenOperator(d_coarse_fine_flux,
          "CONSERVATIVE_COARSEN"));
 
@@ -367,7 +367,7 @@ ModifiedBratuProblem::~ModifiedBratuProblem()
  */
 
 void ModifiedBratuProblem::setupSolutionVector(
-   const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution)
+   const std::shared_ptr<solv::SAMRAIVectorReal<double> >& solution)
 {
    TBOX_ASSERT(solution);
 
@@ -388,7 +388,7 @@ void ModifiedBratuProblem::setupSolutionVector(
  */
 
 void ModifiedBratuProblem::setVectorWeights(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   std::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
@@ -398,13 +398,13 @@ void ModifiedBratuProblem::setVectorWeights(
        * On every level, first assign cell volume to vector weight.
        */
 
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
-         boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         const std::shared_ptr<hier::Patch>& patch = *p;
+         std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geometry);
          const double* dx = patch_geometry->getDx();
@@ -415,8 +415,8 @@ void ModifiedBratuProblem::setVectorWeights(
          if (d_dim > tbox::Dimension(2)) {
             cell_vol *= dx[2];
          }
-         boost::shared_ptr<pdat::CellData<double> > w(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > w(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_weight_id)));
          TBOX_ASSERT(w);
          w->fillAll(cell_vol);
@@ -435,7 +435,7 @@ void ModifiedBratuProblem::setVectorWeights(
           * at this level.
           */
 
-         boost::shared_ptr<hier::PatchLevel> next_finer_level(
+         std::shared_ptr<hier::PatchLevel> next_finer_level(
             hierarchy->getPatchLevel(amr_level + 1));
          hier::BoxContainer coarsened_boxes = next_finer_level->getBoxes();
          hier::IntVector coarsen_ratio = next_finer_level->getRatioToLevelZero();
@@ -451,15 +451,15 @@ void ModifiedBratuProblem::setVectorWeights(
          for (hier::PatchLevel::iterator p(level->begin());
               p != level->end(); ++p) {
 
-            const boost::shared_ptr<hier::Patch>& patch = *p;
+            const std::shared_ptr<hier::Patch>& patch = *p;
             for (hier::BoxContainer::const_iterator i = coarsened_boxes.begin();
                  i != coarsened_boxes.end(); ++i) {
 
                const hier::Box& coarse_box = *i;
                hier::Box intersection = coarse_box * patch->getBox();
                if (!intersection.empty()) {
-                  boost::shared_ptr<pdat::CellData<double> > w(
-                     BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::CellData<double> > w(
+                     SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                         patch->getPatchData(d_weight_id)));
                   TBOX_ASSERT(w);
                   w->fillAll(0.0, intersection);
@@ -496,7 +496,7 @@ void ModifiedBratuProblem::setInitialGuess(
    d_current_dt = current_dt;
    d_new_time = d_current_time + d_current_dt;
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
    for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
@@ -512,17 +512,17 @@ void ModifiedBratuProblem::setInitialGuess(
            amr_level < hierarchy->getNumberOfLevels();
            ++amr_level) {
 
-         boost::shared_ptr<hier::PatchLevel> patch_level(
+         std::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
          for (hier::PatchLevel::iterator p(patch_level->begin());
               p != patch_level->end(); ++p) {
-            const boost::shared_ptr<hier::Patch>& patch = *p;
+            const std::shared_ptr<hier::Patch>& patch = *p;
 
-            boost::shared_ptr<pdat::CellData<double> > y_cur(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > y_cur(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_current)));
-            boost::shared_ptr<pdat::CellData<double> > y_new(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > y_new(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_new)));
             TBOX_ASSERT(y_cur);
             TBOX_ASSERT(y_new);
@@ -532,8 +532,8 @@ void ModifiedBratuProblem::setInitialGuess(
 
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
-            boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(patch_geometry);
             const double* dx = patch_geometry->getDx();
@@ -542,8 +542,8 @@ void ModifiedBratuProblem::setInitialGuess(
             const hier::Index ifirst = patch->getBox().lower();
             const hier::Index ilast = patch->getBox().upper();
 
-            boost::shared_ptr<pdat::SideData<double> > diffusion(
-               BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::SideData<double> > diffusion(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                   patch->getPatchData(d_diffusion_coef, d_scratch)));
             TBOX_ASSERT(diffusion);
 
@@ -574,17 +574,17 @@ void ModifiedBratuProblem::setInitialGuess(
            amr_level < hierarchy->getNumberOfLevels();
            ++amr_level) {
 
-         boost::shared_ptr<hier::PatchLevel> patch_level(
+         std::shared_ptr<hier::PatchLevel> patch_level(
             hierarchy->getPatchLevel(amr_level));
          for (hier::PatchLevel::iterator p(patch_level->begin());
               p != patch_level->end(); ++p) {
-            const boost::shared_ptr<hier::Patch>& patch = *p;
+            const std::shared_ptr<hier::Patch>& patch = *p;
 
-            boost::shared_ptr<pdat::CellData<double> > y_cur(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > y_cur(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_current)));
-            boost::shared_ptr<pdat::CellData<double> > y_new(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > y_new(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_new)));
             TBOX_ASSERT(y_cur);
             TBOX_ASSERT(y_new);
@@ -594,8 +594,8 @@ void ModifiedBratuProblem::setInitialGuess(
 
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
-            boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(patch_geometry);
             const double* dx = patch_geometry->getDx();
@@ -604,8 +604,8 @@ void ModifiedBratuProblem::setInitialGuess(
             const hier::Index ifirst = patch->getBox().lower();
             const hier::Index ilast = patch->getBox().upper();
 
-            boost::shared_ptr<pdat::SideData<double> > diffusion(
-               BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::SideData<double> > diffusion(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                   patch->getPatchData(d_diffusion_coef, d_scratch)));
             TBOX_ASSERT(diffusion);
             if (d_dim == tbox::Dimension(1)) {
@@ -708,32 +708,32 @@ bool ModifiedBratuProblem::checkNewSolution(
 
    double new_time = d_current_time + d_current_dt;
    double maxerror = 0.0;
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
    for (int amr_level = 0;
         amr_level < hierarchy->getNumberOfLevels();
         ++amr_level) {
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      std::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
       double levelerror = 0.0;
       double levell2error = 0.0;
       for (hier::PatchLevel::iterator p(patch_level->begin());
            p != patch_level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
-         boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
          const double* xlo = patch_geom->getXLower();
          const double* xhi = patch_geom->getXUpper();
-         boost::shared_ptr<pdat::CellData<double> > u(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_new)));
-         boost::shared_ptr<pdat::CellData<double> > w(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > w(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_weight_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(w);
@@ -793,7 +793,7 @@ bool ModifiedBratuProblem::checkNewSolution(
 void ModifiedBratuProblem::updateSolution(
    const double new_time)
 {
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
    d_new_time = d_current_time = new_time;
@@ -802,17 +802,17 @@ void ModifiedBratuProblem::updateSolution(
         amr_level < hierarchy->getNumberOfLevels();
         ++amr_level) {
 
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      std::shared_ptr<hier::PatchLevel> patch_level(
          hierarchy->getPatchLevel(amr_level));
       for (hier::PatchLevel::iterator p(patch_level->begin());
            p != patch_level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         boost::shared_ptr<pdat::CellData<double> > y_cur(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > y_cur(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_current)));
-         boost::shared_ptr<pdat::CellData<double> > y_new(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > y_new(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_new)));
          TBOX_ASSERT(y_cur);
          TBOX_ASSERT(y_new);
@@ -847,12 +847,12 @@ void ModifiedBratuProblem::updateSolution(
  *************************************************************************
  */
 void ModifiedBratuProblem::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel>& old_level,
+   const std::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
@@ -864,14 +864,14 @@ void ModifiedBratuProblem::initializeLevelData(
    TBOX_ASSERT(!old_level || level_number == old_level->getLevelNumber());
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    level->allocatePatchData(d_new_patch_problem_data, time);
 
    if ((level_number > 0) || old_level) {
 
-      boost::shared_ptr<RefineSchedule> sched(
+      std::shared_ptr<RefineSchedule> sched(
          d_fill_new_level.createSchedule(
             level,
             old_level,
@@ -896,20 +896,20 @@ void ModifiedBratuProblem::initializeLevelData(
     */
 
    for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
-      const boost::shared_ptr<hier::Patch>& patch = *p;
+      const std::shared_ptr<hier::Patch>& patch = *p;
 
       if (initial_time) {
 
-         boost::shared_ptr<pdat::CellData<double> > u(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_current)));
          TBOX_ASSERT(u);
          u->fillAll(0.0);
 
       }
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
       TBOX_ASSERT(patch_geometry);
       const double* dx = patch_geometry->getDx();
@@ -918,8 +918,8 @@ void ModifiedBratuProblem::initializeLevelData(
       const hier::Index ifirst = patch->getBox().lower();
       const hier::Index ilast = patch->getBox().upper();
 
-      boost::shared_ptr<pdat::SideData<double> > diffusion(
-         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<double> > diffusion(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch->getPatchData(d_diffusion_coef, d_scratch)));
       TBOX_ASSERT(diffusion);
       if (d_dim == tbox::Dimension(1)) {
@@ -959,7 +959,7 @@ void ModifiedBratuProblem::initializeLevelData(
  */
 
 void ModifiedBratuProblem::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -988,9 +988,9 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       const int ln_beg = coarsest_level - (coarsest_level > 0);
       const int ln_end = finest_level;
       for (ln = ln_beg; ln < ln_end; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         boost::shared_ptr<hier::PatchLevel> finer_level(
+         std::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(ln + 1));
 
          d_flux_coarsen_schedule[ln] =
@@ -1002,7 +1002,7 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       const int ln_beg = coarsest_level;
       const int ln_end = finest_level;
       for (ln = ln_beg; ln <= ln_end; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          d_soln_fill_schedule[ln] = d_soln_fill.createSchedule(level,
                ln - 1,
@@ -1014,9 +1014,9 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
       const int ln_beg = coarsest_level - (coarsest_level > 0);
       const int ln_end = finest_level;
       for (ln = ln_beg; ln < ln_end; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
-         boost::shared_ptr<hier::PatchLevel> finer_level(
+         std::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(ln + 1));
 
          d_soln_coarsen_schedule[ln] =
@@ -1044,9 +1044,9 @@ void ModifiedBratuProblem::evaluateNonlinearFunction(
    TBOX_ASSERT(soln != 0);
    TBOX_ASSERT(fval != 0);
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > x(
       solv::Sundials_SAMRAIVector::getSAMRAIVector(soln));
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > f(
       solv::Sundials_SAMRAIVector::getSAMRAIVector(fval));
 
    evaluateBratuFunction(x, f);
@@ -1071,7 +1071,7 @@ int ModifiedBratuProblem::precondSetup(
 
    num_feval += 0;
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > x(
       solv::Sundials_SAMRAIVector::getSAMRAIVector(soln));
 
    setupBratuPreconditioner(x);
@@ -1098,7 +1098,7 @@ int ModifiedBratuProblem::precondSolve(
 
    num_feval += 0;
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > r(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > r(
       solv::Sundials_SAMRAIVector::getSAMRAIVector(rhs));
 
    return applyBratuPreconditioner(r, r);
@@ -1115,13 +1115,13 @@ ModifiedBratuProblem::jacobianTimesVector(
    TBOX_ASSERT(product != 0);
    TBOX_ASSERT(soln != 0);
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > v(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > v(
       solv::Sundials_SAMRAIVector::getSAMRAIVector(vector));
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > Jv(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > Jv(
       solv::Sundials_SAMRAIVector::getSAMRAIVector(product));
 
    if (soln_changed) {
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > ucur(
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > ucur(
          solv::Sundials_SAMRAIVector::getSAMRAIVector(soln));
       evaluateBratuJacobian(ucur);
    }
@@ -1143,9 +1143,9 @@ int ModifiedBratuProblem::evaluateNonlinearFunction(
    TBOX_ASSERT(xcur != 0);
    TBOX_ASSERT(fcur != 0);
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > x(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xcur));
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > f(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(fcur));
 
    evaluateBratuFunction(x, f);
@@ -1158,7 +1158,7 @@ int ModifiedBratuProblem::evaluateJacobian(
 {
    TBOX_ASSERT(x != 0);
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xvec(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > xvec(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(x));
 
    evaluateBratuJacobian(xvec);
@@ -1173,9 +1173,9 @@ int ModifiedBratuProblem::jacobianTimesVector(
    TBOX_ASSERT(xin != 0);
    TBOX_ASSERT(xout != 0);
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xinvec(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > xinvec(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xin));
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > xoutvec(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > xoutvec(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(xout));
 
    jacobianTimesVector(xinvec, xoutvec);
@@ -1186,7 +1186,7 @@ int ModifiedBratuProblem::jacobianTimesVector(
 int ModifiedBratuProblem::setupPreconditioner(
    Vec x)
 {
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > uvec(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > uvec(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(x));
    setupBratuPreconditioner(uvec);
 
@@ -1200,9 +1200,9 @@ int ModifiedBratuProblem::applyPreconditioner(
    TBOX_ASSERT(r != 0);
    TBOX_ASSERT(z != 0);
 
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > rhs(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > rhs(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(r));
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > soln(
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > soln(
       solv::PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(z));
 
    return applyBratuPreconditioner(rhs, soln);
@@ -1232,13 +1232,13 @@ int ModifiedBratuProblem::applyPreconditioner(
  */
 
 void ModifiedBratuProblem::evaluateBratuFunction(
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x,
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > f)
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > x,
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > f)
 {
    TBOX_ASSERT(x);
    TBOX_ASSERT(f);
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
    /*
@@ -1253,9 +1253,9 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
-      boost::shared_ptr<hier::PatchLevel> finer_level(
+      std::shared_ptr<hier::PatchLevel> finer_level(
          hierarchy->getPatchLevel(amr_level + 1));
       eval_average.resetSchedule(d_soln_coarsen_schedule[amr_level]);
       d_soln_coarsen_schedule[amr_level]->coarsenData();
@@ -1277,7 +1277,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    for (amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
 
       s_copy_timer->start();
@@ -1293,27 +1293,27 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
-         boost::shared_ptr<pdat::CellData<double> > u(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
-         boost::shared_ptr<pdat::SideData<double> > diffusion(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > diffusion(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
-         boost::shared_ptr<pdat::SideData<double> > flux(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > flux(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
-         boost::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
-            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
+            SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                patch->getPatchData(d_coarse_fine_flux_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(diffusion);
@@ -1483,7 +1483,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
       if (amr_level < hierarchy->getFinestLevelNumber()) {
 
-         boost::shared_ptr<hier::PatchLevel> finer_level(
+         std::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(amr_level + 1));
 
          d_flux_coarsen_schedule[amr_level]->coarsenData();
@@ -1499,10 +1499,10 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -1512,26 +1512,26 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
-         boost::shared_ptr<pdat::CellData<double> > u(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
-         boost::shared_ptr<pdat::CellData<double> > u_cur(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u_cur(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_current)));
-         boost::shared_ptr<pdat::CellData<double> > source(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > source(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_source_term, d_scratch)));
-         boost::shared_ptr<pdat::CellData<double> > exponential(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > exponential(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exponential_term, d_scratch)));
-         boost::shared_ptr<pdat::SideData<double> > flux(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > flux(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
-         boost::shared_ptr<pdat::CellData<double> > fcur(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > fcur(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                f->getComponentPatchData(0, *patch)));
-         boost::shared_ptr<pdat::CellData<double> > xdat(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > xdat(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                x->getComponentPatchData(0, *patch)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(u_cur);
@@ -1625,9 +1625,9 @@ void ModifiedBratuProblem::evaluateBratuFunction(
    for (amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
-      boost::shared_ptr<hier::PatchLevel> finer_level(
+      std::shared_ptr<hier::PatchLevel> finer_level(
          hierarchy->getPatchLevel(amr_level + 1));
       /*
        * We take advantage of the knowlege that f has the same
@@ -1651,8 +1651,8 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 
 int
 ModifiedBratuProblem::jacobianTimesVector(
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > v,
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > Jv)
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > v,
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > Jv)
 {
    TBOX_ASSERT(v);
    TBOX_ASSERT(Jv);
@@ -1671,15 +1671,15 @@ ModifiedBratuProblem::jacobianTimesVector(
     * down the data.
     */
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(Jv->getPatchHierarchy());
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(Jv->getPatchHierarchy());
 
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         --amr_level) {
 
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
-      boost::shared_ptr<hier::PatchLevel> finer_level(
+      std::shared_ptr<hier::PatchLevel> finer_level(
          hierarchy->getPatchLevel(amr_level + 1));
       jacv_average.resetSchedule(d_soln_coarsen_schedule[amr_level]);
       d_soln_coarsen_schedule[amr_level]->coarsenData();
@@ -1722,7 +1722,7 @@ ModifiedBratuProblem::jacobianTimesVector(
         amr_level >= 0;
         --amr_level) {
 
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
 
       /*
@@ -1754,28 +1754,28 @@ ModifiedBratuProblem::jacobianTimesVector(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
 
-         boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
-         boost::shared_ptr<pdat::CellData<double> > vdat(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > vdat(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_soln_scratch_id)));
-         boost::shared_ptr<pdat::SideData<double> > diffusion(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > diffusion(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
-         boost::shared_ptr<pdat::SideData<double> > flux(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > flux(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
-         boost::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
-            BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
+            SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                patch->getPatchData(d_coarse_fine_flux_id)));
          TBOX_ASSERT(vdat);
          TBOX_ASSERT(diffusion);
@@ -1957,7 +1957,7 @@ ModifiedBratuProblem::jacobianTimesVector(
 
       if (amr_level < hierarchy->getFinestLevelNumber()) {
 
-         boost::shared_ptr<hier::PatchLevel> finer_level(
+         std::shared_ptr<hier::PatchLevel> finer_level(
             hierarchy->getPatchLevel(amr_level + 1));
 
          d_flux_coarsen_schedule[amr_level]->coarsenData();
@@ -1973,10 +1973,10 @@ ModifiedBratuProblem::jacobianTimesVector(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -1985,17 +1985,17 @@ ModifiedBratuProblem::jacobianTimesVector(
 
          const double* dx = patch_geom->getDx();
 
-         boost::shared_ptr<pdat::CellData<double> > jac_a(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > jac_a(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_jacobian_a_id)));
-         boost::shared_ptr<pdat::CellData<double> > Jvdat(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > Jvdat(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                Jv->getComponentPatchData(0, *patch)));
-         boost::shared_ptr<pdat::CellData<double> > vdat(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > vdat(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_soln_scratch_id)));
-         boost::shared_ptr<pdat::SideData<double> > flux(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > flux(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
          TBOX_ASSERT(jac_a);
          TBOX_ASSERT(Jvdat);
@@ -2082,11 +2082,11 @@ ModifiedBratuProblem::jacobianTimesVector(
  */
 
 void ModifiedBratuProblem::setupBratuPreconditioner(
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x)
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > x)
 {
    TBOX_ASSERT(x);
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
    RefineAlgorithm eval_fill;
@@ -2098,7 +2098,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
 
       eval_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
@@ -2107,10 +2107,10 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -2127,24 +2127,24 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
          if (d_dim > tbox::Dimension(2)) {
             cell_vol *= dx[2];
          }
-         boost::shared_ptr<pdat::CellData<double> > u(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
-         boost::shared_ptr<pdat::CellData<double> > exponential(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > exponential(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exponential_term, d_scratch)));
-         boost::shared_ptr<pdat::CellData<double> > source(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > source(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_source_term, d_scratch)));
-         boost::shared_ptr<pdat::SideData<double> > diffusion(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > diffusion(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
 
-         boost::shared_ptr<pdat::CellData<double> > a(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > a(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_precond_a_id)));
-         boost::shared_ptr<pdat::FaceData<double> > b(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<double> > b(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(d_precond_b_id)));
 
          TBOX_ASSERT(exponential);
@@ -2310,15 +2310,15 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
  */
 
 int ModifiedBratuProblem::applyBratuPreconditioner(
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > r,
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > z)
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > r,
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > z)
 {
    TBOX_ASSERT(r);
    TBOX_ASSERT(z);
 
    int ret_val = 0;
 
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
    int r_indx = r->getComponentDescriptorIndex(0);
@@ -2334,9 +2334,9 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
-      boost::shared_ptr<hier::PatchLevel> finer_level(
+      std::shared_ptr<hier::PatchLevel> finer_level(
          hierarchy->getPatchLevel(amr_level + 1));
       pc_rhs_average.resetSchedule(d_soln_coarsen_schedule[amr_level]);
       d_soln_coarsen_schedule[amr_level]->coarsenData();
@@ -2372,9 +2372,9 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber() - 1;
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
-      boost::shared_ptr<hier::PatchLevel> finer_level(
+      std::shared_ptr<hier::PatchLevel> finer_level(
          hierarchy->getPatchLevel(amr_level + 1));
       pc_sol_average.resetSchedule(d_scratch_soln_coarsen_schedule[amr_level]);
       d_scratch_soln_coarsen_schedule[amr_level]->coarsenData();
@@ -2385,18 +2385,18 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         boost::shared_ptr<pdat::CellData<double> > src_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > src_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_soln_scratch_id)));
-         boost::shared_ptr<pdat::CellData<double> > dst_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > dst_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(z_indx)));
          TBOX_ASSERT(src_data);
          TBOX_ASSERT(dst_data);
@@ -2417,9 +2417,9 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
  */
 
 void ModifiedBratuProblem::evaluateBratuJacobian(
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > x)
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > x)
 {
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+   std::shared_ptr<hier::PatchHierarchy> hierarchy(
       d_solution_vector->getPatchHierarchy());
 
    RefineAlgorithm eval_fill;
@@ -2431,7 +2431,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
         --amr_level) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(
                                                    amr_level));
 
       eval_fill.resetSchedule(d_soln_fill_schedule[amr_level]);
@@ -2440,10 +2440,10 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -2461,24 +2461,24 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
             cell_vol *= dx[2];
          }
 
-         boost::shared_ptr<pdat::CellData<double> > u(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > u(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
-         boost::shared_ptr<pdat::CellData<double> > exponential(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > exponential(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exponential_term, d_scratch)));
-         boost::shared_ptr<pdat::CellData<double> > source(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > source(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_source_term, d_scratch)));
-         boost::shared_ptr<pdat::SideData<double> > diffusion(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > diffusion(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
 
-         boost::shared_ptr<pdat::CellData<double> > a(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > a(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_jacobian_a_id)));
-         boost::shared_ptr<pdat::FaceData<double> > b(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<double> > b(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(d_jacobian_b_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(exponential);
@@ -2587,8 +2587,8 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     * Grab data to operate on.
     */
 
-   boost::shared_ptr<pdat::CellData<double> > u(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > u(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_soln_scratch_id)));
    TBOX_ASSERT(u);
 
@@ -2599,8 +2599,8 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     * Determine boxes that touch the physical boundary.
     */
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const std::vector<hier::BoundaryBox>& boundary =
@@ -2661,7 +2661,7 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
  */
 
 void ModifiedBratuProblem::getFromInput(
-   boost::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
    TBOX_ASSERT(input_db);
@@ -2720,7 +2720,7 @@ void ModifiedBratuProblem::getFromInput(
  */
 
 void ModifiedBratuProblem::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -2773,8 +2773,8 @@ void ModifiedBratuProblem::printClassData(
 
 void ModifiedBratuProblem::getLevelEdges(
    hier::BoxContainer& boxes,
-   boost::shared_ptr<hier::Patch> patch,
-   boost::shared_ptr<hier::PatchLevel> level,
+   std::shared_ptr<hier::Patch> patch,
+   std::shared_ptr<hier::PatchLevel> level,
    const tbox::Dimension::dir_t dim,
    const int face)
 {
@@ -2809,8 +2809,8 @@ void ModifiedBratuProblem::getLevelEdges(
     * physical boundary.
     */
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> geometry(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> geometry(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch->getPatchGeometry()));
    TBOX_ASSERT(geometry);
    const std::vector<hier::BoundaryBox>& boundary_boxes =
@@ -2827,13 +2827,13 @@ void ModifiedBratuProblem::getLevelEdges(
 }
 
 void ModifiedBratuProblem::correctLevelFlux(
-   boost::shared_ptr<hier::PatchLevel> level)
+   std::shared_ptr<hier::PatchLevel> level)
 {
    for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
-      const boost::shared_ptr<hier::Patch>& patch = *p;
+      const std::shared_ptr<hier::Patch>& patch = *p;
       const hier::Box box = patch->getBox();
-      boost::shared_ptr<pdat::SideData<double> > flux_data(
-         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<double> > flux_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch->getPatchData(d_flux_id)));
       TBOX_ASSERT(flux_data);
 
@@ -2868,16 +2868,16 @@ void ModifiedBratuProblem::correctLevelFlux(
 }
 
 void ModifiedBratuProblem::correctPatchFlux(
-   boost::shared_ptr<hier::PatchLevel> level,
-   boost::shared_ptr<hier::Patch> patch,
-   boost::shared_ptr<pdat::CellData<double> > u)
+   std::shared_ptr<hier::PatchLevel> level,
+   std::shared_ptr<hier::Patch> patch,
+   std::shared_ptr<pdat::CellData<double> > u)
 {
    const hier::Box box = patch->getBox();
-   boost::shared_ptr<pdat::SideData<double> > flux_data(
-      BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::SideData<double> > flux_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
          patch->getPatchData(d_flux_id)));
-   const boost::shared_ptr<geom::CartesianPatchGeometry> geometry(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> geometry(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch->getPatchGeometry()));
    TBOX_ASSERT(flux_data);
    TBOX_ASSERT(geometry);

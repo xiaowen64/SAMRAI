@@ -31,7 +31,7 @@ PatchFaceDataOpsInteger::~PatchFaceDataOpsInteger()
 
 int
 PatchFaceDataOpsInteger::numberOfEntries(
-   const boost::shared_ptr<pdat::FaceData<int> >& data,
+   const std::shared_ptr<pdat::FaceData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -59,17 +59,17 @@ PatchFaceDataOpsInteger::numberOfEntries(
 
 void
 PatchFaceDataOpsInteger::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::FaceData<int> > d1(
-      BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<int> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::FaceData<int> > d2(
-      BOOST_CAST<pdat::FaceData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<int> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -83,7 +83,7 @@ PatchFaceDataOpsInteger::swapData(
 
 void
 PatchFaceDataOpsInteger::printData(
-   const boost::shared_ptr<pdat::FaceData<int> >& data,
+   const std::shared_ptr<pdat::FaceData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -97,8 +97,8 @@ PatchFaceDataOpsInteger::printData(
 
 void
 PatchFaceDataOpsInteger::copyData(
-   const boost::shared_ptr<pdat::FaceData<int> >& dst,
-   const boost::shared_ptr<pdat::FaceData<int> >& src,
+   const std::shared_ptr<pdat::FaceData<int> >& dst,
+   const std::shared_ptr<pdat::FaceData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -113,8 +113,8 @@ PatchFaceDataOpsInteger::copyData(
 
 void
 PatchFaceDataOpsInteger::abs(
-   const boost::shared_ptr<pdat::FaceData<int> >& dst,
-   const boost::shared_ptr<pdat::FaceData<int> >& src,
+   const std::shared_ptr<pdat::FaceData<int> >& dst,
+   const std::shared_ptr<pdat::FaceData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

@@ -138,50 +138,50 @@ HyperbolicLevelIntegrator::s_initialize_handler(
 /*
  * Timers interspersed throughout the class.
  */
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_bdry_fill_comm;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_error_bdry_fill_create;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_error_bdry_fill_comm;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_mpi_reductions;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_initialize_level_data;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_init_level_create_sched;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_init_level_fill_data;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_init_level_fill_interior;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_bdry_fill_create;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_new_advance_bdry_fill_create;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_apply_gradient_detector;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_tag_cells;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_rich_extrap;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt_sync;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_integrate;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_pre_integrate;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_post_integrate;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_patch_loop;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_new_advance_bdry_fill_comm;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_patch_num_kernel;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_sync;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_compute_dt;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_preprocess_flux_data;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_postprocess_flux_data;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_copy_time_dependent_data;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_std_level_sync;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_new_levels;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_barrier_after_error_bdry_fill_comm;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_initial_comm;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_initial_create;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_fluxsum_create;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_fluxsum_comm;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_sync_create;
-boost::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_sync_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_bdry_fill_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_error_bdry_fill_create;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_error_bdry_fill_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_mpi_reductions;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_initialize_level_data;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_init_level_create_sched;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_init_level_fill_data;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_init_level_fill_interior;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_bdry_fill_create;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_new_advance_bdry_fill_create;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_apply_gradient_detector;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_tag_cells;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_rich_extrap;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_get_level_dt_sync;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_integrate;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_pre_integrate;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_post_integrate;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_patch_loop;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_new_advance_bdry_fill_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_patch_num_kernel;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_sync;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_advance_level_compute_dt;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_preprocess_flux_data;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_postprocess_flux_data;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_copy_time_dependent_data;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_std_level_sync;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_new_levels;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_barrier_after_error_bdry_fill_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_initial_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_sync_initial_create;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_fluxsum_create;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_fluxsum_comm;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_sync_create;
+std::shared_ptr<tbox::Timer> HyperbolicLevelIntegrator::t_coarsen_sync_comm;
 
 #ifdef HLI_RECORD_STATS
 /*
  * Statistics on number of cells and patches generated.
  */
-std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_boxes_stat;
-std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_cells_stat;
-std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_timestamp_stat;
+std::vector<std::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_boxes_stat;
+std::vector<std::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_cells_stat;
+std::vector<std::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_timestamp_stat;
 #endif
 
 /*
@@ -198,7 +198,7 @@ std::vector<boost::shared_ptr<tbox::Statistic> > HyperbolicLevelIntegrator::s_ti
 
 HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    HyperbolicPatchStrategy* patch_strategy,
    bool use_time_refinement):
    d_patch_strategy(patch_strategy),
@@ -272,12 +272,12 @@ HyperbolicLevelIntegrator::~HyperbolicLevelIntegrator()
 
 void
 HyperbolicLevelIntegrator::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double init_data_time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel>& old_level,
+   const std::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    TBOX_ASSERT(hierarchy);
@@ -286,7 +286,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
    TBOX_ASSERT(!old_level || level_number == old_level->getLevelNumber());
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
@@ -314,7 +314,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
    if ((level_number > 0) || old_level) {
       t_init_level_create_sched->start();
 
-      boost::shared_ptr<xfer::RefineSchedule> sched(
+      std::shared_ptr<xfer::RefineSchedule> sched(
          d_fill_new_level->createSchedule(level,
             old_level,
             level_number - 1,
@@ -340,9 +340,9 @@ HyperbolicLevelIntegrator::initializeLevelData(
 
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
+         const std::shared_ptr<hier::Patch>& patch = *ip;
 
-         std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+         std::list<std::shared_ptr<hier::Variable> >::iterator time_dep_var =
             d_time_dep_variables.begin();
          while (time_dep_var != d_time_dep_variables.end()) {
             int old_indx =
@@ -368,7 +368,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
     */
    d_patch_strategy->setDataContext(d_current);
    for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
-      const boost::shared_ptr<hier::Patch>& patch = *p;
+      const std::shared_ptr<hier::Patch>& patch = *p;
 
       patch->allocatePatchData(d_temp_var_scratch_data, init_data_time);
 
@@ -398,7 +398,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
 
 void
 HyperbolicLevelIntegrator::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -420,7 +420,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
    d_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
    for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       t_advance_bdry_fill_create->start();
       /*
@@ -464,7 +464,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
 
 void
 HyperbolicLevelIntegrator::applyGradientDetector(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double error_data_time,
    const int tag_index,
@@ -478,7 +478,7 @@ HyperbolicLevelIntegrator::applyGradientDetector(
 
    t_apply_gradient_detector->start();
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    level->allocatePatchData(d_saved_var_scratch_data, error_data_time);
@@ -499,7 +499,7 @@ HyperbolicLevelIntegrator::applyGradientDetector(
    t_tag_cells->start();
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
       d_patch_strategy->tagGradientDetectorCells(*patch,
          error_data_time,
          initial_time,
@@ -547,9 +547,9 @@ HyperbolicLevelIntegrator::applyGradientDetector(
 
 void
 HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   const boost::shared_ptr<hier::PatchLevel>& coarse_level,
+   const std::shared_ptr<hier::PatchLevel>& coarse_level,
    const double coarsen_data_time,
    const bool before_advance)
 {
@@ -564,7 +564,7 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
    hier::IntVector zero_vector(hier::IntVector::getZero(hierarchy->getDim()));
 
-   boost::shared_ptr<hier::PatchLevel> hier_level(
+   std::shared_ptr<hier::PatchLevel> hier_level(
       hierarchy->getPatchLevel(level_number));
 
    hier::IntVector coarsen_ratio(zero_vector);
@@ -666,7 +666,7 @@ HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation(
 
 void
 HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const double error_data_time,
    const int tag_index,
    const double deltat,
@@ -688,7 +688,7 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->
       tagRichardsonExtrapolationCells(*patch,
@@ -719,10 +719,10 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
 
 void
 HyperbolicLevelIntegrator::initializeLevelIntegrator(
-   const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg_strategy)
+   const std::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg_strategy)
 {
    d_gridding_alg =
-      BOOST_CAST<mesh::GriddingAlgorithm, mesh::GriddingAlgorithmStrategy>(
+      SAMRAI_SHARED_PTR_CAST<mesh::GriddingAlgorithm, mesh::GriddingAlgorithmStrategy>(
          gridding_alg_strategy);
 
    TBOX_ASSERT(d_gridding_alg);
@@ -763,7 +763,7 @@ HyperbolicLevelIntegrator::initializeLevelIntegrator(
 
 double
 HyperbolicLevelIntegrator::getLevelDt(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const double dt_time,
    const bool initial_time)
 {
@@ -782,7 +782,7 @@ HyperbolicLevelIntegrator::getLevelDt(
       d_patch_strategy->setDataContext(d_current);
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
          patch->allocatePatchData(d_temp_var_scratch_data, dt_time);
 
@@ -820,7 +820,7 @@ HyperbolicLevelIntegrator::getLevelDt(
 
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
+         const std::shared_ptr<hier::Patch>& patch = *ip;
 
          patch->allocatePatchData(d_temp_var_scratch_data, dt_time);
 
@@ -987,8 +987,8 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
 
 double
 HyperbolicLevelIntegrator::advanceLevel(
-   const boost::shared_ptr<hier::PatchLevel>& level,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const double current_time,
    const double new_time,
    const bool first_step,
@@ -1023,7 +1023,7 @@ HyperbolicLevelIntegrator::advanceLevel(
    level->allocatePatchData(d_new_time_dep_data, new_time);
    level->allocatePatchData(d_saved_var_scratch_data, current_time);
 
-   boost::shared_ptr<xfer::RefineSchedule> fill_schedule;
+   std::shared_ptr<xfer::RefineSchedule> fill_schedule;
    if (!level->inHierarchy()) {
       t_error_bdry_fill_create->start();
 
@@ -1119,7 +1119,7 @@ HyperbolicLevelIntegrator::advanceLevel(
    d_patch_strategy->setDataContext(d_scratch);
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       patch->allocatePatchData(d_temp_var_scratch_data, current_time);
 
@@ -1216,7 +1216,7 @@ HyperbolicLevelIntegrator::advanceLevel(
 
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
+         const std::shared_ptr<hier::Patch>& patch = *ip;
 
          patch->allocatePatchData(d_temp_var_scratch_data, new_time);
          // "false" argument indicates "initial_time" is false.
@@ -1285,7 +1285,7 @@ HyperbolicLevelIntegrator::advanceLevel(
 
 void
 HyperbolicLevelIntegrator::standardLevelSynchronization(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
@@ -1303,7 +1303,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
 
 void
 HyperbolicLevelIntegrator::standardLevelSynchronization(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
@@ -1326,9 +1326,9 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
       const int coarse_ln = fine_ln - 1;
 
-      boost::shared_ptr<hier::PatchLevel> fine_level(
+      std::shared_ptr<hier::PatchLevel> fine_level(
          hierarchy->getPatchLevel(fine_ln));
-      boost::shared_ptr<hier::PatchLevel> coarse_level(
+      std::shared_ptr<hier::PatchLevel> coarse_level(
          hierarchy->getPatchLevel(coarse_ln));
 
       synchronizeLevelWithCoarser(fine_level,
@@ -1376,7 +1376,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
 
 void
 HyperbolicLevelIntegrator::synchronizeNewLevels(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level,
    const double sync_time,
@@ -1401,14 +1401,14 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
       for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
          const int coarse_ln = fine_ln - 1;
 
-         boost::shared_ptr<hier::PatchLevel> fine_level(
+         std::shared_ptr<hier::PatchLevel> fine_level(
             hierarchy->getPatchLevel(fine_ln));
 
-         boost::shared_ptr<hier::PatchLevel> coarse_level(
+         std::shared_ptr<hier::PatchLevel> coarse_level(
             hierarchy->getPatchLevel(coarse_ln));
 
          t_sync_initial_create->start();
-         boost::shared_ptr<xfer::CoarsenSchedule> sched(
+         std::shared_ptr<xfer::CoarsenSchedule> sched(
             d_sync_initial_data->createSchedule(coarse_level,
                fine_level,
                d_patch_strategy));
@@ -1420,7 +1420,7 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
 
          for (hier::PatchLevel::iterator p(coarse_level->begin());
               p != coarse_level->end(); ++p) {
-            const boost::shared_ptr<hier::Patch>& patch = *p;
+            const std::shared_ptr<hier::Patch>& patch = *p;
 
             patch->allocatePatchData(d_temp_var_scratch_data, sync_time);
 
@@ -1461,8 +1461,8 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
 
 void
 HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
-   const boost::shared_ptr<hier::PatchLevel>& fine_level,
-   const boost::shared_ptr<hier::PatchLevel>& coarse_level,
+   const std::shared_ptr<hier::PatchLevel>& fine_level,
+   const std::shared_ptr<hier::PatchLevel>& coarse_level,
    const double sync_time,
    const double coarse_sim_time)
 {
@@ -1473,7 +1473,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*fine_level, *coarse_level);
    TBOX_ASSERT(sync_time > coarse_sim_time);
 
-   boost::shared_ptr<xfer::CoarsenSchedule> sched;
+   std::shared_ptr<xfer::CoarsenSchedule> sched;
    
    /*
     * Coarsen flux integrals around fine patch boundaries to coarser level
@@ -1512,7 +1512,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
       for (hier::PatchLevel::iterator ip(coarse_level->begin());
            ip != coarse_level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& patch = *ip;
+         const std::shared_ptr<hier::Patch>& patch = *ip;
 
          patch->allocatePatchData(d_temp_var_scratch_data, coarse_sim_time);
 
@@ -1564,7 +1564,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
 void
 HyperbolicLevelIntegrator::resetTimeDependentData(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const double new_time,
    const bool can_be_refined)
 {
@@ -1575,9 +1575,9 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
    double cur_time = 0.;
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
-      std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+      std::list<std::shared_ptr<hier::Variable> >::iterator time_dep_var =
          d_time_dep_variables.begin();
       while (time_dep_var != d_time_dep_variables.end()) {
 
@@ -1643,7 +1643,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
 
 void
 HyperbolicLevelIntegrator::resetDataToPreadvanceState(
-   const boost::shared_ptr<hier::PatchLevel>& level)
+   const std::shared_ptr<hier::PatchLevel>& level)
 {
    TBOX_ASSERT(level);
 
@@ -1726,10 +1726,10 @@ HyperbolicLevelIntegrator::resetDataToPreadvanceState(
 
 void
 HyperbolicLevelIntegrator::registerVariable(
-   const boost::shared_ptr<hier::Variable>& var,
+   const std::shared_ptr<hier::Variable>& var,
    const hier::IntVector ghosts,
    const HYP_VAR_TYPE h_v_type,
-   const boost::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
+   const std::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
    const std::string& coarsen_name,
    const std::string& refine_name)
 {
@@ -1803,10 +1803,10 @@ HyperbolicLevelIntegrator::registerVariable(
           * data, respectively.
           */
 
-         boost::shared_ptr<hier::RefineOperator> refine_op(
+         std::shared_ptr<hier::RefineOperator> refine_op(
             transfer_geom->lookupRefineOperator(var, refine_name));
 
-         boost::shared_ptr<hier::TimeInterpolateOperator> time_int(
+         std::shared_ptr<hier::TimeInterpolateOperator> time_int(
             transfer_geom->lookupTimeInterpolateOperator(var));
 
          d_bdry_fill_advance->registerRefine(
@@ -1824,7 +1824,7 @@ HyperbolicLevelIntegrator::registerVariable(
           * (see synchronizeLevelWithCoarser routine).
           */
 
-         boost::shared_ptr<hier::CoarsenOperator> coarsen_op(
+         std::shared_ptr<hier::CoarsenOperator> coarsen_op(
             transfer_geom->lookupCoarsenOperator(var, coarsen_name));
 
          d_coarsen_sync_data->registerCoarsen(new_id, new_id, coarsen_op);
@@ -1889,7 +1889,7 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Bdry algorithms for input variables will fill from current only.
           */
-         boost::shared_ptr<hier::RefineOperator> refine_op(
+         std::shared_ptr<hier::RefineOperator> refine_op(
             transfer_geom->lookupRefineOperator(var, refine_name));
 
          d_bdry_fill_advance->registerRefine(
@@ -1904,7 +1904,7 @@ HyperbolicLevelIntegrator::registerVariable(
           * up through the hierarchy so that all levels are consistent.
           */
 
-         boost::shared_ptr<hier::CoarsenOperator> coarsen_op(
+         std::shared_ptr<hier::CoarsenOperator> coarsen_op(
             transfer_geom->lookupCoarsenOperator(var, coarsen_name));
 
          d_sync_initial_data->registerCoarsen(cur_id, cur_id, coarsen_op);
@@ -1938,7 +1938,7 @@ HyperbolicLevelIntegrator::registerVariable(
          hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
-         boost::shared_ptr<hier::RefineOperator> refine_op(
+         std::shared_ptr<hier::RefineOperator> refine_op(
             transfer_geom->lookupRefineOperator(var, refine_name));
 
          d_fill_new_level->registerRefine(
@@ -1949,7 +1949,7 @@ HyperbolicLevelIntegrator::registerVariable(
           * in the Richardson extrapolation algorithm.
           */
 
-         boost::shared_ptr<hier::CoarsenOperator> coarsen_op(
+         std::shared_ptr<hier::CoarsenOperator> coarsen_op(
             transfer_geom->lookupCoarsenOperator(var, coarsen_name));
 
          d_coarsen_rich_extrap_init->
@@ -1966,11 +1966,11 @@ HyperbolicLevelIntegrator::registerVariable(
           * a corresponding "fluxsum" variable is created to manage
           * synchronization of data betweeen patch levels in the hierarchy.
           */
-         const boost::shared_ptr<pdat::FaceVariable<double> > face_var(
-            boost::dynamic_pointer_cast<pdat::FaceVariable<double>,
+         const std::shared_ptr<pdat::FaceVariable<double> > face_var(
+            std::dynamic_pointer_cast<pdat::FaceVariable<double>,
                                         hier::Variable>(var));
-         const boost::shared_ptr<pdat::SideVariable<double> > side_var(
-            boost::dynamic_pointer_cast<pdat::SideVariable<double>,
+         const std::shared_ptr<pdat::SideVariable<double> > side_var(
+            std::dynamic_pointer_cast<pdat::SideVariable<double>,
                                         hier::Variable>(var));
 
          if (face_var) {
@@ -2015,11 +2015,11 @@ HyperbolicLevelIntegrator::registerVariable(
          std::string fsum_name = var_name;
          fsum_name += fs_suffix;
 
-         boost::shared_ptr<hier::Variable> fluxsum;
+         std::shared_ptr<hier::Variable> fluxsum;
 
          if (d_flux_is_face) {
-            boost::shared_ptr<pdat::FaceDataFactory<double> > fdf(
-               BOOST_CAST<pdat::FaceDataFactory<double>,
+            std::shared_ptr<pdat::FaceDataFactory<double> > fdf(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
             fluxsum.reset(new pdat::OuterfaceVariable<double>(
@@ -2028,8 +2028,8 @@ HyperbolicLevelIntegrator::registerVariable(
                   fdf->getDepth()));
             d_flux_face_registered = true;
          } else {
-            boost::shared_ptr<pdat::SideDataFactory<double> > sdf(
-               BOOST_CAST<pdat::SideDataFactory<double>,
+            std::shared_ptr<pdat::SideDataFactory<double> > sdf(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
             fluxsum.reset(new pdat::OutersideVariable<double>(
@@ -2047,7 +2047,7 @@ HyperbolicLevelIntegrator::registerVariable(
 
          d_fluxsum_data.setFlag(fs_id);
 
-         boost::shared_ptr<hier::CoarsenOperator> coarsen_op(
+         std::shared_ptr<hier::CoarsenOperator> coarsen_op(
             transfer_geom->lookupCoarsenOperator(fluxsum, coarsen_name));
 
          d_coarsen_fluxsum->registerCoarsen(scr_id, fs_id, coarsen_op);
@@ -2095,7 +2095,7 @@ HyperbolicLevelIntegrator::registerVariable(
 
 void
 HyperbolicLevelIntegrator::preprocessFluxData(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const double cur_time,
    const double new_time,
    const bool regrid_advance,
@@ -2134,9 +2134,9 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
          for (hier::PatchLevel::iterator p(level->begin());
               p != level->end(); ++p) {
-            const boost::shared_ptr<hier::Patch>& patch = *p;
+            const std::shared_ptr<hier::Patch>& patch = *p;
 
-            std::list<boost::shared_ptr<hier::Variable> >::iterator fs_var =
+            std::list<std::shared_ptr<hier::Variable> >::iterator fs_var =
                d_fluxsum_variables.begin();
 
             while (fs_var != d_fluxsum_variables.end()) {
@@ -2145,15 +2145,15 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                      d_scratch);
 
                if (d_flux_is_face) {
-                  boost::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
-                     BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                         patch->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
-                  boost::shared_ptr<pdat::OutersideData<double> > fsum_data(
-                     BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::OutersideData<double> > fsum_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                         patch->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
@@ -2198,7 +2198,7 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
 void
 HyperbolicLevelIntegrator::postprocessFluxData(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const bool regrid_advance,
    const bool first_step,
    const bool last_step)
@@ -2220,11 +2220,11 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
-         std::list<boost::shared_ptr<hier::Variable> >::iterator flux_var =
+         std::list<std::shared_ptr<hier::Variable> >::iterator flux_var =
             d_flux_variables.begin();
-         std::list<boost::shared_ptr<hier::Variable> >::iterator fluxsum_var =
+         std::list<std::shared_ptr<hier::Variable> >::iterator fluxsum_var =
             d_fluxsum_variables.begin();
 
          const hier::Index& ilo = patch->getBox().lower();
@@ -2232,26 +2232,26 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
          while (flux_var != d_flux_variables.end()) {
 
-            boost::shared_ptr<hier::PatchData> flux_data(
+            std::shared_ptr<hier::PatchData> flux_data(
                patch->getPatchData(*flux_var, d_scratch));
-            boost::shared_ptr<hier::PatchData> fsum_data(
+            std::shared_ptr<hier::PatchData> fsum_data(
                patch->getPatchData(*fluxsum_var, d_scratch));
 
-            boost::shared_ptr<pdat::FaceData<double> > fflux_data;
-            boost::shared_ptr<pdat::OuterfaceData<double> > ffsum_data;
+            std::shared_ptr<pdat::FaceData<double> > fflux_data;
+            std::shared_ptr<pdat::OuterfaceData<double> > ffsum_data;
 
-            boost::shared_ptr<pdat::SideData<double> > sflux_data;
-            boost::shared_ptr<pdat::OutersideData<double> > sfsum_data;
+            std::shared_ptr<pdat::SideData<double> > sflux_data;
+            std::shared_ptr<pdat::OutersideData<double> > sfsum_data;
 
             int ddepth;
             hier::IntVector flux_ghosts(level->getDim());
 
             if (d_flux_is_face) {
                fflux_data =
-                  BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                      flux_data);
                ffsum_data =
-                  BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                      fsum_data);
 
                TBOX_ASSERT(fflux_data && ffsum_data);
@@ -2260,10 +2260,10 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                flux_ghosts = fflux_data->getGhostCellWidth();
             } else {
                sflux_data =
-                  BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                      flux_data);
                sfsum_data =
-                  BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                      fsum_data);
 
                TBOX_ASSERT(sflux_data && sfsum_data);
@@ -2402,9 +2402,9 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
 void
 HyperbolicLevelIntegrator::copyTimeDependentData(
-   const boost::shared_ptr<hier::PatchLevel>& level,
-   const boost::shared_ptr<hier::VariableContext>& src_context,
-   const boost::shared_ptr<hier::VariableContext>& dst_context)
+   const std::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::VariableContext>& src_context,
+   const std::shared_ptr<hier::VariableContext>& dst_context)
 {
    TBOX_ASSERT(level);
    TBOX_ASSERT(src_context);
@@ -2413,14 +2413,14 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
-      std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
+      std::list<std::shared_ptr<hier::Variable> >::iterator time_dep_var =
          d_time_dep_variables.begin();
       while (time_dep_var != d_time_dep_variables.end()) {
-         boost::shared_ptr<hier::PatchData> src_data(
+         std::shared_ptr<hier::PatchData> src_data(
             patch->getPatchData(*time_dep_var, src_context));
-         boost::shared_ptr<hier::PatchData> dst_data(
+         std::shared_ptr<hier::PatchData> dst_data(
             patch->getPatchData(*time_dep_var, dst_context));
 
          dst_data->copy(*src_data);
@@ -2440,7 +2440,7 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
  */
 void
 HyperbolicLevelIntegrator::checkUserTagData(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const int tag_index) const
 {
@@ -2448,12 +2448,12 @@ HyperbolicLevelIntegrator::checkUserTagData(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
       d_patch_strategy->checkUserTagData(*patch,
          tag_index);
    }
@@ -2467,7 +2467,7 @@ HyperbolicLevelIntegrator::checkUserTagData(
  */
 void
 HyperbolicLevelIntegrator::checkNewLevelTagData(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const int tag_index) const
 {
@@ -2475,12 +2475,12 @@ HyperbolicLevelIntegrator::checkNewLevelTagData(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
       d_patch_strategy->checkNewPatchTagData(*patch,
          tag_index);
    }
@@ -2664,7 +2664,7 @@ HyperbolicLevelIntegrator::printClassData(
 
 void
 HyperbolicLevelIntegrator::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -2693,7 +2693,7 @@ HyperbolicLevelIntegrator::putToRestart(
 
 void
 HyperbolicLevelIntegrator::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (!is_from_restart && !input_db) {
@@ -2772,14 +2772,14 @@ void
 HyperbolicLevelIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   std::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION");
    if (ver != ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION) {

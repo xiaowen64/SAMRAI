@@ -66,8 +66,8 @@ private:
  */
    static void
    readAndWriteRestartData(
-      std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
-      const std::vector<boost::shared_ptr<tbox::Database> >& input_dbs,
+      std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
+      const std::vector<std::shared_ptr<tbox::Database> >& input_dbs,
       const string& key,
       const std::vector<std::vector<int> >* file_mapping = 0,
       int num_files_written = -1,
@@ -82,8 +82,8 @@ private:
  */
    static void
    readAndWritePatchLevelRestartData(
-      std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
-      const std::vector<boost::shared_ptr<tbox::Database> >& level_in_dbs,
+      std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
+      const std::vector<std::shared_ptr<tbox::Database> >& level_in_dbs,
       const string& key,
       const int num_files_written,
       const std::vector<int>& input_proc_nums,
@@ -96,8 +96,8 @@ private:
  */
    static void
    readAndWriteBoxLevelRestartData(
-      std::vector<boost::shared_ptr<tbox::Database> >& output_dbs,
-      const std::vector<boost::shared_ptr<tbox::Database> >& level_in_dbs,
+      std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
+      const std::vector<std::shared_ptr<tbox::Database> >& level_in_dbs,
       const string& key,
       const int num_files_written,
       const std::vector<int>& input_proc_nums,
@@ -109,8 +109,8 @@ private:
  */
    static void
    readAndWritePatchRestartData(
-      boost::shared_ptr<tbox::Database>& patch_out_db,
-      const boost::shared_ptr<tbox::Database>& patch_in_db,
+      std::shared_ptr<tbox::Database>& patch_out_db,
+      const std::shared_ptr<tbox::Database>& patch_in_db,
       const int output_proc);
 
 };

@@ -68,7 +68,7 @@ SNES_SAMRAIContext::SNESJacobianSet(
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
    SNESAbstractFunctions* my_functions,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_object_name(object_name),
    d_context_needs_initialization(true),
    d_SNES_solver(0),
@@ -146,7 +146,7 @@ SNES_SAMRAIContext::~SNES_SAMRAIContext()
  */
 void
 SNES_SAMRAIContext::initialize(
-   const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
+   const std::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
    TBOX_ASSERT(solution);
 
@@ -157,7 +157,7 @@ SNES_SAMRAIContext::initialize(
    d_solution_vector =
       PETSc_SAMRAIVectorReal<double>::createPETScVector(solution);
 
-   boost::shared_ptr<SAMRAIVectorReal<double> > residual(
+   std::shared_ptr<SAMRAIVectorReal<double> > residual(
       solution->cloneVector("residual"));
    residual->allocateVectorData();
    d_residual_vector =
@@ -179,13 +179,13 @@ SNES_SAMRAIContext::resetSolver(
    const int coarsest_level,
    const int finest_level)
 {
-   boost::shared_ptr<SAMRAIVectorReal<double> > solution_vector(
+   std::shared_ptr<SAMRAIVectorReal<double> > solution_vector(
       PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(d_solution_vector));
    solution_vector->deallocateVectorData();
    solution_vector->resetLevels(coarsest_level, finest_level);
    solution_vector->allocateVectorData();
 
-   boost::shared_ptr<SAMRAIVectorReal<double> > residual_vector(
+   std::shared_ptr<SAMRAIVectorReal<double> > residual_vector(
       PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(d_residual_vector));
    residual_vector->deallocateVectorData();
    residual_vector->resetLevels(coarsest_level, finest_level);
@@ -543,7 +543,7 @@ SNES_SAMRAIContext::destroyPetscObjects()
 
 void
 SNES_SAMRAIContext::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (input_db) {
@@ -741,14 +741,14 @@ void
 SNES_SAMRAIContext::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   std::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_SNES_SAMRAI_CONTEXT_VERSION) {
@@ -801,7 +801,7 @@ SNES_SAMRAIContext::getFromRestart()
 
 void
 SNES_SAMRAIContext::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 

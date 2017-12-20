@@ -33,7 +33,7 @@ public:
    MblkGeometry(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       const size_t nblocks);
 
    ~MblkGeometry();
@@ -83,7 +83,7 @@ private:
    //
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db);
+      std::shared_ptr<tbox::Database> input_db);
 
    //
    // the cartesian input

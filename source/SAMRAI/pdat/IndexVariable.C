@@ -16,7 +16,6 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -36,7 +35,7 @@ IndexVariable<TYPE, BOX_GEOMETRY>::IndexVariable(
    // default zero ghost cells
    hier::Variable(
       name,
-      boost::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(
+      std::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(
          hier::IntVector::getZero(dim)))
 {
 }

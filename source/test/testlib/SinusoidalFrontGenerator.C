@@ -32,7 +32,7 @@ using namespace SAMRAI;
 SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database>& database):
+   const std::shared_ptr<tbox::Database>& database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
@@ -47,7 +47,7 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    std::vector<double> period;
 
    // Parameters set by database, with defaults.
-   boost::shared_ptr<tbox::Database> sft_db; // SinusoidalFrontGenerator database.
+   std::shared_ptr<tbox::Database> sft_db; // SinusoidalFrontGenerator database.
 
    if (database) {
 
@@ -131,7 +131,7 @@ SinusoidalFrontGenerator::~SinusoidalFrontGenerator()
  ***********************************************************************
  */
 void SinusoidalFrontGenerator::applyGradientDetector(
-   const boost::shared_ptr<hier::PatchHierarchy>& base_hierarchy_,
+   const std::shared_ptr<hier::PatchHierarchy>& base_hierarchy_,
    const int ln,
    const double error_data_time,
    const int tag_index,
@@ -141,7 +141,7 @@ void SinusoidalFrontGenerator::applyGradientDetector(
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation);
    TBOX_ASSERT(base_hierarchy_);
-   boost::shared_ptr<hier::PatchLevel> level_(
+   std::shared_ptr<hier::PatchLevel> level_(
       base_hierarchy_->getPatchLevel(ln));
    TBOX_ASSERT(level_);
 
@@ -151,8 +151,8 @@ void SinusoidalFrontGenerator::applyGradientDetector(
         pi != level.end(); ++pi) {
       hier::Patch& patch = **pi;
 
-      boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<int> > tag_cell_data_(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tag_cell_data_);
       assert(tag_cell_data_->getTime() == error_data_time);
@@ -172,11 +172,11 @@ void SinusoidalFrontGenerator::applyGradientDetector(
  */
 void SinusoidalFrontGenerator::setTags(
    bool& exact_tagging,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
    int tag_data_id)
 {
-   const boost::shared_ptr<hier::PatchLevel>& tag_level(
+   const std::shared_ptr<hier::PatchLevel>& tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
    resetHierarchyConfiguration(hierarchy, 0, 1);
@@ -184,14 +184,14 @@ void SinusoidalFrontGenerator::setTags(
    for (hier::PatchLevel::iterator pi(tag_level->begin());
         pi != tag_level->end(); ++pi) {
 
-      boost::shared_ptr<hier::Patch> patch = *pi;
+      std::shared_ptr<hier::Patch> patch = *pi;
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
-      boost::shared_ptr<pdat::CellData<int> > tag_data(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<int> > tag_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
@@ -259,7 +259,7 @@ void SinusoidalFrontGenerator::setDomain(
  ***********************************************************************
  */
 void SinusoidalFrontGenerator::resetHierarchyConfiguration(
-   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+   /*! New hierarchy */ const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ const int coarsest_level,
    /*! Finest level */ const int finest_level)
 {
@@ -281,8 +281,8 @@ void SinusoidalFrontGenerator::computePatchData(
 {
    t_setup->start();
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom.get() != 0);
 
@@ -548,8 +548,8 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
 {
    (void)depth_index;
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 

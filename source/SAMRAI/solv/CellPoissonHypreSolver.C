@@ -34,7 +34,6 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "boost/make_shared.hpp"
 #include <cstdlib>
 
 extern "C" {
@@ -254,7 +253,7 @@ void SAMRAI_F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (double* rhs,
 namespace SAMRAI {
 namespace solv {
 
-boost::shared_ptr<pdat::OutersideVariable<double> >
+std::shared_ptr<pdat::OutersideVariable<double> >
 CellPoissonHypreSolver::s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler(
@@ -273,7 +272,7 @@ tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler
 CellPoissonHypreSolver::CellPoissonHypreSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_ln(-1),
@@ -331,7 +330,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
 
 void
 CellPoissonHypreSolver::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
       d_print_solver_info =
@@ -383,7 +382,7 @@ CellPoissonHypreSolver::getFromInput(
 
 void
 CellPoissonHypreSolver::initializeSolverState(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int ln)
 {
    TBOX_ASSERT(hierarchy);
@@ -403,7 +402,7 @@ CellPoissonHypreSolver::initializeSolverState(
    d_number_iterations = -1;
    d_relative_residual_norm = -1.0;
 
-   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   std::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    level->allocatePatchData(d_Ak0_id);
    allocateHypreData();
 }
@@ -422,7 +421,7 @@ CellPoissonHypreSolver::deallocateSolverState()
    }
 
    d_cf_boundary->clear();
-   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   std::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    level->deallocatePatchData(d_Ak0_id);
    deallocateHypreData();
    d_hierarchy.reset();
@@ -447,9 +446,9 @@ CellPoissonHypreSolver::allocateHypreData()
     * Set up the grid data - only set grid data for local boxes
     */
 
-   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+   std::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          d_hierarchy->getGridGeometry()));
 
    TBOX_ASSERT(grid_geometry);
@@ -741,8 +740,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
    t_set_matrix_coefficients->start();
 
-   boost::shared_ptr<pdat::CellData<double> > C_data;
-   boost::shared_ptr<pdat::SideData<double> > D_data;
+   std::shared_ptr<pdat::CellData<double> > C_data;
+   std::shared_ptr<pdat::SideData<double> > D_data;
 
    /*
     * Some computations can be done using high-level math objects.
@@ -762,20 +761,20 @@ CellPoissonHypreSolver::setMatrixCoefficients(
     * solving, thus allowing everything that does not affect A to change
     * from solve to solve.
     */
-   boost::shared_ptr<pdat::OutersideData<double> > Ak0;
+   std::shared_ptr<pdat::OutersideData<double> > Ak0;
 
    /*
     * Loop over patches and set matrix entries for each patch.
     */
-   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   std::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    const hier::IntVector no_ghosts(d_dim, 0);
    for (hier::PatchLevel::iterator pi(level->begin());
         pi != level->end(); ++pi) {
 
       hier::Patch& patch = **pi;
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> pg(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> pg(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
 
       TBOX_ASSERT(pg);
@@ -787,18 +786,18 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       const hier::Index& patch_up = patch_box.upper();
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
-         C_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         C_data = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(spec.getCPatchDataId()));
          TBOX_ASSERT(C_data);
       }
 
       if (!spec.dIsConstant()) {
-         D_data = BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         D_data = SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(spec.getDPatchDataId()));
          TBOX_ASSERT(D_data);
       }
 
-      Ak0 = BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+      Ak0 = SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
             patch.getPatchData(d_Ak0_id));
       TBOX_ASSERT(Ak0);
 
@@ -893,11 +892,11 @@ CellPoissonHypreSolver::setMatrixCoefficients(
                bbu.trimBoundaryBox(patch.getBox());
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
-            boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
-            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
-            boost::shared_ptr<pdat::ArrayData<double> > gcoef_data;
+            std::shared_ptr<pdat::ArrayData<double> > acoef_data(
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+            std::shared_ptr<pdat::ArrayData<double> > bcoef_data(
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+            std::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
             d_physical_bc_coef_strategy->setBcCoefs(acoef_data,
                bcoef_data,
@@ -954,11 +953,11 @@ CellPoissonHypreSolver::setMatrixCoefficients(
                bbu.trimBoundaryBox(patch.getBox());
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
-            boost::shared_ptr<pdat::ArrayData<double> > acoef_data(
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
-            boost::shared_ptr<pdat::ArrayData<double> > bcoef_data(
-               boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
-            boost::shared_ptr<pdat::ArrayData<double> > gcoef_data;
+            std::shared_ptr<pdat::ArrayData<double> > acoef_data(
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+            std::shared_ptr<pdat::ArrayData<double> > bcoef_data(
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+            std::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
             /*
              * Reset invalid ghost data id to help detect use in setBcCoefs.
@@ -1077,8 +1076,8 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     * and so is moved to the rhs.  Before solving, g*A*k0(a) is added
     * to rhs.
     */
-   boost::shared_ptr<pdat::OutersideData<double> > Ak0(
-      BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OutersideData<double> > Ak0(
+      SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
          patch.getPatchData(d_Ak0_id)));
 
    TBOX_ASSERT(Ak0);
@@ -1103,10 +1102,10 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
       const hier::Box& Ak0box = Ak0->getArrayData(location_index / 2,
             location_index % 2).getBox();
       const hier::Box bccoef_box = bbu.getSurfaceBoxFromBoundaryBox();
-      boost::shared_ptr<pdat::ArrayData<double> > acoef_data;
-      boost::shared_ptr<pdat::ArrayData<double> > bcoef_data;
-      boost::shared_ptr<pdat::ArrayData<double> > gcoef_data(
-         boost::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+      std::shared_ptr<pdat::ArrayData<double> > acoef_data;
+      std::shared_ptr<pdat::ArrayData<double> > bcoef_data;
+      std::shared_ptr<pdat::ArrayData<double> > gcoef_data(
+         std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
       static const double fill_time = 0.0;
       robin_bc_coef->setBcCoefs(acoef_data,
          bcoef_data,
@@ -1247,7 +1246,7 @@ CellPoissonHypreSolver::solveSystem(
 
    t_solve_system->start();
 
-   boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
+   std::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    TBOX_ASSERT(u >= 0);
    TBOX_ASSERT(
       u < level->getPatchDescriptor()->getMaxNumberRegisteredComponents());
@@ -1282,15 +1281,15 @@ CellPoissonHypreSolver::solveSystem(
    d_cf_bc_coef.setGhostDataId(u, hier::IntVector::getZero(d_dim));
 
    for (hier::PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
-      const boost::shared_ptr<hier::Patch>& patch = *p;
+      const std::shared_ptr<hier::Patch>& patch = *p;
 
       const hier::Box box = patch->getBox();
 
       /*
        * Set up variable data needed to prepare linear system solver.
        */
-      boost::shared_ptr<pdat::CellData<double> > u_data_(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > u_data_(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(u)));
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
@@ -1382,9 +1381,9 @@ CellPoissonHypreSolver::solveSystem(
     */
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
-      boost::shared_ptr<pdat::CellData<double> > u_data_(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      const std::shared_ptr<hier::Patch>& patch = *ip;
+      std::shared_ptr<pdat::CellData<double> > u_data_(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(u)));
 
       TBOX_ASSERT(u_data_);

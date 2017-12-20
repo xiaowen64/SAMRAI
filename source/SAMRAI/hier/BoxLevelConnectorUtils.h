@@ -229,8 +229,8 @@ public:
     */
    void
    computeExternalParts(
-      boost::shared_ptr<BoxLevel>& external,
-      boost::shared_ptr<MappingConnector>& input_to_external,
+      std::shared_ptr<BoxLevel>& external,
+      std::shared_ptr<MappingConnector>& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
@@ -292,8 +292,8 @@ public:
     */
    void
    computeInternalParts(
-      boost::shared_ptr<BoxLevel>& internal,
-      boost::shared_ptr<MappingConnector>& input_to_internal,
+      std::shared_ptr<BoxLevel>& internal,
+      std::shared_ptr<MappingConnector>& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
       const BoxContainer& domain = BoxContainer()) const
@@ -328,8 +328,8 @@ public:
     */
    void
    computeNonIntersectingParts(
-      boost::shared_ptr<BoxLevel>& remainder,
-      boost::shared_ptr<Connector>& input_to_remainder,
+      std::shared_ptr<BoxLevel>& remainder,
+      std::shared_ptr<Connector>& input_to_remainder,
       const Connector& input_to_takeaway) const;
 
    //@}
@@ -352,7 +352,7 @@ public:
    computeBoxesAroundBoundary(
       BoxContainer& boundary,
       const IntVector& refinement_ratio,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;
 
    //@{
@@ -404,8 +404,8 @@ public:
     */
    void
    makeSortingMap(
-      boost::shared_ptr<BoxLevel>& sorted_box_level,
-      boost::shared_ptr<MappingConnector>& output_map,
+      std::shared_ptr<BoxLevel>& sorted_box_level,
+      std::shared_ptr<MappingConnector>& output_map,
       const BoxLevel& unsorted_box_level,
       bool sort_boxes_by_corner = true,
       bool sequentialize_global_indices = true,
@@ -434,8 +434,8 @@ public:
     */
    void
    makeRemainderMap(
-      boost::shared_ptr<BoxLevel>& remainder,
-      boost::shared_ptr<MappingConnector>& orig_to_remainder,
+      std::shared_ptr<BoxLevel>& remainder,
+      std::shared_ptr<MappingConnector>& orig_to_remainder,
       const MappingConnector& orig_to_rejections) const;
 
    //@}
@@ -545,8 +545,8 @@ private:
     */
    void
    computeInternalOrExternalParts(
-      boost::shared_ptr<BoxLevel>& parts,
-      boost::shared_ptr<MappingConnector>& input_to_parts,
+      std::shared_ptr<BoxLevel>& parts,
+      std::shared_ptr<MappingConnector>& input_to_parts,
       char internal_or_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
@@ -587,15 +587,15 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_make_sorting_map;
-      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary;
-      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_singularity;
-      boost::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_simplify;
-      boost::shared_ptr<tbox::Timer> t_compute_external_parts;
-      boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
-      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts;
-      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_manip_reference;
-      boost::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_simplify;
+      std::shared_ptr<tbox::Timer> t_make_sorting_map;
+      std::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary;
+      std::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_singularity;
+      std::shared_ptr<tbox::Timer> t_compute_boxes_around_boundary_simplify;
+      std::shared_ptr<tbox::Timer> t_compute_external_parts;
+      std::shared_ptr<tbox::Timer> t_compute_internal_parts;
+      std::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts;
+      std::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_manip_reference;
+      std::shared_ptr<tbox::Timer> t_compute_internal_or_external_parts_simplify;
    };
 
    //! @brief Default prefix for Timers.

@@ -1640,7 +1640,7 @@ BoxContainer::hasBoxInBlock(
  */
 void
 BoxContainer::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    restart_db->putInteger(
       "HIER_BOX_CONTAINER_VERSION", HIER_BOX_CONTAINER_VERSION);

@@ -654,7 +654,7 @@ BoxNeighborhoodCollection::getFromIntBuffer(
 
 void
 BoxNeighborhoodCollection::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    // This appears to be used in the RedistributedRestartUtility.
    restart_db->putBool("d_is_edge_set", true);
@@ -691,7 +691,7 @@ BoxNeighborhoodCollection::putToRestart(
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-         boost::shared_ptr<tbox::Database> nbr_db =
+         std::shared_ptr<tbox::Database> nbr_db =
             restart_db->putDatabase(set_name);
 
          const int mbs_size = numNeighbors(ei);
@@ -761,7 +761,7 @@ BoxNeighborhoodCollection::getFromRestart(
             + tbox::Utilities::processorToString(box_id.getOwnerRank())
             + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
             + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
-         boost::shared_ptr<tbox::Database> nbr_db(
+         std::shared_ptr<tbox::Database> nbr_db(
             restart_db.getDatabase(set_name));
          const unsigned int mbs_size =
             nbr_db->getInteger("mapped_box_set_size");

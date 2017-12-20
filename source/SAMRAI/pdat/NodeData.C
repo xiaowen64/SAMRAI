@@ -575,7 +575,7 @@ NodeData<TYPE>::print(
 template<class TYPE>
 void
 NodeData<TYPE>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -604,7 +604,7 @@ NodeData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 NodeData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 

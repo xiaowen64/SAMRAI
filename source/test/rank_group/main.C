@@ -53,23 +53,23 @@ using namespace tbox;
 
 void
 generatePrebalanceByUserBoxes(
-   boost::shared_ptr<tbox::Database> database,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   std::shared_ptr<tbox::Database> database,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& max_gcw,
-   boost::shared_ptr<hier::BoxLevel>& balance_box_level,
+   std::shared_ptr<hier::BoxLevel>& balance_box_level,
    const hier::BoxLevel& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance);
+   std::shared_ptr<hier::Connector>& anchor_to_balance);
 
 void
 generatePrebalanceByUserShells(
-   const boost::shared_ptr<tbox::Database>& database,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<tbox::Database>& database,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& max_gcw,
-   boost::shared_ptr<hier::BoxLevel>& balance_box_level,
-   const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
+   std::shared_ptr<hier::BoxLevel>& balance_box_level,
+   const std::shared_ptr<hier::BoxLevel>& anchor_box_level,
+   std::shared_ptr<hier::Connector>& anchor_to_balance,
    int tag_level_number);
 
 void
@@ -125,7 +125,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(
+      std::shared_ptr<InputDatabase> input_db(
          new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -143,7 +143,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
       const int dimval = dim.getValue();
@@ -188,7 +188,7 @@ int main(
       input_db->printClassData(plog);
 
       // tbox::TimerManager *tm = tbox::TimerManager::getManager();
-      // boost::shared_ptr<tbox::Timer> t_search_tree_for_set =
+      // std::shared_ptr<tbox::Timer> t_search_tree_for_set =
       // tm->getTimer("apps::main::search_tree_for_set");
 
       /*
@@ -236,14 +236,14 @@ int main(
          xlo[i] = 0.0;
          xhi[i] = 1.0;
       }
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",
             &xlo[0],
             &xhi[0],
             domain_boxes));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "Hierarchy",
             grid_geometry));
@@ -268,13 +268,13 @@ int main(
          dim,
          "ChopAndPackLoadBalancer",
          input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
 
       mesh::TreeLoadBalancer tree_lb(
          dim,
          "TreeLoadBalancer",
          input_db->getDatabaseWithDefault("TreeLoadBalancer",
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
       tree_lb.setSAMRAI_MPI(mpi);
 
       mesh::LoadBalanceStrategy* lb = 0;
@@ -298,12 +298,12 @@ int main(
       /*
        * Set up data used by TreeLoadBalancer.
        */
-      boost::shared_ptr<hier::BoxLevel> anchor_box_level(
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> anchor_box_level(
+         std::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), grid_geometry));
-      boost::shared_ptr<hier::BoxLevel> balance_box_level;
-      boost::shared_ptr<hier::Connector> anchor_to_balance;
-      boost::shared_ptr<hier::Connector> balance_to_balance;
+      std::shared_ptr<hier::BoxLevel> balance_box_level;
+      std::shared_ptr<hier::Connector> anchor_to_balance;
+      std::shared_ptr<hier::Connector> balance_to_balance;
 
       {
          std::vector<tbox::DatabaseBox> db_box_vector =
@@ -336,7 +336,7 @@ int main(
           * reflect the load balancer use in real apps.  We just neeed a
           * distributed anchor for the real loac balancing performance test.
           */
-         boost::shared_ptr<hier::Connector> domain_to_anchor;
+         std::shared_ptr<hier::Connector> domain_to_anchor;
          oca.findOverlapsWithTranspose(domain_to_anchor,
             domain_box_level,
             *anchor_box_level,
@@ -598,13 +598,13 @@ int main(
  ***********************************************************************
  */
 void generatePrebalanceByUserShells(
-   const boost::shared_ptr<tbox::Database>& database,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<tbox::Database>& database,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& max_gcw,
-   boost::shared_ptr<hier::BoxLevel>& balance_box_level,
-   const boost::shared_ptr<hier::BoxLevel>& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance,
+   std::shared_ptr<hier::BoxLevel>& balance_box_level,
+   const std::shared_ptr<hier::BoxLevel>& anchor_box_level,
+   std::shared_ptr<hier::Connector>& anchor_to_balance,
    int tag_level_number)
 {
 
@@ -620,7 +620,7 @@ void generatePrebalanceByUserShells(
    std::vector<double> r0(dimval);
    for (int d = 0; d < dimval; ++d) r0[d] = 0;
 
-   boost::shared_ptr<tbox::Database> abr_db;
+   std::shared_ptr<tbox::Database> abr_db;
    if (database) {
       if (database->isDouble("r0")) {
          r0 = database->getDoubleVector("r0");
@@ -636,22 +636,22 @@ void generatePrebalanceByUserShells(
 
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+   std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
-   boost::shared_ptr<hier::PatchLevel> tag_level(
+   std::shared_ptr<hier::PatchLevel> tag_level(
       new hier::PatchLevel(
          anchor_box_level,
          grid_geometry,
          vdb->getPatchDescriptor()));
    tag_level->setLevelNumber(tag_level_number);
 
-   boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
+   std::shared_ptr<pdat::CellVariable<int> > tag_variable(
       new pdat::CellVariable<int>(dim, "TagVariable"));
 
-   boost::shared_ptr<hier::VariableContext> default_context(
+   std::shared_ptr<hier::VariableContext> default_context(
       vdb->getContext("TagVariable"));
 
    const int tag_id = vdb->registerVariableAndContext(
@@ -665,9 +665,9 @@ void generatePrebalanceByUserShells(
    const double* h = grid_geometry->getDx();
    for (hier::PatchLevel::iterator pi(tag_level->begin());
         pi != tag_level->end(); ++pi) {
-      const boost::shared_ptr<hier::Patch>& patch = *pi;
-      boost::shared_ptr<pdat::CellData<int> > tag_data(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+      const std::shared_ptr<hier::Patch>& patch = *pi;
+      std::shared_ptr<pdat::CellData<int> > tag_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_id)));
       TBOX_ASSERT(tag_data);
 
@@ -724,13 +724,13 @@ void generatePrebalanceByUserShells(
  ***********************************************************************
  */
 void generatePrebalanceByUserBoxes(
-   boost::shared_ptr<tbox::Database> database,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   std::shared_ptr<tbox::Database> database,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::IntVector& min_size,
    const hier::IntVector& max_gcw,
-   boost::shared_ptr<hier::BoxLevel>& balance_box_level,
+   std::shared_ptr<hier::BoxLevel>& balance_box_level,
    const hier::BoxLevel& anchor_box_level,
-   boost::shared_ptr<hier::Connector>& anchor_to_balance)
+   std::shared_ptr<hier::Connector>& anchor_to_balance)
 {
    NULL_USE(hierarchy);
    NULL_USE(min_size);
@@ -776,8 +776,8 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   boost::shared_ptr<hier::MappingConnector> sorting_map;
-   boost::shared_ptr<hier::BoxLevel> seq_box_level;
+   std::shared_ptr<hier::MappingConnector> sorting_map;
+   std::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       seq_box_level,

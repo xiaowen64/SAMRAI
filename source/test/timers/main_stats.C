@@ -23,8 +23,9 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
+
 using namespace std;
 
 using namespace SAMRAI;
@@ -86,7 +87,7 @@ int main(
             mpi.getSize());
       }
 
-      boost::shared_ptr<tbox::Database> restart_db(
+      std::shared_ptr<tbox::Database> restart_db(
          tbox::RestartManager::getManager()->getRootDatabase());
       NULL_USE(restart_db);
 
@@ -105,19 +106,19 @@ int main(
        * Create statistics.
        */
 
-      boost::shared_ptr<tbox::Statistic> procstat1(
+      std::shared_ptr<tbox::Statistic> procstat1(
          statistician->getStatistic("procstat1", "PROC_STAT"));
-      boost::shared_ptr<tbox::Statistic> procstat2(
+      std::shared_ptr<tbox::Statistic> procstat2(
          statistician->getStatistic("procstat2", "PROC_STAT"));
-      boost::shared_ptr<tbox::Statistic> procstat3(
+      std::shared_ptr<tbox::Statistic> procstat3(
          statistician->getStatistic("procstat3", "PROC_STAT"));
       NULL_USE(procstat3);
 
-      boost::shared_ptr<tbox::Statistic> patchstat1(
+      std::shared_ptr<tbox::Statistic> patchstat1(
          statistician->getStatistic("patchstat1", "PATCH_STAT"));
-      boost::shared_ptr<tbox::Statistic> patchstat2(
+      std::shared_ptr<tbox::Statistic> patchstat2(
          statistician->getStatistic("patchstat2", "PATCH_STAT"));
-      boost::shared_ptr<tbox::Statistic> patchstat3(
+      std::shared_ptr<tbox::Statistic> patchstat3(
          statistician->getStatistic("patchstat3", "PATCH_STAT"));
       NULL_USE(patchstat3);
 
@@ -200,7 +201,7 @@ int main(
       }
 
       // Test #2:
-      boost::shared_ptr<tbox::Statistic> tstat;
+      std::shared_ptr<tbox::Statistic> tstat;
       if (!statistician->checkStatisticExists(tstat, "procstat2")) {
          ++fail_count;
          tbox::perr

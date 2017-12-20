@@ -225,7 +225,7 @@ public:
     */
    virtual void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /**
     * Writes out the class version number to the restart database.  Then,
@@ -235,7 +235,7 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * @brief Return the dimension of this object.

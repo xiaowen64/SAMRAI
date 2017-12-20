@@ -43,8 +43,8 @@ namespace tbox {
  */
 // #define AsyncCommGroup_DEBUG_OUTPUT
 
-boost::shared_ptr<Timer> AsyncCommGroup::t_reduce_data;
-boost::shared_ptr<Timer> AsyncCommGroup::t_wait_all;
+std::shared_ptr<Timer> AsyncCommGroup::t_reduce_data;
+std::shared_ptr<Timer> AsyncCommGroup::t_wait_all;
 
 StartupShutdownManager::Handler
 AsyncCommGroup::s_initialize_finalize_handler(

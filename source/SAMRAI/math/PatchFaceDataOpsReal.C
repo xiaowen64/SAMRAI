@@ -45,17 +45,17 @@ PatchFaceDataOpsReal<TYPE>::~PatchFaceDataOpsReal()
 template<class TYPE>
 void
 PatchFaceDataOpsReal<TYPE>::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::FaceData<TYPE> > d1(
-      BOOST_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<TYPE> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::FaceData<TYPE> > d2(
-      BOOST_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<TYPE> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -70,7 +70,7 @@ PatchFaceDataOpsReal<TYPE>::swapData(
 template<class TYPE>
 void
 PatchFaceDataOpsReal<TYPE>::printData(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -85,8 +85,8 @@ PatchFaceDataOpsReal<TYPE>::printData(
 template<class TYPE>
 void
 PatchFaceDataOpsReal<TYPE>::copyData(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -103,7 +103,7 @@ PatchFaceDataOpsReal<TYPE>::copyData(
 template<class TYPE>
 void
 PatchFaceDataOpsReal<TYPE>::setToScalar(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {

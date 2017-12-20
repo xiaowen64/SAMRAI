@@ -19,10 +19,10 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -103,11 +103,11 @@ namespace hier {
  *    VariableDatabase* var_db = VariableDatabase.getDatabase();
  *
  *    // Create the context (or access it if it exists already).
- *    boost::shared_ptr<VariableContext> current =
+ *    std::shared_ptr<VariableContext> current =
  *       var_db->getContext("CURRENT");
  *
  *    // Define the variable.
- *    boost::shared_ptr<pdat::FaceVariable<double> > flux(
+ *    std::shared_ptr<pdat::FaceVariable<double> > flux(
  *       new pdat::FaceVariable<double>(dim, "flux", 1));
  *
  *    // Register the Variable/VariableContext pair.
@@ -206,7 +206,7 @@ public:
     *
     * This descriptor is shared by all patches in the hierarchy.
     */
-   virtual boost::shared_ptr<PatchDescriptor>
+   virtual std::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const;
 
    /*!
@@ -225,7 +225,7 @@ public:
     *
     * @return  Variable context.
     */
-   virtual boost::shared_ptr<VariableContext>
+   virtual std::shared_ptr<VariableContext>
    getContext(
       const std::string& context_name);
 
@@ -247,13 +247,13 @@ public:
     * error will be logged and the program will abort.  This prevents
     * multiple Variables being associated with the same name.
     *
-    * @param[in] variable boost::shared_ptr to variable
+    * @param[in] variable std::shared_ptr to variable
     *
     * @pre variable
     */
    virtual void
    addVariable(
-      const boost::shared_ptr<Variable>& variable);
+      const std::shared_ptr<Variable>& variable);
 
    /*!
     * @brief Remove the Variable from the database identified by @c name.
@@ -272,7 +272,7 @@ public:
     * @return  Variable in the database with given name.
     *          If no such variable exists, a null pointer is returned.
     */
-   virtual boost::shared_ptr<Variable>
+   virtual std::shared_ptr<Variable>
    getVariable(
       const std::string& variable_name) const;
 
@@ -302,7 +302,7 @@ public:
     * This function does not deallocate any patch data storage associated
     * with the new patch data index.
     *
-    * @param[in]  variable boost::shared_ptr to @c Variable.  If the variable
+    * @param[in]  variable std::shared_ptr to @c Variable.  If the variable
     *             is unknown to the database, then an invalid patch data index
     *             (< 0) will be returned
     * @param[in]  old_id Integer patch data index currently associated with
@@ -319,7 +319,7 @@ public:
     */
    virtual int
    registerClonedPatchDataIndex(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       int old_id);
 
    /*!
@@ -348,7 +348,7 @@ public:
     *        routine registerInternalSAMRAIVariable() must be used for that
     *        case.
     * </ul>
-    * @param[in]  variable boost::shared_ptr to Variable
+    * @param[in]  variable std::shared_ptr to Variable
     * @param[in]  data_id  Optional integer patch data index to be added
     *                      (along with variable) to the database.  If the value
     *                      is unspecified (default case), the default variable
@@ -365,7 +365,7 @@ public:
     */
    virtual int
    registerPatchDataIndex(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       int data_id = idUndefined());
 
    /*!
@@ -391,7 +391,7 @@ public:
     * @brief Check whether the given variable is mapped to the given patch data
     * index in the database.
     *
-    * @param[in]  variable  boost::shared_ptr to variable
+    * @param[in]  variable  std::shared_ptr to variable
     * @param[in]  data_id   Integer patch data index
     *
     * @return  Boolean true if the variable is mapped the given patch
@@ -403,14 +403,14 @@ public:
     */
    virtual bool
    checkVariablePatchDataIndex(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       int data_id) const;
 
    /*!
     * @brief Check whether the given variable matches the patch data type
     * associated with the given patch data index in the database.
     *
-    * @param[in]  variable  boost::shared_ptr to variable
+    * @param[in]  variable  std::shared_ptr to variable
     * @param[in] data_id   Integer patch data index
     *
     * @return  Boolean true if the type of the variable matches the type of
@@ -422,7 +422,7 @@ public:
     */
    virtual bool
    checkVariablePatchDataIndexType(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       int data_id) const;
 
    /*!
@@ -454,8 +454,8 @@ public:
     * in this case.
     *
     *
-    * @param[in]  variable  boost::shared_ptr to variable
-    * @param[in] context    boost::shared_ptr to variable context
+    * @param[in]  variable  std::shared_ptr to variable
+    * @param[in] context    std::shared_ptr to variable context
     * @param[in] ghosts     Optional ghost width for patch data associated
     *                       with variable-context pair.
     *
@@ -467,8 +467,8 @@ public:
     */
    virtual int
    registerVariableAndContext(
-      const boost::shared_ptr<Variable>& variable,
-      const boost::shared_ptr<VariableContext>& context,
+      const std::shared_ptr<Variable>& variable,
+      const std::shared_ptr<VariableContext>& context,
       const IntVector& ghosts // NOTE: old default (zero ghost width)
                               // does not work since dimension of
                               // variable and IntVector must match.
@@ -489,8 +489,8 @@ public:
     * associated with the variable will not be returned.  See the other
     * map...() functions declared in this class.
     *
-    * @param[in]  variable  boost::shared_ptr to variable
-    * @param[in]  context   boost::shared_ptr to variable context
+    * @param[in]  variable  std::shared_ptr to variable
+    * @param[in]  context   std::shared_ptr to variable context
     *
     * @return Integer patch data index of variable-context pair in database.
     *         If the variable-context pair was not registered with the
@@ -501,15 +501,15 @@ public:
     */
    virtual int
    mapVariableAndContextToIndex(
-      const boost::shared_ptr<Variable>& variable,
-      const boost::shared_ptr<VariableContext>& context) const;
+      const std::shared_ptr<Variable>& variable,
+      const std::shared_ptr<VariableContext>& context) const;
 
    /*!
     * @brief Map patch data index to variable associated with the data, if
     * possible, and set the variable pointer to the variable in the database.
     *
     * @param[in]   index  Integer patch data index
-    * @param[out]  variable  boost::shared_ptr to variable that maps to patch
+    * @param[out]  variable  std::shared_ptr to variable that maps to patch
     *                    data index in database.  If there is no index in the
     *                    database matching the index input value, then the
     *                    variable pointer is set to null.
@@ -520,7 +520,7 @@ public:
    virtual bool
    mapIndexToVariable(
       const int index,
-      boost::shared_ptr<Variable>& variable) const;
+      std::shared_ptr<Variable>& variable) const;
 
    /*!
     * @brief Map patch data index to variable-context pair associated with
@@ -537,9 +537,9 @@ public:
     * variables.
     *
     * @param[in]   index patch data index
-    * @param[out]   variable boost::shared_ptr to variable set to matching
+    * @param[out]   variable std::shared_ptr to variable set to matching
     *          variable in database.  If no match is found, it is set to null.
-    * @param[out]   context  boost::shared_ptr to variable context set to
+    * @param[out]   context  std::shared_ptr to variable context set to
     *          matching variable context in database. If no match is found, it
     *          is set to null.
     *
@@ -549,8 +549,8 @@ public:
    virtual bool
    mapIndexToVariableAndContext(
       const int index,
-      boost::shared_ptr<Variable>& variable,
-      boost::shared_ptr<VariableContext>& context) const;
+      std::shared_ptr<Variable>& variable,
+      std::shared_ptr<VariableContext>& context) const;
 
    /*!
     * @brief Print variable, context, and patch descriptor information
@@ -593,7 +593,7 @@ public:
     * SAMRAI variables.
     *
     *
-    * @param[in]  variable  boost::shared_ptr to variable
+    * @param[in]  variable  std::shared_ptr to variable
     * @param[in] ghosts     Ghost width for patch data associated with the
     *                       variable
     * @return Integer patch data index of variable-ghost width pair
@@ -604,7 +604,7 @@ public:
     */
    virtual int
    registerInternalSAMRAIVariable(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       const IntVector& ghosts);
 
    /*!
@@ -710,7 +710,7 @@ private:
 
    void
    addContext_Private(
-      const boost::shared_ptr<VariableContext>& context);
+      const std::shared_ptr<VariableContext>& context);
 
    /*
     * Private member function to add variable to database (either
@@ -723,7 +723,7 @@ private:
     */
    bool
    addVariable_Private(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       bool user_variable);
 
    /*
@@ -733,7 +733,7 @@ private:
     */
    void
    addVariablePatchDataIndexPairToDatabase_Private(
-      const boost::shared_ptr<Variable>& variable,
+      const std::shared_ptr<Variable>& variable,
       int data_id,
       bool user_variable);
 
@@ -744,8 +744,8 @@ private:
     */
    int
    registerVariableAndContext_Private(
-      const boost::shared_ptr<Variable>& variable,
-      const boost::shared_ptr<VariableContext>& context,
+      const std::shared_ptr<Variable>& variable,
+      const std::shared_ptr<VariableContext>& context,
       const IntVector& ghosts,
       bool user_variable);
 
@@ -765,9 +765,9 @@ private:
    /*
     * Data members that store variable, context, patch data index information.
     */
-   boost::shared_ptr<PatchDescriptor> d_patch_descriptor;
+   std::shared_ptr<PatchDescriptor> d_patch_descriptor;
 
-   boost::shared_ptr<VariableContext> d_internal_SAMRAI_context;
+   std::shared_ptr<VariableContext> d_internal_SAMRAI_context;
 
    int d_num_registered_patch_data_ids;
 
@@ -776,13 +776,13 @@ private:
     * d_contexts[ <context id> ]
     */
    int d_max_context_id;
-   std::vector<boost::shared_ptr<VariableContext> > d_contexts;
+   std::vector<std::shared_ptr<VariableContext> > d_contexts;
 
    /*
     * Vector of Variable pointers is indexed as d_variables[ <variable id> ]
     */
    int d_max_variable_id;
-   std::vector<boost::shared_ptr<Variable> > d_variables;
+   std::vector<std::shared_ptr<Variable> > d_variables;
 
    /*
     * Vector of VariableContext to patch descriptor indices is indexed as
@@ -795,7 +795,7 @@ private:
     * d_index2variable_map[ <descriptor id> ]
     */
    int d_max_descriptor_id;
-   std::vector<boost::shared_ptr<Variable> > d_index2variable_map;
+   std::vector<std::shared_ptr<Variable> > d_index2variable_map;
 
    /*
     * Vector of user variable booleans is indexed as

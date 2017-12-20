@@ -122,11 +122,11 @@ EdgeComplexConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<EdgeData<dcomplex> > cdata(
-      BOOST_CAST<EdgeData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<EdgeData<dcomplex> > cdata(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<EdgeData<dcomplex> > fdata(
-      BOOST_CAST<EdgeData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<EdgeData<dcomplex> > fdata(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);

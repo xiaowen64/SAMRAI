@@ -36,7 +36,7 @@ using namespace std;
 CommTester::CommTester(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    PatchDataTestStrategy* data_test,
    bool do_refine,
    bool do_coarsen,
@@ -115,11 +115,11 @@ CommTester::~CommTester()
  */
 
 void CommTester::registerVariable(
-   const boost::shared_ptr<hier::Variable> src_variable,
-   const boost::shared_ptr<hier::Variable> dst_variable,
+   const std::shared_ptr<hier::Variable> src_variable,
+   const std::shared_ptr<hier::Variable> dst_variable,
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
-   const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
+   const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
@@ -148,7 +148,7 @@ void CommTester::registerVariable(
    d_patch_data_components.setFlag(dst_id);
 
    if (d_do_refine) {
-      boost::shared_ptr<hier::RefineOperator> refine_operator(
+      std::shared_ptr<hier::RefineOperator> refine_operator(
          xfer_geom->lookupRefineOperator(src_variable, operator_name));
 
       hier::IntVector scratch_ghosts(hier::IntVector::max(src_ghosts,
@@ -177,7 +177,7 @@ void CommTester::registerVariable(
             refine_operator);
       }
    } else if (d_do_coarsen) {
-      boost::shared_ptr<hier::CoarsenOperator> coarsen_operator(
+      std::shared_ptr<hier::CoarsenOperator> coarsen_operator(
          xfer_geom->lookupCoarsenOperator(src_variable, operator_name));
       d_coarsen_algorithm.registerCoarsen(dst_id,
          src_id,
@@ -190,11 +190,11 @@ void CommTester::registerVariable(
 }
 
 void CommTester::registerVariableForReset(
-   const boost::shared_ptr<hier::Variable> src_variable,
-   const boost::shared_ptr<hier::Variable> dst_variable,
+   const std::shared_ptr<hier::Variable> src_variable,
+   const std::shared_ptr<hier::Variable> dst_variable,
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
-   const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
+   const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
@@ -218,7 +218,7 @@ void CommTester::registerVariableForReset(
    d_patch_data_components.setFlag(dst_id);
 
    if (d_do_refine) {
-      boost::shared_ptr<hier::RefineOperator> refine_operator(
+      std::shared_ptr<hier::RefineOperator> refine_operator(
          xfer_geom->lookupRefineOperator(src_variable, operator_name));
 
       hier::IntVector scratch_ghosts(hier::IntVector::max(src_ghosts,
@@ -240,7 +240,7 @@ void CommTester::registerVariableForReset(
          refine_operator);
 
    } else if (d_do_coarsen) {
-      boost::shared_ptr<hier::CoarsenOperator> coarsen_operator(
+      std::shared_ptr<hier::CoarsenOperator> coarsen_operator(
          xfer_geom->lookupCoarsenOperator(src_variable, operator_name));
       d_reset_coarsen_algorithm.registerCoarsen(dst_id,
          src_id,
@@ -263,7 +263,7 @@ void CommTester::createRefineSchedule(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    if (d_do_refine) {
@@ -312,7 +312,7 @@ void CommTester::createRefineSchedule(
       } else if (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL") {
          d_refine_schedule[level_number] =
             d_refine_algorithm.createSchedule(level,
-               boost::shared_ptr<hier::PatchLevel>(),
+               std::shared_ptr<hier::PatchLevel>(),
                level_number - 1,
                d_patch_hierarchy,
                this);
@@ -348,9 +348,9 @@ void CommTester::createCoarsenSchedule(
       d_coarsen_schedule.resize(d_patch_hierarchy->getNumberOfLevels());
       d_coarsen_schedule[level_number].reset();
 
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(level_number));
-      boost::shared_ptr<hier::PatchLevel> coarser_level(
+      std::shared_ptr<hier::PatchLevel> coarser_level(
          d_patch_hierarchy->getPatchLevel(level_number - 1));
 
       d_coarsen_schedule[level_number] =
@@ -436,20 +436,20 @@ bool CommTester::performCompositeBoundaryComm(
            itr != dst_ids.end(); ++itr) {
          cba.addDataId(*itr);
       }
-      boost::shared_ptr<SAMRAI::xfer::CompositeBoundarySchedule> cbsched =
+      std::shared_ptr<SAMRAI::xfer::CompositeBoundarySchedule> cbsched =
          cba.createSchedule(level_number);
       cbsched->fillData(d_fake_time);
 
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(level_number));
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
          for (std::list<int>::const_iterator itr = dst_ids.begin();
               itr != dst_ids.end(); ++itr) {
-            const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data =
+            const std::vector<std::shared_ptr<hier::PatchData> >& bdry_data =
                cbsched->getBoundaryPatchData(*patch, *itr);
 
             bool result = d_data_test_strategy->verifyCompositeBoundaryData(
@@ -486,12 +486,12 @@ bool CommTester::verifyCommunicationResults() const
    }
    for (int ln = 0;
         ln <= d_patch_hierarchy->getFinestLevelNumber(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
          tests_pass = tests_pass &&
             d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
@@ -513,12 +513,12 @@ bool CommTester::verifyCommunicationResults() const
  */
 
 void CommTester::initializeLevelData(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const boost::shared_ptr<hier::PatchLevel>& old_level,
+   const std::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
@@ -587,7 +587,7 @@ void CommTester::initializeLevelData(
 }
 
 void CommTester::resetHierarchyConfiguration(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
@@ -674,8 +674,8 @@ void CommTester::postprocessCoarsen(
  */
 
 void CommTester::setupHierarchy(
-   boost::shared_ptr<tbox::Database> main_input_db,
-   boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
+   std::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
 {
    TBOX_ASSERT(main_input_db);
 
@@ -684,18 +684,18 @@ void CommTester::setupHierarchy(
          d_data_test_strategy->getGridGeometry(),
          main_input_db->getDatabase("PatchHierarchy")));
 
-   boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+   std::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim,
          main_input_db->getDatabase("BergerRigoutsos")));
 
-   boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+   std::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(
          d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+   std::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
       new mesh::GriddingAlgorithm(
          d_patch_hierarchy,
          "GriddingAlgorithm",
@@ -723,7 +723,7 @@ void CommTester::setupHierarchy(
     * there are no precomputed Connectors.
     */
    for (int ln = 0; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
       level->getBoxLevel()->clearPersistentOverlapConnectors();
    }

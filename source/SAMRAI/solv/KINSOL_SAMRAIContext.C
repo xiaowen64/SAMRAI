@@ -35,7 +35,7 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const std::string& object_name,
    KINSOLAbstractFunctions* my_functions,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_object_name(object_name),
    d_KINSOL_solver(new KINSOLSolver(object_name, my_functions, 0, 0)),
    d_solution_vector(0),
@@ -101,7 +101,7 @@ KINSOL_SAMRAIContext::~KINSOL_SAMRAIContext()
 
 void
 KINSOL_SAMRAIContext::initialize(
-   const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
+   const std::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
    TBOX_ASSERT(solution);
 
@@ -127,7 +127,7 @@ KINSOL_SAMRAIContext::solve()
 
 void
 KINSOL_SAMRAIContext::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (input_db) {
@@ -362,14 +362,14 @@ void
 KINSOL_SAMRAIContext::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   std::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("SOLV_KINSOL_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_KINSOL_SAMRAI_CONTEXT_VERSION) {
@@ -461,7 +461,7 @@ KINSOL_SAMRAIContext::getFromRestart()
 
 void
 KINSOL_SAMRAIContext::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 

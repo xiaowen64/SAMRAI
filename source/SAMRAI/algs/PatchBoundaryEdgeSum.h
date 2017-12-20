@@ -20,9 +20,9 @@
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {
@@ -132,7 +132,7 @@ public:
     *
     *  @pre !d_setup_called
     *  @pre edge_data_id >= 0
-    *  @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(edge_data_id) is actually a boost::shared_ptr<pdat::EdgeDataFactory<double> >
+    *  @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(edge_data_id) is actually a std::shared_ptr<pdat::EdgeDataFactory<double> >
     */
    void
    registerSum(
@@ -148,7 +148,7 @@ public:
     */
    void
    setupSum(
-      const boost::shared_ptr<hier::PatchLevel>& level);
+      const std::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Compute sum of edge values at each shared edge and replace
@@ -178,7 +178,7 @@ private:
     */
    void
    doLevelSum(
-      const boost::shared_ptr<hier::PatchLevel>& level) const;
+      const std::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Static members for managing shared temporary data among multiple
@@ -208,8 +208,8 @@ private:
     * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
-   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_oedge_dst_variable;
+   std::vector<std::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
+   std::vector<std::shared_ptr<hier::Variable> > d_tmp_oedge_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    std::vector<int> d_oedge_src_id;
@@ -222,11 +222,11 @@ private:
    hier::ComponentSelector d_oedge_src_data_set;
    hier::ComponentSelector d_oedge_dst_data_set;
 
-   boost::shared_ptr<hier::PatchLevel> d_level;
+   std::shared_ptr<hier::PatchLevel> d_level;
 
-   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   std::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   boost::shared_ptr<xfer::RefineSchedule> d_single_level_sum_schedule;
+   std::shared_ptr<xfer::RefineSchedule> d_single_level_sum_schedule;
 
 };
 

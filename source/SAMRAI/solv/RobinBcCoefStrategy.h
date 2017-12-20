@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -136,10 +136,10 @@ public:
     */
    virtual void
    setBcCoefs(
-      const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-      const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-      const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      const std::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      const std::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const std::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       const double fill_time = 0.0) const = 0;

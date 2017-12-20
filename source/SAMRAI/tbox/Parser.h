@@ -14,10 +14,10 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #include <cstdio>
 #include <string>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -77,7 +77,7 @@ public:
    parse(
       const std::string& filename,
       FILE* fstream,
-      const boost::shared_ptr<Database>& database);
+      const std::shared_ptr<Database>& database);
 
    /**
     * Return the total number of errors resulting from the parse.
@@ -112,7 +112,7 @@ public:
     * Return the current database scope.  The current scope is modified
     * through the enterScope() and leaveScope() member functions.
     */
-   boost::shared_ptr<Database>&
+   std::shared_ptr<Database>&
    getScope()
    {
       return d_scope_stack.front();
@@ -143,7 +143,7 @@ public:
     * Lookup the scope that contains the specified key.  If the scope does
     * not exist, then return a NULL pointer to the database.
     */
-   boost::shared_ptr<Database>
+   std::shared_ptr<Database>
    getDatabaseWithKey(
       const std::string& name);
 
@@ -243,7 +243,7 @@ private:
 
    std::list<Parser::ParseData> d_parse_stack;
 
-   std::list<boost::shared_ptr<Database> > d_scope_stack;
+   std::list<std::shared_ptr<Database> > d_scope_stack;
 
    static Parser* s_default_parser;
 

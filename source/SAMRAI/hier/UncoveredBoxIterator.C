@@ -76,7 +76,7 @@ UncoveredBoxIterator::UncoveredBoxIterator(
    d_finest_level_num(other.d_finest_level_num)
 {
    if (other.d_item) {
-      d_item = new std::pair<boost::shared_ptr<Patch>, Box>(*other.d_item);
+      d_item = new std::pair<std::shared_ptr<Patch>, Box>(*other.d_item);
    }
    if (other.d_flattened_hierarchy) {
       d_flattened_hierarchy =
@@ -132,7 +132,7 @@ UncoveredBoxIterator::operator = (
          delete d_item;
       }
       if (rhs.d_item) {
-         d_item = new std::pair<boost::shared_ptr<Patch>, Box>(*rhs.d_item);
+         d_item = new std::pair<std::shared_ptr<Patch>, Box>(*rhs.d_item);
          d_item->first = rhs.d_item->first;
          d_item->second = rhs.d_item->second;
       } else {
@@ -177,13 +177,13 @@ UncoveredBoxIterator::operator = (
    return *this;
 }
 
-const std::pair<boost::shared_ptr<Patch>, Box>&
+const std::pair<std::shared_ptr<Patch>, Box>&
 UncoveredBoxIterator::operator * () const
 {
    return *d_item;
 }
 
-const std::pair<boost::shared_ptr<Patch>, Box> *
+const std::pair<std::shared_ptr<Patch>, Box> *
 UncoveredBoxIterator::operator -> () const
 {
    return d_item;
@@ -276,7 +276,7 @@ UncoveredBoxIterator::incrementIterator()
       bool new_level = false;
       while (d_level_num <= d_finest_level_num) {
 
-         boost::shared_ptr<PatchLevel> this_level =
+         std::shared_ptr<PatchLevel> this_level =
             d_hierarchy->getPatchLevel(d_level_num);
 
          const BoxContainer& this_level_boxes =
@@ -327,14 +327,14 @@ void
 UncoveredBoxIterator::findFirstUncoveredBox()
 {
    ++d_level_num;
-   boost::shared_ptr<PatchLevel> this_level =
+   std::shared_ptr<PatchLevel> this_level =
       d_hierarchy->getPatchLevel(d_level_num);
 
    bool id_found = false;
 
    while (d_level_num <= d_finest_level_num) { 
 
-      boost::shared_ptr<PatchLevel> this_level =
+      std::shared_ptr<PatchLevel> this_level =
          d_hierarchy->getPatchLevel(d_level_num);
 
       const BoxContainer& this_level_boxes =
@@ -383,7 +383,7 @@ UncoveredBoxIterator::setIteratorItem()
 {
    // Get the current uncovered box.
    const Box& cur_box = *d_uncovered_boxes_itr;
-   boost::shared_ptr<PatchLevel> this_level =
+   std::shared_ptr<PatchLevel> this_level =
       d_hierarchy->getPatchLevel(d_level_num);
 
    // Update item with the current originating patch and the current box.
@@ -393,7 +393,7 @@ UncoveredBoxIterator::setIteratorItem()
       d_item->second = cur_box;
    } else {
       d_item =
-         new std::pair<boost::shared_ptr<Patch>, Box>(
+         new std::pair<std::shared_ptr<Patch>, Box>(
             this_level->getPatch(d_current_patch_id),
             cur_box);
    }

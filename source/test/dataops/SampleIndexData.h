@@ -21,7 +21,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/IOStream.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 /**
  * The SampleClass struct holds some dummy data and methods.  It's intent
@@ -89,10 +89,10 @@ public:
     */
    void
    getFromRestart(
-      boost::shared_ptr<tbox::Database>& restart_db);
+      std::shared_ptr<tbox::Database>& restart_db);
    void
    putToRestart(
-      boost::shared_ptr<tbox::Database>& restart_db) const;
+      std::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    /*

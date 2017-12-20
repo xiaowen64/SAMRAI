@@ -22,7 +22,6 @@
 #endif
 #include "SAMRAI/hier/RefineOperator.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace std;
 using namespace SAMRAI;

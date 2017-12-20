@@ -11,6 +11,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <string>
+#include <memory>
 using namespace std;
 
 // Headers for basic SAMRAI objects used in this code.
@@ -30,8 +31,6 @@ using namespace std;
 
 // Headers for classes specific to this example
 #include "BoundaryDataTester.h"
-
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -70,7 +69,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      std::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -80,7 +79,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db(
+         std::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -93,7 +92,7 @@ int main(
        * Read "Main" input data.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -114,13 +113,13 @@ int main(
        * state of BoundaryDataTester to log file for checking.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry));
@@ -162,8 +161,8 @@ int main(
       }
 
       hier::BoxLevelConnectorUtils edge_utils;
-      boost::shared_ptr<hier::BoxLevel> layer0(
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> layer0(
+         std::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), grid_geometry));
       hier::BoxContainer::const_iterator domain_boxes = domain.begin();
       int rank = mpi.getRank();
@@ -181,7 +180,7 @@ int main(
       patch_hierarchy->makeNewPatchLevel(0, layer0);
 
       // Add Connector required for schedule construction.
-      boost::shared_ptr<hier::PatchLevel> level0(
+      std::shared_ptr<hier::PatchLevel> level0(
          patch_hierarchy->getPatchLevel(0));
       level0->createConnector(*level0, hier::IntVector(dim, 2));
 

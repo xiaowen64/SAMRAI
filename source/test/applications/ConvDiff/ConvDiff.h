@@ -31,8 +31,8 @@ using namespace std;
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
+#include <memory>
 
 /**
  * The ConvDiff class provides numerical routines for a sample problem
@@ -79,8 +79,8 @@ public:
    ConvDiff(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
+      std::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * The destructor for ConvDiff.
@@ -255,7 +255,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -267,13 +267,13 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
    void
    readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -285,7 +285,7 @@ public:
 #ifdef HAVE_HDF5
    void
    registerVisItDataWriter(
-      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
+      std::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -307,7 +307,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    virtual void
@@ -315,7 +315,7 @@ private:
 
    void
    readStateDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      std::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       std::vector<double>& uval);
@@ -342,21 +342,21 @@ private:
    tbox::Dimension d_dim;
 
    /*
-    * boost::shared_ptr to the grid geometry object used (Cartesian) to setup
+    * std::shared_ptr to the grid geometry object used (Cartesian) to setup
     * initial data and to set physical boundary conditions.
     */
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
 #ifdef HAVE_HDF5
-   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
+   std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
    /*
-    * boost::shared_ptrs to variables.  d_primitive_vars - [u]
+    * std::shared_ptrs to variables.  d_primitive_vars - [u]
     *                                   d_function_eval  - [F(u)]
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_primitive_vars;
-   boost::shared_ptr<pdat::CellVariable<double> > d_function_eval;
+   std::shared_ptr<pdat::CellVariable<double> > d_primitive_vars;
+   std::shared_ptr<pdat::CellVariable<double> > d_function_eval;
 
    /*
     * Convection-diffusion equation constant vectors

@@ -91,11 +91,11 @@ NodeComplexInjection::coarsen(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
-   boost::shared_ptr<NodeData<dcomplex> > fdata(
-      BOOST_CAST<NodeData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<NodeData<dcomplex> > fdata(
+      SAMRAI_SHARED_PTR_CAST<NodeData<dcomplex>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<NodeData<dcomplex> > cdata(
-      BOOST_CAST<NodeData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<NodeData<dcomplex> > cdata(
+      SAMRAI_SHARED_PTR_CAST<NodeData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

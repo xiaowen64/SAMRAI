@@ -15,7 +15,6 @@
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -34,7 +33,7 @@ CoarsenAlgorithm::CoarsenAlgorithm(
    const tbox::Dimension& dim,
    bool fill_coarse_data):
    d_dim(dim),
-   d_coarsen_classes(boost::make_shared<CoarsenClasses>()),
+   d_coarsen_classes(std::make_shared<CoarsenClasses>()),
    d_fill_coarse_data(fill_coarse_data),
    d_schedule_created(false)
 {
@@ -64,9 +63,9 @@ void
 CoarsenAlgorithm::registerCoarsen(
    const int dst,
    const int src,
-   const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
+   const std::shared_ptr<hier::CoarsenOperator>& opcoarsen,
    const hier::IntVector& gcw_to_coarsen,
-   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
+   const std::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
    if (d_schedule_created) {
       TBOX_ERROR(
@@ -104,12 +103,12 @@ CoarsenAlgorithm::registerCoarsen(
  *************************************************************************
  */
 
-boost::shared_ptr<CoarsenSchedule>
+std::shared_ptr<CoarsenSchedule>
 CoarsenAlgorithm::createSchedule(
-   const boost::shared_ptr<hier::PatchLevel>& crse_level,
-   const boost::shared_ptr<hier::PatchLevel>& fine_level,
+   const std::shared_ptr<hier::PatchLevel>& crse_level,
+   const std::shared_ptr<hier::PatchLevel>& fine_level,
    CoarsenPatchStrategy* patch_strategy,
-   const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory)
+   const std::shared_ptr<CoarsenTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(crse_level);
    TBOX_ASSERT(fine_level);
@@ -117,14 +116,14 @@ CoarsenAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<CoarsenTransactionFactory> trans_factory(
+   std::shared_ptr<CoarsenTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardCoarsenTransactionFactory());
    }
 
-   return boost::make_shared<CoarsenSchedule>(
+   return std::make_shared<CoarsenSchedule>(
              crse_level,
              fine_level,
              d_coarsen_classes,
@@ -135,7 +134,7 @@ CoarsenAlgorithm::createSchedule(
 
 void
 CoarsenAlgorithm::resetSchedule(
-   const boost::shared_ptr<CoarsenSchedule>& schedule) const
+   const std::shared_ptr<CoarsenSchedule>& schedule) const
 {
 
    TBOX_ASSERT(schedule);

@@ -16,9 +16,8 @@
 #include "SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 
-#include "boost/shared_ptr.hpp"
-
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {
@@ -185,8 +184,8 @@ public:
    StandardTagAndInitialize(
       const std::string& object_name,
       StandardTagAndInitStrategy* tag_strategy,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * Virtual destructor for StandardTagAndInitialize.
@@ -297,13 +296,13 @@ public:
     */
    void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    /*!
@@ -319,7 +318,7 @@ public:
     */
    void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -337,7 +336,7 @@ public:
     */
    void
    preprocessErrorEstimation(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const int cycle,
       const double regrid_time,
@@ -360,7 +359,7 @@ public:
     */
    void
    tagCellsForRefinement(
-      const boost::shared_ptr<hier::PatchHierarchy>& level,
+      const std::shared_ptr<hier::PatchHierarchy>& level,
       const int level_number,
       const int regrid_cycle,
       const double regrid_time,
@@ -510,9 +509,9 @@ public:
     */
    virtual void
    processHierarchyBeforeAddingNewLevel(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const boost::shared_ptr<hier::BoxLevel>& new_box_level);
+      const std::shared_ptr<hier::BoxLevel>& new_box_level);
 
    /*!
     * In some cases user code may wish to process a PatchLevel before it is
@@ -534,10 +533,10 @@ public:
     */
    void
    processLevelBeforeRemoval(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>());
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>());
 
    /*!
     * @brief Check the tags on a tagged level.
@@ -556,7 +555,7 @@ public:
     */
    void
    checkUserTagData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const int regrid_cycle,
       const double regrid_time,
@@ -577,7 +576,7 @@ public:
     */
    void
    checkNewLevelTagData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const int tag_index);
 
@@ -587,7 +586,7 @@ private:
     */
    void
    preprocessRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double regrid_time,
       const double regrid_start_time,
@@ -598,7 +597,7 @@ private:
     */
    void
    tagCellsUsingRichardsonExtrapolation(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const int regrid_cycle,
       const double regrid_time,
@@ -623,7 +622,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*
     * Concrete object that supplies problem-specific initialization
@@ -643,7 +642,7 @@ private:
     * tbox::Array of patch levels containing coarsened versions of the patch
     * levels, for use with Richardson extrapolation.
     */
-   std::vector<boost::shared_ptr<hier::PatchLevel> > d_rich_extrap_coarsened_levels;
+   std::vector<std::shared_ptr<hier::PatchLevel> > d_rich_extrap_coarsened_levels;
 
    StandardTagAndInitializeConnectorWidthRequestor d_staicwri;
 

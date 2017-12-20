@@ -18,10 +18,10 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Transaction.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <map>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -78,12 +78,12 @@ public:
     * include the local processor, then the transaction is not placed
     * on the schedule.
     *
-    * @param transaction  boost::shared_ptr to transaction added to the
+    * @param transaction  std::shared_ptr to transaction added to the
     * schedule.
     */
    void
    addTransaction(
-      const boost::shared_ptr<Transaction>& transaction);
+      const std::shared_ptr<Transaction>& transaction);
 
    /*!
     * @brief Append a data transaction to the tail of the list of
@@ -94,12 +94,12 @@ public:
     * include the local processor, then the transaction will not be
     * not placed on the schedule.
     *
-    * @param transaction  boost::shared_ptr to transaction appended to the
+    * @param transaction  std::shared_ptr to transaction appended to the
     * schedule.
     */
    void
    appendTransaction(
-      const boost::shared_ptr<Transaction>& transaction);
+      const std::shared_ptr<Transaction>& transaction);
 
    /*!
     * @brief Return number of send transactions in the schedule.
@@ -340,7 +340,7 @@ private:
     * Three containers of transactions are maintained based on
     * source and destination.
     */
-   typedef std::map<int, std::list<boost::shared_ptr<Transaction> > > TransactionSets;
+   typedef std::map<int, std::list<std::shared_ptr<Transaction> > > TransactionSets;
    TransactionSets d_send_sets;
    TransactionSets d_recv_sets;
 
@@ -348,7 +348,7 @@ private:
     * @brief Transactions where the source and destination are the
     * local process.
     */
-   std::list<boost::shared_ptr<Transaction> > d_local_set;
+   std::list<std::shared_ptr<Transaction> > d_local_set;
 
    //@{ @name High-level asynchronous messages passing objects
 
@@ -417,16 +417,16 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<Timer> t_communicate;
-      boost::shared_ptr<Timer> t_begin_communication;
-      boost::shared_ptr<Timer> t_finalize_communication;
-      boost::shared_ptr<Timer> t_post_receives;
-      boost::shared_ptr<Timer> t_post_sends;
-      boost::shared_ptr<Timer> t_process_incoming_messages;
-      boost::shared_ptr<Timer> t_MPI_wait;
-      boost::shared_ptr<Timer> t_pack_stream;
-      boost::shared_ptr<Timer> t_unpack_stream;
-      boost::shared_ptr<Timer> t_local_copies;
+      std::shared_ptr<Timer> t_communicate;
+      std::shared_ptr<Timer> t_begin_communication;
+      std::shared_ptr<Timer> t_finalize_communication;
+      std::shared_ptr<Timer> t_post_receives;
+      std::shared_ptr<Timer> t_post_sends;
+      std::shared_ptr<Timer> t_process_incoming_messages;
+      std::shared_ptr<Timer> t_MPI_wait;
+      std::shared_ptr<Timer> t_pack_stream;
+      std::shared_ptr<Timer> t_unpack_stream;
+      std::shared_ptr<Timer> t_local_copies;
    };
 
    //! @brief Default prefix for Timers.

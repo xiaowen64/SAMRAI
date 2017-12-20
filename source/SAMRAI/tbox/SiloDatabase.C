@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 #include <vector>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -529,15 +528,15 @@ SiloDatabase::isDatabase(
  *************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 SiloDatabase::putDatabase(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    std::string path = d_directory + "/" + key;
-   boost::shared_ptr<Database> new_database(
-      boost::make_shared<SiloDatabase>(
+   std::shared_ptr<Database> new_database(
+      std::make_shared<SiloDatabase>(
          key,
          d_file,
          path,
@@ -556,7 +555,7 @@ SiloDatabase::putDatabase(
  ************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 SiloDatabase::getDatabase(
    const std::string& key)
 {
@@ -568,8 +567,8 @@ SiloDatabase::getDatabase(
          << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
-   boost::shared_ptr<Database> new_database(
-      boost::make_shared<SiloDatabase>(
+   std::shared_ptr<Database> new_database(
+      std::make_shared<SiloDatabase>(
          key,
          d_file,
          d_directory + "/" + key,
