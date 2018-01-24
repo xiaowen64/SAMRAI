@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for the SAMRAI database objects
  *
  ************************************************************************/
@@ -34,10 +34,10 @@ Database::~Database()
  ************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 Database::getDatabaseWithDefault(
    const std::string& key,
-   const boost::shared_ptr<Database>& defaultvalue)
+   const std::shared_ptr<Database>& defaultvalue)
 {
    TBOX_ASSERT(!key.empty());
 

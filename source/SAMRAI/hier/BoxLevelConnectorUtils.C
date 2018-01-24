@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
-#include "boost/make_shared.hpp"
 #include <limits>
 #include <cstdlib>
 #include <list>
@@ -68,10 +67,10 @@ BoxLevelConnectorUtils::getFromInput()
    if (s_ignore_external_timer_prefix == '\0') {
       s_ignore_external_timer_prefix = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
+         std::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("BoxLevelConnectorUtils")) {
-            boost::shared_ptr<tbox::Database> blcu_db(
+            std::shared_ptr<tbox::Database> blcu_db(
                idb->getDatabase("BoxLevelConnectorUtils"));
             s_ignore_external_timer_prefix =
                blcu_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
@@ -132,7 +131,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
          << "base, but not both." << std::endl);
    }
 
-   boost::shared_ptr<Connector> base_to_head;
+   std::shared_ptr<Connector> base_to_head;
    OverlapConnectorAlgorithm oca;
    oca.findOverlaps(base_to_head,
       base,
@@ -205,7 +204,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
 
    const BoxLevel& base = connector.getBase();
    const BoxLevel& head = connector.getHead();
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom(
       base.getGridGeometry());
 
    /*
@@ -218,7 +217,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
     * head_nesting_margin.
     */
 
-   boost::shared_ptr<BoxLevel> swelledbase;
+   std::shared_ptr<BoxLevel> swelledbase;
    if (base_swell == 0) {
       swelledbase.reset(new BoxLevel(base));
    } else {
@@ -236,7 +235,7 @@ BoxLevelConnectorUtils::baseNestsInHead(
       swelledbase->finalize();
    }
 
-   boost::shared_ptr<BoxLevel> swelledhead;
+   std::shared_ptr<BoxLevel> swelledhead;
    if (head_swell == 0) {
       swelledhead.reset(new BoxLevel(head));
    } else {
@@ -278,8 +277,8 @@ BoxLevelConnectorUtils::baseNestsInHead(
       swelledbase_to_swelledhead.assertOverlapCorrectness();
    }
 
-   boost::shared_ptr<BoxLevel> external;
-   boost::shared_ptr<MappingConnector> swelledbase_to_external;
+   std::shared_ptr<BoxLevel> external;
+   std::shared_ptr<MappingConnector> swelledbase_to_external;
    if (domain) {
       computeExternalParts(
          external,
@@ -311,14 +310,14 @@ BoxLevelConnectorUtils::baseNestsInHead(
            bi != domain->end(); ++bi) {
          domain_box_level.addBox(*bi);
       }
-      boost::shared_ptr<Connector> external_to_domain;
+      std::shared_ptr<Connector> external_to_domain;
       OverlapConnectorAlgorithm oca;
       oca.findOverlaps(external_to_domain,
          *external,
          domain_box_level,
          base_swell);
-      boost::shared_ptr<BoxLevel> finalexternal;
-      boost::shared_ptr<MappingConnector> external_to_finalexternal;
+      std::shared_ptr<BoxLevel> finalexternal;
+      std::shared_ptr<MappingConnector> external_to_finalexternal;
       computeInternalParts(
          finalexternal,
          external_to_finalexternal,
@@ -355,8 +354,8 @@ BoxLevelConnectorUtils::baseNestsInHead(
  */
 void
 BoxLevelConnectorUtils::makeSortingMap(
-   boost::shared_ptr<BoxLevel>& sorted_box_level,
-   boost::shared_ptr<MappingConnector>& output_map,
+   std::shared_ptr<BoxLevel>& sorted_box_level,
+   std::shared_ptr<MappingConnector>& output_map,
    const BoxLevel& unsorted_box_level,
    bool sort_boxes_by_corner,
    bool sequentialize_global_indices,
@@ -566,8 +565,8 @@ BoxLevelConnectorUtils::qsortBoxCompare(
  */
 void
 BoxLevelConnectorUtils::computeInternalOrExternalParts(
-   boost::shared_ptr<BoxLevel>& parts,
-   boost::shared_ptr<MappingConnector>& input_to_parts,
+   std::shared_ptr<BoxLevel>& parts,
+   std::shared_ptr<MappingConnector>& input_to_parts,
    char internal_or_external,
    const Connector& input_to_reference,
    const IntVector& nesting_width,
@@ -577,7 +576,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
 
    const BoxLevel& input = input_to_reference.getBase();
 
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
+   const std::shared_ptr<const BaseGridGeometry>& grid_geometry(
       input.getGridGeometry());
 
    const tbox::Dimension& dim(input.getDim());
@@ -880,7 +879,7 @@ void
 BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    BoxContainer& boundary,
    const IntVector& refinement_ratio,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<const BaseGridGeometry>& grid_geometry,
    const bool simplify_boundary_boxes) const
 {
    d_object_timers->t_compute_boxes_around_boundary->start();
@@ -1083,8 +1082,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
 
 void
 BoxLevelConnectorUtils::makeRemainderMap(
-   boost::shared_ptr<BoxLevel>& remainder,
-   boost::shared_ptr<MappingConnector>& orig_to_remainder,
+   std::shared_ptr<BoxLevel>& remainder,
+   std::shared_ptr<MappingConnector>& orig_to_remainder,
    const MappingConnector& orig_to_rejection) const
 {
    TBOX_ASSERT(orig_to_rejection.isLocal());
@@ -1220,8 +1219,8 @@ BoxLevelConnectorUtils::addPeriodicImages(
       return; // No-op.
    }
 
-   boost::shared_ptr<BoxContainer> domain_tree_for_box_level(
-      boost::make_shared<BoxContainer>(domain_search_tree));
+   std::shared_ptr<BoxContainer> domain_tree_for_box_level(
+      std::make_shared<BoxContainer>(domain_search_tree));
    domain_tree_for_box_level->refine(box_level.getRefinementRatio());
    domain_tree_for_box_level->makeTree(0);
 
@@ -1484,8 +1483,8 @@ BoxLevelConnectorUtils::addPeriodicImagesAndRelationships(
 
 void
 BoxLevelConnectorUtils::computeNonIntersectingParts(
-   boost::shared_ptr<BoxLevel>& remainder,
-   boost::shared_ptr<Connector>& input_to_remainder,
+   std::shared_ptr<BoxLevel>& remainder,
+   std::shared_ptr<Connector>& input_to_remainder,
    const Connector& input_to_takeaway) const
 {
    if (d_sanity_check_precond) {
@@ -1493,13 +1492,13 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    }
 
    const tbox::Dimension& dim = input_to_takeaway.getConnectorWidth().getDim();
-   boost::shared_ptr<MappingConnector> i_to_r_map;
+   std::shared_ptr<MappingConnector> i_to_r_map;
    computeExternalParts(remainder,
       i_to_r_map,
       input_to_takeaway,
       IntVector::getZero(dim));
 
-   input_to_remainder = boost::static_pointer_cast<Connector>(i_to_r_map);
+   input_to_remainder = std::static_pointer_cast<Connector>(i_to_r_map);
 
    TBOX_ASSERT(input_to_remainder->getConnectorWidth() ==
       IntVector::getZero(dim));

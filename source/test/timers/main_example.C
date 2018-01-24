@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Example program to demonstrate timers.
  *
  ************************************************************************/
@@ -11,6 +11,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <string>
+#include <memory>
 using namespace std;
 
 // Headers for basic SAMRAI objects used in this code.
@@ -21,8 +22,6 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -54,7 +53,7 @@ int main(
        * Create an input database "input_db" and parse input file (specified
        * on the command line.
        */
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      std::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -70,7 +69,7 @@ int main(
        * looked up the first time).
        */
       string name = "main::test";
-      boost::shared_ptr<tbox::Timer> timer(
+      std::shared_ptr<tbox::Timer> timer(
          tbox::TimerManager::getManager()->getTimer(name));
 
       /*

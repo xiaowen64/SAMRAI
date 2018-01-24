@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Variable class for defining outernode centered variables
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/OuternodeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -34,7 +33,7 @@ OuternodeVariable<TYPE>::OuternodeVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::make_shared<OuternodeDataFactory<TYPE> >(dim, depth))
+                  std::make_shared<OuternodeDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -46,8 +45,8 @@ OuternodeVariable<TYPE>::~OuternodeVariable()
 template<class TYPE>
 int OuternodeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuternodeDataFactory<TYPE> > factory(
-      BOOST_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<OuternodeDataFactory<TYPE> > factory(
+      SAMRAI_SHARED_PTR_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

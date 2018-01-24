@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
@@ -759,8 +759,8 @@ private:
 
    int d_mpi_err;
 
-   static boost::shared_ptr<Timer> t_reduce_data;
-   static boost::shared_ptr<Timer> t_wait_all;
+   static std::shared_ptr<Timer> t_reduce_data;
+   static std::shared_ptr<Timer> t_wait_all;
 
    static StartupShutdownManager::Handler s_initialize_finalize_handler;
 

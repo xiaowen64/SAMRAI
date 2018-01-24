@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for a DatabaseFactory
  *
  ************************************************************************/
@@ -41,7 +41,7 @@ public:
    /**
     * Build a new Database instance.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    allocate(
       const std::string& name) = 0;
 

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
@@ -35,7 +35,7 @@ public:
    MblkGeometry(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       const size_t nblocks);
 
    ~MblkGeometry();
@@ -98,7 +98,7 @@ public:
    tagOctantCells(
       hier::Patch& patch,
       const int xyz_id,
-      boost::shared_ptr<pdat::CellData<int> >& temp_tags,
+      std::shared_ptr<pdat::CellData<int> >& temp_tags,
       const double regrid_time,
       const int refine_tag_val);
 
@@ -108,7 +108,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /*

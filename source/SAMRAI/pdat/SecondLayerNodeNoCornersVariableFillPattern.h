@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Second layer node fill pattern class
  *
  ************************************************************************/
@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -74,11 +74,11 @@ public:
     * @param[in] transformation  the transformation from source to
     *                            destination index space.
     *
-    * @return                boost::shared_ptr to the calculated overlap object
+    * @return                std::shared_ptr to the calculated overlap object
     *
     * @pre dst_patch_box.getDim() == src_mask.getDim()
     */
-   boost::shared_ptr<hier::BoxOverlap>
+   std::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -109,7 +109,7 @@ public:
     * @param[in] pdf         patch data factory for the data that is to be
     *                        filled
     */
-   boost::shared_ptr<hier::BoxOverlap>
+   std::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
       const hier::BoxContainer& node_fill_boxes,

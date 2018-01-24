@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Singleton manager class for statistic objects.
  *
  ************************************************************************/
@@ -16,8 +16,8 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Statistic.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -35,7 +35,7 @@ class StatisticRestartDatabase;
  *
  * Statistic objects can be to the database or accessed in code as follows:
  *
- *     boost::shared_ptr<Statistic> stat =
+ *     std::shared_ptr<Statistic> stat =
  *           Statistician::getStatistician->
  *           getStatistic("name", "PROC_STAT");
  *
@@ -110,7 +110,7 @@ public:
     * @pre !stat_type.empty()
     * @pre (stat_type == "PROC_STAT") || (stat_type == "PATCH_STAT")
     */
-   boost::shared_ptr<Statistic>
+   std::shared_ptr<Statistic>
    getStatistic(
       const std::string& name,
       const std::string& stat_type);
@@ -125,7 +125,7 @@ public:
     */
    bool
    checkStatisticExists(
-      boost::shared_ptr<Statistic>& stat,
+      std::shared_ptr<Statistic>& stat,
       const std::string& name) const;
 
    /**
@@ -893,7 +893,7 @@ protected:
     */
    bool
    checkProcStatExists(
-      boost::shared_ptr<Statistic>& stat,
+      std::shared_ptr<Statistic>& stat,
       const std::string& name) const;
 
    /**
@@ -905,7 +905,7 @@ protected:
     */
    bool
    checkPatchStatExists(
-      boost::shared_ptr<Statistic>& stat,
+      std::shared_ptr<Statistic>& stat,
       const std::string& name) const;
 
 private:
@@ -1003,9 +1003,9 @@ private:
     * pointers to those statistics.
     */
    int d_num_proc_stats;
-   std::vector<boost::shared_ptr<Statistic> > d_proc_statistics;
+   std::vector<std::shared_ptr<Statistic> > d_proc_statistics;
    int d_num_patch_stats;
-   std::vector<boost::shared_ptr<Statistic> > d_patch_statistics;
+   std::vector<std::shared_ptr<Statistic> > d_patch_statistics;
 
    /*
     * Vectors of global statistic data assembled by the finalize() function.
@@ -1123,7 +1123,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<Database>& restart_db) const;
+      const std::shared_ptr<Database>& restart_db) const;
 
    /*
     * Construct those statistics saved in the restart database.

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex node-centered patch data.
  *
  ************************************************************************/
@@ -25,9 +25,9 @@ PatchNodeDataNormOpsComplex::~PatchNodeDataNormOpsComplex()
 
 double
 PatchNodeDataNormOpsComplex::L1Norm(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -48,9 +48,9 @@ PatchNodeDataNormOpsComplex::L1Norm(
 
 double
 PatchNodeDataNormOpsComplex::L2Norm(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -71,10 +71,10 @@ PatchNodeDataNormOpsComplex::L2Norm(
 
 double
 PatchNodeDataNormOpsComplex::weightedL2Norm(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -99,9 +99,9 @@ PatchNodeDataNormOpsComplex::weightedL2Norm(
 
 double
 PatchNodeDataNormOpsComplex::RMSNorm(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -116,10 +116,10 @@ PatchNodeDataNormOpsComplex::RMSNorm(
 
 double
 PatchNodeDataNormOpsComplex::weightedRMSNorm(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
 
@@ -134,9 +134,9 @@ PatchNodeDataNormOpsComplex::weightedRMSNorm(
 
 double
 PatchNodeDataNormOpsComplex::maxNorm(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -154,10 +154,10 @@ PatchNodeDataNormOpsComplex::maxNorm(
 
 dcomplex
 PatchNodeDataNormOpsComplex::dot(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data1,
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data2,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data1,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 

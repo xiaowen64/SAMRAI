@@ -1,15 +1,14 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Abstract factory class for creating patch level objects
  *
  ************************************************************************/
 #include "SAMRAI/hier/PatchLevelFactory.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -22,16 +21,16 @@ PatchLevelFactory::~PatchLevelFactory()
 {
 }
 
-boost::shared_ptr<PatchLevel>
+std::shared_ptr<PatchLevel>
 PatchLevelFactory::allocate(
    const BoxLevel& box_level,
-   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-   const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const boost::shared_ptr<PatchFactory>& factory) const
+   const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<PatchDescriptor>& descriptor,
+   const std::shared_ptr<PatchFactory>& factory) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(box_level, *grid_geometry);
-   boost::shared_ptr<PatchLevel> pl(
-      boost::make_shared<PatchLevel>(
+   std::shared_ptr<PatchLevel> pl(
+      std::make_shared<PatchLevel>(
          box_level,
          grid_geometry,
          descriptor,
@@ -39,16 +38,16 @@ PatchLevelFactory::allocate(
    return pl;
 }
 
-boost::shared_ptr<PatchLevel>
+std::shared_ptr<PatchLevel>
 PatchLevelFactory::allocate(
-   const boost::shared_ptr<BoxLevel> box_level,
-   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-   const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const boost::shared_ptr<PatchFactory>& factory) const
+   const std::shared_ptr<BoxLevel> box_level,
+   const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<PatchDescriptor>& descriptor,
+   const std::shared_ptr<PatchFactory>& factory) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*box_level, *grid_geometry);
-   boost::shared_ptr<PatchLevel> pl(
-      boost::make_shared<PatchLevel>(
+   std::shared_ptr<PatchLevel> pl(
+      std::make_shared<PatchLevel>(
          box_level,
          grid_geometry,
          descriptor,
@@ -56,16 +55,16 @@ PatchLevelFactory::allocate(
    return pl;
 }
 
-boost::shared_ptr<PatchLevel>
+std::shared_ptr<PatchLevel>
 PatchLevelFactory::allocate(
-   const boost::shared_ptr<tbox::Database>& database,
-   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-   const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const boost::shared_ptr<PatchFactory>& factory,
+   const std::shared_ptr<tbox::Database>& database,
+   const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<PatchDescriptor>& descriptor,
+   const std::shared_ptr<PatchFactory>& factory,
    const bool defer_boundary_box_creation) const
 {
-   boost::shared_ptr<PatchLevel> pl(
-      boost::make_shared<PatchLevel>(
+   std::shared_ptr<PatchLevel> pl(
+      std::make_shared<PatchLevel>(
          database,
          grid_geometry,
          descriptor,

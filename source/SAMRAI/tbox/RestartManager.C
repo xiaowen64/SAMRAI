@@ -1,14 +1,13 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An restart manager singleton class
  *
  ************************************************************************/
 
-#include "boost/make_shared.hpp"
 #include <string>
 
 #include "SAMRAI/tbox/RestartManager.h"
@@ -72,9 +71,9 @@ RestartManager::shutdownCallback()
  */
 
 RestartManager::RestartManager():
-   d_database_root(boost::make_shared<NullDatabase>()),
+   d_database_root(std::make_shared<NullDatabase>()),
 #ifdef HAVE_HDF5
-   d_database_factory(boost::make_shared<HDFDatabaseFactory>()),
+   d_database_factory(std::make_shared<HDFDatabaseFactory>()),
 #endif
    d_is_from_restart(false)
 {
@@ -128,7 +127,7 @@ RestartManager::openRestartFile(
 
    if (hasDatabaseFactory()) {
 
-      boost::shared_ptr<Database> database(d_database_factory->allocate(
+      std::shared_ptr<Database> database(d_database_factory->allocate(
                                               restart_filename));
 
       if (!database->open(restart_filename)) {
@@ -276,7 +275,7 @@ RestartManager::writeRestartFile(
 
    if (hasDatabaseFactory()) {
 
-      boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
+      std::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
                                                    restart_filename));
 
       new_restartDB->create(restart_filename);
@@ -302,14 +301,14 @@ RestartManager::writeRestartFile(
  */
 void
 RestartManager::writeRestartFile(
-   const boost::shared_ptr<Database>& database)
+   const std::shared_ptr<Database>& database)
 {
    TBOX_ASSERT(database);
 
    std::list<RestartManager::RestartItem>::iterator i =
       d_restart_items_list.begin();
    for ( ; i != d_restart_items_list.end(); ++i) {
-      boost::shared_ptr<Database> obj_db(
+      std::shared_ptr<Database> obj_db(
          database->putDatabase(i->name));
       (i->obj)->putToRestart(obj_db);
    }

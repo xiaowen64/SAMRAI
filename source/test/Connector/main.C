@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Test program to test Connector class
  *
  ************************************************************************/
@@ -23,7 +23,6 @@
 #include "SAMRAI/hier/AssumedPartition.h"
 #include "SAMRAI/geom/GridGeometry.h"
 
-#include "boost/make_shared.hpp"
 
 using namespace std;
 
@@ -36,7 +35,7 @@ using namespace hier;
  * filter to keep a subset of boxes.
  */
 struct PrimitiveBoxGen {
-   boost::shared_ptr<hier::BaseGridGeometry> d_geom;
+   std::shared_ptr<hier::BaseGridGeometry> d_geom;
    hier::AssumedPartition d_ap;
    // Index filtering parameters.
    enum IndexFilter { ALL = 0 /* Keep all boxes */,
@@ -52,7 +51,7 @@ struct PrimitiveBoxGen {
    double d_frac;
    PrimitiveBoxGen(
       tbox::Database& database,
-      const boost::shared_ptr<hier::BaseGridGeometry>& geom):
+      const std::shared_ptr<hier::BaseGridGeometry>& geom):
       d_avg_parts_per_rank(1.0)
    {
       d_geom = geom;
@@ -139,10 +138,10 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
+      std::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
-      boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
+      std::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -185,8 +184,8 @@ int main(
                "getTestParametersFromDatabase: You must specify \"BlockGeometry\" in input database.");
          }
          // Note: Using GridGeometry only because BaseGridGeometry can't be instanstiated.
-         boost::shared_ptr<hier::BaseGridGeometry> grid_geom =
-            boost::make_shared<geom::GridGeometry>(
+         std::shared_ptr<hier::BaseGridGeometry> grid_geom =
+            std::make_shared<geom::GridGeometry>(
                dim,
                "BlockGeometry",
                input_db->getDatabase("BlockGeometry"));
@@ -205,8 +204,8 @@ int main(
             std::string level_name("PrimitiveBoxGen");
             level_name += tbox::Utilities::intToString(static_cast<int>(levels.size()), 1);
 
-            boost::shared_ptr<tbox::Database> level_db =
-               input_db->getDatabaseWithDefault(level_name, boost::shared_ptr<tbox::Database>());
+            std::shared_ptr<tbox::Database> level_db =
+               input_db->getDatabaseWithDefault(level_name, std::shared_ptr<tbox::Database>());
 
             if (!level_db) {
                break;
@@ -240,8 +239,8 @@ int main(
             std::string test_name("Test");
             test_name += tbox::Utilities::intToString(test_number++, 2);
 
-            boost::shared_ptr<tbox::Database> test_db =
-               input_db->getDatabaseWithDefault(test_name, boost::shared_ptr<tbox::Database>());
+            std::shared_ptr<tbox::Database> test_db =
+               input_db->getDatabaseWithDefault(test_name, std::shared_ptr<tbox::Database>());
 
             if (!test_db) {
                break;

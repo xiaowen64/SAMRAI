@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
@@ -207,7 +207,7 @@ struct BalanceUtilities {
    recursiveBisectionNonuniform(
       hier::BoxContainer& out_boxes,
       std::list<double>& out_workloads,
-      const boost::shared_ptr<hier::PatchLevel>& in_level,
+      const std::shared_ptr<hier::PatchLevel>& in_level,
       int work_id,
       double ideal_workload,
       const double workload_tolerance,
@@ -295,7 +295,7 @@ struct BalanceUtilities {
     */
    static double
    computeNonUniformWorkload(
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);
 
@@ -322,7 +322,7 @@ struct BalanceUtilities {
    static double
    computeNonUniformWorkloadOnCorners(
       std::vector<double>& corner_weights,
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);
 
@@ -423,7 +423,7 @@ struct BalanceUtilities {
     */
    static double
    computeLoadBalanceEfficiency(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       std::ostream& os,
       int workload_data_id = -1);
 
@@ -595,7 +595,7 @@ private:
    privateRecursiveBisectionNonuniformSingleBox(
       hier::BoxContainer& out_boxes,
       std::list<double>& out_workloads,
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       const hier::Box& in_box,
       double in_box_workload,
       int work_data_index,

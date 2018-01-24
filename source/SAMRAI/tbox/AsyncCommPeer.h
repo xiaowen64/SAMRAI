@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -429,7 +429,7 @@ public:
     */
    void
    setSendTimer(
-      const boost::shared_ptr<Timer>& send_timer);
+      const std::shared_ptr<Timer>& send_timer);
 
    /*!
     * @brief Set the receive-timer.
@@ -442,7 +442,7 @@ public:
     */
    void
    setRecvTimer(
-      const boost::shared_ptr<Timer>& recv_timer);
+      const std::shared_ptr<Timer>& recv_timer);
 
    /*!
     * @brief Set the wait-timer.
@@ -459,7 +459,7 @@ public:
     */
    void
    setWaitTimer(
-      const boost::shared_ptr<Timer>& wait_timer);
+      const std::shared_ptr<Timer>& wait_timer);
 
    //@}
 
@@ -629,13 +629,13 @@ private:
    // Make some temporary variable statuses to avoid repetitious allocations.
    int d_mpi_err;
 
-   boost::shared_ptr<Timer> t_send_timer;
-   boost::shared_ptr<Timer> t_recv_timer;
-   boost::shared_ptr<Timer> t_wait_timer;
+   std::shared_ptr<Timer> t_send_timer;
+   std::shared_ptr<Timer> t_recv_timer;
+   std::shared_ptr<Timer> t_wait_timer;
 
-   static boost::shared_ptr<Timer> t_default_send_timer;
-   static boost::shared_ptr<Timer> t_default_recv_timer;
-   static boost::shared_ptr<Timer> t_default_wait_timer;
+   static std::shared_ptr<Timer> t_default_send_timer;
+   static std::shared_ptr<Timer> t_default_recv_timer;
+   static std::shared_ptr<Timer> t_default_wait_timer;
 
    static StartupShutdownManager::Handler
       s_initialize_finalize_handler;

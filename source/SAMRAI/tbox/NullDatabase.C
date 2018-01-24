@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An input database structure that stores (key,value) pairs
  *
  ************************************************************************/
@@ -156,20 +156,20 @@ NullDatabase::isDatabase(
    return true;
 }
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 NullDatabase::putDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   return boost::shared_ptr<Database>(this);
+   return std::shared_ptr<Database>(this);
 }
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 NullDatabase::getDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   return boost::make_shared<NullDatabase>();
+   return std::make_shared<NullDatabase>();
 }
 
 /*

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Singleton manager for hierarchy data operation objects.
  *
  ************************************************************************/
@@ -19,8 +19,8 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -108,12 +108,12 @@ public:
     * @pre variable->getDim() == hierarchy.getDim()
     * @post returned value not NULL
     */
-   virtual boost::shared_ptr<HierarchyDataOpsReal<double> >
+   virtual std::shared_ptr<HierarchyDataOpsReal<double> >
    getOperationsDouble(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<hier::Variable>& variable,
       /*! operation should correspond to this hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Whether a unique operator is requested */
       bool get_unique = false);
 
@@ -126,12 +126,12 @@ public:
     * @pre variable->getDim() == hierarchy.getDim()
     * @post returned value not NULL
     */
-   virtual boost::shared_ptr<HierarchyDataOpsReal<float> >
+   virtual std::shared_ptr<HierarchyDataOpsReal<float> >
    getOperationsFloat(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<hier::Variable>& variable,
       /*! operation should correspond to this hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Whether a unique operator is requested */
       bool get_unique = false);
 
@@ -144,12 +144,12 @@ public:
     * @pre variable->getDim() == hierarchy.getDim()
     * @post returned value not NULL
     */
-   virtual boost::shared_ptr<HierarchyDataOpsComplex>
+   virtual std::shared_ptr<HierarchyDataOpsComplex>
    getOperationsComplex(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<hier::Variable>& variable,
       /*! operation should correspond to this hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Whether a unique operator is requested */
       bool get_unique = false);
 
@@ -162,12 +162,12 @@ public:
     * @pre variable->getDim() == hierarchy.getDim()
     * @post returned value not NULL
     */
-   virtual boost::shared_ptr<HierarchyDataOpsInteger>
+   virtual std::shared_ptr<HierarchyDataOpsInteger>
    getOperationsInteger(
       /*! operation should correspond to this variable */
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<hier::Variable>& variable,
       /*! operation should correspond to this hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Whether a unique operator is requested */
       bool get_unique = false);
    //@}
@@ -224,48 +224,48 @@ private:
    static HierarchyDataOpsManager* s_pdat_op_manager_instance;
 
    //@{ \name Operations for data of various types.
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<double> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<double> > >
    d_cell_ops_double;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<double> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<double> > >
    d_face_ops_double;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<double> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<double> > >
    d_node_ops_double;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<double> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<double> > >
    d_side_ops_double;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<double> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<double> > >
    d_edge_ops_double;
 
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<float> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<float> > >
    d_cell_ops_float;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<float> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<float> > >
    d_face_ops_float;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<float> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<float> > >
    d_side_ops_float;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<float> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<float> > >
    d_node_ops_float;
-   std::vector<boost::shared_ptr<HierarchyDataOpsReal<float> > >
+   std::vector<std::shared_ptr<HierarchyDataOpsReal<float> > >
    d_edge_ops_float;
 
-   std::vector<boost::shared_ptr<HierarchyDataOpsComplex> >
+   std::vector<std::shared_ptr<HierarchyDataOpsComplex> >
    d_cell_ops_complex;
-   std::vector<boost::shared_ptr<HierarchyDataOpsComplex> >
+   std::vector<std::shared_ptr<HierarchyDataOpsComplex> >
    d_face_ops_complex;
-   std::vector<boost::shared_ptr<HierarchyDataOpsComplex> >
+   std::vector<std::shared_ptr<HierarchyDataOpsComplex> >
    d_side_ops_complex;
-   std::vector<boost::shared_ptr<HierarchyDataOpsComplex> >
+   std::vector<std::shared_ptr<HierarchyDataOpsComplex> >
    d_node_ops_complex;
-   std::vector<boost::shared_ptr<HierarchyDataOpsComplex> >
+   std::vector<std::shared_ptr<HierarchyDataOpsComplex> >
    d_edge_ops_complex;
 
-   std::vector<boost::shared_ptr<HierarchyDataOpsInteger> >
+   std::vector<std::shared_ptr<HierarchyDataOpsInteger> >
    d_cell_ops_int;
-   std::vector<boost::shared_ptr<HierarchyDataOpsInteger> >
+   std::vector<std::shared_ptr<HierarchyDataOpsInteger> >
    d_face_ops_int;
-   std::vector<boost::shared_ptr<HierarchyDataOpsInteger> >
+   std::vector<std::shared_ptr<HierarchyDataOpsInteger> >
    d_side_ops_int;
-   std::vector<boost::shared_ptr<HierarchyDataOpsInteger> >
+   std::vector<std::shared_ptr<HierarchyDataOpsInteger> >
    d_node_ops_int;
-   std::vector<boost::shared_ptr<HierarchyDataOpsInteger> >
+   std::vector<std::shared_ptr<HierarchyDataOpsInteger> >
    d_edge_ops_int;
    //@}
 

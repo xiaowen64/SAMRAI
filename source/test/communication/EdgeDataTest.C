@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for edge-centered patch data
  *
  ************************************************************************/
@@ -41,7 +41,7 @@ static double GETVALUE(
 EdgeDataTest::EdgeDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -90,7 +90,7 @@ EdgeDataTest::~EdgeDataTest()
 }
 
 void EdgeDataTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -128,7 +128,7 @@ void EdgeDataTest::readTestInput(
 
    readVariableInput(db->getDatabase("VariableData"));
 
-   boost::shared_ptr<tbox::Database> var_data(
+   std::shared_ptr<tbox::Database> var_data(
       db->getDatabase("VariableData"));
    std::vector<string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
@@ -136,7 +136,7 @@ void EdgeDataTest::readTestInput(
    d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; ++i) {
-      boost::shared_ptr<tbox::Database> var_db(
+      std::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
@@ -186,7 +186,7 @@ void EdgeDataTest::registerVariables(
 }
 
 void EdgeDataTest::setConstantData(
-   boost::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<double> > data,
    const hier::Box& box,
    double ndimfact,
    double axfact) const
@@ -209,10 +209,10 @@ void EdgeDataTest::setConstantData(
 }
 
 void EdgeDataTest::setConservativeData(
-   boost::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
    TBOX_ASSERT(data);
@@ -221,7 +221,7 @@ void EdgeDataTest::setConservativeData(
       && (level_number <= hierarchy->getFinestLevelNumber()));
 
    int i, j;
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
@@ -301,8 +301,8 @@ void EdgeDataTest::setConservativeData(
       hier::IntVector ratio(level->getRatioToLevelZero());
       const int max_ratio = ratio.max();
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -380,7 +380,7 @@ void EdgeDataTest::setConservativeData(
 
 void EdgeDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -392,8 +392,8 @@ void EdgeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
@@ -407,8 +407,8 @@ void EdgeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
@@ -424,7 +424,7 @@ void EdgeDataTest::initializeDataOnPatch(
 }
 
 void EdgeDataTest::setConstantBoundaryData(
-   boost::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<double> > data,
    const hier::BoundaryBox& bbox,
    double ndimfact,
    double axfact) const
@@ -561,7 +561,7 @@ void EdgeDataTest::setConstantBoundaryData(
 
 bool EdgeDataTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    bool test_failed = false;
@@ -581,7 +581,7 @@ bool EdgeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::EdgeData<double> > solution(
+      std::shared_ptr<pdat::EdgeData<double> > solution(
          new pdat::EdgeData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -594,8 +594,8 @@ bool EdgeDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
          int depth = edge_data->getDepth();
@@ -642,14 +642,14 @@ bool EdgeDataTest::verifyResults(
 }
 
 void EdgeDataTest::setLinearData(
-   boost::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -703,9 +703,9 @@ void EdgeDataTest::setLinearData(
 }
 
 void EdgeDataTest::checkPatchInteriorData(
-   const boost::shared_ptr<pdat::EdgeData<double> >& data,
+   const std::shared_ptr<pdat::EdgeData<double> >& data,
    const hier::Box& interior,
-   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
+   const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
    TBOX_ASSERT(data);
 
@@ -769,8 +769,8 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
@@ -791,8 +791,8 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::EdgeData<double> > edge_data(
-         BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::EdgeData<double> > edge_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 

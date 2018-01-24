@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -1209,8 +1209,8 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
          if (!(intersection.empty())) {
 
-            boost::shared_ptr<pdat::CellData<int> > tag_data_(
-               BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<int> > tag_data_(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                   patch.getPatchData(d_common->d_tag_data_index)));
 
             TBOX_ASSERT(tag_data_);

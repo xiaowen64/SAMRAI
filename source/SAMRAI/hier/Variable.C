@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Base class for application-level variables
  *
  ************************************************************************/
@@ -27,7 +27,7 @@ int Variable::s_instance_counter = 0;
 
 Variable::Variable(
    const std::string& name,
-   const boost::shared_ptr<PatchDataFactory>& factory):
+   const std::shared_ptr<PatchDataFactory>& factory):
    d_dim(factory->getDim()),
    d_name(name),
    d_factory(factory)

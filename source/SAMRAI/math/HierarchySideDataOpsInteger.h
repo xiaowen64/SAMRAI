@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer side data on multiple levels.
  *
  ************************************************************************/
@@ -18,8 +18,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -71,7 +71,7 @@ public:
     * @pre hierarchy
     */
    explicit HierarchySideDataOpsInteger(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level = -1,
       const int finest_level = -1);
 
@@ -87,7 +87,7 @@ public:
     */
    void
    setPatchHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -104,7 +104,7 @@ public:
    /**
     * Return const pointer to patch hierarchy associated with operations.
     */
-   const boost::shared_ptr<hier::PatchHierarchy>
+   const std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -388,7 +388,7 @@ private:
    operator = (
       const HierarchySideDataOpsInteger&);
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
    std::vector<std::vector<hier::BoxContainer> >

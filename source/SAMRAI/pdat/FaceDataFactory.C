@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating face data objects
  *
  ************************************************************************/
@@ -19,7 +19,6 @@
 #include "SAMRAI/pdat/OuterfaceDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -60,13 +59,13 @@ FaceDataFactory<TYPE>::~FaceDataFactory()
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchDataFactory>
+std::shared_ptr<hier::PatchDataFactory>
 FaceDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return boost::make_shared<FaceDataFactory>(
+   return std::make_shared<FaceDataFactory>(
              d_depth,
              ghosts,
              d_fine_boundary_represents_var);
@@ -81,13 +80,13 @@ FaceDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchData>
+std::shared_ptr<hier::PatchData>
 FaceDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-   return boost::make_shared<FaceData<TYPE> >(
+   return std::make_shared<FaceData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts);
@@ -102,13 +101,13 @@ FaceDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::BoxGeometry>
+std::shared_ptr<hier::BoxGeometry>
 FaceDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   return boost::make_shared<FaceGeometry>(box, d_ghosts);
+   return std::make_shared<FaceGeometry>(box, d_ghosts);
 }
 
 template<class TYPE>
@@ -152,7 +151,7 @@ FaceDataFactory<TYPE>::getSizeOfMemory(
 template<class TYPE>
 bool
 FaceDataFactory<TYPE>::validCopyTo(
-   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
+   const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
@@ -162,8 +161,8 @@ FaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
-         boost::dynamic_pointer_cast<FaceDataFactory<TYPE>,
+      std::shared_ptr<FaceDataFactory<TYPE> > fdf(
+         std::dynamic_pointer_cast<FaceDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (fdf) {
          valid_copy = true;
@@ -171,8 +170,8 @@ FaceDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
-         boost::dynamic_pointer_cast<OuterfaceDataFactory<TYPE>,
+      std::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
+         std::dynamic_pointer_cast<OuterfaceDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));
       if (ofdf) {

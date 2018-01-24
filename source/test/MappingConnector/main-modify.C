@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -45,14 +45,14 @@ void
 breakUpBoxes(
    hier::BoxLevel& box_level,
    const hier::BoxLevel& domain_box_level,
-   const boost::shared_ptr<tbox::Database>& database);
+   const std::shared_ptr<tbox::Database>& database);
 
 void
 alterAndGenerateMapping(
-   boost::shared_ptr<hier::BoxLevel>& box_level_c,
-   boost::shared_ptr<hier::MappingConnector>& b_to_c,
+   std::shared_ptr<hier::BoxLevel>& box_level_c,
+   std::shared_ptr<hier::MappingConnector>& b_to_c,
    const hier::BoxLevel& box_level_b,
-   const boost::shared_ptr<tbox::Database>& database);
+   const std::shared_ptr<tbox::Database>& database);
 
 /*
  ************************************************************************
@@ -115,7 +115,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      std::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -125,7 +125,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -155,7 +155,7 @@ int main(
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
+      std::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -188,7 +188,7 @@ int main(
        * using input database BoxLevelA.
        */
       hier::BoxLevel box_level_a(domain_box_level);
-      boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
+      std::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(box_level_a, domain_box_level, a_db);
       box_level_a.cacheGlobalReducedData();
       refinement_ratios.push_back(box_level_a.getRefinementRatio());
@@ -198,7 +198,7 @@ int main(
        * using input database BoxLevelB.
        */
       hier::BoxLevel box_level_b(domain_box_level);
-      boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
+      std::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(box_level_b, domain_box_level, b_db);
       box_level_b.cacheGlobalReducedData();
       refinement_ratios.push_back(box_level_b.getRefinementRatio() /
@@ -226,7 +226,7 @@ int main(
             box_level_a.getRefinementRatio(),
             width_a));
 
-      boost::shared_ptr<hier::Connector> a_to_b;
+      std::shared_ptr<hier::Connector> a_to_b;
 
       hier::OverlapConnectorAlgorithm oca;
       oca.findOverlapsWithTranspose(a_to_b,
@@ -251,9 +251,9 @@ int main(
        * Generate the mapping Connectors B<==>C.
        */
 
-      boost::shared_ptr<hier::BoxLevel> box_level_c;
-      boost::shared_ptr<hier::MappingConnector> b_to_c;
-      boost::shared_ptr<Database> alteration_db(
+      std::shared_ptr<hier::BoxLevel> box_level_c;
+      std::shared_ptr<hier::MappingConnector> b_to_c;
+      std::shared_ptr<Database> alteration_db(
          main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
@@ -335,7 +335,7 @@ int main(
 void breakUpBoxes(
    hier::BoxLevel& box_level,
    const hier::BoxLevel& domain_box_level,
-   const boost::shared_ptr<tbox::Database>& database) {
+   const std::shared_ptr<tbox::Database>& database) {
 
    const tbox::Dimension& dim(box_level.getDim());
 
@@ -374,7 +374,7 @@ void breakUpBoxes(
    load_balancer.loadBalanceBoxLevel(
       box_level,
       dummy_connector,
-      boost::shared_ptr<hier::PatchHierarchy>(),
+      std::shared_ptr<hier::PatchHierarchy>(),
       level_number,
       min_box_size,
       max_box_size,
@@ -388,10 +388,10 @@ void breakUpBoxes(
  * Generate the mapping Connectors B<==>C.
  */
 void alterAndGenerateMapping(
-   boost::shared_ptr<hier::BoxLevel>& box_level_c,
-   boost::shared_ptr<hier::MappingConnector>& b_to_c,
+   std::shared_ptr<hier::BoxLevel>& box_level_c,
+   std::shared_ptr<hier::MappingConnector>& b_to_c,
    const hier::BoxLevel& box_level_b,
-   const boost::shared_ptr<tbox::Database>& database)
+   const std::shared_ptr<tbox::Database>& database)
 {
    const tbox::Dimension dim(box_level_b.getDim());
 

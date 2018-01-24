@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for the SAMRAI database objects
  *
  ************************************************************************/
@@ -18,10 +18,10 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #define INPUT_RANGE_ERROR(param_name)                                     \
    TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
@@ -183,7 +183,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key) = 0;
 
@@ -194,7 +194,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key) = 0;
 
@@ -209,10 +209,10 @@ public:
     *
     * @pre !key.empty()
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabaseWithDefault(
       const std::string& key,
-      const boost::shared_ptr<Database>& defaultvalue);
+      const std::shared_ptr<Database>& defaultvalue);
 
    /**
     * Return whether the specified key represents a boolean entry.  If

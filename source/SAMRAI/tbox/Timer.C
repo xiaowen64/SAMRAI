@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -289,7 +289,7 @@ Timer::computeMaxWallclock()
 
 void
 Timer::putToRestart(
-   const boost::shared_ptr<Database>& restart_db) const
+   const std::shared_ptr<Database>& restart_db) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(restart_db);
@@ -312,7 +312,7 @@ Timer::putToRestart(
 
 void
 Timer::getFromRestart(
-   const boost::shared_ptr<Database>& restart_db)
+   const std::shared_ptr<Database>& restart_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(restart_db);

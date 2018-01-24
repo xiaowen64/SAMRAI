@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -12,7 +12,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
-#include "boost/make_shared.hpp"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -107,7 +106,7 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index space of block_id for overlaps.
     */
 
-   std::map<BlockId, boost::shared_ptr<BoxTree> >::const_iterator blocki(d_single_block_trees.find(
+   std::map<BlockId, std::shared_ptr<BoxTree> >::const_iterator blocki(d_single_block_trees.find(
                                                                             block_id));
 
    if (blocki != d_single_block_trees.end()) {
@@ -169,7 +168,7 @@ MultiblockBoxTree::findOverlapBoxes(
     * Search in the index space of block_id for overlaps.
     */
 
-   std::map<BlockId, boost::shared_ptr<BoxTree> >::const_iterator blocki(d_single_block_trees.find(
+   std::map<BlockId, std::shared_ptr<BoxTree> >::const_iterator blocki(d_single_block_trees.find(
                                                                             block_id));
 
    if (blocki != d_single_block_trees.end()) {

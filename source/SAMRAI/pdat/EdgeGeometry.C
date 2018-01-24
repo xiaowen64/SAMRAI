@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -54,7 +53,7 @@ EdgeGeometry::~EdgeGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 EdgeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -72,7 +71,7 @@ EdgeGeometry::calculateOverlap(
    const EdgeGeometry* t_src =
       dynamic_cast<const EdgeGeometry *>(&src_geometry);
 
-   boost::shared_ptr<hier::BoxOverlap> over;
+   std::shared_ptr<hier::BoxOverlap> over;
 
    if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
@@ -202,7 +201,7 @@ EdgeGeometry::toEdgeBox(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 EdgeGeometry::doOverlap(
    const EdgeGeometry& dst_geometry,
    const EdgeGeometry& src_geometry,
@@ -224,7 +223,7 @@ EdgeGeometry::doOverlap(
       transformation,
       dst_restrict_boxes);
 
-   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
+   return std::make_shared<EdgeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -234,7 +233,7 @@ EdgeGeometry::doOverlap(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 EdgeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -251,7 +250,7 @@ EdgeGeometry::setUpOverlap(
    }
 
    // Create the edge overlap data object using the boxes and source shift
-   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
+   return std::make_shared<EdgeOverlap>(dst_boxes, transformation);
 
 }
 

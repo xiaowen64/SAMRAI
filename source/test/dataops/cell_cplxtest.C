@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test cell-centered complex patch data ops
  *
  ************************************************************************/
@@ -43,8 +43,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <iomanip>
-
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 using namespace SAMRAI;
 
@@ -53,12 +52,12 @@ static bool
 complexDataSameAsValue(
    int desc_id,
    dcomplex value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+   std::shared_ptr<hier::PatchHierarchy> hierarchy);
 static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+   std::shared_ptr<hier::PatchHierarchy> hierarchy);
 
 #define NVARS 4
 
@@ -143,14 +142,14 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
@@ -162,11 +161,11 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel> layer0(
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> layer0(
+         std::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel> layer1(
-         boost::make_shared<hier::BoxLevel>(ratio, geometry));
+      std::shared_ptr<hier::BoxLevel> layer1(
+         std::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
@@ -197,12 +196,12 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy(
+      std::shared_ptr<hier::VariableContext> dummy(
          variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
 
       // Make some dummy variables and register them with hier::VariableDatabase
-      boost::shared_ptr<pdat::CellVariable<dcomplex> > cvar[NVARS];
+      std::shared_ptr<pdat::CellVariable<dcomplex> > cvar[NVARS];
       int cvindx[NVARS];
       cvar[0].reset(new pdat::CellVariable<dcomplex>(dim, "cvar0", 1));
       cvindx[0] = variable_db->registerVariableAndContext(
@@ -217,7 +216,7 @@ int main(
       cvindx[3] = variable_db->registerVariableAndContext(
             cvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::CellVariable<double> > cwgt(
+      std::shared_ptr<pdat::CellVariable<double> > cwgt(
          new pdat::CellVariable<double>(dim, "cwgt", 1));
       int cwgt_id = variable_db->registerVariableAndContext(
             cwgt, dummy, no_ghosts);
@@ -230,32 +229,32 @@ int main(
          }
       }
 
-      boost::shared_ptr<math::HierarchyDataOpsComplex> cell_ops(
+      std::shared_ptr<math::HierarchyDataOpsComplex> cell_ops(
          new math::HierarchyCellDataOpsComplex(
             hierarchy,
             0,
             1));
       TBOX_ASSERT(cell_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> > cwgt_ops(
+      std::shared_ptr<math::HierarchyDataOpsReal<double> > cwgt_ops(
          new math::HierarchyCellDataOpsReal<double>(
             hierarchy,
             0,
             1));
 
-      boost::shared_ptr<hier::Patch> patch;
+      std::shared_ptr<hier::Patch> patch;
 
       // Initialize control volume data for cell-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -263,8 +262,8 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                cell_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::CellData<double> > cvdata(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > cvdata(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
@@ -279,13 +278,13 @@ int main(
       // 0.0025 on fine level for 2d.  0.001 and 0.000125 for 3d.
       bool vol_test_passed = true;
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<pdat::CellData<double> > cvdata(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > cvdata(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
 
             TBOX_ASSERT(cvdata);
@@ -539,15 +538,15 @@ int main(
       }
 
       // Test #13:  Place some bogus values on coarse level
-      boost::shared_ptr<pdat::CellData<dcomplex> > cdata;
+      std::shared_ptr<pdat::CellData<dcomplex> > cdata;
 
       // set values
-      boost::shared_ptr<hier::PatchLevel> level_zero(
+      std::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         cdata = BOOST_CAST<pdat::CellData<dcomplex>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(cvindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
@@ -566,7 +565,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         cdata = BOOST_CAST<pdat::CellData<dcomplex>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(cvindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
@@ -783,19 +782,19 @@ static bool
 complexDataSameAsValue(
    int desc_id,
    dcomplex value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   std::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   boost::shared_ptr<hier::Patch> patch;
+   std::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::CellData<dcomplex> > cvdata(
-            BOOST_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<dcomplex> > cvdata(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
@@ -823,19 +822,19 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   std::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   boost::shared_ptr<hier::Patch> patch;
+   std::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::CellData<double> > cvdata(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > cvdata(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);

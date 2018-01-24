@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -84,7 +84,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <typeinfo>
@@ -107,7 +106,7 @@ const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    GridGeometry(dim, object_name, input_db, false),
    d_domain_box(dim)
 {
@@ -147,7 +146,7 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_lo,
    const double* x_up,
    hier::BoxContainer& domain,
-   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
+   const std::shared_ptr<hier::TransferOperatorRegistry>& op_reg):
    GridGeometry(object_name, domain, op_reg),
    d_domain_box(domain.front().getDim())
 {
@@ -182,7 +181,7 @@ CartesianGridGeometry::~CartesianGridGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BaseGridGeometry>
+std::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio) const
@@ -196,7 +195,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
+   std::shared_ptr<hier::BaseGridGeometry> fine_geometry(
       new CartesianGridGeometry(fine_geom_name,
          d_x_lo,
          d_x_up,
@@ -217,7 +216,7 @@ CartesianGridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BaseGridGeometry>
+std::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio) const
@@ -257,7 +256,7 @@ CartesianGridGeometry::makeCoarsenedGridGeometry(
       }
    }
 
-   boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
+   std::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
       new CartesianGridGeometry(coarse_geom_name,
          d_x_lo,
          d_x_up,
@@ -385,8 +384,8 @@ CartesianGridGeometry::setGeometryDataOnPatch(
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];
    }
 
-   boost::shared_ptr<CartesianPatchGeometry> geom(
-      boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
+   std::shared_ptr<CartesianPatchGeometry> geom(
+      std::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
          touches_regular_bdry,
          block_id,
          dx, x_lo, x_up));
@@ -401,99 +400,99 @@ CartesianGridGeometry::buildOperators()
    // CartesianGridGeometry specific Coarsening Operators
    addCoarsenOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<CartesianCellComplexWeightedAverage>());
+      std::make_shared<CartesianCellComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<CartesianCellDoubleWeightedAverage>());
+      std::make_shared<CartesianCellDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<CartesianCellFloatWeightedAverage>());
+      std::make_shared<CartesianCellFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::EdgeVariable<dcomplex>).name(),
-      boost::make_shared<CartesianEdgeComplexWeightedAverage>());
+      std::make_shared<CartesianEdgeComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      boost::make_shared<CartesianEdgeDoubleWeightedAverage>());
+      std::make_shared<CartesianEdgeDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      boost::make_shared<CartesianEdgeFloatWeightedAverage>());
+      std::make_shared<CartesianEdgeFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::FaceVariable<dcomplex>).name(),
-      boost::make_shared<CartesianFaceComplexWeightedAverage>());
+      std::make_shared<CartesianFaceComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::FaceVariable<double>).name(),
-      boost::make_shared<CartesianFaceDoubleWeightedAverage>());
+      std::make_shared<CartesianFaceDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::FaceVariable<float>).name(),
-      boost::make_shared<CartesianFaceFloatWeightedAverage>());
+      std::make_shared<CartesianFaceFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OuterfaceVariable<dcomplex>).name(),
-      boost::make_shared<CartesianOuterfaceComplexWeightedAverage>());
+      std::make_shared<CartesianOuterfaceComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OuterfaceVariable<double>).name(),
-      boost::make_shared<CartesianOuterfaceDoubleWeightedAverage>());
+      std::make_shared<CartesianOuterfaceDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OuterfaceVariable<float>).name(),
-      boost::make_shared<CartesianOuterfaceFloatWeightedAverage>());
+      std::make_shared<CartesianOuterfaceFloatWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::OutersideVariable<double>).name(),
-      boost::make_shared<CartesianOutersideDoubleWeightedAverage>());
+      std::make_shared<CartesianOutersideDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::SideVariable<dcomplex>).name(),
-      boost::make_shared<CartesianSideComplexWeightedAverage>());
+      std::make_shared<CartesianSideComplexWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::SideVariable<double>).name(),
-      boost::make_shared<CartesianSideDoubleWeightedAverage>());
+      std::make_shared<CartesianSideDoubleWeightedAverage>());
    addCoarsenOperator(
       typeid(pdat::SideVariable<float>).name(),
-      boost::make_shared<CartesianSideFloatWeightedAverage>());
+      std::make_shared<CartesianSideFloatWeightedAverage>());
 
    // CartesianGridGeometry specific Refinement Operators
    addRefineOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<CartesianCellComplexConservativeLinearRefine>());
+      std::make_shared<CartesianCellComplexConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<CartesianCellDoubleConservativeLinearRefine>());
+      std::make_shared<CartesianCellDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<CartesianCellFloatConservativeLinearRefine>());
+      std::make_shared<CartesianCellFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      boost::make_shared<CartesianEdgeDoubleConservativeLinearRefine>());
+      std::make_shared<CartesianEdgeDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      boost::make_shared<CartesianEdgeFloatConservativeLinearRefine>());
+      std::make_shared<CartesianEdgeFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<double>).name(),
-      boost::make_shared<CartesianFaceDoubleConservativeLinearRefine>());
+      std::make_shared<CartesianFaceDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::FaceVariable<float>).name(),
-      boost::make_shared<CartesianFaceFloatConservativeLinearRefine>());
+      std::make_shared<CartesianFaceFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<double>).name(),
-      boost::make_shared<CartesianSideDoubleConservativeLinearRefine>());
+      std::make_shared<CartesianSideDoubleConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<float>).name(),
-      boost::make_shared<CartesianSideFloatConservativeLinearRefine>());
+      std::make_shared<CartesianSideFloatConservativeLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      boost::make_shared<CartesianCellComplexLinearRefine>());
+      std::make_shared<CartesianCellComplexLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<double>).name(),
-      boost::make_shared<CartesianCellDoubleLinearRefine>());
+      std::make_shared<CartesianCellDoubleLinearRefine>());
    addRefineOperator(
       typeid(pdat::CellVariable<float>).name(),
-      boost::make_shared<CartesianCellFloatLinearRefine>());
+      std::make_shared<CartesianCellFloatLinearRefine>());
    addRefineOperator(
       typeid(pdat::NodeVariable<dcomplex>).name(),
-      boost::make_shared<CartesianNodeComplexLinearRefine>());
+      std::make_shared<CartesianNodeComplexLinearRefine>());
    addRefineOperator(
       typeid(pdat::NodeVariable<double>).name(),
-      boost::make_shared<CartesianNodeDoubleLinearRefine>());
+      std::make_shared<CartesianNodeDoubleLinearRefine>());
    addRefineOperator(
       typeid(pdat::NodeVariable<float>).name(),
-      boost::make_shared<CartesianNodeFloatLinearRefine>());
+      std::make_shared<CartesianNodeFloatLinearRefine>());
 }
 
 /*
@@ -546,7 +545,7 @@ CartesianGridGeometry::printClassData(
 
 void
 CartesianGridGeometry::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -576,7 +575,7 @@ CartesianGridGeometry::putToRestart(
 
 void
 CartesianGridGeometry::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (!is_from_restart && !input_db) {
@@ -628,7 +627,7 @@ CartesianGridGeometry::getFromInput(
 void
 CartesianGridGeometry::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> restart_db(
+   std::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(getObjectName())) {
@@ -636,7 +635,7 @@ CartesianGridGeometry::getFromRestart()
          << "    database with name " << getObjectName()
          << " not found in the restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(
+   std::shared_ptr<tbox::Database> db(
       restart_db->getDatabase(getObjectName()));
 
    const tbox::Dimension& dim(getDim());

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer side-centered patch data.
  *
  ************************************************************************/
@@ -31,7 +31,7 @@ PatchSideDataOpsInteger::~PatchSideDataOpsInteger()
 
 int
 PatchSideDataOpsInteger::numberOfEntries(
-   const boost::shared_ptr<pdat::SideData<int> >& data,
+   const std::shared_ptr<pdat::SideData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -60,17 +60,17 @@ PatchSideDataOpsInteger::numberOfEntries(
  */
 
 void PatchSideDataOpsInteger::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::SideData<int> > d1(
-      BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::SideData<int> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::SideData<int> > d2(
-      BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::SideData<int> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -85,7 +85,7 @@ void PatchSideDataOpsInteger::swapData(
 
 void
 PatchSideDataOpsInteger::printData(
-   const boost::shared_ptr<pdat::SideData<int> >& data,
+   const std::shared_ptr<pdat::SideData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -99,8 +99,8 @@ PatchSideDataOpsInteger::printData(
 
 void
 PatchSideDataOpsInteger::copyData(
-   const boost::shared_ptr<pdat::SideData<int> >& dst,
-   const boost::shared_ptr<pdat::SideData<int> >& src,
+   const std::shared_ptr<pdat::SideData<int> >& dst,
+   const std::shared_ptr<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -118,8 +118,8 @@ PatchSideDataOpsInteger::copyData(
 }
 void
 PatchSideDataOpsInteger::abs(
-   const boost::shared_ptr<pdat::SideData<int> >& dst,
-   const boost::shared_ptr<pdat::SideData<int> >& src,
+   const std::shared_ptr<pdat::SideData<int> >& dst,
+   const std::shared_ptr<pdat::SideData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

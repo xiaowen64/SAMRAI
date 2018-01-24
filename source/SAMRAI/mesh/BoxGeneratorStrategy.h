@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for box generation routines.
  *
  ************************************************************************/
@@ -61,9 +61,9 @@ public:
     */
    virtual void
    findBoxesContainingTags(
-      boost::shared_ptr<hier::BoxLevel>& new_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_new,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      std::shared_ptr<hier::BoxLevel>& new_box_level,
+      std::shared_ptr<hier::Connector>& tag_to_new,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_data_index,
       const int tag_val,
       const hier::BoxContainer& bound_boxes,

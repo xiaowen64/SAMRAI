@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Program for poisson solver on adaptive grid using FAC
  *
  ************************************************************************/
@@ -42,10 +42,10 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
 
-#include "boost/shared_ptr.hpp"
 
 #include <vector>
 #include <string>
+#include <memory>
 
 using namespace SAMRAI;
 
@@ -91,7 +91,7 @@ int main(
        * Create input database and parse all data in input file into it.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      std::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -104,7 +104,7 @@ int main(
        * This database contains information relevant to main.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -149,14 +149,14 @@ int main(
       /*
        * Create a grid geometry required for the patchHierarchy object.
        */
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
       tbox::plog << "Grid Geometry:" << std::endl;
       grid_geometry->printClassData(tbox::plog);
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "Patch Hierarchy",
             grid_geometry,
@@ -175,39 +175,39 @@ int main(
       std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
 
 #ifdef HAVE_HYPRE
-      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+      std::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
          new solv::CellPoissonHypreSolver(
             dim,
             hypre_poisson_name,
             input_db->isDatabase("hypre_solver") ?
             input_db->getDatabase("hypre_solver") :
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
 
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      std::shared_ptr<solv::CellPoissonFACOps> fac_ops(
          new solv::CellPoissonFACOps(
             hypre_poisson,
             dim,
             fac_ops_name,
             input_db->isDatabase("fac_ops") ?
             input_db->getDatabase("fac_ops") :
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
 #else
-      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+      std::shared_ptr<solv::CellPoissonFACOps> fac_ops(
          new solv::CellPoissonFACOps(
             dim,
             fac_ops_name,
             input_db->isDatabase("fac_ops") ?
             input_db->getDatabase("fac_ops") :
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
 #endif
 
-      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+      std::shared_ptr<solv::FACPreconditioner> fac_precond(
          new solv::FACPreconditioner(
             fac_precond_name,
             fac_ops,
             input_db->isDatabase("fac_precond") ?
             input_db->getDatabase("fac_precond") :
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
 
       AdaptivePoisson adaptive_poisson(adaptive_poisson_name,
                                        dim,
@@ -220,18 +220,18 @@ int main(
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
+      std::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             "CellTaggingMethod",
             &adaptive_poisson,
             input_db->getDatabase("StandardTagAndInitialize")));
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      std::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(
             dim,
             (input_db->isDatabase("BergerRigoutsos") ?
              input_db->getDatabase("BergerRigoutsos") :
-             boost::shared_ptr<tbox::Database>())));
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+             std::shared_ptr<tbox::Database>())));
+      std::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "load balancer",
@@ -242,7 +242,7 @@ int main(
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      std::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "Gridding Algorithm",
@@ -325,7 +325,7 @@ int main(
 
          /* Write the plot file. */
          if (do_plot) {
-            boost::shared_ptr<appu::VisItDataWriter> visit_writer(
+            std::shared_ptr<appu::VisItDataWriter> visit_writer(
                new appu::VisItDataWriter(
                   dim,
                   "VisIt Writer",
@@ -363,7 +363,7 @@ int main(
             patch_hierarchy->recursivePrint(tbox::plog, "    ", 1);
             if (0) {
                /* Write post-adapt viz file for debugging */
-               boost::shared_ptr<appu::VisItDataWriter> visit_writer(
+               std::shared_ptr<appu::VisItDataWriter> visit_writer(
                   new appu::VisItDataWriter(
                      dim,
                      "VisIt Writer",

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for example FAC Poisson solver
  *
  ************************************************************************/
@@ -24,7 +24,7 @@
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 
@@ -78,8 +78,8 @@ public:
    FACPoisson(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      const boost::shared_ptr<solv::CellPoissonFACSolver>& fac_solver,
-      const boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
+      const std::shared_ptr<solv::CellPoissonFACSolver>& fac_solver,
+      const std::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
 
    virtual ~FACPoisson();
 
@@ -97,12 +97,12 @@ public:
     */
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level,
+      const std::shared_ptr<hier::PatchLevel>& old_level,
       const bool allocate_data);
 
    /*!
@@ -110,7 +110,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       int coarsest_level,
       int finest_level);
 
@@ -169,7 +169,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    //@{
    /*!
@@ -179,12 +179,12 @@ private:
    /*!
     * @brief FAC poisson solver.
     */
-   boost::shared_ptr<solv::CellPoissonFACSolver> d_poisson_fac_solver;
+   std::shared_ptr<solv::CellPoissonFACSolver> d_poisson_fac_solver;
 
    /*!
     * @brief Boundary condition coefficient implementation.
     */
-   boost::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
+   std::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
 
    //@}
 
@@ -197,7 +197,7 @@ private:
    /*!
     * @brief Context owned by this object.
     */
-   boost::shared_ptr<hier::VariableContext> d_context;
+   std::shared_ptr<hier::VariableContext> d_context;
 
    /*!
     * @brief Descriptor indices of internal data.

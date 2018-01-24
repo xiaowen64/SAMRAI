@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:  Manages data on stencils at coarse-fine boundaries
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -30,7 +29,7 @@ namespace xfer {
  */
 
 CompositeBoundarySchedule::CompositeBoundarySchedule(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarse_level_num,
    int stencil_width,
    const std::set<int>& data_ids)
@@ -96,16 +95,16 @@ CompositeBoundarySchedule::createStencilForLevel()
                                          false,
                                          d_stencil_width);
 
-      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geom =
+      const std::shared_ptr<hier::BaseGridGeometry>& grid_geom =
          d_hierarchy->getGridGeometry();
 
-      const boost::shared_ptr<hier::PatchLevel>& level =
+      const std::shared_ptr<hier::PatchLevel>& level =
          d_hierarchy->getPatchLevel(level_num);
-      const boost::shared_ptr<hier::PatchLevel>& finer_level =
+      const std::shared_ptr<hier::PatchLevel>& finer_level =
          d_hierarchy->getPatchLevel(level_num+1);
 
-      boost::shared_ptr<hier::BoxLevel> stencil_box_level =
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> stencil_box_level =
+         std::make_shared<hier::BoxLevel>(
             finer_level->getRatioToLevelZero(),
             grid_geom);
 
@@ -140,7 +139,7 @@ CompositeBoundarySchedule::createStencilForLevel()
       hier::LocalId coarse_local_id(-1);
       for (hier::PatchLevel::iterator itr = level->begin(); itr != level->end();
            ++itr) {
-         const boost::shared_ptr<hier::Patch>& patch(*itr);
+         const std::shared_ptr<hier::Patch>& patch(*itr);
          const hier::Box& patch_box = patch->getBox();
          const hier::BoxId& box_id = patch_box.getBoxId();
 
@@ -205,7 +204,7 @@ CompositeBoundarySchedule::createStencilForLevel()
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
-      boost::shared_ptr<hier::Connector> fine_to_stencil;
+      std::shared_ptr<hier::Connector> fine_to_stencil;
       hier::OverlapConnectorAlgorithm oca;
       oca.bridge(
          fine_to_stencil,
@@ -230,7 +229,7 @@ CompositeBoundarySchedule::createStencilForLevel()
 
       finer_level->getBoxLevel()->cacheConnector(fine_to_stencil);
 
-      d_stencil_level = boost::make_shared<hier::PatchLevel>(
+      d_stencil_level = std::make_shared<hier::PatchLevel>(
          stencil_box_level,
          grid_geom,
          level->getPatchDescriptor());
@@ -250,7 +249,7 @@ CompositeBoundarySchedule::createStencilForLevel()
 
 void CompositeBoundarySchedule::registerDataIds()
 {
-   boost::shared_ptr< xfer::VariableFillPattern >
+   std::shared_ptr< xfer::VariableFillPattern >
       interior_fill(new PatchInteriorVariableFillPattern(d_hierarchy->getDim()));
 
    for (std::set<int>::const_iterator itr = d_data_ids.begin();
@@ -259,7 +258,7 @@ void CompositeBoundarySchedule::registerDataIds()
       int data_id = *itr;
 
       d_refine_algorithm.registerRefine(data_id, data_id, data_id,
-         boost::shared_ptr<hier::RefineOperator>(), interior_fill);
+         std::shared_ptr<hier::RefineOperator>(), interior_fill);
    }
 }
 
@@ -280,7 +279,7 @@ CompositeBoundarySchedule::setUpSchedule()
    d_refine_schedule.reset();
 
    if (d_stencil_level) {
-      boost::shared_ptr< xfer::PatchLevelFillPattern >
+      std::shared_ptr< xfer::PatchLevelFillPattern >
          interior_level_fill(new PatchLevelInteriorFillPattern());
  
       d_refine_schedule =
@@ -320,7 +319,7 @@ CompositeBoundarySchedule::fillData(double fill_time)
       d_refine_schedule->fillData(fill_time);
    }
 
-   const boost::shared_ptr<hier::PatchLevel>& level =
+   const std::shared_ptr<hier::PatchLevel>& level =
       d_hierarchy->getPatchLevel(d_coarse_level_num);
 
    for (std::set<int>::const_iterator ditr = d_data_ids.begin();
@@ -332,13 +331,13 @@ CompositeBoundarySchedule::fillData(double fill_time)
       for (hier::PatchLevel::iterator itr = level->begin(); itr != level->end();
            ++itr) {
 
-         const boost::shared_ptr<hier::Patch>& patch(*itr);
+         const std::shared_ptr<hier::Patch>& patch(*itr);
          const hier::BoxId& box_id = patch->getBox().getBoxId();
          VectorPatchData& data_vec =
             d_data_map[data_id][box_id];
          data_vec.clear();
 
-         std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> >&
+         std::map<hier::BoxId, std::shared_ptr<hier::PatchData> >&
             stencil_map = d_stencil_to_data[data_id];
          if (d_stencil_level) {
             const hier::BoxContainer& uncovered_boxes =
@@ -374,7 +373,7 @@ CompositeBoundarySchedule::fillData(double fill_time)
  *************************************************************************
  */
 
-const std::vector<boost::shared_ptr<hier::PatchData> >&
+const std::vector<std::shared_ptr<hier::PatchData> >&
 CompositeBoundarySchedule::getBoundaryPatchData(
    const hier::Patch& patch,
    int data_id) const
@@ -408,14 +407,14 @@ CompositeBoundarySchedule::getBoundaryPatchData(
       TBOX_ERROR("CompositeBoundarySchedule::getBoundaryPatchData error:  stencil data for patch data id " << data_id << " not found for Patch " << box_id << " on level " << level_num << std::endl);
    }
 
-   const std::vector<boost::shared_ptr<hier::PatchData> >& data_vec =
+   const std::vector<std::shared_ptr<hier::PatchData> >& data_vec =
       inner_map_itr->second;
 
    return data_vec;
 
 }
 
-std::vector<boost::shared_ptr<hier::PatchData> >
+std::vector<std::shared_ptr<hier::PatchData> >
 CompositeBoundarySchedule::getDataForUncoveredBox(
    const hier::BoxId& uncovered_id,
    int data_id) const
@@ -428,15 +427,15 @@ CompositeBoundarySchedule::getDataForUncoveredBox(
       TBOX_ERROR("CompositeBoundarySchedule:: error:  stencil not filled." << std::endl);
    }
 
-   std::map<int, std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> > >::const_iterator data_map_itr = d_stencil_to_data.find(data_id);
+   std::map<int, std::map<hier::BoxId, std::shared_ptr<hier::PatchData> > >::const_iterator data_map_itr = d_stencil_to_data.find(data_id);
    if (data_map_itr == d_stencil_to_data.end()) {
       TBOX_ERROR("CompositeBoundarySchedule:: error:  stencil data for patch data id " << data_id << " not found." << std::endl);
    }
 
-   const std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> >& data_map =
+   const std::map<hier::BoxId, std::shared_ptr<hier::PatchData> >& data_map =
       data_map_itr->second;
 
-   std::vector<boost::shared_ptr<hier::PatchData> > data_vec;
+   std::vector<std::shared_ptr<hier::PatchData> > data_vec;
 
    std::map<hier::BoxId, std::set<hier::BoxId> >::const_iterator st_itr =
       d_uncovered_to_stencil.find(uncovered_id);
@@ -446,7 +445,7 @@ CompositeBoundarySchedule::getDataForUncoveredBox(
 
       for (std::set<hier::BoxId>::const_iterator itr = stencil_ids.begin();
            itr != stencil_ids.end(); ++itr) {
-         std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> >::const_iterator pd_itr = data_map.find(*itr);
+         std::map<hier::BoxId, std::shared_ptr<hier::PatchData> >::const_iterator pd_itr = data_map.find(*itr);
          if (pd_itr == data_map.end()) {
             TBOX_ERROR("CompositeBoundarySchedule:: error:  No patch data for stencil box "  << *itr << " found." << std::endl); 
          }

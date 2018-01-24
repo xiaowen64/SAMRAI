@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
@@ -116,10 +116,10 @@ OverlapConnectorAlgorithm::getFromInput()
    if (s_print_steps == '\0') {
       s_print_steps = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
+         std::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("OverlapConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> oca_db(
+            std::shared_ptr<tbox::Database> oca_db(
                idb->getDatabase("OverlapConnectorAlgorithm"));
             s_print_steps =
                oca_db->getCharWithDefault("DEV_print_bridge_steps", 'n');
@@ -180,7 +180,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
     */
    TBOX_ASSERT(box_id.getOwnerRank() == connector.getMPI().getRank());
 
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom(
       connector.getBase().getGridGeometry());
 
    const Box& box(*connector.getBase().getBox(Box(dim, box_id)));
@@ -305,7 +305,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
        */
       TBOX_ASSERT(box_id.getOwnerRank() == connector.getMPI().getRank());
 
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom(
          connector.getBase().getGridGeometry());
 
       const Box& box = *connector.getBase().getBox(Box(dim, box_id));
@@ -382,7 +382,7 @@ OverlapConnectorAlgorithm::extractNeighbors(
 
 void
 OverlapConnectorAlgorithm::findOverlaps(
-   boost::shared_ptr<Connector>& connector,
+   std::shared_ptr<Connector>& connector,
    const BoxLevel& base_box_level,
    const BoxLevel& head_box_level,
    const IntVector& base_width,
@@ -408,7 +408,7 @@ OverlapConnectorAlgorithm::findOverlaps(
 
 void
 OverlapConnectorAlgorithm::findOverlapsWithTranspose(
-   boost::shared_ptr<Connector>& connector,
+   std::shared_ptr<Connector>& connector,
    const BoxLevel& base_box_level,
    const BoxLevel& head_box_level,
    const IntVector& base_width,
@@ -508,7 +508,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
 
    const tbox::Dimension& dim = base.getDim();
    const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? base.getMPI() : d_mpi;
-   const boost::shared_ptr<const BaseGridGeometry>& geom = base.getGridGeometry();
+   const std::shared_ptr<const BaseGridGeometry>& geom = base.getGridGeometry();
    if (mpi.hasReceivableMessage(0, MPI_ANY_SOURCE, MPI_ANY_TAG)) {
       TBOX_ERROR("OverlapConnectorAlgorithm::findOverlaps_assumedPartition: not starting\n"
          << "clean of receivable MPI messages.");
@@ -626,7 +626,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
    const IntVector center_growth_to_nest_head(
       dim,
       head_bounding_cell_count < base_bounding_cell_count ? 0 : tbox::MathUtilities<int>::getMax());
-   boost::shared_ptr<Connector> tmp_conn;
+   std::shared_ptr<Connector> tmp_conn;
    if (d_print_steps) {
       tbox::plog << "OverlapConnectorAlgorithm::findOverlaps_assumedPartition: bridging.\n";
    }
@@ -664,7 +664,7 @@ OverlapConnectorAlgorithm::findOverlaps_assumedPartition(
  */
 void
 OverlapConnectorAlgorithm::bridgeWithNesting(
-   boost::shared_ptr<Connector>& west_to_east,
+   std::shared_ptr<Connector>& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const IntVector& cent_growth_to_nest_west,
@@ -738,7 +738,7 @@ OverlapConnectorAlgorithm::bridgeWithNesting(
  */
 void
 OverlapConnectorAlgorithm::bridge(
-   boost::shared_ptr<Connector>& west_to_east,
+   std::shared_ptr<Connector>& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    const IntVector& connector_width_limit,
@@ -811,7 +811,7 @@ OverlapConnectorAlgorithm::bridge(
  */
 void
 OverlapConnectorAlgorithm::bridge(
-   boost::shared_ptr<Connector>& west_to_east,
+   std::shared_ptr<Connector>& west_to_east,
    const Connector& west_to_cent,
    const Connector& cent_to_east,
    bool compute_transpose) const
@@ -1435,7 +1435,7 @@ OverlapConnectorAlgorithm::privateBridge_discoverAndSend(
       (east_to_west != 0 && east_to_west != &west_to_east);
 
    const BoxLevel& east(west_to_east.getBase());
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
+   const std::shared_ptr<const BaseGridGeometry>& grid_geometry(
       east.getGridGeometry());
 
    const tbox::SAMRAI_MPI& mpi = d_mpi.hasNullCommunicator() ? east.getMPI() : d_mpi;

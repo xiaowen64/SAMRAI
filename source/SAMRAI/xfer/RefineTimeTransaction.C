@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
@@ -47,9 +47,9 @@ double RefineTimeTransaction::s_time = 0.0;
  *************************************************************************
  */
 RefineTimeTransaction::RefineTimeTransaction(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
    const hier::Box& box,
@@ -154,7 +154,7 @@ RefineTimeTransaction::packStream(
       temporary_box,
       d_src_patch->getPatchDescriptor());
 
-   boost::shared_ptr<hier::PatchData> temporary_patch_data(
+   std::shared_ptr<hier::PatchData> temporary_patch_data(
       d_src_patch->getPatchDescriptor()
       ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
       ->allocate(temporary_patch));
@@ -204,7 +204,7 @@ RefineTimeTransaction::copyLocalData()
          temporary_box,
          d_src_patch->getPatchDescriptor());
 
-      boost::shared_ptr<hier::PatchData> temp(
+      std::shared_ptr<hier::PatchData> temp(
          d_src_patch->getPatchDescriptor()
          ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
          ->allocate(temporary_patch));
@@ -225,9 +225,9 @@ RefineTimeTransaction::copyLocalData()
 
 void
 RefineTimeTransaction::timeInterpolate(
-   const boost::shared_ptr<hier::PatchData>& pd_dst,
-   const boost::shared_ptr<hier::PatchData>& pd_old,
-   const boost::shared_ptr<hier::PatchData>& pd_new)
+   const std::shared_ptr<hier::PatchData>& pd_dst,
+   const std::shared_ptr<hier::PatchData>& pd_old,
+   const std::shared_ptr<hier::PatchData>& pd_new)
 {
    TBOX_ASSERT(pd_old);
    TBOX_ASSERT(pd_dst);

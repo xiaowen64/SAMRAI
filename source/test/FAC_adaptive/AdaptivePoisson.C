@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AdaptivePoisson class implementation
  *
  ************************************************************************/
@@ -47,11 +47,11 @@
 #include "SAMRAI/math/PatchCellDataOpsReal.h"
 #include "SAMRAI/math/HierarchyCellDataOpsReal.h"
 
-#include "boost/shared_ptr.hpp"
 #include <sstream>
 #include <iomanip>
 #include <cstring>
 #include <stdlib.h>
+#include <memory>
 
 #include <cmath>
 
@@ -60,8 +60,8 @@ using namespace SAMRAI;
 AdaptivePoisson::AdaptivePoisson(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
-   boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
+   std::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
+   std::shared_ptr<solv::FACPreconditioner>& fac_precond,
    tbox::Database& database,
    /*! Log output stream */ std::ostream* log_stream):
    d_name(object_name),
@@ -183,27 +183,27 @@ AdaptivePoisson::AdaptivePoisson(
     */
    {
       if (database.isDatabase("sine_solution")) {
-         boost::shared_ptr<tbox::Database> db(
+         std::shared_ptr<tbox::Database> db(
             database.getDatabase("sine_solution"));
          d_sine_solution.setFromDatabase(*db);
       }
       if (database.isDatabase("gaussian_solution")) {
-         boost::shared_ptr<tbox::Database> db(
+         std::shared_ptr<tbox::Database> db(
             database.getDatabase("gaussian_solution"));
          d_gaussian_solution.setFromDatabase(*db);
       }
       if (database.isDatabase("multigaussian_solution")) {
-         boost::shared_ptr<tbox::Database> db(
+         std::shared_ptr<tbox::Database> db(
             database.getDatabase("multigaussian_solution"));
          d_multigaussian_solution.setFromDatabase(*db);
       }
       if (database.isDatabase("polynomial_solution")) {
-         boost::shared_ptr<tbox::Database> db(
+         std::shared_ptr<tbox::Database> db(
             database.getDatabase("polynomial_solution"));
          d_polynomial_solution.setFromDatabase(*db);
       }
       if (database.isDatabase("gaussian_diffcoef_solution")) {
-         boost::shared_ptr<tbox::Database> db(
+         std::shared_ptr<tbox::Database> db(
             database.getDatabase("gaussian_diffcoef_solution"));
          d_gaussian_diffcoef_solution.setFromDatabase(*db);
       }
@@ -278,7 +278,7 @@ AdaptivePoisson::AdaptivePoisson(
 
 void AdaptivePoisson::initializeLevelData(
    /*! Hierarchy to initialize */
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    /*! Level to initialize */
    const int ln,
    const double init_data_time,
@@ -286,19 +286,19 @@ void AdaptivePoisson::initializeLevelData(
    /*! Whether level is being introduced for the first time */
    const bool initial_time,
    /*! Level to copy data from */
-   const boost::shared_ptr<hier::PatchLevel>& old_level,
+   const std::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(init_data_time);
    NULL_USE(can_be_refined);
    NULL_USE(initial_time);
 
-   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(hierarchy);
+   std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(hierarchy);
 
    /*
     * Reference the level object with the given index from the hierarchy.
     */
-   boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+   std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
    /*
     * If instructed, allocate all patch data on the level.
@@ -326,14 +326,14 @@ void AdaptivePoisson::initializeLevelData(
       hier::Patch& patch = **pi;
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
-         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<double> > diffcoef_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_diffcoef_persistent)));
-      boost::shared_ptr<pdat::CellData<double> > exact_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > exact_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_exact_persistent)));
-      boost::shared_ptr<pdat::CellData<double> > source_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > source_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_constant_source_persistent)));
       TBOX_ASSERT(exact_data);
       TBOX_ASSERT(source_data);
@@ -372,12 +372,12 @@ void AdaptivePoisson::initializeLevelData(
     */
    {
       xfer::RefineAlgorithm refiner;
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
-         BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
             patch_hierarchy->getGridGeometry()));
       TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
-      boost::shared_ptr<hier::RefineOperator> accurate_refine_op =
+      std::shared_ptr<hier::RefineOperator> accurate_refine_op =
          grid_geometry.
          lookupRefineOperator(d_scalar, "CONSERVATIVE_LINEAR_REFINE");
       TBOX_ASSERT(accurate_refine_op);
@@ -385,7 +385,7 @@ void AdaptivePoisson::initializeLevelData(
          d_scalar_persistent,
          d_scalar_persistent,
          accurate_refine_op);
-      boost::shared_ptr<xfer::RefineSchedule> refine_schedule;
+      std::shared_ptr<xfer::RefineSchedule> refine_schedule;
       if (ln > 0) {
          /*
           * Include coarser levels in setting data
@@ -431,7 +431,7 @@ void AdaptivePoisson::initializeLevelData(
 }
 
 void AdaptivePoisson::resetHierarchyConfiguration(
-   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+   /*! New hierarchy */ const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ int coarsest_level,
    /*! Finest level */ int finest_level)
 {
@@ -454,7 +454,7 @@ void AdaptivePoisson::resetHierarchyConfiguration(
 }
 
 void AdaptivePoisson::applyGradientDetector(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy_,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy_,
    const int ln,
    const double error_data_time,
    const int tag_index,
@@ -478,24 +478,24 @@ void AdaptivePoisson::applyGradientDetector(
    for (hier::PatchLevel::iterator pi(level.begin());
         pi != level.end(); ++pi) {
       hier::Patch& patch = **pi;
-      boost::shared_ptr<hier::PatchData> tag_data(
+      std::shared_ptr<hier::PatchData> tag_data(
          patch.getPatchData(tag_index));
       ntotal += patch.getBox().numberCells().getProduct();
       if (!tag_data) {
          TBOX_ERROR(
             "Data index " << tag_index << " does not exist for patch.\n");
       }
-      boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(tag_data));
+      std::shared_ptr<pdat::CellData<int> > tag_cell_data_(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(tag_data));
       TBOX_ASSERT(tag_cell_data_);
-      boost::shared_ptr<hier::PatchData> soln_data(
+      std::shared_ptr<hier::PatchData> soln_data(
          patch.getPatchData(d_scalar_persistent));
       if (!soln_data) {
          TBOX_ERROR("Data index " << d_scalar_persistent
                                   << " does not exist for patch.\n");
       }
-      boost::shared_ptr<pdat::CellData<double> > soln_cell_data_(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(soln_data));
+      std::shared_ptr<pdat::CellData<double> > soln_cell_data_(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(soln_data));
       TBOX_ASSERT(soln_cell_data_);
       pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<int>& tag_cell_data = *tag_cell_data_;
@@ -581,8 +581,8 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
    // end debug code
 
    if (variable_name == "Gradient Function") {
-      boost::shared_ptr<pdat::CellData<double> > soln_cell_data_(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > soln_cell_data_(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_scalar_persistent)));
       TBOX_ASSERT(soln_cell_data_);
       const pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
@@ -725,7 +725,7 @@ int AdaptivePoisson::computeError(
    const int nlevels = hierarchy.getNumberOfLevels();
    std::vector<double> wtsums(2 * nlevels);
    for (ln = nlevels - 1; ln >= 0; --ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy.getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy.getPatchLevel(ln));
 
       double& levelwts(wtsums[ln]);
       double& levell2n(wtsums[ln + nlevels]); // l2n and wts combined in 1 array.
@@ -735,19 +735,19 @@ int AdaptivePoisson::computeError(
 
       for (hier::PatchLevel::iterator p(level->begin());
            p != level->end(); ++p) {
-         const boost::shared_ptr<hier::Patch>& patch = *p;
+         const std::shared_ptr<hier::Patch>& patch = *p;
 
          /*
           * Get the patch data.
           */
-         boost::shared_ptr<pdat::CellData<double> > current_solution(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > current_solution(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_scalar_persistent)));
-         boost::shared_ptr<pdat::CellData<double> > exact_solution(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > exact_solution(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exact_persistent)));
-         boost::shared_ptr<pdat::CellData<double> > weight(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > weight(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_weight_persistent)));
          TBOX_ASSERT(current_solution);
          TBOX_ASSERT(exact_solution);
@@ -859,7 +859,7 @@ int AdaptivePoisson::computeError(
 }
 
 int AdaptivePoisson::solvePoisson(
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   std::shared_ptr<hier::PatchHierarchy> hierarchy,
    std::string initial_u)
 {
 
@@ -888,19 +888,19 @@ int AdaptivePoisson::solvePoisson(
     * Fill the boundary condition coefficient data.
     */
    for (int ln = coarsest_ln; ln <= finest_ln; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::iterator pi(level->begin());
            pi != level->end(); ++pi) {
-         const boost::shared_ptr<hier::Patch>& patch = *pi;
+         const std::shared_ptr<hier::Patch>& patch = *pi;
 
          const hier::Box& box = patch->getBox();
 
-         boost::shared_ptr<pdat::CellData<double> > source_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > source_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_constant_source_persistent)));
-         boost::shared_ptr<pdat::CellData<double> > rhs_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > rhs_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_rhs_scratch)));
          TBOX_ASSERT(source_data);
          TBOX_ASSERT(rhs_data);
@@ -983,12 +983,12 @@ int AdaptivePoisson::solvePoisson(
     */
    {
       xfer::RefineAlgorithm refiner;
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
-         BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
             hierarchy->getGridGeometry()));
       TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
-      boost::shared_ptr<hier::RefineOperator> accurate_refine_op(
+      std::shared_ptr<hier::RefineOperator> accurate_refine_op(
          grid_geometry.lookupRefineOperator(d_scalar, "LINEAR_REFINE"));
       TBOX_ASSERT(accurate_refine_op);
       refiner.registerRefine(d_scalar_persistent,
@@ -998,9 +998,9 @@ int AdaptivePoisson::solvePoisson(
       d_robin_refine_patch.setTargetDataId(d_scalar_persistent);
       d_robin_refine_patch.setHomogeneousBc(false);
       d_robin_refine_patch.setCoefImplementation(d_physical_bc_coef);
-      boost::shared_ptr<xfer::RefineSchedule> refine_schedule;
+      std::shared_ptr<xfer::RefineSchedule> refine_schedule;
       for (int ln = coarsest_ln; ln <= finest_ln; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          if (ln > 0) {
             /* Include coarser levels in setting data */

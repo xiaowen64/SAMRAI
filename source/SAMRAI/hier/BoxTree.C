@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
-#include "boost/make_shared.hpp"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -27,8 +26,8 @@
 namespace SAMRAI {
 namespace hier {
 
-boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
-boost::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
+std::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
+std::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
 unsigned int BoxTree::s_num_build[SAMRAI::MAX_DIM_VAL] =
 { 0 };
 unsigned int BoxTree::s_num_generate[SAMRAI::MAX_DIM_VAL]
@@ -640,23 +639,23 @@ BoxTree::printStatistics(
               << std::endl;
 
    tbox::Statistician* st = tbox::Statistician::getStatistician();
-   boost::shared_ptr<tbox::Statistic> bdstat(st->getStatistic("num_build",
+   std::shared_ptr<tbox::Statistic> bdstat(st->getStatistic("num_build",
                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> gnstat(st->getStatistic("num_generate",
+   std::shared_ptr<tbox::Statistic> gnstat(st->getStatistic("num_generate",
                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> dpstat(st->getStatistic("num_duplicate",
+   std::shared_ptr<tbox::Statistic> dpstat(st->getStatistic("num_duplicate",
                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> srstat(st->getStatistic("num_search",
+   std::shared_ptr<tbox::Statistic> srstat(st->getStatistic("num_search",
                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> sbstat(st->getStatistic("num_sorted_box",
+   std::shared_ptr<tbox::Statistic> sbstat(st->getStatistic("num_sorted_box",
                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> fbstat(st->getStatistic("num_found_box",
+   std::shared_ptr<tbox::Statistic> fbstat(st->getStatistic("num_found_box",
                                                 "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> msbstat(st->getStatistic("max_sorted_box",
+   std::shared_ptr<tbox::Statistic> msbstat(st->getStatistic("max_sorted_box",
                                                  "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> mfbstat(st->getStatistic("max_found_box",
+   std::shared_ptr<tbox::Statistic> mfbstat(st->getStatistic("max_found_box",
                                                  "PROC_STAT"));
-   boost::shared_ptr<tbox::Statistic> lsstat(st->getStatistic("max_lin_search",
+   std::shared_ptr<tbox::Statistic> lsstat(st->getStatistic("max_lin_search",
                                                 "PROC_STAT"));
 
    static int seq_num = 0;

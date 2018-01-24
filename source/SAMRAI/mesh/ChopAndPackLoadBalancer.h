@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
@@ -18,7 +18,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {
@@ -208,8 +208,8 @@ public:
    ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * Construct load balancer object, including setting default object state
@@ -225,8 +225,8 @@ public:
     */
    explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * The virtual destructor releases all internal storage.
@@ -279,7 +279,7 @@ public:
     *                      is used.  If no value is given, the data will be
     *                      used for all levels.
     *
-    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  std::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -407,7 +407,7 @@ public:
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
       hier::Connector* balance_to_anchor,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -452,7 +452,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Given a list of boxes, representing the domain of a level in the AMR
@@ -516,7 +516,7 @@ private:
       hier::BoxContainer& out_boxes,
       hier::ProcessorMapping& mapping,
       const hier::BoxContainer& in_boxes,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::BoxContainer& physical_domain,
       const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -548,7 +548,7 @@ private:
       hier::BoxContainer& out_boxes,
       std::vector<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -565,7 +565,7 @@ private:
       hier::BoxContainer& out_boxes,
       std::vector<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::IntVector& ratio_to_coarsest_hierarchy_level,
       int wrk_indx,
@@ -708,14 +708,14 @@ private:
    /*
     * Performance timers.
     */
-   boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
-   boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
-   boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
-   boost::shared_ptr<tbox::Timer> t_get_global_boxes;
-   boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
-   boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
-   boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;
-   boost::shared_ptr<tbox::Timer> t_chop_boxes;
+   std::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   std::shared_ptr<tbox::Timer> t_load_balance_boxes;
+   std::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
+   std::shared_ptr<tbox::Timer> t_get_global_boxes;
+   std::shared_ptr<tbox::Timer> t_bin_pack_boxes;
+   std::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
+   std::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;
+   std::shared_ptr<tbox::Timer> t_chop_boxes;
 };
 
 }

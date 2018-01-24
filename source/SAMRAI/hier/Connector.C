@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed
  *                box graph.
  *
@@ -39,9 +39,9 @@ namespace hier {
 
 const int Connector::HIER_CONNECTOR_VERSION = 0;
 
-boost::shared_ptr<tbox::Timer> Connector::t_acquire_remote_relationships;
-boost::shared_ptr<tbox::Timer> Connector::t_cache_global_reduced_data;
-boost::shared_ptr<tbox::Timer> Connector::t_find_overlaps_rbbt;
+std::shared_ptr<tbox::Timer> Connector::t_acquire_remote_relationships;
+std::shared_ptr<tbox::Timer> Connector::t_cache_global_reduced_data;
+std::shared_ptr<tbox::Timer> Connector::t_find_overlaps_rbbt;
 
 tbox::StartupShutdownManager::Handler
 Connector::s_initialize_finalize_handler(
@@ -419,7 +419,7 @@ Connector::shrinkWidth(
    const bool base_coarser = !getHeadCoarserFlag() &&
       getBase().getRefinementRatio() != getHead().getRefinementRatio();
 
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom(
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom(
       getBase().getGridGeometry());
 
    if (grid_geom->getNumberBlocks() == 1 || grid_geom->hasIsotropicRatios()) {
@@ -550,7 +550,7 @@ Connector::computeTransposeOf(const Connector& other,
       TBOX_ERROR("Connector::computeTransposeOf: not starting clean of receivable MPI messages.");
    }
 
-   std::map<int, boost::shared_ptr<tbox::MessageStream> > messages;
+   std::map<int, std::shared_ptr<tbox::MessageStream> > messages;
    std::vector<tbox::SAMRAI_MPI::Request> requests;
    tbox::SAMRAI_MPI::Status tmp_status;
    int mpi_err;
@@ -572,7 +572,7 @@ Connector::computeTransposeOf(const Connector& other,
       if (base_box.getOwnerRank() == mpi1.getRank()) {
          insertNeighbors(head_nabrs, base_box.getBoxId());
       } else {
-         boost::shared_ptr<tbox::MessageStream>& mstream = messages[base_box.getOwnerRank()];
+         std::shared_ptr<tbox::MessageStream>& mstream = messages[base_box.getOwnerRank()];
          if (!mstream) {
             mstream.reset(new tbox::MessageStream);
             *mstream << edge_msg_type;
@@ -1915,7 +1915,7 @@ Connector::assertConsistencyWithBase() const
 
 void
 Connector::computeNeighborhoodDifferences(
-   boost::shared_ptr<Connector>& left_minus_right,
+   std::shared_ptr<Connector>& left_minus_right,
    const Connector& left,
    const Connector& right)
 {
@@ -2078,8 +2078,8 @@ Connector::checkConsistencyWithHead() const
 
 void
 Connector::findOverlapErrors(
-   boost::shared_ptr<Connector>& missing,
-   boost::shared_ptr<Connector>& extra,
+   std::shared_ptr<Connector>& missing,
+   std::shared_ptr<Connector>& extra,
    bool ignore_self_overlap) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -2217,7 +2217,7 @@ Connector::checkOverlapCorrectness(
 #endif
    TBOX_ASSERT(!hasPeriodicLocalNeighborhoodBaseBoxes());
 
-   boost::shared_ptr<Connector> missing, extra;
+   std::shared_ptr<Connector> missing, extra;
    findOverlapErrors(missing, extra, ignore_self_overlap);
 
    if (!assert_completeness) {

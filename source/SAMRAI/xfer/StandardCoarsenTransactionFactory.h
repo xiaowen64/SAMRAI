@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory for create standard copy transactions
  *                for coarsen schedules.
  *
@@ -20,7 +20,7 @@
 #include "SAMRAI/xfer/CoarsenClasses.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -48,9 +48,9 @@ public:
    /*!
     * @brief Allocate a CoarsenCopyTransaction object.
     *
-    * @param dst_level      boost::shared_ptr to destination patch level.
-    * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between
+    * @param dst_level      std::shared_ptr to destination patch level.
+    * @param src_level      std::shared_ptr to source patch level.
+    * @param overlap        std::shared_ptr to overlap region between
     *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
@@ -62,11 +62,11 @@ public:
     *      (dst_level->getDim() == dst_box.getDim()) &&
     *      (dst_level->getDim() == src_box.getDim())
     */
-   virtual boost::shared_ptr<tbox::Transaction>
+   virtual std::shared_ptr<tbox::Transaction>
    allocate(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const boost::shared_ptr<hier::BoxOverlap>& overlap,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
       const CoarsenClasses::Data ** coarsen_data,

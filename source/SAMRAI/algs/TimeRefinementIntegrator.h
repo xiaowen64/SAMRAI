@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -22,9 +22,9 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {
@@ -212,10 +212,10 @@ public:
     */
    TimeRefinementIntegrator(
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
-      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm);
+      const std::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
+      const std::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm);
 
    /**
     * The destructor for TimeRefinementIntegrator unregisters
@@ -452,7 +452,7 @@ public:
    /**
     * Return const pointer to patch hierarchy managed by integrator.
     */
-   const boost::shared_ptr<hier::PatchHierarchy>
+   const std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const
    {
       return d_patch_hierarchy;
@@ -461,7 +461,7 @@ public:
    /**
     * Return pointer to level integrator.
     */
-   boost::shared_ptr<TimeRefinementLevelStrategy>
+   std::shared_ptr<TimeRefinementLevelStrategy>
    getLevelIntegrator() const
    {
       return d_refine_level_integrator;
@@ -470,7 +470,7 @@ public:
    /**
     * Return pointer to gridding algorithm object.
     */
-   boost::shared_ptr<mesh::GriddingAlgorithmStrategy>
+   std::shared_ptr<mesh::GriddingAlgorithmStrategy>
    getGriddingAlgorithm() const
    {
       return d_gridding_algorithm;
@@ -551,7 +551,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Returns the object name.
@@ -639,7 +639,7 @@ private:
     */
    virtual void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*
@@ -672,9 +672,9 @@ private:
     * individual levels in the AMR patch hierarchy.  The gridding algorithm
     * provides grid generation and regridding routines for the AMR hierarchy.
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
-   boost::shared_ptr<TimeRefinementLevelStrategy> d_refine_level_integrator;
-   boost::shared_ptr<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
+   std::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
+   std::shared_ptr<TimeRefinementLevelStrategy> d_refine_level_integrator;
+   std::shared_ptr<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
 
    /*
     */
@@ -744,9 +744,9 @@ private:
    /*
     * tbox::Timer objects for performance measurement.
     */
-   static boost::shared_ptr<tbox::Timer> t_initialize_hier;
-   static boost::shared_ptr<tbox::Timer> t_advance_hier;
-   static boost::shared_ptr<tbox::Timer> t_advance_level;
+   static std::shared_ptr<tbox::Timer> t_initialize_hier;
+   static std::shared_ptr<tbox::Timer> t_advance_hier;
+   static std::shared_ptr<tbox::Timer> t_advance_level;
 
    // The following are not implemented:
    TimeRefinementIntegrator(

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real face-centered data.
  *
  ************************************************************************/
@@ -40,10 +40,10 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::~PatchFaceDataMiscellaneousOpsReal()
 template<class TYPE>
 int
 PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data1,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 
@@ -78,11 +78,11 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 template<class TYPE>
 void
 PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
 
@@ -111,10 +111,10 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 template<class TYPE>
 int
 PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
 
@@ -149,8 +149,8 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 template<class TYPE>
 TYPE
 PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& numer,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);
@@ -172,8 +172,8 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 template<class TYPE>
 TYPE
 PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& numer,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);

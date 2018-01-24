@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   SphericalShellGenerator class declaration
  *
  ************************************************************************/
@@ -13,6 +13,7 @@
 #include "MeshGenerationStrategy.h"
 
 #include <string>
+#include <memory>
 
 /*
  * SAMRAI classes
@@ -33,7 +34,6 @@
 
 #include "DerivedVisOwnerData.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -65,7 +65,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       /*! Input database */
-      const boost::shared_ptr<tbox::Database>& database = boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& database = std::shared_ptr<tbox::Database>());
 
    ~SphericalShellGenerator();
 
@@ -75,7 +75,7 @@ public:
    virtual void
    setTags(
       bool& exact_tagging,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id);
 
@@ -103,7 +103,7 @@ public:
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       /*! Coarsest level */ const int coarsest_level,
       /*! Finest level */ const int finest_level);
 
@@ -156,7 +156,7 @@ private:
     * @brief PatchHierarchy for use in implementations of some
     * abstract interfaces that do not specify a hierarch.
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Constant time shift to be added to simulation time.

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 2D Skeleton boundary data
  *
  ************************************************************************/
@@ -101,7 +101,7 @@ bool SkeletonBoundaryUtilities2::s_fortran_constants_stuffed = false;
 
 void SkeletonBoundaryUtilities2::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    std::vector<int>& edge_conds,
    std::vector<int>& node_conds,
    const hier::IntVector& periodic)
@@ -143,7 +143,7 @@ void SkeletonBoundaryUtilities2::getFromInput(
 
 void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
    const string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const std::vector<int>& bdry_edge_conds,
@@ -160,7 +160,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+   const std::shared_ptr<hier::PatchGeometry> pgeom(
       patch.getPatchGeometry());
 
    const hier::Box& interior = patch.getBox();
@@ -220,7 +220,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
 
 void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    const string& varname,
-   boost::shared_ptr<pdat::CellData<double> >& vardata,
+   std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const std::vector<int>& bdry_node_conds,
@@ -237,7 +237,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+   const std::shared_ptr<hier::PatchGeometry> pgeom(
       patch.getPatchGeometry());
 
    const hier::Box& interior(patch.getBox());
@@ -377,10 +377,10 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   std::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   boost::shared_ptr<pdat::CellData<double> > vardata(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > vardata(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 
@@ -509,7 +509,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
 
 void SkeletonBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
-   boost::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<tbox::Database> input_db,
    std::vector<int>& edge_conds,
    const hier::IntVector& periodic)
 {
@@ -559,7 +559,7 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
 
          if (need_data_read) {
             if (input_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db(
+               std::shared_ptr<tbox::Database> bdry_loc_db(
                   input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
@@ -601,7 +601,7 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
  */
 
 void SkeletonBoundaryUtilities2::read2dBdryNodes(
-   boost::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<tbox::Database> input_db,
    const std::vector<int>& edge_conds,
    std::vector<int>& node_conds,
    const hier::IntVector& periodic)
@@ -641,7 +641,7 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
          }
 
          if (input_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db(
+            std::shared_ptr<tbox::Database> bdry_loc_db(
                input_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   DLBGTest class declaration
  *
  ************************************************************************/
@@ -11,7 +11,7 @@
 #define included_DLBGTest
 
 #include <string>
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 #include "SAMRAI/tbox/Database.h"
 
@@ -43,8 +43,8 @@ public:
    DLBGTest(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
-      boost::shared_ptr<tbox::Database> database);
+      std::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
+      std::shared_ptr<tbox::Database> database);
 
    ~DLBGTest();
 
@@ -93,7 +93,7 @@ public:
     */
    int
    registerVariablesWithPlotter(
-      boost::shared_ptr<appu::VisItDataWriter> writer);
+      std::shared_ptr<appu::VisItDataWriter> writer);
 #endif
 
    /*!
@@ -106,7 +106,7 @@ public:
 private:
    std::string d_name;
    const tbox::Dimension d_dim;
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    SinusoidalFrontGenerator d_sine_wall;
 

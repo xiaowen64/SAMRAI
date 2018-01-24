@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
@@ -155,7 +155,7 @@ public:
     * exists in the database, then the old key record is deleted and the new
     * one is silently created in its place.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -164,7 +164,7 @@ public:
     * key does not exist in the database or it is not a database, then
     * an error message is printed and the program exits.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 
@@ -916,7 +916,7 @@ private:
       size_t d_array_size;                              // size of array data
       bool d_accessed;                                  // whether accessed
       bool d_from_default;                              // from default key
-      boost::shared_ptr<Database> d_database;           // sub-database
+      std::shared_ptr<Database> d_database;           // sub-database
       std::vector<bool> d_boolean;              // boolean vector value
       std::vector<DatabaseBox> d_box;           // box vector value
       std::vector<char> d_char;                 // char vector value

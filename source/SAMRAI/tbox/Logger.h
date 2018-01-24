@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Utility class for logging.
  *
  ************************************************************************/
@@ -14,8 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -68,7 +68,7 @@ namespace tbox {
  *
  *
  * This Appender could be use to log warning message using:
- * boost::shared_ptr<tbox::Logger::Appender> appender = new ConsoleAppender()
+ * std::shared_ptr<tbox::Logger::Appender> appender = new ConsoleAppender()
  * tbox::Logger.getInstance() -> setWarningAppender(appender);
  *
  * Normally this would be done at the start of an application.
@@ -162,7 +162,7 @@ public:
     */
    void
    setAbortAppender(
-      const boost::shared_ptr<Appender>& appender)
+      const std::shared_ptr<Appender>& appender)
    {
       d_abort_appender = appender;
    }
@@ -175,7 +175,7 @@ public:
     */
    void
    setWarningAppender(
-      const boost::shared_ptr<Appender>& appender)
+      const std::shared_ptr<Appender>& appender)
    {
       d_warning_appender = appender;
    }
@@ -188,7 +188,7 @@ public:
     */
    void
    setDebugAppender(
-      const boost::shared_ptr<Appender>& appender)
+      const std::shared_ptr<Appender>& appender)
    {
       d_debug_appender = appender;
    }
@@ -255,9 +255,9 @@ private:
    /*
     * Appenders for each type of logging.
     */
-   boost::shared_ptr<Appender> d_abort_appender;
-   boost::shared_ptr<Appender> d_warning_appender;
-   boost::shared_ptr<Appender> d_debug_appender;
+   std::shared_ptr<Appender> d_abort_appender;
+   std::shared_ptr<Appender> d_warning_appender;
+   std::shared_ptr<Appender> d_debug_appender;
 
    /*
     * Logging state (on or off)

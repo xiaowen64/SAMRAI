@@ -1,15 +1,14 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Class for finding multiblockSingularities
  *
  ************************************************************************/
 #include "SAMRAI/hier/SingularityFinder.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -196,7 +195,7 @@ SingularityFinder::findSingularities(
 
    std::set<std::set<BlockId> > sing_set;
 
-   for (std::list<boost::shared_ptr<Edge> >::iterator e_itr = d_edges.begin();
+   for (std::list<std::shared_ptr<Edge> >::iterator e_itr = d_edges.begin();
         e_itr != d_edges.end(); ++e_itr) {
       if ((**e_itr).d_bdry) continue;
       int nblocks = static_cast<int>((**e_itr).d_blocks.size());
@@ -221,7 +220,7 @@ SingularityFinder::findSingularities(
       }
    }
 
-   for (std::list<boost::shared_ptr<Point> >::iterator p_itr = d_points.begin();
+   for (std::list<std::shared_ptr<Point> >::iterator p_itr = d_points.begin();
         p_itr != d_points.end(); ++p_itr) {
       if ((**p_itr).d_bdry) continue;
       int nblocks = static_cast<int>((**p_itr).d_blocks.size());
@@ -265,7 +264,7 @@ SingularityFinder::connect(const BoxId& id_a,
                            const BaseGridGeometry& grid_geometry)
 {
 
-   boost::shared_ptr<Face> face = boost::make_shared<Face>();
+   std::shared_ptr<Face> face = std::make_shared<Face>();
    d_faces.push_back(face);
 
    if (d_blocks.empty()) {
@@ -275,10 +274,10 @@ SingularityFinder::connect(const BoxId& id_a,
    int a = id_a.getLocalId().getValue();
    int b = id_b.getLocalId().getValue();
    if (d_blocks[a].get() == 0) {
-      d_blocks[a] = boost::make_shared<Block>(d_dim);
+      d_blocks[a] = std::make_shared<Block>(d_dim);
    }
    if (d_blocks[b].get() == 0) {
-      d_blocks[b] = boost::make_shared<Block>(d_dim);
+      d_blocks[b] = std::make_shared<Block>(d_dim);
    }
 
    d_blocks[a]->d_face[facea] = face;
@@ -303,8 +302,8 @@ SingularityFinder::connect(const BoxId& id_a,
    for (std::map<int, int>::const_iterator e_itr = map_of_edges.begin();
         e_itr != map_of_edges.end(); ++e_itr) {
 
-      boost::shared_ptr<Edge>& edgea = d_blocks[a]->d_edge[e_itr->first];
-      boost::shared_ptr<Edge>& edgeb = d_blocks[b]->d_edge[e_itr->second];
+      std::shared_ptr<Edge>& edgea = d_blocks[a]->d_edge[e_itr->first];
+      std::shared_ptr<Edge>& edgeb = d_blocks[b]->d_edge[e_itr->second];
 
       if (edgea.get() == 0 && edgeb.get() == 0) {
          edgea.reset(new Edge());
@@ -326,7 +325,7 @@ SingularityFinder::connect(const BoxId& id_a,
                d_blocks[*b_itr]->d_edge[edgea->d_block_to_edge[*b_itr]] = edgea;
             }
          }
-         for (std::list<boost::shared_ptr<Edge> >::iterator e_itr =
+         for (std::list<std::shared_ptr<Edge> >::iterator e_itr =
                  d_edges.begin(); e_itr != d_edges.end(); ++e_itr) {
             if (e_itr->get() == edgeb.get()) {
                d_edges.erase(e_itr);
@@ -353,8 +352,8 @@ SingularityFinder::connect(const BoxId& id_a,
    for (std::map<int, int>::const_iterator e_itr = map_of_points.begin();
         e_itr != map_of_points.end(); ++e_itr) {
 
-      boost::shared_ptr<Point>& pointa = d_blocks[a]->d_point[e_itr->first];
-      boost::shared_ptr<Point>& pointb = d_blocks[b]->d_point[e_itr->second];
+      std::shared_ptr<Point>& pointa = d_blocks[a]->d_point[e_itr->first];
+      std::shared_ptr<Point>& pointb = d_blocks[b]->d_point[e_itr->second];
 
       if (pointa.get() == 0 && pointb.get() == 0) {
          pointa.reset(new Point());
@@ -378,7 +377,7 @@ SingularityFinder::connect(const BoxId& id_a,
                   pointa;
             }
          }
-         for (std::list<boost::shared_ptr<Point> >::iterator e_itr =
+         for (std::list<std::shared_ptr<Point> >::iterator e_itr =
                  d_points.begin(); e_itr != d_points.end(); ++e_itr) {
             if (e_itr->get() == pointb.get()) {
                d_points.erase(e_itr);
@@ -409,11 +408,11 @@ SingularityFinder::findBoundaryFaces()
 {
    for (int iblock = 0; iblock < static_cast<int>(d_blocks.size()); ++iblock) {
 
-      boost::shared_ptr<Block>& block = d_blocks[iblock];
+      std::shared_ptr<Block>& block = d_blocks[iblock];
 
       for (int iface = 0; iface < 2 * d_dim.getValue(); ++iface) {
 
-         boost::shared_ptr<Face>& face = block->d_face[iface];
+         std::shared_ptr<Face>& face = block->d_face[iface];
 
          if (face.get() == 0) {
 
@@ -426,7 +425,7 @@ SingularityFinder::findBoundaryFaces()
                for (int iedge = 0; iedge < 4; ++iedge) {
                   int edge_idx = s_face_edges[iface][iedge];
                   if (!block->d_edge[edge_idx]) {
-                     boost::shared_ptr<Edge> edge = boost::make_shared<Edge>();
+                     std::shared_ptr<Edge> edge = std::make_shared<Edge>();
                      d_edges.push_back(edge);
                      edge->d_blocks.insert(iblock);
                      block->d_edge[edge_idx] = edge;
@@ -439,7 +438,7 @@ SingularityFinder::findBoundaryFaces()
             for (int ipoint = 0; ipoint < num_pts; ++ipoint) {
                int point_idx = s_face_nodes[iface][ipoint];
                if (!block->d_point[point_idx]) {
-                  boost::shared_ptr<Point> point = boost::make_shared<Point>();
+                  std::shared_ptr<Point> point = std::make_shared<Point>();
                   point->d_blocks.insert(iblock);
                   block->d_point[point_idx] = point;
                }

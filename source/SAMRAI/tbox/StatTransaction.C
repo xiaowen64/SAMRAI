@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction structure for statistic data copies
  *
  ************************************************************************/
@@ -22,7 +22,7 @@ namespace SAMRAI {
 namespace tbox {
 
 StatTransaction::StatTransaction(
-   const boost::shared_ptr<Statistic>& stat,
+   const std::shared_ptr<Statistic>& stat,
    int src_proc_id,
    int dst_proc_id):
    d_stat(stat),

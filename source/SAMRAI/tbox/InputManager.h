@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An input manager singleton class that parses input files
  *
  ************************************************************************/
@@ -15,8 +15,8 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -90,10 +90,10 @@ public:
     * SAMRAI class:
     *
     *       // get root database
-    *       boost::shared_ptr<Database> root_db =
+    *       std::shared_ptr<Database> root_db =
     *          InputManager::getManager()->getInputDatabase();
     *       // get class's sub-database
-    *       boost::shared_ptr<Database> class_db =
+    *       std::shared_ptr<Database> class_db =
     *          root_db->getDatabase("MyClass");
     *       // get parameter(s) from sub-database
     *       int dummy = class_db->getInteger("dummy");
@@ -108,7 +108,7 @@ public:
     * This function is intended for SAMRAI classes in which there is no
     * easy or efficient way to supply input parameters.
     */
-   static boost::shared_ptr<Database>
+   static std::shared_ptr<Database>
    getInputDatabase()
    {
       return s_input_db;
@@ -117,7 +117,7 @@ public:
    /**
     * Create a new database named "main" from the specified input file.
     */
-   boost::shared_ptr<InputDatabase>
+   std::shared_ptr<InputDatabase>
    parseInputFile(
       const std::string& filename);
 
@@ -127,7 +127,7 @@ public:
    void
    parseInputFile(
       const std::string& filename,
-      const boost::shared_ptr<InputDatabase>& input_db);
+      const std::shared_ptr<InputDatabase>& input_db);
 
 protected:
    /**
@@ -162,7 +162,7 @@ private:
 
    static StartupShutdownManager::Handler s_finalize_handler;
 
-   static boost::shared_ptr<Database> s_input_db;
+   static std::shared_ptr<Database> s_input_db;
 };
 
 }

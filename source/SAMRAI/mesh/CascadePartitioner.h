@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -26,9 +26,9 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {
@@ -160,8 +160,8 @@ public:
    CascadePartitioner(
       const tbox::Dimension& dim,
       const std::string& name,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.
@@ -221,7 +221,7 @@ public:
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
       hier::Connector* balance_to_anchor,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -266,7 +266,7 @@ public:
     * is used.  If no value is given, the data will be
     * used for all levels.
     *
-    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  std::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -316,7 +316,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*
     * Utility functions to determine parameter values for level.
@@ -461,13 +461,13 @@ private:
    /*!
     * @brief Level holding workload data
     */
-   mutable boost::shared_ptr<hier::PatchLevel> d_workload_level;
+   mutable std::shared_ptr<hier::PatchLevel> d_workload_level;
 
    //@{
    //! @name Shared temporaries, used only when actively partitioning.
    mutable hier::BoxLevel* d_balance_box_level;
    mutable hier::Connector* d_balance_to_reference;
-   mutable boost::shared_ptr<PartitioningParams> d_pparams;
+   mutable std::shared_ptr<PartitioningParams> d_pparams;
    mutable LoadType d_global_work_sum;
    mutable LoadType d_global_work_avg;
    mutable LoadType d_local_work_max;
@@ -506,18 +506,18 @@ private:
    /*
     * Performance timers.
     */
-   boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
-   boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
-   boost::shared_ptr<tbox::Timer> t_use_map;
-   boost::shared_ptr<tbox::Timer> t_communication_wait;
-   boost::shared_ptr<tbox::Timer> t_distribute_load;
-   boost::shared_ptr<tbox::Timer> t_update_connectors;
-   boost::shared_ptr<tbox::Timer> t_global_work_reduction;
-   boost::shared_ptr<tbox::Timer> t_combine_children;
-   boost::shared_ptr<tbox::Timer> t_balance_children;
-   boost::shared_ptr<tbox::Timer> t_supply_work;
-   boost::shared_ptr<tbox::Timer> t_send_shipment;
-   boost::shared_ptr<tbox::Timer> t_receive_and_unpack_supplied_load;
+   std::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   std::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
+   std::shared_ptr<tbox::Timer> t_use_map;
+   std::shared_ptr<tbox::Timer> t_communication_wait;
+   std::shared_ptr<tbox::Timer> t_distribute_load;
+   std::shared_ptr<tbox::Timer> t_update_connectors;
+   std::shared_ptr<tbox::Timer> t_global_work_reduction;
+   std::shared_ptr<tbox::Timer> t_combine_children;
+   std::shared_ptr<tbox::Timer> t_balance_children;
+   std::shared_ptr<tbox::Timer> t_supply_work;
+   std::shared_ptr<tbox::Timer> t_send_shipment;
+   std::shared_ptr<tbox::Timer> t_receive_and_unpack_supplied_load;
 
    //@}
 

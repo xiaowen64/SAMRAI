@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   ABRTest class implementation
  *
  ************************************************************************/
@@ -26,14 +26,14 @@ using namespace SAMRAI;
 ABRTest::ABRTest(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
-   boost::shared_ptr<tbox::Database> database):
+   std::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
+   std::shared_ptr<tbox::Database> database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(patch_hierarchy),
    d_sine_wall(object_name + ":tagger",
                d_dim,
-               database->getDatabaseWithDefault("sine_tagger", boost::shared_ptr<tbox::Database>()))
+               database->getDatabaseWithDefault("sine_tagger", std::shared_ptr<tbox::Database>()))
 {
    d_sine_wall.resetHierarchyConfiguration(d_hierarchy, 0, 0);
 }
@@ -77,7 +77,7 @@ void ABRTest::deallocatePatchData(
 
 #ifdef HAVE_HDF5
 int ABRTest::registerVariablesWithPlotter(
-   boost::shared_ptr<appu::VisItDataWriter> writer)
+   std::shared_ptr<appu::VisItDataWriter> writer)
 {
    if (writer)
       d_sine_wall.registerVariablesWithPlotter(*writer);

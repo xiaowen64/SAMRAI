@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -27,9 +27,9 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -323,9 +323,9 @@ public:
  */
    PatchHierarchy(
       const std::string& object_name,
-      const boost::shared_ptr<BaseGridGeometry>& geometry,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<BaseGridGeometry>& geometry,
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor for PatchHierarchy.
@@ -358,7 +358,7 @@ public:
     * @pre fine_hierarchy_name != getObjectName()
     * @pre refine_ratio > IntVector::getZero(refine_ratio.getDim())
     */
-   boost::shared_ptr<PatchHierarchy>
+   std::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
       const std::string& fine_hierarchy_name,
       const IntVector& refine_ratio) const;
@@ -380,7 +380,7 @@ public:
     * this must be done before any data operations can be performed on
     * the new hierarchy.
     *
-    * @return boost::shared_ptr to the coarsened patch hierarchy.
+    * @return std::shared_ptr to the coarsened patch hierarchy.
     *
     * @param[in]  coarse_hierarchy_name
     * @param[in]  coarsen_ratio
@@ -390,7 +390,7 @@ public:
     * @pre coarse_hierarchy_name != getObjectName()
     * @pre coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim())
     */
-   boost::shared_ptr<PatchHierarchy>
+   std::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
       const std::string& coarse_hierarchy_name,
       const IntVector& coarsen_ratio) const;
@@ -401,7 +401,7 @@ public:
     * This method results in the new PatchLevel making a COPY of the supplied
     * BoxLevel.  If the caller intends to modify the supplied BoxLevel for
     * other purposes after making the new PatchLevel, then this method must be
-    * used rather than the method taking a boost::shared_ptr<BoxLevel>.
+    * used rather than the method taking a std::shared_ptr<BoxLevel>.
     *
     * Boxes, their mappings and the refinement ratio are obtained from
     * @c new_box_level.
@@ -443,7 +443,7 @@ public:
    virtual void
    makeNewPatchLevel(
       const int level_number,
-      const boost::shared_ptr<BoxLevel> new_box_level);
+      const std::shared_ptr<BoxLevel> new_box_level);
 
    /*!
     * @brief Remove a patch level
@@ -468,7 +468,7 @@ public:
     *
     * @pre (level >= 0) && (level < getNumberOfLevels())
     */
-   boost::shared_ptr<PatchLevel>
+   std::shared_ptr<PatchLevel>
    getPatchLevel(
       const int level) const
    {
@@ -482,7 +482,7 @@ public:
     * @return a pointer to the patch descriptor used for the patches in
     * the patch hierarchy.
     */
-   boost::shared_ptr<PatchDescriptor>
+   std::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const
    {
       return d_patch_descriptor;
@@ -572,7 +572,7 @@ public:
     *
     * @param[in]  level
     */
-   const boost::shared_ptr<BoxLevel>&
+   const std::shared_ptr<BoxLevel>&
    getBoxLevel(
       const int level) const
    {
@@ -887,7 +887,7 @@ public:
     */
    void
    setPatchFactory(
-      const boost::shared_ptr<PatchFactory>& factory)
+      const std::shared_ptr<PatchFactory>& factory)
    {
       d_patch_factory = factory;
    }
@@ -902,7 +902,7 @@ public:
     */
    void
    setPatchLevelFactory(
-      const boost::shared_ptr<PatchLevelFactory>& factory)
+      const std::shared_ptr<PatchLevelFactory>& factory)
    {
       d_patch_level_factory = factory;
    }
@@ -912,7 +912,7 @@ public:
     *
     * @return a pointer to the grid geometry object.
     */
-   boost::shared_ptr<BaseGridGeometry>
+   std::shared_ptr<BaseGridGeometry>
    getGridGeometry() const
    {
       return d_grid_geometry;
@@ -958,7 +958,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Read in the entire hierarchy from the restart database.
@@ -1069,7 +1069,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*!
@@ -1118,17 +1118,17 @@ private:
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy
     */
-   std::vector<boost::shared_ptr<PatchLevel> > d_patch_levels;
+   std::vector<std::shared_ptr<PatchLevel> > d_patch_levels;
 
    /*!
     * @brief BaseGridGeometry that was used to construct the hierarchy
     */
-   boost::shared_ptr<BaseGridGeometry> d_grid_geometry;
+   std::shared_ptr<BaseGridGeometry> d_grid_geometry;
 
    /*!
     * @brief PatchDescriptor that is shared by every patch on the hierarchy
     */
-   boost::shared_ptr<PatchDescriptor> d_patch_descriptor;
+   std::shared_ptr<PatchDescriptor> d_patch_descriptor;
 
 /*
  * TODO: Since we have really never used the patch factory and patch
@@ -1137,12 +1137,12 @@ private:
 /*!
  * @brief Factory used to create patches on the hierarchy
  */
-   boost::shared_ptr<PatchFactory> d_patch_factory;
+   std::shared_ptr<PatchFactory> d_patch_factory;
 
    /*!
     * @brief Factory used to create levels on the hierarchy
     */
-   boost::shared_ptr<PatchLevelFactory> d_patch_level_factory;
+   std::shared_ptr<PatchLevelFactory> d_patch_level_factory;
 
    //@{
    //! @name Parameters for setting up the hierarchy.
@@ -1281,7 +1281,7 @@ private:
  * TODO: These things (if really needed) should be moved to the
  * BaseGridGeometry class.  However, the BaseGridGeometry object cannot own a
  * BoxLevel because the BaseGridGeometry object is incapable of creating
- * a boost::shared_ptr to itself.  Might need to change BoxLevel to take a raw
+ * a std::shared_ptr to itself.  Might need to change BoxLevel to take a raw
  * pointer to BaseGridGeometry.
  */
 
@@ -1294,7 +1294,7 @@ private:
     * The physical domain BoxLevel is maintained in GLOBALIZED
     * mode with processor 0 owning all boxes.
     */
-   boost::shared_ptr<BoxLevel> d_domain_box_level;
+   std::shared_ptr<BoxLevel> d_domain_box_level;
 
    //@}
 

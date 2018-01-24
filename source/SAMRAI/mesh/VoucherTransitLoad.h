@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Implementation of TreeLoadBalancer.
  *
  ************************************************************************/
@@ -404,10 +404,10 @@ private:
       //! @brief Demander-specified LocalId generator to avoid ID clashes.
       hier::SequentialLocalIdGenerator d_id_gen;
       //! @brief Shipment of work, as boxes, sent or received.
-      boost::shared_ptr<BoxTransitSet> d_box_shipment;
+      std::shared_ptr<BoxTransitSet> d_box_shipment;
       const PartitioningParams* d_pparams;
 
-      boost::shared_ptr<tbox::MessageStream> d_msg;
+      std::shared_ptr<tbox::MessageStream> d_msg;
       tbox::SAMRAI_MPI d_mpi;
       tbox::SAMRAI_MPI::Request d_mpi_request;
    };
@@ -578,10 +578,10 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_adjust_load;
-      boost::shared_ptr<tbox::Timer> t_raise_dst_load;
-      boost::shared_ptr<tbox::Timer> t_assign_to_local;
-      boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
+      std::shared_ptr<tbox::Timer> t_adjust_load;
+      std::shared_ptr<tbox::Timer> t_raise_dst_load;
+      std::shared_ptr<tbox::Timer> t_assign_to_local;
+      std::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
    };
 
    //! @brief Default prefix for Timers.

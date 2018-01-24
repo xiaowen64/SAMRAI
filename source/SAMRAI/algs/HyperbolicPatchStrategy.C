@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -55,8 +55,8 @@ void
 HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
-   const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
+   const std::shared_ptr<hier::VariableContext>& coarsened_fine,
+   const std::shared_ptr<hier::VariableContext>& advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,
@@ -90,7 +90,7 @@ HyperbolicPatchStrategy::setupLoadBalancer(
 
 void
 HyperbolicPatchStrategy::preprocessAdvanceLevelState(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    double current_time,
    double dt,
    bool first_step,
@@ -107,7 +107,7 @@ HyperbolicPatchStrategy::preprocessAdvanceLevelState(
 
 void
 HyperbolicPatchStrategy::postprocessAdvanceLevelState(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    double current_time,
    double dt,
    bool first_step,

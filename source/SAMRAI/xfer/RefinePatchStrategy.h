@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -257,7 +257,7 @@ public:
       const hier::PatchLevel& coarse_level,
       const hier::Connector& coarse_to_fine,
       const hier::Connector& coarse_to_unfilled,
-      const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      const std::vector<std::vector<std::shared_ptr<hier::BoxOverlap> > >& overlaps,
       const RefineClasses::Data** refine_items) {
       NULL_USE(fine_level);
       NULL_USE(coarse_level);

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Implementation of TreeLoadBalancer.
  *
  ************************************************************************/
@@ -623,18 +623,18 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_adjust_load;
-      boost::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
-      boost::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
-      boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
-      boost::shared_ptr<tbox::Timer> t_find_swap_pair;
-      boost::shared_ptr<tbox::Timer> t_assign_to_local_process_and_populate_maps;
-      boost::shared_ptr<tbox::Timer> t_populate_maps;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
-      boost::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
-      boost::shared_ptr<tbox::Timer> t_pack_edge;
-      boost::shared_ptr<tbox::Timer> t_unpack_edge;
+      std::shared_ptr<tbox::Timer> t_adjust_load;
+      std::shared_ptr<tbox::Timer> t_adjust_load_by_popping;
+      std::shared_ptr<tbox::Timer> t_adjust_load_by_swapping;
+      std::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
+      std::shared_ptr<tbox::Timer> t_find_swap_pair;
+      std::shared_ptr<tbox::Timer> t_assign_to_local_process_and_populate_maps;
+      std::shared_ptr<tbox::Timer> t_populate_maps;
+      std::shared_ptr<tbox::Timer> t_construct_semilocal;
+      std::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
+      std::shared_ptr<tbox::Timer> t_construct_semilocal_send_edges;
+      std::shared_ptr<tbox::Timer> t_pack_edge;
+      std::shared_ptr<tbox::Timer> t_unpack_edge;
    };
 
    //! @brief Default prefix for Timers.

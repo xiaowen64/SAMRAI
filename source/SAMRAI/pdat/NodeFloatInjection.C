@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered float data on
  *                a  mesh.
  *
@@ -89,11 +89,11 @@ NodeFloatInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<NodeData<float> > fdata(
-      BOOST_CAST<NodeData<float>, hier::PatchData>(
+   std::shared_ptr<NodeData<float> > fdata(
+      SAMRAI_SHARED_PTR_CAST<NodeData<float>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<NodeData<float> > cdata(
-      BOOST_CAST<NodeData<float>, hier::PatchData>(
+   std::shared_ptr<NodeData<float> > cdata(
+      SAMRAI_SHARED_PTR_CAST<NodeData<float>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

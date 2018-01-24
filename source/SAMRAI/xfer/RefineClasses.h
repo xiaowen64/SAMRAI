@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
@@ -17,10 +17,10 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <list>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -91,12 +91,12 @@ public:
       /*!
        * @brief Refinement operator
        */
-      boost::shared_ptr<hier::RefineOperator> d_oprefine;
+      std::shared_ptr<hier::RefineOperator> d_oprefine;
 
       /*!
        * @brief Time interpolation operator
        */
-      boost::shared_ptr<hier::TimeInterpolateOperator> d_optime;
+      std::shared_ptr<hier::TimeInterpolateOperator> d_optime;
 
       /*!
        * @brief Index of equivalence class where this item belongs.  All
@@ -114,7 +114,7 @@ public:
        * @brief VariableFillPattern that can restrict the stencil of the data
        * filled by the RefineSchedule.
        */
-      boost::shared_ptr<VariableFillPattern> d_var_fill_pattern;
+      std::shared_ptr<VariableFillPattern> d_var_fill_pattern;
    };
 
    /*!
@@ -267,8 +267,8 @@ public:
    void
    insertEquivalenceClassItem(
       RefineClasses::Data& data_item,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>());
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>());
 
    /*!
     * @brief Check refine data item for validity.
@@ -295,8 +295,8 @@ public:
    bool
    itemIsValid(
       const RefineClasses::Data& data_item,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare RefineClasses object with another RefineClasses object;
@@ -321,9 +321,9 @@ public:
     */
    bool
    classesMatch(
-      const boost::shared_ptr<RefineClasses>& test_classes,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<RefineClasses>& test_classes,
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare RefineClasses::Data objects for equivalence;
@@ -363,8 +363,8 @@ public:
    itemsAreEquivalent(
       const RefineClasses::Data& data1,
       const RefineClasses::Data& data2,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Increase the allocated size of the array storing refine items.
@@ -429,7 +429,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      const boost::shared_ptr<hier::PatchDescriptor>& pd) const;
+      const std::shared_ptr<hier::PatchDescriptor>& pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given RefineClasses::Data
@@ -448,7 +448,7 @@ private:
    int
    getEquivalenceClassIndex(
       const RefineClasses::Data& data,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const;
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor) const;
 
    /*!
     * The default length of the refine item array.

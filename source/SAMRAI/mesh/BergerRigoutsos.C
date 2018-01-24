@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Asynchronous Berger-Rigoutsos algorithm wrapper
  *
  ************************************************************************/
@@ -35,7 +35,7 @@ char BergerRigoutsos::s_ignore_external_timer_prefix('n');
  */
 BergerRigoutsos::BergerRigoutsos(
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
 
    d_dim(dim),
 
@@ -123,7 +123,7 @@ BergerRigoutsos::~BergerRigoutsos()
 
 void
 BergerRigoutsos::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
 
@@ -249,9 +249,9 @@ BergerRigoutsos::getFromInput(
  */
 void
 BergerRigoutsos::findBoxesContainingTags(
-   boost::shared_ptr<hier::BoxLevel>& new_box_level,
-   boost::shared_ptr<hier::Connector>& tag_to_new,
-   const boost::shared_ptr<hier::PatchLevel>& tag_level,
+   std::shared_ptr<hier::BoxLevel>& new_box_level,
+   std::shared_ptr<hier::Connector>& tag_to_new,
+   const std::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_data_index,
    const int tag_val,
    const hier::BoxContainer& bound_boxes,
@@ -542,7 +542,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
        */
       hier::LocalId root_box_local_id(0);
       int root_box_owner = 0;
-      std::list<boost::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
+      std::list<std::shared_ptr<BergerRigoutsosNode> > block_nodes_to_delete;
       for (hier::BoxContainer::const_iterator rb = d_root_boxes.begin();
            rb != d_root_boxes.end(); ++rb) {
          if (rb->empty()) continue;
@@ -557,7 +557,7 @@ BergerRigoutsos::clusterAndComputeRelationships()
 
          d_relaunch_queue.push_back(block_node);
 
-         block_nodes_to_delete.push_back(boost::shared_ptr<BergerRigoutsosNode>(block_node));
+         block_nodes_to_delete.push_back(std::shared_ptr<BergerRigoutsosNode>(block_node));
       }
 
       int n_comm_group_completed = 0;
@@ -1014,8 +1014,8 @@ BergerRigoutsos::sortOutputBoxes()
    /*
     * Sort local indices by corners to make the output deterministic.
     */
-   boost::shared_ptr<hier::MappingConnector> sorting_map;
-   boost::shared_ptr<hier::BoxLevel> sorted_box_level;
+   std::shared_ptr<hier::MappingConnector> sorting_map;
+   std::shared_ptr<hier::BoxLevel> sorted_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       sorted_box_level,

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/SideDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -36,7 +35,7 @@ SideVariable<TYPE>::SideVariable(
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
-                  boost::make_shared<SideDataFactory<TYPE> >(
+                  std::make_shared<SideDataFactory<TYPE> >(
                      depth,
                      // default zero ghost cells
                      hier::IntVector::getZero(dim),
@@ -55,7 +54,7 @@ SideVariable<TYPE>::SideVariable(
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
-                  boost::make_shared<SideDataFactory<TYPE> >(
+                  std::make_shared<SideDataFactory<TYPE> >(
                      depth,
                      // default zero ghost cells
                      hier::IntVector::getZero(dim),
@@ -80,8 +79,8 @@ const hier::IntVector& SideVariable<TYPE>::getDirectionVector() const
 template<class TYPE>
 int SideVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<SideDataFactory<TYPE> > factory(
-      BOOST_CAST<SideDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<SideDataFactory<TYPE> > factory(
+      SAMRAI_SHARED_PTR_CAST<SideDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with MappingConnectors.
  *
  ************************************************************************/
@@ -109,10 +109,10 @@ MappingConnectorAlgorithm::getFromInput()
    if (s_print_steps == '\0') {
       s_print_steps = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> idb(
+         std::shared_ptr<tbox::Database> idb(
             tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> mca_db(
+            std::shared_ptr<tbox::Database> mca_db(
                idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps =
                mca_db->getCharWithDefault("DEV_print_modify_steps", 'n');
@@ -1304,7 +1304,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    d_object_timers->t_modify_find_overlaps_for_one_process->start();
 
    const BoxLevel& old = mapping_connector.getBase();
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
+   const std::shared_ptr<const BaseGridGeometry>& grid_geometry(
       old.getGridGeometry());
    const tbox::SAMRAI_MPI& mpi = d_mpi.getCommunicator() == MPI_COMM_NULL ? old.getMPI() : d_mpi;
    const int rank = mpi.getRank();

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -50,8 +50,8 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
  */
 void
 PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
-   boost::shared_ptr<hier::BoxLevel>& fill_box_level,
-   boost::shared_ptr<hier::Connector>& dst_to_fill,
+   std::shared_ptr<hier::BoxLevel>& fill_box_level,
+   std::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
    const hier::IntVector& fill_ghost_width,
    bool data_on_patch_border)
@@ -68,7 +68,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          *fill_box_level,
          fill_ghost_width));
 
-   boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+   std::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_box_level.getGridGeometry());
 
    const hier::BoxContainer& dst_boxes = dst_box_level.getBoxes();

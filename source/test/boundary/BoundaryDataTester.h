@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Class to test usage of boundary utilities
  *
  ************************************************************************/
@@ -25,9 +25,9 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;
@@ -43,8 +43,8 @@ public:
    BoundaryDataTester(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
+      std::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * Virtual destructor for BoundaryDataTester.
@@ -105,7 +105,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -118,7 +118,7 @@ public:
     */
    void
    readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -127,7 +127,7 @@ public:
     */
    void
    initializeDataOnPatchInteriors(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
    /**
@@ -136,7 +136,7 @@ public:
     */
    int
    runBoundaryTest(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
    /**
@@ -162,7 +162,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Vectors of information read from input file describing test variables
@@ -175,8 +175,8 @@ private:
    /*
     * Items used to manage variables and data in test program.
     */
-   std::vector<boost::shared_ptr<hier::Variable> > d_variables;
-   boost::shared_ptr<hier::VariableContext> d_variable_context;
+   std::vector<std::shared_ptr<hier::Variable> > d_variables;
+   std::shared_ptr<hier::VariableContext> d_variable_context;
    hier::ComponentSelector d_patch_data_components;
 
    /*
@@ -207,13 +207,13 @@ private:
     */
    void
    readVariableInputAndMakeVariables(
-      boost::shared_ptr<tbox::Database> db);
+      std::shared_ptr<tbox::Database> db);
    void
    readBoundaryDataInput(
-      boost::shared_ptr<tbox::Database> db);
+      std::shared_ptr<tbox::Database> db);
    void
    readBoundaryDataStateEntry(
-      boost::shared_ptr<tbox::Database> db,
+      std::shared_ptr<tbox::Database> db,
       string& db_name,
       int bdry_location_index);
    void

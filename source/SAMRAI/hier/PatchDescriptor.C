@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -74,7 +74,7 @@ PatchDescriptor::~PatchDescriptor()
 int
 PatchDescriptor::definePatchDataComponent(
    const std::string& name,
-   const boost::shared_ptr<PatchDataFactory>& factory)
+   const std::shared_ptr<PatchDataFactory>& factory)
 {
    TBOX_ASSERT(!name.empty());
    TBOX_ASSERT(factory);
@@ -136,11 +136,11 @@ PatchDescriptor::removePatchDataComponent(
  *************************************************************************
  */
 
-boost::shared_ptr<PatchDataFactory>
+std::shared_ptr<PatchDataFactory>
 PatchDescriptor::getPatchDataFactory(
    const std::string& name) const
 {
-   boost::shared_ptr<PatchDataFactory> factory;
+   std::shared_ptr<PatchDataFactory> factory;
    const int id = mapNameToIndex(name);
    if (id >= 0) {
       factory = d_factories[id];

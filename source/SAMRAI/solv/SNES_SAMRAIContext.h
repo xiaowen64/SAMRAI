@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
@@ -388,8 +388,8 @@ public:
    SNES_SAMRAIContext(
       const std::string& object_name,
       SNESAbstractFunctions* my_functions,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * Destructor for solve_SNES_SAMRAIContext destroys the SNES
@@ -917,7 +917,7 @@ public:
     */
    void
    initialize(
-      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution);
+      const std::shared_ptr<SAMRAIVectorReal<double> >& solution);
 
    /*!
     *  Reset the state of the nonlinear solver after regridding.
@@ -971,7 +971,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * Print out all members of integrator instance to given output stream.
@@ -1084,7 +1084,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*!

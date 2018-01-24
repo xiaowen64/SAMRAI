@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/OuterfaceDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -34,7 +33,7 @@ OuterfaceVariable<TYPE>::OuterfaceVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::make_shared<OuterfaceDataFactory<TYPE> >(dim, depth))
+                  std::make_shared<OuterfaceDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -46,8 +45,8 @@ OuterfaceVariable<TYPE>::~OuterfaceVariable()
 template<class TYPE>
 int OuterfaceVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuterfaceDataFactory<TYPE> > factory(
-      BOOST_CAST<OuterfaceDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<OuterfaceDataFactory<TYPE> > factory(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

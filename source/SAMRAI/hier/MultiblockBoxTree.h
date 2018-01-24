@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -15,9 +15,9 @@
 
 #include "SAMRAI/hier/BoxTree.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <map>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -249,7 +249,7 @@ private:
     * For each BlockId represented in the tree, there is
     * an entry in this container.
     */
-   std::map<BlockId, boost::shared_ptr<BoxTree> > d_single_block_trees;
+   std::map<BlockId, std::shared_ptr<BoxTree> > d_single_block_trees;
 
    const BaseGridGeometry* d_grid_geometry;
 };

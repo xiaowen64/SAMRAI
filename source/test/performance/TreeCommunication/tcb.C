@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Code and input for benchmarking and experimentation with tree-based communication.
  *
  ************************************************************************/
@@ -65,7 +65,7 @@ struct CommonTestSwitches {
    }
 };
 
-boost::shared_ptr<RankTreeStrategy>
+std::shared_ptr<RankTreeStrategy>
 getTreeForTesting(
    const std::string& tree_name,
    Database& test_db,
@@ -319,7 +319,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      std::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -335,14 +335,14 @@ int main(
        */
       TimerManager::getManager()->getTimer("apps::main::child_send");
       TimerManager::getManager()->getTimer("apps::main::child_recv");
-      boost::shared_ptr<tbox::Timer> t_child_wait = TimerManager::getManager()->getTimer(
+      std::shared_ptr<tbox::Timer> t_child_wait = TimerManager::getManager()->getTimer(
             "apps::main::child_wait");
       TimerManager::getManager()->getTimer("apps::main::parent_send");
       TimerManager::getManager()->getTimer("apps::main::parent_recv");
-      boost::shared_ptr<tbox::Timer> t_parent_wait = TimerManager::getManager()->getTimer(
+      std::shared_ptr<tbox::Timer> t_parent_wait = TimerManager::getManager()->getTimer(
             "apps::main::parent_wait");
       TimerManager::getManager()->getTimer("apps::main::equiv_MPI");
-      boost::shared_ptr<tbox::Timer> t_processing = TimerManager::getManager()->getTimer(
+      std::shared_ptr<tbox::Timer> t_processing = TimerManager::getManager()->getTimer(
             "apps::main::processing");
 
       /*
@@ -352,7 +352,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      std::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -409,8 +409,8 @@ int main(
             std::string test_name("Test");
             test_name += Utilities::intToString(test_number, 2);
 
-            boost::shared_ptr<Database> test_db =
-               input_db->getDatabaseWithDefault(test_name, boost::shared_ptr<Database>());
+            std::shared_ptr<Database> test_db =
+               input_db->getDatabaseWithDefault(test_name, std::shared_ptr<Database>());
 
             if (!test_db) {
                break;
@@ -424,7 +424,7 @@ int main(
             CommonTestSwitches cts;
             getCommonTestSwitchesFromDatabase(cts, *test_db);
 
-            const boost::shared_ptr<RankTreeStrategy> rank_tree =
+            const std::shared_ptr<RankTreeStrategy> rank_tree =
                getTreeForTesting(cts.tree_name, *test_db, samrai_mpi);
 
             // Write local part of tree to log.
@@ -588,13 +588,13 @@ int testUp(
    std::vector<int> msg(cts.msg_length, 1);
    setMessageData(msg, mpi.getRank());
 
-   boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
          "apps::main::repetitions");
-   boost::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
          "apps::main::processing");
-   boost::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
          "apps::main::verify");
-   boost::shared_ptr<Timer> equiv_mpi_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> equiv_mpi_timer = TimerManager::getManager()->getTimer(
          "apps::main::equiv_MPI");
 
    mpi.Barrier();
@@ -680,13 +680,13 @@ int testDown(
    std::vector<int> msg(cts.msg_length, 1);
    setMessageData(msg, mpi.getRank());
 
-   boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
          "apps::main::repetitions");
-   boost::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
          "apps::main::processing");
-   boost::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
          "apps::main::verify");
-   boost::shared_ptr<Timer> equiv_mpi_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> equiv_mpi_timer = TimerManager::getManager()->getTimer(
          "apps::main::equiv_MPI");
 
    mpi.Barrier();
@@ -769,13 +769,13 @@ int testUpThenDown(
    std::vector<int> msg(cts.msg_length, 1);
    setMessageData(msg, mpi.getRank());
 
-   boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
          "apps::main::repetitions");
-   boost::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
          "apps::main::processing");
-   boost::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
          "apps::main::verify");
-   boost::shared_ptr<Timer> equiv_mpi_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> equiv_mpi_timer = TimerManager::getManager()->getTimer(
          "apps::main::equiv_MPI");
 
    mpi.Barrier();
@@ -898,11 +898,11 @@ int testTreeLB(
    std::vector<int> msg(cts.msg_length, 1);
    setMessageData(msg, mpi.getRank());
 
-   boost::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> repetitions_timer = TimerManager::getManager()->getTimer(
          "apps::main::repetitions");
-   boost::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> processing_timer = TimerManager::getManager()->getTimer(
          "apps::main::processing");
-   boost::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
+   std::shared_ptr<Timer> verify_timer = TimerManager::getManager()->getTimer(
          "apps::main::verify");
 
    mpi.Barrier();
@@ -1089,19 +1089,19 @@ int verifyReceivedData(
  * Get the RankTreeStrategy implementation for the test Database.
  ****************************************************************************
  */
-boost::shared_ptr<RankTreeStrategy> getTreeForTesting(
+std::shared_ptr<RankTreeStrategy> getTreeForTesting(
    const std::string& tree_name,
    Database& test_db,
    const SAMRAI_MPI& mpi)
 {
-   boost::shared_ptr<tbox::RankTreeStrategy> rank_tree;
+   std::shared_ptr<tbox::RankTreeStrategy> rank_tree;
 
    if (tree_name == "BalancedDepthFirstTree") {
 
       BalancedDepthFirstTree * bdfs(new BalancedDepthFirstTree());
 
       if (test_db.isDatabase("BalancedDepthFirstTree")) {
-         boost::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("BalancedDepthFirstTree");
+         std::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("BalancedDepthFirstTree");
          bool do_left_leaf_switch = tmp_db->getBoolWithDefault("do_left_leaf_switch", true);
          bdfs->setLeftLeafSwitching(do_left_leaf_switch);
       }
@@ -1114,7 +1114,7 @@ boost::shared_ptr<RankTreeStrategy> getTreeForTesting(
       CenteredRankTree * crt(new tbox::CenteredRankTree());
 
       if (test_db.isDatabase("CenteredRankTree")) {
-         boost::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("CenteredRankTree");
+         std::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("CenteredRankTree");
          bool make_first_rank_the_root = tmp_db->getBoolWithDefault("make_first_rank_the_root",
                true);
          crt->makeFirstRankTheRoot(make_first_rank_the_root);
@@ -1128,7 +1128,7 @@ boost::shared_ptr<RankTreeStrategy> getTreeForTesting(
       BreadthFirstRankTree * dft(new tbox::BreadthFirstRankTree());
 
       if (test_db.isDatabase("BreadthFirstRankTree")) {
-         boost::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("BreadthFirstRankTree");
+         std::shared_ptr<tbox::Database> tmp_db = test_db.getDatabase("BreadthFirstRankTree");
          const int tree_degree = tmp_db->getIntegerWithDefault("tree_degree", true);
          dft->setTreeDegree(static_cast<unsigned short>(tree_degree));
       }

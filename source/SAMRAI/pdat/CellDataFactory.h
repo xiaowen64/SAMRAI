@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating cell data objects
  *
  ************************************************************************/
@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Complex.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -68,7 +68,7 @@ public:
     *
     * @pre getDim() == ghosts.getDim()
     */
-   virtual boost::shared_ptr<hier::PatchDataFactory>
+   virtual std::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -79,7 +79,7 @@ public:
     *
     * @pre getDim() == patch.getDim()
     */
-   virtual boost::shared_ptr<hier::PatchData>
+   virtual std::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -91,7 +91,7 @@ public:
     * @pre getDim() == box.getDim()
     */
 
-   virtual boost::shared_ptr<hier::BoxGeometry>
+   virtual std::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -138,7 +138,7 @@ public:
     */
    bool
    validCopyTo(
-      const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
+      const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
 private:
    int d_depth;

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Manager of Connectors incident from a common BoxLevel.
  *
  ************************************************************************/
@@ -172,7 +172,7 @@ private:
     */
    void
    cacheConnector(
-      boost::shared_ptr<Connector>& connector);
+      std::shared_ptr<Connector>& connector);
 
    /*!
     * @brief Find an overlap Connector with the given head and minimum
@@ -318,7 +318,7 @@ private:
    /*
     * Method which does work of findConnector and findConnectorWithTranspose.
     */
-   boost::shared_ptr<Connector>
+   std::shared_ptr<Connector>
    doFindConnectorWork(
       const BoxLevel& head,
       const IntVector& min_connector_width,
@@ -331,7 +331,7 @@ private:
    void
    doCacheConnectorWork(
       const BoxLevel& head,
-      boost::shared_ptr<Connector>& connector);
+      std::shared_ptr<Connector>& connector);
 
    /*
     * @brief Make sure all base boxes have a neighbor set or remove
@@ -352,7 +352,7 @@ private:
    friend class BoxLevel;
    //@}
 
-   typedef std::vector<boost::shared_ptr<Connector> > ConVect;
+   typedef std::vector<std::shared_ptr<Connector> > ConVect;
 
    /*!
     * @brief Persistent overlap Connectors incident from me.

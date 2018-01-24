@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,7 +12,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -54,7 +53,7 @@ OuterfaceGeometry::~OuterfaceGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuterfaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -75,7 +74,7 @@ OuterfaceGeometry::calculateOverlap(
    const OuterfaceGeometry* t_src =
       dynamic_cast<const OuterfaceGeometry *>(&src_geometry);
 
-   boost::shared_ptr<hier::BoxOverlap> over;
+   std::shared_ptr<hier::BoxOverlap> over;
 
    if ((t_src != 0) && (t_dst_face != 0)) {
       over = doOverlap(*t_dst_face, *t_src, src_mask, fill_box,
@@ -106,7 +105,7 @@ OuterfaceGeometry::calculateOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuterfaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const OuterfaceGeometry& src_geometry,
@@ -198,7 +197,7 @@ OuterfaceGeometry::doOverlap(
 
    // Create the face overlap data object using the boxes and source shift
 
-   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
+   return std::make_shared<FaceOverlap>(dst_boxes, transformation);
 }
 /*
  *************************************************************************
@@ -211,7 +210,7 @@ OuterfaceGeometry::doOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuterfaceGeometry::doOverlap(
    const OuterfaceGeometry& dst_geometry,
    const OuterfaceGeometry& src_geometry,
@@ -321,7 +320,7 @@ OuterfaceGeometry::doOverlap(
 
    // Create the face overlap data object using the boxes and source shift
 
-   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
+   return std::make_shared<FaceOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -331,7 +330,7 @@ OuterfaceGeometry::doOverlap(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuterfaceGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -348,7 +347,7 @@ OuterfaceGeometry::setUpOverlap(
    }
 
    // Create the face overlap data object using the boxes and source shift
-   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
+   return std::make_shared<FaceOverlap>(dst_boxes, transformation);
 
 }
 

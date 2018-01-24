@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating edge data objects
  *
  ************************************************************************/
@@ -20,7 +20,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -60,13 +59,13 @@ EdgeDataFactory<TYPE>::~EdgeDataFactory()
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchDataFactory>
+std::shared_ptr<hier::PatchDataFactory>
 EdgeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return boost::make_shared<EdgeDataFactory<TYPE> >(
+   return std::make_shared<EdgeDataFactory<TYPE> >(
              d_depth,
              ghosts,
              d_fine_boundary_represents_var);
@@ -81,13 +80,13 @@ EdgeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchData>
+std::shared_ptr<hier::PatchData>
 EdgeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-   return boost::make_shared<EdgeData<TYPE> >(
+   return std::make_shared<EdgeData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts);
@@ -102,13 +101,13 @@ EdgeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::BoxGeometry>
+std::shared_ptr<hier::BoxGeometry>
 EdgeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   return boost::make_shared<EdgeGeometry>(box, d_ghosts);
+   return std::make_shared<EdgeGeometry>(box, d_ghosts);
 }
 
 template<class TYPE>
@@ -152,7 +151,7 @@ EdgeDataFactory<TYPE>::getSizeOfMemory(
 template<class TYPE>
 bool
 EdgeDataFactory<TYPE>::validCopyTo(
-   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
+   const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
@@ -162,8 +161,8 @@ EdgeDataFactory<TYPE>::validCopyTo(
     * Valid options are EdgeData and OuteredgeData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<EdgeDataFactory<TYPE> > edf(
-         boost::dynamic_pointer_cast<EdgeDataFactory<TYPE>,
+      std::shared_ptr<EdgeDataFactory<TYPE> > edf(
+         std::dynamic_pointer_cast<EdgeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (edf) {
          valid_copy = true;
@@ -171,8 +170,8 @@ EdgeDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
-         boost::dynamic_pointer_cast<OuteredgeDataFactory<TYPE>,
+      std::shared_ptr<OuteredgeDataFactory<TYPE> > oedf(
+         std::dynamic_pointer_cast<OuteredgeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));
       if (oedf) {

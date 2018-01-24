@@ -1,7 +1,7 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2016 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2017 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
@@ -494,6 +494,8 @@ You are on your own!
   ;;
 esac
 
+
+
 dnl
 dnl Check various C++ compiler features.
 dnl
@@ -524,6 +526,16 @@ CASC_CXX_ISNAN_TEMPLATE
 CASC_CXX_STD_FILL_N_RETURNS_VOID
 
 CASC_CXX_CTIME
+
+AC_LANG_PUSH([C++])
+AX_CHECK_COMPILE_FLAG([-std=c++11], [
+  CXX_FLAGS+=" -std=c++11"
+], [
+  echo "C++ compiler cannot compile C++11 code"
+  exit -1
+])
+AC_LANG_POP([C++])
+
 AC_CHECK_HEADERS([sys/times.h])
 AC_CHECK_HEADERS([unistd.h])
 
@@ -1757,7 +1769,7 @@ dnl
 if test `pwd` != `cd "$srcdir" && pwd`
 then 
      $INSTALL  $srcdir/COPYRIGHT COPYRIGHT
-     $INSTALL  $srcdir/COPYING.LESSER COPYING.LESSER
+     $INSTALL  $srcdir/LICENSE LICENSE
      $INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES 
      $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
      $MKDIR_P source/test/testtools
