@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/tbox/CudaSupport.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -41,12 +42,14 @@ public:
    /**
     * @brief Creates an uninitialized Index.
     */
+   SAMRAI_HOST_DEVICE
    explicit Index(
       const tbox::Dimension& dim);
 
    /**
     * @brief Construct an Index with all components equal to the argument.
     */
+   SAMRAI_HOST_DEVICE
    Index(
       const tbox::Dimension& dim,
       const int value);
@@ -54,6 +57,7 @@ public:
    /**
     * @brief Construct a two-dimensional Index with the value (i,j).
     */
+   SAMRAI_HOST_DEVICE
    Index(
       const int i,
       const int j);
@@ -61,6 +65,7 @@ public:
    /**
     * @brief Construct a three-dimensional Index with the value (i,j,k).
     */
+   SAMRAI_HOST_DEVICE
    Index(
       const int i,
       const int j,
@@ -81,6 +86,7 @@ public:
    /**
     * @brief The copy constructor creates an Index equal to the argument.
     */
+   SAMRAI_HOST_DEVICE
    Index(
       const Index& rhs);
 
@@ -89,6 +95,7 @@ public:
     *
     * @pre rhs.getNumBlocks() == 1
     */
+   SAMRAI_HOST_DEVICE
    explicit Index(
       const IntVector& rhs);
 
@@ -470,6 +477,7 @@ public:
     *
     * @pre (i >= 0) && (i < getDim().getValue())
     */
+   SAMRAI_HOST_DEVICE
    int&
    operator [] (
       const unsigned int i)
@@ -483,6 +491,7 @@ public:
     *
     * @pre (i >= 0) && (i < getDim().getValue())
     */
+   SAMRAI_HOST_DEVICE
    const int&
    operator [] (
       const unsigned int i) const
@@ -496,6 +505,7 @@ public:
     *
     * @pre (i >= 0) && (i < getDim().getValue())
     */
+   SAMRAI_HOST_DEVICE
    int&
    operator () (
       const unsigned int i)
@@ -509,6 +519,7 @@ public:
     *
     * @pre (i >= 0) && (i < getDim().getValue())
     */
+   SAMRAI_HOST_DEVICE
    const int&
    operator () (
       const unsigned int i) const

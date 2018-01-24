@@ -1479,7 +1479,7 @@ private:
  * @see Box
  */
 
-class BoxIterator
+class BoxIterator : public std::iterator<std::random_access_iterator_tag, Index>
 {
    friend class Box;
 
@@ -1582,6 +1582,13 @@ public:
       const BoxIterator& iterator) const
    {
       return d_index != iterator.d_index;
+   }
+
+   bool
+   operator < (
+       const BoxIterator& iterator) const
+   {
+     return d_index < iterator.d_index;
    }
 
 private:

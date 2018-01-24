@@ -6,6 +6,8 @@ set(SAMRAI_VERSION_MAJOR 3)
 set(SAMRAI_VERSION_MINOR 11)
 set(SAMRAI_VERSION_PATCHLEVEL 1)
 
+cmake_policy(SET CMP0057 NEW)
+
 if (NOT EXISTS ${PROJECT_SOURCE_DIR}/blt/SetupBLT.cmake)
   message(FATAL_ERROR "The BLT submodule is not present. \
 If in the git repository, please run the following commands:\n \

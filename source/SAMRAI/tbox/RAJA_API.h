@@ -230,15 +230,6 @@ struct ArrayView<3, const T> :
           RAJA::as_array<RAJA::PERM_KJI>::get())){};
 };
  
- // template <typename T, int DIM>
- // struct CellView : public ArrayView<T, DIM>
- // {
- //   SAMRAI_INLINE CellView(const boost::shared_ptr<pdat::CellData<T> >& data)
- //     : ArrayView<
- //   {
- //   }
- // };
-
 }
 }
 
