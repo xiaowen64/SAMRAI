@@ -220,6 +220,8 @@ ConduitDatabase::getArraySize(
          return (*d_node)[key]["data"].dtype().number_of_elements();
       } else if (isDatabaseBox(key)) {
          return (*d_node)[key]["dimension"].dtype().number_of_elements();
+      } if (isString(key)) {
+         return (*d_node)[key].number_of_children();
       } else {
          return (*d_node)[key].dtype().number_of_elements();
       }
@@ -241,7 +243,7 @@ ConduitDatabase::isDatabase(
    bool is_database = false;
    if (d_node->has_child(key)) {
       if ((*d_node)[key].dtype().is_object() && !isBool(key) &&
-          !isDatabaseBox(key)) {
+          !isDatabaseBox(key) && !isString(key)) {
          is_database = true;
       }
    }
@@ -267,7 +269,7 @@ ConduitDatabase::getDatabase(
    const std::string& key)
 {
    findChildNodeOrExit(key);
-   if (!(*d_node)[key].dtype().is_object()) {
+   if (!isDatabase(key)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a database...");
    }
    std::shared_ptr<Database> database(new ConduitDatabase(key, &((*d_node)[key])));
@@ -1132,7 +1134,9 @@ ConduitDatabase::isString(
    const std::string& key)
 {
    bool is_string = false;
-   if (d_node->has_child(key) && (*d_node)[key].dtype().is_string()) {
+   if (d_node->has_child(key) &&
+       (*d_node)[key].has_child("str0") &&
+       (*d_node)[key]["str0"].dtype().is_string()) {
       is_string = true;
    }
    return is_string;
@@ -1144,7 +1148,7 @@ ConduitDatabase::putString(
    const std::string& data)
 {
    deleteKeyIfFound(key);
-   (*d_node)[key].set_string(data);
+   (*d_node)[key]["str0"].set_string(data);
    d_types[key] = SAMRAI_STRING;
 }
 
@@ -1153,10 +1157,17 @@ ConduitDatabase::putStringVector(
    const std::string& key,
    const std::vector<std::string>& data)
 {
-   if (data.size() != 1) {
-      MEMORY_DB_ERROR("string vectors longer than 1 not allowed.");
+   deleteKeyIfFound(key);
+   int i = 0;
+   for (std::vector<std::string>::const_iterator itr = data.begin();
+        itr != data.end(); ++itr) {
+      std::stringstream ss;
+      ss << i;
+      std::string id = "str" + ss.str();
+      (*d_node)[key][id].set_string(*itr);
+      ++i; 
    }
-   putString(key, data[0]);
+   d_types[key] = SAMRAI_STRING;
 }
 
 void
@@ -1165,10 +1176,12 @@ ConduitDatabase::putStringArray(
    const std::string * const data,
    const size_t nelements)
 {
-   if (nelements != 1) {
-      MEMORY_DB_ERROR("string arrays longer than 1 not allowed.");
+   std::vector<std::string> str_vec(nelements);
+
+   for (size_t i = 0; i < nelements; ++i) {
+      str_vec[i] = data[i];
    }
-   putString(key, data[0]);
+   putStringVector(key, str_vec);
 }
 
 std::string
@@ -1176,11 +1189,11 @@ ConduitDatabase::getString(
    const std::string& key)
 {
    findChildNodeOrExit(key);
-   if (!(*d_node)[key].dtype().is_string() ||
+   if (!isString(key) ||
        (*d_node)[key].dtype().number_of_elements() != 1) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single string ...");
    }
-   return (*d_node)[key].as_string();
+   return (*d_node)[key]["str0"].as_string();
 }
 
 std::string
@@ -1199,10 +1212,20 @@ ConduitDatabase::getStringVector(
    const std::string& key)
 {
    findChildNodeOrExit(key);
-   if (!(*d_node)[key].dtype().is_string()) {
+   if (!isString(key)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a string...");
    }
-   std::vector<std::string> str_vec(1, (*d_node)[key].as_string());
+
+   size_t nelements = (*d_node)[key].number_of_children();
+   std::vector<std::string> str_vec;
+
+   for (size_t i = 0; i < nelements; ++i) {
+      std::stringstream ss;
+      ss << i;
+      std::string id = "str" + ss.str();
+      str_vec.push_back((*d_node)[key][id].as_string());
+   } 
+
    return str_vec;
 }
 
