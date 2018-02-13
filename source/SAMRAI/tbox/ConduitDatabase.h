@@ -909,9 +909,11 @@ private:
    bool
    deleteKeyIfFound(
       const std::string& key);
-   void
-   findChildNodeOrExit(
+
+   conduit::Node&
+   getChildNodeOrExit(
       const std::string& key);
+
    static void
    indentStream(
       std::ostream& os,
@@ -921,6 +923,7 @@ private:
          os << " ";
       }
    }
+
    void
    printDatabase(
       std::ostream& os,

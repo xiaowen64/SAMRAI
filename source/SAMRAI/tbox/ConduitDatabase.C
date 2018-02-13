@@ -179,7 +179,7 @@ enum Database::DataType
 ConduitDatabase::getArrayType(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
 
    if (isBool(key)) {
       return SAMRAI_BOOL;
@@ -272,7 +272,7 @@ std::shared_ptr<Database>
 ConduitDatabase::getDatabase(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isDatabase(key)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a database...");
    }
@@ -332,12 +332,12 @@ bool
 ConduitDatabase::getBool(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isBool(key) ||
-       (*d_node)[key]["data"].dtype().number_of_elements() != 1) {
+       child["data"].dtype().number_of_elements() != 1) {
       MEMORY_DB_ERROR("Key=" << key << " is not a boolean scalar...");
    }
-   return static_cast<bool>((*d_node)[key]["data"].as_uint8());
+   return static_cast<bool>(child["data"].as_uint8());
 }
 
 bool
@@ -355,12 +355,12 @@ std::vector<bool>
 ConduitDatabase::getBoolVector(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isBool(key)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a boolean...");
    }
-   conduit::uint8_array int_vals = (*d_node)[key]["data"].as_uint8_array();
-   unsigned int vec_size = (*d_node)[key].dtype().number_of_elements();
+   conduit::uint8_array int_vals = child["data"].as_uint8_array();
+   unsigned int vec_size = child.dtype().number_of_elements();
    std::vector<bool> bool_vec(vec_size, false);
    for (unsigned int i = 0; i < vec_size; ++i) {
       if (int_vals[i] != 0) {
@@ -467,15 +467,15 @@ DatabaseBox
 ConduitDatabase::getDatabaseBox(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isDatabaseBox(key) ||
-       (*d_node)[key]["dimension"].dtype().number_of_elements() != 1) {
+       child["dimension"].dtype().number_of_elements() != 1) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single box...");
    }
 
-   tbox::Dimension dim((*d_node)[key]["dimension"].as_uint8());
-   int* lower = (*d_node)[key]["lower"].as_int_ptr(); 
-   int* upper = (*d_node)[key]["upper"].as_int_ptr(); 
+   tbox::Dimension dim(child["dimension"].as_uint8());
+   int* lower = child["lower"].as_int_ptr(); 
+   int* upper = child["upper"].as_int_ptr(); 
 
    DatabaseBox db_box(dim, lower, upper);
 
@@ -497,15 +497,15 @@ std::vector<DatabaseBox>
 ConduitDatabase::getDatabaseBoxVector(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isDatabaseBox(key)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a DatabaseBox...");
    }
    std::vector<DatabaseBox> box_vec;
-   size_t vec_size = (*d_node)[key]["dimension"].dtype().number_of_elements();
-   conduit::uint8_array dim_vals = (*d_node)[key]["dimension"].as_uint8_array();
-   conduit::int_array lo_vals = (*d_node)[key]["lower"].as_int_array();
-   conduit::int_array hi_vals = (*d_node)[key]["upper"].as_int_array();
+   size_t vec_size = child["dimension"].dtype().number_of_elements();
+   conduit::uint8_array dim_vals = child["dimension"].as_uint8_array();
+   conduit::int_array lo_vals = child["lower"].as_int_array();
+   conduit::int_array hi_vals = child["upper"].as_int_array();
    for (size_t i = 0; i < vec_size; ++i) {
       tbox::Dimension dim(dim_vals[i]);
       int * lower = &(lo_vals[i*SAMRAI::MAX_DIM_VAL]);
@@ -774,19 +774,19 @@ ConduitDatabase::getDouble(
    const std::string& key)
 {
    double value = 0.0;
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
 
-   if ((*d_node)[key].dtype().number_of_elements() != 1) {
+   if (child.dtype().number_of_elements() != 1) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single double...");
    }
 
-   const conduit::DataType& datatype = (*d_node)[key].dtype();
+   const conduit::DataType& datatype = child.dtype();
    if (datatype.is_double()) {
-      value = (*d_node)[key].as_double();
+      value = child.as_double();
    } else if (datatype.is_integer()) {
-      value = static_cast<double>((*d_node)[key].as_int());
+      value = static_cast<double>(child.as_int());
    } else if (datatype.is_float()) {
-      value = static_cast<double>((*d_node)[key].as_float());
+      value = static_cast<double>(child.as_float());
    } else {
       MEMORY_DB_ERROR("Key=" << key << " is not a single double...");
    }
@@ -809,24 +809,24 @@ std::vector<double>
 ConduitDatabase::getDoubleVector(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    std::vector<double> dbl_vec;
 
-   const conduit::DataType& datatype = (*d_node)[key].dtype();
+   const conduit::DataType& datatype = child.dtype();
    size_t vec_size = datatype.number_of_elements();
    dbl_vec.resize(vec_size);
    if (datatype.is_double()) {
-      conduit::double_array dbl_array = (*d_node)[key].as_double_array();
+      conduit::double_array dbl_array = child.as_double_array();
       for (size_t i = 0; i < vec_size; ++i) {
          dbl_vec[i] = dbl_array[i];
       }
    } else if (datatype.is_integer()) {
-      conduit::int_array int_vals = (*d_node)[key].as_int_array();
+      conduit::int_array int_vals = child.as_int_array();
       for (size_t i = 0; i < vec_size; ++i) {
          dbl_vec[i] = static_cast<double>(int_vals[i]);
       }
    } else if (datatype.is_float()) {
-      conduit::float_array float_array = (*d_node)[key].as_float_array();
+      conduit::float_array float_array = child.as_float_array();
       for (size_t i = 0; i < vec_size; ++i) {
          dbl_vec[i] = static_cast<double>(float_array[i]);
       }
@@ -923,19 +923,19 @@ ConduitDatabase::getFloat(
 #endif
 
    float value = 0.0;
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
 
-   if ((*d_node)[key].dtype().number_of_elements() != 1) {
+   if (child.dtype().number_of_elements() != 1) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single float...");
    }
 
-   const conduit::DataType& datatype = (*d_node)[key].dtype();
+   const conduit::DataType& datatype = child.dtype();
    if (datatype.is_float()) {
-      value = (*d_node)[key].as_float();
+      value = child.as_float();
    } else if (datatype.is_integer()) {
-      value = static_cast<float>((*d_node)[key].as_int());
+      value = static_cast<float>(child.as_int());
    } else if (datatype.is_double()) {
-      value = static_cast<float>((*d_node)[key].as_double());
+      value = static_cast<float>(child.as_double());
    } else {
       MEMORY_DB_ERROR("Key=" << key << " is not a single float...");
    }
@@ -963,24 +963,24 @@ ConduitDatabase::getFloatVector(
 #pragma warning (disable:810)
 #endif
 
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    std::vector<float> flt_vec;
 
-   const conduit::DataType& datatype = (*d_node)[key].dtype();
+   const conduit::DataType& datatype = child.dtype();
    size_t vec_size = datatype.number_of_elements();
    flt_vec.resize(vec_size);
    if (datatype.is_float()) {
-      conduit::float_array flt_array = (*d_node)[key].as_float_array();
+      conduit::float_array flt_array = child.as_float_array();
       for (size_t i = 0; i < vec_size; ++i) {
          flt_vec[i] = flt_array[i];
       }
    } else if (datatype.is_integer()) {
-      conduit::int_array int_vals = (*d_node)[key].as_int_array();
+      conduit::int_array int_vals = child.as_int_array();
       for (size_t i = 0; i < vec_size; ++i) {
          flt_vec[i] = static_cast<float>(int_vals[i]);
       }
    } else if (datatype.is_double()) {
-      conduit::double_array dbl_array = (*d_node)[key].as_double_array();
+      conduit::double_array dbl_array = child.as_double_array();
       for (size_t i = 0; i < vec_size; ++i) {
          flt_vec[i] = static_cast<float>(dbl_array[i]);
       }
@@ -1068,12 +1068,12 @@ int
 ConduitDatabase::getInteger(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
-   if (!(*d_node)[key].dtype().is_int() ||
-       (*d_node)[key].dtype().number_of_elements() != 1) {
+   conduit::Node& child = getChildNodeOrExit(key);
+   if (!child.dtype().is_int() ||
+       child.dtype().number_of_elements() != 1) {
       MEMORY_DB_ERROR("Key=" << key << " is not an integer scalar...");
    }
-   return (*d_node)[key].as_int();
+   return child.as_int();
 }
 
 int
@@ -1091,13 +1091,13 @@ std::vector<int>
 ConduitDatabase::getIntegerVector(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
-   if (!(*d_node)[key].dtype().is_int()) {
+   conduit::Node& child = getChildNodeOrExit(key);
+   if (!child.dtype().is_int()) {
       MEMORY_DB_ERROR("Key=" << key << " is not an integer...");
    }
-   size_t vec_size = (*d_node)[key].dtype().number_of_elements();
+   size_t vec_size = child.dtype().number_of_elements();
    std::vector<int> int_vec(vec_size);
-   conduit::int_array int_vals = (*d_node)[key].as_int_array();
+   conduit::int_array int_vals = child.as_int_array();
    for (size_t i = 0; i < vec_size; ++i) {
       int_vec[i] = int_vals[i];
    }
@@ -1195,12 +1195,12 @@ std::string
 ConduitDatabase::getString(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isString(key) ||
-       (*d_node)[key].has_child("str0")) {
+       child.has_child("str0")) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single string ...");
    }
-   return (*d_node)[key].as_string();
+   return child.as_string();
 }
 
 std::string
@@ -1218,24 +1218,24 @@ std::vector<std::string>
 ConduitDatabase::getStringVector(
    const std::string& key)
 {
-   findChildNodeOrExit(key);
+   conduit::Node& child = getChildNodeOrExit(key);
    if (!isString(key)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a string...");
    }
 
    std::vector<std::string> str_vec;
 
-   if ((*d_node)[key].dtype().is_string()) {
-      str_vec.push_back((*d_node)[key].as_string());
+   if (child.dtype().is_string()) {
+      str_vec.push_back(child.as_string());
    } else {
 
-      size_t nelements = (*d_node)[key].number_of_children();
+      size_t nelements = child.number_of_children();
 
       for (size_t i = 0; i < nelements; ++i) {
          std::stringstream ss;
          ss << i;
          std::string id = "str" + ss.str();
-         str_vec.push_back((*d_node)[key][id].as_string());
+         str_vec.push_back(child[id].as_string());
       } 
    }
 
@@ -1306,13 +1306,15 @@ bool ConduitDatabase::deleteKeyIfFound(
  *************************************************************************
  */
 
-void
-ConduitDatabase::findChildNodeOrExit(
+
+conduit::Node&
+ConduitDatabase::getChildNodeOrExit(
    const std::string& key)
 {
    if (!d_node->has_child(key)) {
       MEMORY_DB_ERROR("Key ``" << key << "'' does not exist in the database...");
    }
+   return (*d_node)[key];
 }
 
 void
