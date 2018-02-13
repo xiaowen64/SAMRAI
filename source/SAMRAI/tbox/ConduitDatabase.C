@@ -221,7 +221,11 @@ ConduitDatabase::getArraySize(
       } else if (isDatabaseBox(key)) {
          return (*d_node)[key]["dimension"].dtype().number_of_elements();
       } if (isString(key)) {
-         return (*d_node)[key].number_of_children();
+         if ((*d_node)[key].dtype().is_string()) {
+            return 1;
+         } else {
+            return (*d_node)[key].number_of_children();
+         }
       } else {
          return (*d_node)[key].dtype().number_of_elements();
       }
@@ -1134,10 +1138,13 @@ ConduitDatabase::isString(
    const std::string& key)
 {
    bool is_string = false;
-   if (d_node->has_child(key) &&
-       (*d_node)[key].has_child("str0") &&
-       (*d_node)[key]["str0"].dtype().is_string()) {
-      is_string = true;
+   if (d_node->has_child(key)) {
+      if ((*d_node)[key].dtype().is_string()) {
+         is_string = true;
+      } else if ((*d_node)[key].has_child("str0") &&
+                 (*d_node)[key]["str0"].dtype().is_string()) {
+         is_string = true;
+      }
    }
    return is_string;
 }
@@ -1148,7 +1155,7 @@ ConduitDatabase::putString(
    const std::string& data)
 {
    deleteKeyIfFound(key);
-   (*d_node)[key]["str0"].set_string(data);
+   (*d_node)[key].set_string(data);
    d_types[key] = SAMRAI_STRING;
 }
 
@@ -1190,10 +1197,10 @@ ConduitDatabase::getString(
 {
    findChildNodeOrExit(key);
    if (!isString(key) ||
-       (*d_node)[key].dtype().number_of_elements() != 1) {
+       (*d_node)[key].has_child("str0")) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single string ...");
    }
-   return (*d_node)[key]["str0"].as_string();
+   return (*d_node)[key].as_string();
 }
 
 std::string
@@ -1216,15 +1223,21 @@ ConduitDatabase::getStringVector(
       MEMORY_DB_ERROR("Key=" << key << " is not a string...");
    }
 
-   size_t nelements = (*d_node)[key].number_of_children();
    std::vector<std::string> str_vec;
 
-   for (size_t i = 0; i < nelements; ++i) {
-      std::stringstream ss;
-      ss << i;
-      std::string id = "str" + ss.str();
-      str_vec.push_back((*d_node)[key][id].as_string());
-   } 
+   if ((*d_node)[key].dtype().is_string()) {
+      str_vec.push_back((*d_node)[key].as_string());
+   } else {
+
+      size_t nelements = (*d_node)[key].number_of_children();
+
+      for (size_t i = 0; i < nelements; ++i) {
+         std::stringstream ss;
+         ss << i;
+         std::string id = "str" + ss.str();
+         str_vec.push_back((*d_node)[key][id].as_string());
+      } 
+   }
 
    return str_vec;
 }

@@ -960,6 +960,10 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
+   void
+   putBlueprint(
+      const std::shared_ptr<tbox::Database>& blueprint_db) const; 
+
    /*!
     * @brief Read in the entire hierarchy from the restart database.
     *

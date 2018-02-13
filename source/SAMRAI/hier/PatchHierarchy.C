@@ -1121,6 +1121,230 @@ PatchHierarchy::putToRestart(
    }
 }
 
+void
+PatchHierarchy::putBlueprint(
+   const std::shared_ptr<tbox::Database>& blueprint_db) const
+{
+   TBOX_ASSERT(blueprint_db);
+
+   std::vector<int> first_patch_id;
+   first_patch_id.push_back(0);
+
+   int patch_count = 0;
+   for (int i = 1; i < d_number_levels; ++i) {
+      patch_count += d_patch_levels[i-1]->getNumberOfPatches();
+      first_patch_id.push_back(patch_count); 
+   }
+
+   for (int i = 0; i < d_number_levels; ++i) {
+      const std::shared_ptr<hier::PatchLevel>& level = d_patch_levels[i];
+
+      for (PatchLevel::Iterator p(level->begin()); p != level->end();
+           ++p) {
+
+         const std::shared_ptr<hier::Patch>& patch = *p;
+         const BoxId& box_id = patch->getBox().getBoxId();
+         const LocalId& local_id = box_id.getLocalId();
+
+         int domain_id = first_patch_id[i] + local_id.getValue();
+         std::string domain_name =
+            "domain_" + tbox::Utilities::intToString(domain_id);
+
+         std::shared_ptr<tbox::Database> domain_db(
+            blueprint_db->putDatabase(domain_name));
+
+         if (d_number_levels == 1) {
+            break;
+         }
+
+         std::shared_ptr<tbox::Database> nestsets_db(
+            domain_db->putDatabase("nestsets"));
+      }
+
+      if (i+1 < d_number_levels) {
+
+         std::shared_ptr<hier::BoxLevel> coarse_level(
+            level->getBoxLevel());
+         std::shared_ptr<hier::BoxLevel> fine_level(
+            d_patch_levels[i+1]->getBoxLevel());
+
+         const Connector& c_to_f =
+            coarse_level->findConnector(
+               *fine_level,
+               getRequiredConnectorWidth(i,i+1),
+               CONNECTOR_CREATE,
+               true);
+
+         const IntVector& ratio = c_to_f.getRatio();
+         std::vector<int> ratio_vec(d_dim.getValue());
+         for (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+            ratio_vec[d] = ratio[d];
+         }
+
+         for (PatchLevel::Iterator p(level->begin()); p != level->end();
+              ++p) {
+
+            std::shared_ptr<Patch> patch(*p);
+            const Box& pbox = patch->getBox();
+            const BoxId& box_id = pbox.getBoxId();
+            const LocalId& local_id = box_id.getLocalId();
+
+            int domain_id = first_patch_id[i] + local_id.getValue();
+            std::string domain_name =
+               "domain_" + tbox::Utilities::intToString(domain_id);
+
+            std::shared_ptr<tbox::Database> domain_db(
+               blueprint_db->getDatabase(domain_name));
+
+            std::shared_ptr<tbox::Database> nestsets_db(
+               domain_db->getDatabase("nestsets"));
+
+            int ncount = 0;
+            Connector::ConstNeighborhoodIterator nbh = c_to_f.findLocal(box_id);
+            if (nbh == c_to_f.end())  {
+               continue;
+            }
+
+            for (Connector::ConstNeighborIterator na = c_to_f.begin(nbh);
+                 na != c_to_f.end(nbh); ++na) {
+
+               const Box& nbr_box = *na;
+               Box crse_nbr(nbr_box);
+               crse_nbr.coarsen(ratio);
+
+               Box overlap(crse_nbr*pbox);
+               if (!overlap.empty()) {
+
+                  std::string set_name =
+                     "nestset_" + tbox::Utilities::intToString(ncount);
+                  std::shared_ptr<tbox::Database> set_db(
+                     nestsets_db->putDatabase(set_name));
+
+                  const LocalId& nbr_id = nbr_box.getLocalId();
+                  int child_id = first_patch_id[i+1] + nbr_id.getValue();
+
+                  set_db->putInteger("child", child_id);
+                  set_db->putIntegerVector("ratio", ratio_vec);
+                  set_db->putString("association", "element");
+
+                  std::vector<int> ovlp_vec;
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.lower(d));
+                  } 
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.upper(d));
+                  }
+                  set_db->putIntegerVector("local", ovlp_vec);
+
+                  ovlp_vec.clear();
+                  overlap.refine(ratio);
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.lower(d));
+                  }
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.upper(d));
+                  }
+                  set_db->putIntegerVector("remote", ovlp_vec);
+
+                  ++ncount;
+               }
+            }
+         }
+      }
+
+      if (i > 0) {
+
+         std::shared_ptr<hier::BoxLevel> coarse_level(
+            d_patch_levels[i-1]->getBoxLevel());
+         std::shared_ptr<hier::BoxLevel> fine_level(
+            level->getBoxLevel());
+
+         const Connector& f_to_c =
+            fine_level->findConnector(
+               *coarse_level,
+               getRequiredConnectorWidth(i,i-1),
+               CONNECTOR_CREATE,
+               true);
+
+         const IntVector& ratio = f_to_c.getRatio();
+         std::vector<int> ratio_vec(d_dim.getValue());
+         for (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+            ratio_vec[d] = ratio[d];
+         }
+
+         for (PatchLevel::Iterator p(level->begin()); p != level->end();
+              ++p) {
+
+            std::shared_ptr<Patch> patch(*p);
+            const Box& pbox = patch->getBox();
+            const BoxId& box_id = pbox.getBoxId();
+            const LocalId& local_id = box_id.getLocalId();
+
+            int domain_id = first_patch_id[i] + local_id.getValue();
+            std::string domain_name =
+               "domain_" + tbox::Utilities::intToString(domain_id);
+
+            std::shared_ptr<tbox::Database> domain_db(
+               blueprint_db->getDatabase(domain_name));
+
+            std::shared_ptr<tbox::Database> nestsets_db(
+               domain_db->getDatabase("nestsets"));
+
+            int ncount = nestsets_db->getAllKeys().size();
+            Connector::ConstNeighborhoodIterator nbh = f_to_c.findLocal(box_id);
+
+            if (nbh == f_to_c.end())  {
+               continue;
+            }
+
+            for (Connector::ConstNeighborIterator na = f_to_c.begin(nbh);
+                 na != f_to_c.end(nbh); ++na) {
+
+               const Box& nbr_box = *na;
+               Box fine_nbr(nbr_box);
+               fine_nbr.refine(ratio);
+
+               Box overlap(fine_nbr*pbox);
+               if (!overlap.empty()) {
+
+                  std::string set_name =
+                     "nestset_" + tbox::Utilities::intToString(ncount);
+                  std::shared_ptr<tbox::Database> set_db(
+                     nestsets_db->putDatabase(set_name));
+
+                  const LocalId& nbr_id = nbr_box.getLocalId();
+                  int parent_id = first_patch_id[i-1] + nbr_id.getValue();
+
+                  set_db->putInteger("parent", parent_id);
+                  set_db->putIntegerVector("ratio", ratio_vec);
+                  set_db->putString("association", "element");
+
+                  std::vector<int> ovlp_vec;
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.lower(d));
+                  } 
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.upper(d));
+                  }
+                  set_db->putIntegerVector("local", ovlp_vec);
+
+                  ovlp_vec.clear();
+                  overlap.coarsen(ratio);
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.lower(d));
+                  }
+                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
+                     ovlp_vec.push_back(overlap.upper(d));
+                  }
+                  set_db->putIntegerVector("remote", ovlp_vec);
+                  ++ncount;
+               }
+            }
+         }
+      }
+   }
+}
+
 /*
  *************************************************************************
  *
