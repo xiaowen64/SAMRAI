@@ -7,6 +7,7 @@
 #include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
+#include "SAMRAI/appu/VisItDataWriter.h"
 
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -146,6 +147,10 @@ class Stencil :
       std::string& db_name,
       int bdry_location_index);
 
+   void
+     registerVisItDataWriter(
+        boost::shared_ptr<appu::VisItDataWriter> viz_writer);
+
   private:
     std::string d_object_name;
 
@@ -154,6 +159,8 @@ class Stencil :
     const tbox::Dimension d_dim;
 
     boost::shared_ptr<pdat::CellVariable<double> > d_rho;
+
+    boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 
    hier::IntVector d_nghosts;
 };

@@ -141,7 +141,7 @@ int main(
       tbox::PIO::logOnlyNodeZero(log_filename);
     }
 
-    int viz_dump_interval = 0;
+    int viz_dump_interval = 1;
     if (main_db->keyExists("viz_dump_interval")) {
       viz_dump_interval = main_db->getInteger("viz_dump_interval");
     }
@@ -257,6 +257,14 @@ int main(
           hyp_level_integrator,
           gridding_algorithm));
 
+    boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+       new appu::VisItDataWriter(
+          dim,
+          "Euler VisIt Writer",
+          viz_dump_dirname,
+          visit_number_procs_per_file));
+    stencil_model->registerVisItDataWriter(visit_data_writer);
+
     /*
      * Initialize hierarchy configuration and data on all patches.
      * Then, close restart file and write initial state for visualization.
@@ -278,6 +286,11 @@ int main(
     input_db->printClassData(tbox::plog);
     tbox::plog << "\nVariable database..." << endl;
     hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
+
+    visit_data_writer->writePlotData(
+        patch_hierarchy,
+        time_integrator->getIntegratorStep(),
+        time_integrator->getIntegratorTime());
 
     // tbox::plog << "\nCheck Linear Advection data... " << endl;
     // linear_advection_model->printClassData(tbox::plog);
@@ -310,6 +323,13 @@ int main(
       tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
       tbox::pout << "Simulation time is " << loop_time << endl;
       tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+
+       if ((viz_dump_interval > 0)
+           && (iteration_num % viz_dump_interval) == 0) {
+          visit_data_writer->writePlotData(patch_hierarchy,
+             iteration_num,
+             loop_time);
+       }
     }
 
     /*
