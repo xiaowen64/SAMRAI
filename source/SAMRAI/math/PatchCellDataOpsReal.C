@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real cell-centered patch data.
  *
  ************************************************************************/
@@ -51,10 +51,10 @@ PatchCellDataOpsReal<TYPE>::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::CellData<TYPE> > d1(
-      POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::CellData<TYPE> > d2(
-      POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
@@ -434,7 +434,7 @@ TileClustering::clusterWithinProcessBoundaries(
       if (patch.getBox().intersects(bounding_box)) {
 
          std::shared_ptr<pdat::CellData<int> > tag_data(
-            POINTER_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
          hier::BoxContainer tiles;
          int num_coarse_tags =
@@ -559,7 +559,7 @@ TileClustering::clusterWholeTiles(
       }
 
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(patch.getPatchData(tag_data_index)));
 
       if (d_print_steps) {
          tbox::plog << "TileClustering::clusterWholeTiles: making coarsened tags." << std::endl;

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Routines for performing cell-tagging and initializing
  *                a new level.
  *
@@ -293,7 +293,7 @@ StandardTagAndInitialize::tagCellsForRefinement(
          const std::shared_ptr<hier::Patch>& patch = *ip;
 
          std::shared_ptr<pdat::CellData<int> > tag_data(
-            POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                patch->getPatchData(tag_index)));
 
          TBOX_ASSERT(tag_data);
@@ -493,10 +493,10 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       std::shared_ptr<hier::Patch> fine_patch(
          patch_level->getPatch(coarse_patch->getGlobalId()));
       std::shared_ptr<pdat::CellData<int> > ftags(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             fine_patch->getPatchData(tag_index)));
       std::shared_ptr<pdat::CellData<int> > ctags(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             coarse_patch->getPatchData(tag_index)));
 
       TBOX_ASSERT(ftags);

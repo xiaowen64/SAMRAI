@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -176,7 +176,7 @@ void OuternodeDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
@@ -232,7 +232,7 @@ void OuternodeDataTest::setLinearData(
 #endif
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
@@ -446,7 +446,7 @@ bool OuternodeDataTest::verifyResults(
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
          std::shared_ptr<pdat::NodeData<double> > node_data(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables_dst[i], getDataContext())));
          TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();

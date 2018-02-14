@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test cell patch data operations.
  *
  ************************************************************************/
@@ -538,7 +538,7 @@ int main(
       }
 
       std::shared_ptr<pdat::CellData<double> > weight(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cwgt_id)));
       TBOX_ASSERT(weight);
       weight->fillAll(cell_vol);
@@ -549,13 +549,13 @@ int main(
 
       // Get pointers to patch data objects
       std::shared_ptr<pdat::CellData<double> > cddata0(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[0])));
       std::shared_ptr<pdat::CellData<double> > cddata1(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[1])));
       std::shared_ptr<pdat::CellData<double> > cddata2(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[2])));
 
       TBOX_ASSERT(cddata0);
@@ -622,7 +622,7 @@ int main(
       double val_inbox = 1.0;
       double val_not_inbox = 3.0;
       std::shared_ptr<pdat::CellData<double> > cvdata(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[0])));
 
       TBOX_ASSERT(cvdata);
@@ -685,7 +685,7 @@ int main(
       bool divide_inbox_test_passed = true;
       val_inbox = 0.8;
       val_not_inbox = 1.6;
-      cvdata = POINTER_CAST<pdat::CellData<double>,
+      cvdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
       TBOX_ASSERT(cvdata);
 
@@ -767,7 +767,7 @@ int main(
       bool restricted_linSum_test_passed = true;
       val_inbox = 50.0;
       val_not_inbox = 0.0;
-      cvdata = POINTER_CAST<pdat::CellData<double>,
+      cvdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
       TBOX_ASSERT(cvdata);
 
@@ -832,7 +832,7 @@ int main(
       double val_inbox3 = 21.0;
       val_not_inbox = 1.0;
 
-      cvdata = POINTER_CAST<pdat::CellData<double>,
+      cvdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
       TBOX_ASSERT(cvdata);
       pdat::CellIterator ciend(pdat::CellGeometry::end(cvdata->getBox()));
@@ -1256,7 +1256,7 @@ doubleDataSameAsValue(
    bool test_passed = true;
 
    std::shared_ptr<pdat::CellData<double> > cvdata(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch->getPatchData(desc_id)));
 
    TBOX_ASSERT(cvdata);

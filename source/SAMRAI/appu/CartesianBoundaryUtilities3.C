@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 3D Cartesian boundary data
  *
  ************************************************************************/
@@ -214,7 +214,7 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
    }
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -299,7 +299,7 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    }
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -384,7 +384,7 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
    }
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -645,12 +645,12 @@ CartesianBoundaryUtilities3::checkBdryData(
    int bloc = bbox.getLocationIndex();
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
    std::shared_ptr<pdat::CellData<double> > vardata(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 

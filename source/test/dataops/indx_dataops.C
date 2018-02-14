@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -222,7 +222,7 @@ int main(
             // access sample data from patch
             std::shared_ptr<pdat::IndexData<SampleIndexData,
                                               pdat::CellGeometry> > sample(
-               POINTER_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
+               SAMRAI_SHARED_PTR_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
                           hier::PatchData>(
                   patch->getPatchData(data_id)));
             TBOX_ASSERT(sample);

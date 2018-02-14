@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for cell-centered double data on
  *                a  mesh.
  *
@@ -118,10 +118,10 @@ CellDoubleConstantRefine::refine(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<CellData<double> > cdata(
-      POINTER_CAST<CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<CellData<double> > fdata(
-      POINTER_CAST<CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);

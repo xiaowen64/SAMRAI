@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered double data on
  *                a  mesh.
  *
@@ -89,10 +89,10 @@ NodeDoubleInjection::coarsen(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<NodeData<double> > fdata(
-      POINTER_CAST<NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<NodeData<double> > cdata(
-      POINTER_CAST<NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

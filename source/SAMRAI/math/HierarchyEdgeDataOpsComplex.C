@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex edge data on multiple levels.
  *
  ************************************************************************/
@@ -134,10 +134,10 @@ HierarchyEdgeDataOpsComplex::copyData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -157,11 +157,11 @@ HierarchyEdgeDataOpsComplex::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    std::shared_ptr<pdat::EdgeDataFactory<dcomplex> > d1fact(
-      POINTER_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    std::shared_ptr<pdat::EdgeDataFactory<dcomplex> > d2fact(
-      POINTER_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -210,7 +210,7 @@ HierarchyEdgeDataOpsComplex::printData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -241,7 +241,7 @@ HierarchyEdgeDataOpsComplex::setToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -281,10 +281,10 @@ HierarchyEdgeDataOpsComplex::scale(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > dst(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -317,10 +317,10 @@ HierarchyEdgeDataOpsComplex::addScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > dst(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -353,13 +353,13 @@ HierarchyEdgeDataOpsComplex::add(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -393,13 +393,13 @@ HierarchyEdgeDataOpsComplex::subtract(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -433,13 +433,13 @@ HierarchyEdgeDataOpsComplex::multiply(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -473,13 +473,13 @@ HierarchyEdgeDataOpsComplex::divide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -512,10 +512,10 @@ HierarchyEdgeDataOpsComplex::reciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -550,13 +550,13 @@ HierarchyEdgeDataOpsComplex::linearSum(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -591,13 +591,13 @@ HierarchyEdgeDataOpsComplex::axpy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -632,13 +632,13 @@ HierarchyEdgeDataOpsComplex::axmy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > s2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -671,10 +671,10 @@ HierarchyEdgeDataOpsComplex::abs(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<double> > d(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > src(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -707,7 +707,7 @@ HierarchyEdgeDataOpsComplex::setRandomValues(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -745,7 +745,7 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
    if (interior_only) {
 
       std::shared_ptr<pdat::EdgeDataFactory<dcomplex> > dfact(
-         POINTER_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeDataFactory<dcomplex>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
@@ -782,7 +782,7 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-               POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
@@ -825,10 +825,10 @@ HierarchyEdgeDataOpsComplex::sumControlVolumes(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::EdgeData<double> > cv(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(d);
@@ -869,7 +869,7 @@ HierarchyEdgeDataOpsComplex::L1Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -931,10 +931,10 @@ HierarchyEdgeDataOpsComplex::weightedL2Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > w(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(wgt_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1016,7 +1016,7 @@ HierarchyEdgeDataOpsComplex::maxNorm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1067,10 +1067,10 @@ HierarchyEdgeDataOpsComplex::dot(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > d1(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::EdgeData<dcomplex> > d2(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1131,10 +1131,10 @@ HierarchyEdgeDataOpsComplex::integral(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::EdgeData<dcomplex> > data(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::EdgeData<double> > vol(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Variable class for defining outernode centered variables
  *
  ************************************************************************/
@@ -46,7 +46,7 @@ template<class TYPE>
 int OuternodeVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<OuternodeDataFactory<TYPE> > factory(
-      POINTER_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

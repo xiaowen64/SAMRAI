@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
@@ -154,7 +154,7 @@ ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int level_number)
 {
    std::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      POINTER_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
          hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
          getPatchDataFactory(data_id)));
    TBOX_ASSERT(datafact);

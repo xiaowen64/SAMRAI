@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -249,7 +249,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                      << d_flux_id << ") does not exist.");
          }
          flux_data_ptr =
-            POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(patch_data);
+            SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(patch_data);
          TBOX_ASSERT(flux_data_ptr);
          if (d_diffusion_coef_id != -1) {
             patch_data = patch.getPatchData(d_diffusion_coef_id);
@@ -259,7 +259,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                         << ") does not exist.");
             }
             diffcoef_data_ptr =
-               POINTER_CAST<pdat::SideData<double>, hier::PatchData>(patch_data);
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(patch_data);
             TBOX_ASSERT(diffcoef_data_ptr);
          }
       }
@@ -271,7 +271,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
             TBOX_ERROR(d_object_name << ": Flags data (patch data id = "
                                      << d_flag_id << ") does not exist.");
          }
-         flag_data_ptr = POINTER_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
+         flag_data_ptr = SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
                patch.getPatchData(d_flag_id));
          TBOX_ASSERT(flag_data_ptr);
       }
@@ -292,7 +292,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
       if (gcoef_data) {
 
          std::shared_ptr<geom::CartesianPatchGeometry> pg(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
@@ -338,7 +338,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       if (gcoef_data) {
          flux_data_ptr =
-            POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                patch.getPatchData(d_flux_id));
          TBOX_ASSERT(flux_data_ptr);
          pdat::OuterfaceData<double>& flux_data(*flux_data_ptr);
@@ -353,11 +353,10 @@ SimpleCellRobinBcCoefs::setBcCoefs(
             for ( ; ai != aiend; ++ai) {
                pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / d_diffusion_coef_constant;
-               tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
          } else {
             diffcoef_data_ptr =
-               POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                   patch.getPatchData(d_diffusion_coef_id));
             TBOX_ASSERT(diffcoef_data_ptr);
             const pdat::ArrayData<double>& diffcoef_array_data =
@@ -365,7 +364,6 @@ SimpleCellRobinBcCoefs::setBcCoefs(
             for ( ; ai != aiend; ++ai) {
                pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / diffcoef_array_data(*ai, 0);
-               tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
          }
       }
@@ -374,7 +372,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       const int axis = location_index / 2;
       const int face = location_index % 2;
-      flag_data_ptr = POINTER_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
+      flag_data_ptr = SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
             patch.getPatchData(d_flag_id));
       TBOX_ASSERT(flag_data_ptr);
       pdat::OuterfaceData<int>& flag_data(*flag_data_ptr);
@@ -411,7 +409,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
 
       if (gcoef_data) {
          std::shared_ptr<geom::CartesianPatchGeometry> pg(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
@@ -445,7 +443,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
          const pdat::ArrayData<double>& dirichlet_array_data =
             *d_dirichlet_data[position];
          diffcoef_data_ptr =
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(d_diffusion_coef_id));
          TBOX_ASSERT(diffcoef_data_ptr);
          pdat::ArrayData<double>& g = *gcoef_data;
@@ -534,7 +532,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          std::shared_ptr<geom::CartesianPatchGeometry> pg(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch.getPatchGeometry()));
 
          TBOX_ASSERT(pg);
@@ -555,10 +553,10 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          std::shared_ptr<pdat::CellData<double> > cell_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(dirichlet_data_id)));
          std::shared_ptr<geom::CartesianPatchGeometry> pg(
-            POINTER_CAST<geom::CartesianPatchGeometry,
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                        hier::PatchGeometry>(patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
@@ -612,10 +610,10 @@ SimpleCellRobinBcCoefs::restoreDirichletData(
          const hier::GlobalId& global_id = patch.getGlobalId();
          hier::BoxId box_id(global_id);
          std::shared_ptr<pdat::CellData<double> > cell_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(dirichlet_data_id)));
          std::shared_ptr<geom::CartesianPatchGeometry> pg(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);

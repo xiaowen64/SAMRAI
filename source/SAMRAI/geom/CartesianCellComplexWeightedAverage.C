@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for cell-centered complex data on
  *                a Cartesian mesh.
  *
@@ -107,10 +107,10 @@ CartesianCellComplexWeightedAverage::coarsen(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    std::shared_ptr<pdat::CellData<dcomplex> > fdata(
-      POINTER_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<pdat::CellData<dcomplex> > cdata(
-      POINTER_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -122,10 +122,10 @@ CartesianCellComplexWeightedAverage::coarsen(
    const hier::Index& cihi = cdata->getGhostBox().upper();
 
    const std::shared_ptr<CartesianPatchGeometry> fgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
    const std::shared_ptr<CartesianPatchGeometry> cgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);

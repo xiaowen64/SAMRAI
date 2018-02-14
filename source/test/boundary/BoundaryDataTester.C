@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Class to test usage of boundary utilities
  *
  ************************************************************************/
@@ -90,7 +90,7 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
    for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
 
       std::shared_ptr<pdat::CellData<double> > cvdata(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[iv], d_variable_context)));
       TBOX_ASSERT(cvdata);
 
@@ -192,7 +192,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
          std::shared_ptr<pdat::CellData<double> > cvdata(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_variables[iv], d_variable_context)));
 
          TBOX_ASSERT(cvdata);
@@ -207,7 +207,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
          std::shared_ptr<pdat::CellData<double> > cvdata(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_variables[iv], d_variable_context)));
 
          TBOX_ASSERT(cvdata);
@@ -679,7 +679,7 @@ void BoundaryDataTester::checkBoundaryData(
 #endif
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =
@@ -692,7 +692,7 @@ void BoundaryDataTester::checkBoundaryData(
 
       for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
          std::shared_ptr<pdat::CellData<double> > cvdata(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[iv], d_variable_context)));
          TBOX_ASSERT(cvdata);
 

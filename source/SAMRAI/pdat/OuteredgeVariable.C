@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Variable class for defining outeredge centered variables
  *
  ************************************************************************/
@@ -46,7 +46,7 @@ template<class TYPE>
 int OuteredgeVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<OuteredgeDataFactory<TYPE> > factory(
-      POINTER_CAST<OuteredgeDataFactory<TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<OuteredgeDataFactory<TYPE>, hier::PatchData>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

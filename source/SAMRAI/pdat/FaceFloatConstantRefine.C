@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for face-centered float data on
  *                a  mesh.
  *
@@ -122,10 +122,10 @@ FaceFloatConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    std::shared_ptr<FaceData<float> > cdata(
-      POINTER_CAST<FaceData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<FaceData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<FaceData<float> > fdata(
-      POINTER_CAST<FaceData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<FaceData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap =

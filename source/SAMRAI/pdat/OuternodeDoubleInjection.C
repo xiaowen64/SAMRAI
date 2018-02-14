@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   ConstantCoarsen averaging operator for outernode-centered
  *                double data on a mesh.
  *
@@ -124,10 +124,10 @@ OuternodeDoubleInjection::coarsen(
    const tbox::Dimension& dim(fine.getDim());
 
    std::shared_ptr<OuternodeData<double> > fdata(
-      POINTER_CAST<OuternodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<OuternodeData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<OuternodeData<double> > cdata(
-      POINTER_CAST<OuternodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<OuternodeData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

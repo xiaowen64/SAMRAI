@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for edge-centered float data on
  *                a  mesh.
  *
@@ -122,10 +122,10 @@ EdgeFloatConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    std::shared_ptr<EdgeData<float> > cdata(
-      POINTER_CAST<EdgeData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<EdgeData<float> > fdata(
-      POINTER_CAST<EdgeData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);

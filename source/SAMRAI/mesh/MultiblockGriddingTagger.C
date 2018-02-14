@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -70,7 +70,7 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
          << std::endl);
    } else {
       std::shared_ptr<pdat::CellVariable<int> > t_check_var(
-         POINTER_CAST<pdat::CellVariable<int>, hier::Variable>(check_var));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<int>, hier::Variable>(check_var));
       TBOX_ASSERT(t_check_var);
    }
 
@@ -88,7 +88,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    const tbox::Dimension& dim = patch.getDim();
 
    const std::shared_ptr<pdat::CellData<int> > tag_data(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
@@ -138,7 +138,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const std::shared_ptr<pdat::CellData<int> > tag_data(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
@@ -194,7 +194,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                                                encon_patch->getBox().getBlockId());
 
                std::shared_ptr<pdat::CellData<int> > sing_data(
-                  POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                      encon_patch->getPatchData(d_buf_tag_indx)));
 
                TBOX_ASSERT(sing_data);

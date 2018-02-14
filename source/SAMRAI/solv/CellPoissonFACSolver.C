@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
@@ -412,7 +412,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << u << "\n");
       }
       std::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_uv->addComponent(variable, u, s_weight_id[d_dim.getValue() - 1]);
@@ -430,7 +430,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << f << "\n");
       }
       std::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_fv->addComponent(variable, f, s_weight_id[d_dim.getValue() - 1]);

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
@@ -128,7 +128,7 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
             std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-               POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                   patch->getPatchData(n)));
             TBOX_ASSERT(oedge_data);
             oedge_data->fillAll(0.0);

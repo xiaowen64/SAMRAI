@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerside double data on
  *                a Skeleton mesh.
  *
@@ -116,10 +116,10 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<pdat::OuterfaceData<double> > fdata(
-      POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<pdat::OuterfaceData<double> > cdata(
-      POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);

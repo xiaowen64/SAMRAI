@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test face-centered complex patch data ops
  *
  ************************************************************************/
@@ -256,7 +256,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -265,7 +265,7 @@ int main(
                face_vol *= dx[i];
             }
             std::shared_ptr<pdat::FaceData<double> > data(
-               POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
@@ -817,7 +817,7 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         cdata = POINTER_CAST<pdat::FaceData<dcomplex>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
@@ -838,7 +838,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         cdata = POINTER_CAST<pdat::FaceData<dcomplex>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index idx0(dim, 2);
@@ -1121,7 +1121,7 @@ complexDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::FaceData<dcomplex> > fvdata(
-            POINTER_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<dcomplex>, hier::PatchData>(
                patch->getPatchData(desc_id)));
          TBOX_ASSERT(fvdata);
          pdat::FaceIterator fend(pdat::FaceGeometry::end(fvdata->getBox(), 1));
@@ -1160,7 +1160,7 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::FaceData<double> > fvdata(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(fvdata);

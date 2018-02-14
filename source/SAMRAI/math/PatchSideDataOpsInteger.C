@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer side-centered patch data.
  *
  ************************************************************************/
@@ -67,10 +67,10 @@ void PatchSideDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::SideData<int> > d1(
-      POINTER_CAST<pdat::SideData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::SideData<int> > d2(
-      POINTER_CAST<pdat::SideData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

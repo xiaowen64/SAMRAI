@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Utility functions for error reporting, file manipulation, etc.
  *
  ************************************************************************/
@@ -141,12 +141,12 @@ typedef int mode_t;
  */
 #ifdef DEBUG_CHECK_ASSERTIONS
 
-#define POINTER_CAST std::dynamic_pointer_cast
+#define SAMRAI_SHARED_PTR_CAST std::dynamic_pointer_cast
 #define CPP_CAST dynamic_cast
 
 #else
 
-#define POINTER_CAST std::static_pointer_cast
+#define SAMRAI_SHARED_PTR_CAST std::static_pointer_cast
 #define CPP_CAST static_cast
 
 #endif

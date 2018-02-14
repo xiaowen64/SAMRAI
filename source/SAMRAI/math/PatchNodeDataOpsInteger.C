@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer node-centered patch data.
  *
  ************************************************************************/
@@ -38,10 +38,10 @@ PatchNodeDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::NodeData<int> > d1(
-      POINTER_CAST<pdat::NodeData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::NodeData<int> > d2(
-      POINTER_CAST<pdat::NodeData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

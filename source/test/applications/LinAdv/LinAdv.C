@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -450,7 +450,7 @@ void LinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -458,7 +458,7 @@ void LinAdv::initializeDataOnPatch(
       const double* xhi = pgeom->getXUpper();
 
       std::shared_ptr<pdat::CellData<double> > uval(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
 
       TBOX_ASSERT(uval);
@@ -577,7 +577,7 @@ void LinAdv::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       std::shared_ptr<pdat::CellData<double> > workload_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
 
@@ -607,7 +607,7 @@ double LinAdv::computeStableDtOnPatch(
    NULL_USE(dt_time);
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -616,7 +616,7 @@ double LinAdv::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -680,7 +680,7 @@ void LinAdv::computeFluxesOnPatch(
    hier::Box pbox = patch.getBox();
 
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
    TBOX_ASSERT(flux);
    
@@ -689,7 +689,7 @@ void LinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 
       const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
@@ -698,7 +698,7 @@ void LinAdv::computeFluxesOnPatch(
       const hier::Index ilast = patch.getBox().upper();
 
       std::shared_ptr<pdat::CellData<double> > uval(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       /*
        * Verify that the integrator providing the context correctly
@@ -877,7 +877,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -887,10 +887,10 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1167,7 +1167,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -1177,10 +1177,10 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1393,7 +1393,7 @@ void LinAdv::conservativeDifferenceOnPatch(
    NULL_USE(at_syncronization);
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -1402,10 +1402,10 @@ void LinAdv::conservativeDifferenceOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1455,7 +1455,7 @@ void LinAdv::boundaryReset(
    bool bdry_cell = true;
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    hier::BoxContainer domain_boxes;
@@ -1555,7 +1555,7 @@ void LinAdv::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1685,7 +1685,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
    hier::Box pbox = patch.getBox();
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
 
@@ -1708,10 +1708,10 @@ void LinAdv::tagRichardsonExtrapolationCells(
 
       if (ref == "UVAL_RICHARDSON") {
          std::shared_ptr<pdat::CellData<double> > coarsened_fine_var =
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, coarsened_fine));
          std::shared_ptr<pdat::CellData<double> > advanced_coarse_var =
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, advanced_coarse));
          size = static_cast<int>(d_rich_tol.size());
          tol = ((error_level_number < size)
@@ -1857,13 +1857,13 @@ void LinAdv::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
 
@@ -1912,7 +1912,7 @@ void LinAdv::tagGradientDetectorCells(
 
       string ref = d_refinement_criteria[ncrit];
       std::shared_ptr<pdat::CellData<double> > var(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       TBOX_ASSERT(var);
 
@@ -3065,7 +3065,7 @@ void LinAdv::checkBoundaryData(
 #endif
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =
@@ -3155,7 +3155,7 @@ LinAdv::checkUserTagData(
    const int tag_index) const
 {
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
 }
@@ -3166,7 +3166,7 @@ LinAdv::checkNewPatchTagData(
    const int tag_index) const
 {
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
 }

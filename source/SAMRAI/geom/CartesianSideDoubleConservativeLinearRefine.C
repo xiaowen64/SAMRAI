@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for side-centered
  *                double data on a Cartesian mesh.
  *
@@ -139,10 +139,10 @@ CartesianSideDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
    std::shared_ptr<pdat::SideData<double> > cdata(
-      POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<pdat::SideData<double> > fdata(
-      POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const pdat::SideOverlap* t_overlap =
@@ -167,10 +167,10 @@ CartesianSideDoubleConservativeLinearRefine::refine(
    const hier::Index& fihi = fdata->getGhostBox().upper();
 
    const std::shared_ptr<CartesianPatchGeometry> cgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
    const std::shared_ptr<CartesianPatchGeometry> fgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);

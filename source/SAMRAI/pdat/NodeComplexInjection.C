@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered complex data on
  *                a  mesh.
  *
@@ -92,10 +92,10 @@ NodeComplexInjection::coarsen(
    TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
    std::shared_ptr<NodeData<dcomplex> > fdata(
-      POINTER_CAST<NodeData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<dcomplex>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<NodeData<dcomplex> > cdata(
-      POINTER_CAST<NodeData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

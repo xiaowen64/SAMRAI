@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -751,7 +751,7 @@ void MblkLinAdv::initializeDataOnPatch(
    d_mblk_geometry->getDx(level_number, block_number, dx);
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(xyz);
 
@@ -775,7 +775,7 @@ void MblkLinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       std::shared_ptr<pdat::CellData<double> > uval(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
 
       TBOX_ASSERT(uval);
@@ -889,7 +889,7 @@ void MblkLinAdv::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       std::shared_ptr<pdat::CellData<double> > workload_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
@@ -932,7 +932,7 @@ double MblkLinAdv::computeStableDtOnPatch(
       patch.getBox().getBlockId().getBlockValue(), dx);
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1008,10 +1008,10 @@ void MblkLinAdv::computeFluxesOnPatch(
       const hier::Index ilast = patch.getBox().upper();
 
       std::shared_ptr<pdat::CellData<double> > uval(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       std::shared_ptr<pdat::FaceData<double> > flux(
-         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_flux, getDataContext())));
 
       /*
@@ -1186,10 +1186,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1489,10 +1489,10 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1727,10 +1727,10 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1777,7 +1777,7 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1989,7 +1989,7 @@ void MblkLinAdv::tagGradientDetectorCells(
       patch.getBox().getBlockId().getBlockValue(), dx);
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
 
@@ -2024,7 +2024,7 @@ void MblkLinAdv::tagGradientDetectorCells(
 
       string ref = d_refinement_criteria[ncrit];
       std::shared_ptr<pdat::CellData<double> > var(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       TBOX_ASSERT(var);
 

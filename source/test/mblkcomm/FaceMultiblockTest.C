@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for face-centered patch data
  *
  ************************************************************************/
@@ -122,7 +122,7 @@ void FaceMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::FaceData<double> > face_data(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
@@ -176,7 +176,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::FaceData<double> > face_data(
-         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -321,7 +321,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::FaceData<double> > face_data(
-         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -406,7 +406,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   std::shared_ptr<pdat::FaceData<double> > sing_data(
-                     POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -568,7 +568,7 @@ bool FaceMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       std::shared_ptr<pdat::FaceData<double> > face_data(
-         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
       int depth = face_data->getDepth();

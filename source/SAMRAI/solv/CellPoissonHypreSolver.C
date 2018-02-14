@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -448,7 +448,7 @@ CellPoissonHypreSolver::allocateHypreData()
 
    std::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          d_hierarchy->getGridGeometry()));
 
    TBOX_ASSERT(grid_geometry);
@@ -774,7 +774,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       hier::Patch& patch = **pi;
 
       std::shared_ptr<geom::CartesianPatchGeometry> pg(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
 
       TBOX_ASSERT(pg);
@@ -786,18 +786,18 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       const hier::Index& patch_up = patch_box.upper();
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
-         C_data = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         C_data = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(spec.getCPatchDataId()));
          TBOX_ASSERT(C_data);
       }
 
       if (!spec.dIsConstant()) {
-         D_data = POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         D_data = SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(spec.getDPatchDataId()));
          TBOX_ASSERT(D_data);
       }
 
-      Ak0 = POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+      Ak0 = SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
             patch.getPatchData(d_Ak0_id));
       TBOX_ASSERT(Ak0);
 
@@ -1077,7 +1077,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     * to rhs.
     */
    std::shared_ptr<pdat::OutersideData<double> > Ak0(
-      POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
          patch.getPatchData(d_Ak0_id)));
 
    TBOX_ASSERT(Ak0);
@@ -1289,7 +1289,7 @@ CellPoissonHypreSolver::solveSystem(
        * Set up variable data needed to prepare linear system solver.
        */
       std::shared_ptr<pdat::CellData<double> > u_data_(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(u)));
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
@@ -1383,7 +1383,7 @@ CellPoissonHypreSolver::solveSystem(
         ip != level->end(); ++ip) {
       const std::shared_ptr<hier::Patch>& patch = *ip;
       std::shared_ptr<pdat::CellData<double> > u_data_(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(u)));
 
       TBOX_ASSERT(u_data_);

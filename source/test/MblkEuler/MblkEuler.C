@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Template for a multiblock AMR Euler code
  *
  ************************************************************************/
@@ -284,13 +284,13 @@ void MblkEuler::initializeDataOnPatch(
    if (initial_time) {
 
       std::shared_ptr<pdat::CellData<double> > state(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_state, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > vol(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_vol, getDataContext())));
       std::shared_ptr<pdat::NodeData<double> > xyz(
-         POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_xyz, getDataContext())));
 
       TBOX_ASSERT(state);
@@ -619,7 +619,7 @@ void MblkEuler::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       std::shared_ptr<pdat::CellData<double> > workload_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
@@ -663,10 +663,10 @@ double MblkEuler::computeStableDtOnPatch(
    // get the cell data and their bounds
    //
    std::shared_ptr<pdat::CellData<double> > state(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_state, getDataContext())));
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
    hier::IntVector state_ghosts = state->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
@@ -893,7 +893,7 @@ void MblkEuler::testPatchExtrema(
    const char* pos)
 {
    std::shared_ptr<pdat::CellData<double> > state(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(state);
    hier::IntVector state_ghosts = state->getGhostCellWidth();
@@ -976,16 +976,16 @@ void MblkEuler::computeFluxesOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > state(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_state, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > vol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_vol, getDataContext())));
    std::shared_ptr<pdat::SideData<double> > flux(
-      POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
 
    TBOX_ASSERT(state);
@@ -1481,7 +1481,7 @@ void MblkEuler::markPhysicalBoundaryConditions(
    const hier::IntVector& ghost_width_to_fill)
 {
    std::shared_ptr<pdat::CellData<double> > state(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(state);
 
@@ -1591,10 +1591,10 @@ void MblkEuler::setPhysicalBoundaryConditions(
    markPhysicalBoundaryConditions(patch, ghost_width_to_fill);
 
    std::shared_ptr<pdat::NodeData<double> > position(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > state(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(position);
    TBOX_ASSERT(state);
@@ -1749,17 +1749,17 @@ void MblkEuler::postprocessRefine(
    const hier::IntVector& ratio)
 {
    std::shared_ptr<pdat::CellData<double> > cstate(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_state, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_vol, getDataContext())));
 
    std::shared_ptr<pdat::CellData<double> > fstate(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_state, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cstate);
@@ -2013,17 +2013,17 @@ void MblkEuler::postprocessCoarsen(
    const hier::IntVector& ratio)
 {
    std::shared_ptr<pdat::CellData<double> > cstate(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_state, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_vol, getDataContext())));
 
    std::shared_ptr<pdat::CellData<double> > fstate(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_state, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cstate);
@@ -2209,7 +2209,7 @@ void MblkEuler::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(xyz);
    double* x = xyz->getPointer(0);
@@ -2227,10 +2227,10 @@ void MblkEuler::tagGradientDetectorCells(
    tbox::plog << "box    = " << patch.getBox() << endl;
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    std::shared_ptr<pdat::CellData<double> > var(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_state, getDataContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(var);
@@ -2592,11 +2592,11 @@ void MblkEuler::setVolumeOnPatch(
    const hier::Patch& patch)
 {
    std::shared_ptr<pdat::CellData<double> > vol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_vol, getDataContext())));
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(vol);
    TBOX_ASSERT(xyz);

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   ShrunkenLevelGenerator class implementation
  *
  ************************************************************************/
@@ -199,7 +199,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    const tbox::Dimension dim(hierarchy->getDim());
 
    std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
@@ -250,7 +250,7 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
       std::shared_ptr<hier::Patch> patch = *pi;
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
       TBOX_ASSERT(tag_data);
 

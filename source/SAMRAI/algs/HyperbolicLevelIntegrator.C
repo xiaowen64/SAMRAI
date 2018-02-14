@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -722,7 +722,7 @@ HyperbolicLevelIntegrator::initializeLevelIntegrator(
    const std::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg_strategy)
 {
    d_gridding_alg =
-      POINTER_CAST<mesh::GriddingAlgorithm, mesh::GriddingAlgorithmStrategy>(
+      SAMRAI_SHARED_PTR_CAST<mesh::GriddingAlgorithm, mesh::GriddingAlgorithmStrategy>(
          gridding_alg_strategy);
 
    TBOX_ASSERT(d_gridding_alg);
@@ -2019,7 +2019,7 @@ HyperbolicLevelIntegrator::registerVariable(
 
          if (d_flux_is_face) {
             std::shared_ptr<pdat::FaceDataFactory<double> > fdf(
-               POINTER_CAST<pdat::FaceDataFactory<double>,
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
             fluxsum.reset(new pdat::OuterfaceVariable<double>(
@@ -2029,7 +2029,7 @@ HyperbolicLevelIntegrator::registerVariable(
             d_flux_face_registered = true;
          } else {
             std::shared_ptr<pdat::SideDataFactory<double> > sdf(
-               POINTER_CAST<pdat::SideDataFactory<double>,
+               SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
             fluxsum.reset(new pdat::OutersideVariable<double>(
@@ -2146,14 +2146,14 @@ HyperbolicLevelIntegrator::preprocessFluxData(
 
                if (d_flux_is_face) {
                   std::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
-                     POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                         patch->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
                   std::shared_ptr<pdat::OutersideData<double> > fsum_data(
-                     POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                         patch->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
@@ -2248,10 +2248,10 @@ HyperbolicLevelIntegrator::postprocessFluxData(
 
             if (d_flux_is_face) {
                fflux_data =
-                  POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                      flux_data);
                ffsum_data =
-                  POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                      fsum_data);
 
                TBOX_ASSERT(fflux_data && ffsum_data);
@@ -2260,10 +2260,10 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                flux_ghosts = fflux_data->getGhostCellWidth();
             } else {
                sflux_data =
-                  POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                      flux_data);
                sfsum_data =
-                  POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                      fsum_data);
 
                TBOX_ASSERT(sflux_data && sfsum_data);

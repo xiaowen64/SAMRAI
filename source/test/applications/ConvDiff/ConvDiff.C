@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in convection
  *                diffusion example.
  *
@@ -386,7 +386,7 @@ void ConvDiff::initializeDataOnPatch(
    if (initial_time) {
 
       const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 
@@ -395,7 +395,7 @@ void ConvDiff::initializeDataOnPatch(
       const double* xhi = patch_geom->getXUpper();
 
       std::shared_ptr<pdat::CellData<double> > primitive_vars(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
       TBOX_ASSERT(primitive_vars);
@@ -449,7 +449,7 @@ double ConvDiff::computeStableDtOnPatch(
    NULL_USE(time);
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -504,15 +504,15 @@ void ConvDiff::singleStep(
 {
 
    std::shared_ptr<pdat::CellData<double> > prim_var_updated(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
    std::shared_ptr<pdat::CellData<double> > prim_var_fixed(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorContext())));
 
    std::shared_ptr<pdat::CellData<double> > function_eval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_function_eval, getInteriorContext())));
    TBOX_ASSERT(prim_var_updated);
    TBOX_ASSERT(prim_var_fixed);
@@ -523,7 +523,7 @@ void ConvDiff::singleStep(
    const hier::Index ilast = pbox.upper();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -616,10 +616,10 @@ void ConvDiff::tagGradientDetectorCells(
    NULL_USE(uses_richardson_extrapolation_too);
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    std::shared_ptr<pdat::CellData<double> > primitive_vars(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(primitive_vars);
@@ -669,7 +669,7 @@ void ConvDiff::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    std::shared_ptr<pdat::CellData<double> > primitive_vars(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext())));
 
    TBOX_ASSERT(primitive_vars);
@@ -1212,7 +1212,7 @@ void ConvDiff::checkBoundaryData(
 #endif
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
@@ -964,7 +964,7 @@ BalanceUtilities::computeNonUniformWorkload(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*patch, box);
 
    const std::shared_ptr<pdat::CellData<double> > work_data(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch->getPatchData(wrk_indx)));
 
    TBOX_ASSERT(work_data);
@@ -1834,7 +1834,7 @@ BalanceUtilities::computeLoadBalanceEfficiency(
            ip != level->end(); ++ip) {
          const std::shared_ptr<hier::Patch>& patch = *ip;
          std::shared_ptr<pdat::CellData<double> > weight(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(workload_data_id)));
 
          TBOX_ASSERT(weight);

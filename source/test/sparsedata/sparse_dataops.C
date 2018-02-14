@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -219,10 +219,10 @@ int main(
 
             // access sample data from patch
             std::shared_ptr<LSparseData> sample1(
-               POINTER_CAST<LSparseData, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                   patch->getPatchData(data_id1)));
             std::shared_ptr<LSparseData> sample2(
-               POINTER_CAST<LSparseData, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                   patch->getPatchData(data_id2)));
             TBOX_ASSERT(sample1);
             TBOX_ASSERT(sample2);
@@ -355,7 +355,7 @@ checkIterators(
          const std::shared_ptr<hier::Patch>& patch = *ip;
 
          std::shared_ptr<LSparseData> sample(
-            POINTER_CAST<LSparseData, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                patch->getPatchData(data_id1)));
          TBOX_ASSERT(sample);
 
@@ -418,13 +418,13 @@ bool checkCopyOps(
            ip != level->end(); ++ip) {
          const std::shared_ptr<hier::Patch>& patch = *ip;
          std::shared_ptr<LSparseData> control(
-            POINTER_CAST<LSparseData, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                patch->getPatchData(data_id1)));
          std::shared_ptr<LSparseData> copiedTo(
-            POINTER_CAST<LSparseData, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                patch->getPatchData(data_id1)));
          std::shared_ptr<LSparseData> copiedFrom(
-            POINTER_CAST<LSparseData, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                patch->getPatchData(data_id2)));
          TBOX_ASSERT(control);
          TBOX_ASSERT(copiedTo);
@@ -497,7 +497,7 @@ bool checkRemoveOps(
          const std::shared_ptr<hier::Patch>& patch = *ip;
 
          std::shared_ptr<LSparseData> sample(
-            POINTER_CAST<LSparseData, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<LSparseData, hier::PatchData>(
                patch->getPatchData(data_id1)));
          TBOX_ASSERT(sample);
 

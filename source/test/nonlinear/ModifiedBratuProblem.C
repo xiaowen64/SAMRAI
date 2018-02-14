@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Class containing numerical routines for modified Bratu problem
  *
  ************************************************************************/
@@ -404,7 +404,7 @@ void ModifiedBratuProblem::setVectorWeights(
            p != level->end(); ++p) {
          const std::shared_ptr<hier::Patch>& patch = *p;
          std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geometry);
          const double* dx = patch_geometry->getDx();
@@ -416,7 +416,7 @@ void ModifiedBratuProblem::setVectorWeights(
             cell_vol *= dx[2];
          }
          std::shared_ptr<pdat::CellData<double> > w(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_weight_id)));
          TBOX_ASSERT(w);
          w->fillAll(cell_vol);
@@ -459,7 +459,7 @@ void ModifiedBratuProblem::setVectorWeights(
                hier::Box intersection = coarse_box * patch->getBox();
                if (!intersection.empty()) {
                   std::shared_ptr<pdat::CellData<double> > w(
-                     POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                         patch->getPatchData(d_weight_id)));
                   TBOX_ASSERT(w);
                   w->fillAll(0.0, intersection);
@@ -519,10 +519,10 @@ void ModifiedBratuProblem::setInitialGuess(
             const std::shared_ptr<hier::Patch>& patch = *p;
 
             std::shared_ptr<pdat::CellData<double> > y_cur(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_current)));
             std::shared_ptr<pdat::CellData<double> > y_new(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_new)));
             TBOX_ASSERT(y_cur);
             TBOX_ASSERT(y_new);
@@ -533,7 +533,7 @@ void ModifiedBratuProblem::setInitialGuess(
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
             std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(patch_geometry);
             const double* dx = patch_geometry->getDx();
@@ -543,7 +543,7 @@ void ModifiedBratuProblem::setInitialGuess(
             const hier::Index ilast = patch->getBox().upper();
 
             std::shared_ptr<pdat::SideData<double> > diffusion(
-               POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                   patch->getPatchData(d_diffusion_coef, d_scratch)));
             TBOX_ASSERT(diffusion);
 
@@ -581,10 +581,10 @@ void ModifiedBratuProblem::setInitialGuess(
             const std::shared_ptr<hier::Patch>& patch = *p;
 
             std::shared_ptr<pdat::CellData<double> > y_cur(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_current)));
             std::shared_ptr<pdat::CellData<double> > y_new(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(d_solution, d_new)));
             TBOX_ASSERT(y_cur);
             TBOX_ASSERT(y_new);
@@ -595,7 +595,7 @@ void ModifiedBratuProblem::setInitialGuess(
             patch->getPatchData(d_solution, d_scratch)->setTime(d_new_time);
 
             std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(patch_geometry);
             const double* dx = patch_geometry->getDx();
@@ -605,7 +605,7 @@ void ModifiedBratuProblem::setInitialGuess(
             const hier::Index ilast = patch->getBox().upper();
 
             std::shared_ptr<pdat::SideData<double> > diffusion(
-               POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                   patch->getPatchData(d_diffusion_coef, d_scratch)));
             TBOX_ASSERT(diffusion);
             if (d_dim == tbox::Dimension(1)) {
@@ -723,17 +723,17 @@ bool ModifiedBratuProblem::checkNewSolution(
          const hier::Index ifirst = patch->getBox().lower();
          const hier::Index ilast = patch->getBox().upper();
          std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
          const double* xlo = patch_geom->getXLower();
          const double* xhi = patch_geom->getXUpper();
          std::shared_ptr<pdat::CellData<double> > u(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_new)));
          std::shared_ptr<pdat::CellData<double> > w(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_weight_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(w);
@@ -809,10 +809,10 @@ void ModifiedBratuProblem::updateSolution(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          std::shared_ptr<pdat::CellData<double> > y_cur(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_current)));
          std::shared_ptr<pdat::CellData<double> > y_new(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_new)));
          TBOX_ASSERT(y_cur);
          TBOX_ASSERT(y_new);
@@ -901,7 +901,7 @@ void ModifiedBratuProblem::initializeLevelData(
       if (initial_time) {
 
          std::shared_ptr<pdat::CellData<double> > u(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_current)));
          TBOX_ASSERT(u);
          u->fillAll(0.0);
@@ -909,7 +909,7 @@ void ModifiedBratuProblem::initializeLevelData(
       }
 
       std::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
       TBOX_ASSERT(patch_geometry);
       const double* dx = patch_geometry->getDx();
@@ -919,7 +919,7 @@ void ModifiedBratuProblem::initializeLevelData(
       const hier::Index ilast = patch->getBox().upper();
 
       std::shared_ptr<pdat::SideData<double> > diffusion(
-         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch->getPatchData(d_diffusion_coef, d_scratch)));
       TBOX_ASSERT(diffusion);
       if (d_dim == tbox::Dimension(1)) {
@@ -1296,7 +1296,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
@@ -1304,16 +1304,16 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const hier::Index ilast = patch->getBox().upper();
 
          std::shared_ptr<pdat::CellData<double> > u(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
          std::shared_ptr<pdat::SideData<double> > diffusion(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
          std::shared_ptr<pdat::SideData<double> > flux(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
          std::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
-            POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                patch->getPatchData(d_coarse_fine_flux_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(diffusion);
@@ -1502,7 +1502,7 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -1513,25 +1513,25 @@ void ModifiedBratuProblem::evaluateBratuFunction(
          const hier::Index ilast = patch->getBox().upper();
 
          std::shared_ptr<pdat::CellData<double> > u(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
          std::shared_ptr<pdat::CellData<double> > u_cur(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_current)));
          std::shared_ptr<pdat::CellData<double> > source(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_source_term, d_scratch)));
          std::shared_ptr<pdat::CellData<double> > exponential(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exponential_term, d_scratch)));
          std::shared_ptr<pdat::SideData<double> > flux(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
          std::shared_ptr<pdat::CellData<double> > fcur(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                f->getComponentPatchData(0, *patch)));
          std::shared_ptr<pdat::CellData<double> > xdat(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                x->getComponentPatchData(0, *patch)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(u_cur);
@@ -1760,22 +1760,22 @@ ModifiedBratuProblem::jacobianTimesVector(
          const hier::Index ilast = patch->getBox().upper();
 
          std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
          std::shared_ptr<pdat::CellData<double> > vdat(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_soln_scratch_id)));
          std::shared_ptr<pdat::SideData<double> > diffusion(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
          std::shared_ptr<pdat::SideData<double> > flux(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
          std::shared_ptr<pdat::OutersideData<double> > coarse_fine_flux(
-            POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                patch->getPatchData(d_coarse_fine_flux_id)));
          TBOX_ASSERT(vdat);
          TBOX_ASSERT(diffusion);
@@ -1976,7 +1976,7 @@ ModifiedBratuProblem::jacobianTimesVector(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -1986,16 +1986,16 @@ ModifiedBratuProblem::jacobianTimesVector(
          const double* dx = patch_geom->getDx();
 
          std::shared_ptr<pdat::CellData<double> > jac_a(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_jacobian_a_id)));
          std::shared_ptr<pdat::CellData<double> > Jvdat(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                Jv->getComponentPatchData(0, *patch)));
          std::shared_ptr<pdat::CellData<double> > vdat(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_soln_scratch_id)));
          std::shared_ptr<pdat::SideData<double> > flux(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_flux_id)));
          TBOX_ASSERT(jac_a);
          TBOX_ASSERT(Jvdat);
@@ -2110,7 +2110,7 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -2128,23 +2128,23 @@ void ModifiedBratuProblem::setupBratuPreconditioner(
             cell_vol *= dx[2];
          }
          std::shared_ptr<pdat::CellData<double> > u(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
          std::shared_ptr<pdat::CellData<double> > exponential(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exponential_term, d_scratch)));
          std::shared_ptr<pdat::CellData<double> > source(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_source_term, d_scratch)));
          std::shared_ptr<pdat::SideData<double> > diffusion(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
 
          std::shared_ptr<pdat::CellData<double> > a(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_precond_a_id)));
          std::shared_ptr<pdat::FaceData<double> > b(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(d_precond_b_id)));
 
          TBOX_ASSERT(exponential);
@@ -2393,10 +2393,10 @@ int ModifiedBratuProblem::applyBratuPreconditioner(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          std::shared_ptr<pdat::CellData<double> > src_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_soln_scratch_id)));
          std::shared_ptr<pdat::CellData<double> > dst_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(z_indx)));
          TBOX_ASSERT(src_data);
          TBOX_ASSERT(dst_data);
@@ -2443,7 +2443,7 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
          const std::shared_ptr<hier::Patch>& patch = *p;
 
          const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
 
@@ -2462,23 +2462,23 @@ void ModifiedBratuProblem::evaluateBratuJacobian(
          }
 
          std::shared_ptr<pdat::CellData<double> > u(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_solution, d_scratch)));
          std::shared_ptr<pdat::CellData<double> > exponential(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exponential_term, d_scratch)));
          std::shared_ptr<pdat::CellData<double> > source(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_source_term, d_scratch)));
          std::shared_ptr<pdat::SideData<double> > diffusion(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch->getPatchData(d_diffusion_coef, d_scratch)));
 
          std::shared_ptr<pdat::CellData<double> > a(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_jacobian_a_id)));
          std::shared_ptr<pdat::FaceData<double> > b(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(d_jacobian_b_id)));
          TBOX_ASSERT(u);
          TBOX_ASSERT(exponential);
@@ -2588,7 +2588,7 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    std::shared_ptr<pdat::CellData<double> > u(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_soln_scratch_id)));
    TBOX_ASSERT(u);
 
@@ -2600,7 +2600,7 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
     */
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const std::vector<hier::BoundaryBox>& boundary =
@@ -2810,7 +2810,7 @@ void ModifiedBratuProblem::getLevelEdges(
     */
 
    std::shared_ptr<geom::CartesianPatchGeometry> geometry(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch->getPatchGeometry()));
    TBOX_ASSERT(geometry);
    const std::vector<hier::BoundaryBox>& boundary_boxes =
@@ -2833,7 +2833,7 @@ void ModifiedBratuProblem::correctLevelFlux(
       const std::shared_ptr<hier::Patch>& patch = *p;
       const hier::Box box = patch->getBox();
       std::shared_ptr<pdat::SideData<double> > flux_data(
-         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch->getPatchData(d_flux_id)));
       TBOX_ASSERT(flux_data);
 
@@ -2874,10 +2874,10 @@ void ModifiedBratuProblem::correctPatchFlux(
 {
    const hier::Box box = patch->getBox();
    std::shared_ptr<pdat::SideData<double> > flux_data(
-      POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
          patch->getPatchData(d_flux_id)));
    const std::shared_ptr<geom::CartesianPatchGeometry> geometry(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch->getPatchGeometry()));
    TBOX_ASSERT(flux_data);
    TBOX_ASSERT(geometry);

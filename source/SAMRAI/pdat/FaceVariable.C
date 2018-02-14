@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -52,7 +52,7 @@ template<class TYPE>
 int FaceVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<FaceDataFactory<TYPE> > factory(
-      POINTER_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

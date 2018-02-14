@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -119,7 +119,7 @@ void NodeMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::NodeData<double> > node_data(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
 
@@ -173,7 +173,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::NodeData<double> > node_data(
-         POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
@@ -308,7 +308,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::NodeData<double> > node_data(
-         POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
@@ -390,7 +390,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   std::shared_ptr<pdat::NodeData<double> > sing_data(
-                     POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -521,7 +521,7 @@ bool NodeMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       std::shared_ptr<pdat::NodeData<double> > node_data(
-         POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
       int depth = node_data->getDepth();

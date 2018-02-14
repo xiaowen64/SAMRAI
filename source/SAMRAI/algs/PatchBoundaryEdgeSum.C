@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing edge data at patch boundaries
  *
  ************************************************************************/
@@ -135,7 +135,7 @@ PatchBoundaryEdgeSum::registerSum(
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    std::shared_ptr<pdat::EdgeDataFactory<double> > edge_factory(
-      POINTER_CAST<pdat::EdgeDataFactory<double>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::EdgeDataFactory<double>, hier::PatchDataFactory>(
          var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id)));
 
    TBOX_ASSERT(edge_factory);
@@ -334,10 +334,10 @@ PatchBoundaryEdgeSum::doLevelSum(
       int array_size = static_cast<int>(d_user_edge_data_id.size());
       for (int i = 0; i < array_size; ++i) {
          std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(d_user_edge_data_id[i])));
          std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-            POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                patch->getPatchData(d_oedge_src_id[i])));
 
          TBOX_ASSERT(edge_data);
@@ -357,10 +357,10 @@ PatchBoundaryEdgeSum::doLevelSum(
       int array_size = static_cast<int>(d_user_edge_data_id.size());
       for (int i = 0; i < array_size; ++i) {
          std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(d_user_edge_data_id[i])));
          std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-            POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                patch->getPatchData(d_oedge_dst_id[i])));
 
          TBOX_ASSERT(edge_data);

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
@@ -83,7 +83,7 @@ GhostCellRobinBcCoefs::setGhostDataId(
                                   << " does not correspond to any variable.");
       }
       std::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
-         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
       TBOX_ASSERT(cell_variable_ptr);
    }
 }
@@ -116,7 +116,7 @@ GhostCellRobinBcCoefs::setBcCoefs(
    t_set_bc_coefs->start();
 
    std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
 
    TBOX_ASSERT(patch_geom);
@@ -162,7 +162,7 @@ GhostCellRobinBcCoefs::setBcCoefs(
                                   << d_ghost_data_id << " does not exist.");
       }
       std::shared_ptr<pdat::CellData<double> > cell_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(patch_data));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(patch_data));
 
       TBOX_ASSERT(cell_data);
 

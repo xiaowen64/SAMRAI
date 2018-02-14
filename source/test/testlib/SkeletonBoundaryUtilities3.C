@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 3D Skeleton boundary data
  *
  ************************************************************************/
@@ -607,7 +607,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       patch.getPatchGeometry());
 
    std::shared_ptr<pdat::CellData<double> > vardata(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 

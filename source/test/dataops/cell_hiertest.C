@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test cell-centered patch data ops
  *
  ************************************************************************/
@@ -248,7 +248,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -257,7 +257,7 @@ int main(
                cell_vol *= dx[i];
             }
             std::shared_ptr<pdat::CellData<double> > cvdata(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
@@ -279,7 +279,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<pdat::CellData<double> > cvdata(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
 
             TBOX_ASSERT(cvdata);
@@ -530,7 +530,7 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         cdata = POINTER_CAST<pdat::CellData<double>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                             hier::PatchData>(patch->getPatchData(cvindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
@@ -549,7 +549,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         cdata = POINTER_CAST<pdat::CellData<double>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                             hier::PatchData>(patch->getPatchData(cvindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
@@ -751,7 +751,7 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::CellData<double> > cvdata(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);
