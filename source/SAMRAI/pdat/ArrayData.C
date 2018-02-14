@@ -21,6 +21,7 @@
 #include "SAMRAI/pdat/SumOperation.h"
 #include "SAMRAI/tbox/ForAll.h"
 
+#include "SAMRAI/pdat/ManagedAllocator.h"
 #if defined(HAVE_CUDA)
 #include <cuda_runtime_api.h>
 #if defined(HAVE_CNMEM)
@@ -95,6 +96,9 @@ ArrayData<TYPE>::ArrayData(
 #if defined(HAVE_CNMEM)
    appu::MemoryPool* pool = appu::MemoryPool::getMemoryPool();
    d_array = static_cast<TYPE*>(pool->alloc(sizeof(TYPE) * d_depth * d_offset));
+#elif defined(ENABLE_SIMPOOL)
+   DynamicPoolAllocator<UMAllocator> &m = DynamicPoolAllocator<UMAllocator>::getInstance();
+   d_array = static_cast<TYPE*>(m.allocate(sizeof(TYPE) * d_depth * d_offset));
 #else
    cudaMallocManaged((void**)&d_array, sizeof(TYPE) * d_depth * d_offset);
 #endif
@@ -112,6 +116,9 @@ ArrayData<TYPE>::~ArrayData()
 #if defined(HAVE_CNMEM)
   appu::MemoryPool* pool = appu::MemoryPool::getMemoryPool();
   pool->free(d_array);
+#elif defined(ENABLE_SIMPOOL)
+   DynamicPoolAllocator<UMAllocator> &m = DynamicPoolAllocator<UMAllocator>::getInstance();
+   m.deallocate(d_array);
 #else
   cudaFree(d_array);
 #endif
@@ -674,7 +681,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    packBuffer(&buffer[0], hier::Box::shift(dest_box, -src_shift));
 
@@ -691,7 +698,8 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
+
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -715,7 +723,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    hier::Box pack_box(dest_box);
    transformation.inverseTransform(pack_box);
@@ -735,7 +743,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -776,7 +784,7 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    stream.unpack(&buffer[0], size);
    unpackBuffer(&buffer[0], dest_box);
@@ -794,7 +802,7 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    stream.unpack(&buffer[0], size);
 
@@ -831,7 +839,7 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    stream.unpack(&buffer[0], size);
    unpackBufferAndSum(&buffer[0], dest_box);
@@ -849,7 +857,7 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
+   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
 
    stream.unpack(&buffer[0], size);
 
