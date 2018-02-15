@@ -163,6 +163,8 @@ class Stencil :
     hier::IntVector d_nghosts;
 
     boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
+
+    double d_tag_threshold;
 };
 
 #endif

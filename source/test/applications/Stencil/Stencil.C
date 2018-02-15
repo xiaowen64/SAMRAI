@@ -2,7 +2,14 @@
 
 #include "SAMRAI/pdat/CellData.h"
 
+#include "SAMRAI/geom/CartesianPatchGeometry.h"
+#include "SAMRAI/appu/CartesianBoundaryDefines.h"
+
 #include "SAMRAI/tbox/RAJA_API.h"
+
+#define MAX(a, b) fmax(a, b)
+#define MIN(a, b) fmin(a, b)
+#define ABS(a) fabs(a)
 
 template <typename T, int DIM>
 struct CellView : 
@@ -26,14 +33,16 @@ Stencil::Stencil(
   d_rho_variables(),
   d_nghosts(hier::IntVector(dim, 2))
 {
-  const int num_variables = input_db.getIntegerWithDefault("num_variables", 1);
+  const int num_variables = input_db->getIntegerWithDefault("num_variables", 1);
+
+  d_tag_threshold = input_db->getDoubleWithDefault("tag_threshold", 0.5);
 
   for (int i = 0; i < num_variables; ++i) {
     std::ostringstream oss;
     oss << "rho_" << i;
     std::string var_name = oss.str();
 
-    d_rho_variables.push_back(new pdat::CellVariable<double>(dim, var_name, 1));
+    d_rho_variables.push_back( boost::make_shared<pdat::CellVariable<double> >(dim, var_name, 1));
   }
 }
 
@@ -53,7 +62,7 @@ Stencil::registerModelVariables(
     hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
     d_visit_writer->registerPlotQuantity(
-      rho_var.getName(),
+      rho_var->getName(),
        "SCALAR",
        vardb->mapVariableAndContextToIndex(
           rho_var, integrator->getPlotContext()));
@@ -73,6 +82,10 @@ Stencil::initializeDataOnPatch(
 
     tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __host__ __device__ (int k, int j) {
       rho(j,k) = 0.0;
+
+      if (j == 20) {
+        rho(j,k) = 10.0;
+        }
     });
   }
 }
@@ -95,13 +108,15 @@ Stencil::computeFluxesOnPatch(
   const double time,
   const double dt)
 {
-  CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho, getDataContext())));
+  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+    CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
-  const int level = patch.getPatchLevelNumber();
+    const int level = patch.getPatchLevelNumber();
 
-  tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __host__ __device__ (int k, int j) {
-    rho(j,k) = level;
-  });
+    tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __host__ __device__ (int k, int j) {
+      rho(j,k) = level;
+    });
+  }
 }
 
 void
@@ -130,16 +145,16 @@ Stencil::tagGradientDetectorCells(
 
   CellView<int, 2> tags(BOOST_CAST<pdat::CellData<int> >(patch.getPatchData(tag_index)));
 
-  Real tag_threshold = d_tag_threshold;
+  double tag_threshold = d_tag_threshold;
 
   tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __device__ (int k, int j) {
-    Real d2x = ABS(rho(j+1,k) - 2.0*rho(j,k) + rho(j-1,k));
-    Real d2y = ABS(rho(j,k+1) - 2.0*rho(j,k) + rho(j,k-1));
+    double d2x = ABS(rho(j+1,k) - 2.0*rho(j,k) + rho(j-1,k));
+    double d2y = ABS(rho(j,k+1) - 2.0*rho(j,k) + rho(j,k-1));
 
-    Real dxy = ABS(rho(j+1,k+1) - 2.0*rho(j,k) + rho(j-1,k-1));
-    Real dyx = ABS(rho(j-1,k+1) - 2.0*rho(j,k) + rho(j+1,k-1));
+    double dxy = ABS(rho(j+1,k+1) - 2.0*rho(j,k) + rho(j-1,k-1));
+    double dyx = ABS(rho(j-1,k+1) - 2.0*rho(j,k) + rho(j+1,k-1));
 
-    Real dd = MAX(d2x,MAX(d2y,MAX(dxy,dyx)));
+    double dd = MAX(d2x,MAX(d2y,MAX(dxy,dyx)));
 
     if (dd > tag_threshold) {
       tags(j,k) = 1;
@@ -156,8 +171,7 @@ Stencil::setPhysicalBoundaryConditions(
   const int depth = ghost_width_to_fill[0];
 
   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      SHARED_PTR_CAST(geom::CartesianPatchGeometry,
-        patch.getPatchGeometry()));
+      BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
   const std::vector<hier::BoundaryBox>& edge_bdry 
     = pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
@@ -181,7 +195,7 @@ Stencil::setPhysicalBoundaryConditions(
       hier::Box boundary_box(pgeom->getBoundaryFillBox(
             edge_bdry[i],
             patch.getBox(),
-            ghost_width_to_fill);
+            ghost_width_to_fill));
 
           switch(edge) {
           case (BdryLoc::YLO) :
