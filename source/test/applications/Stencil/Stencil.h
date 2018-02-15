@@ -153,9 +153,9 @@ class Stencil :
 
     const tbox::Dimension d_dim;
 
-    boost::shared_ptr<pdat::CellVariable<double> > d_rho;
+    std::vector<boost::shared_ptr<pdat::CellVariable<double> > > d_rho_variables;
 
-   hier::IntVector d_nghosts;
+    hier::IntVector d_nghosts;
 };
 
 #endif

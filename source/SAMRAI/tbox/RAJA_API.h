@@ -54,6 +54,7 @@ inline void for_all(int begin, int end, loop_body&& body) {
 }
 
 
+
 /*
  * for_all over hier::Box
  */
@@ -68,6 +69,17 @@ inline void for_all1(const hier::Box& box, loop_body body)
 
    RAJA::forallN< typename detail::policy_traits<policy>::raja_1d_policy >(
        RAJA::RangeSegment(ifirst(0), ilast(0)+1),
+       body);
+}
+
+template<typename policy, typename loop_body>
+inline void for_all1(const hier::Box& box, const int dim, loop_body body)
+{
+  const hier::Index ifirst = box.lower();
+  const hier::Index ilast = box.upper();
+
+   RAJA::forallN< typename detail::policy_traits<policy>::raja_1d_policy >(
+       RAJA::RangeSegment(ifirst(dim), ilast(dim)+1),
        body);
 }
 
