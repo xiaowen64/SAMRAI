@@ -14,7 +14,6 @@ struct CellView :
   }
 };
 
-
 Stencil::Stencil(
         const std::string& name,
         const tbox::Dimension& dim,
@@ -50,6 +49,15 @@ Stencil::registerModelVariables(
         d_grid_geometry,
         "CONSERVATIVE_COARSEN",
         "CONSERVATIVE_LINEAR_REFINE");
+
+    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
+
+    d_visit_writer->registerPlotQuantity(
+      rho_var.getName(),
+       "SCALAR",
+       vardb->mapVariableAndContextToIndex(
+          rho_var, integrator->getPlotContext()));
+
   }
 }
 
@@ -87,7 +95,13 @@ Stencil::computeFluxesOnPatch(
   const double time,
   const double dt)
 {
-  // TODO: do some work
+  CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho, getDataContext())));
+
+  const int level = patch.getPatchLevelNumber();
+
+  tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __host__ __device__ (int k, int j) {
+    rho(j,k) = level;
+  });
 }
 
 void
@@ -263,4 +277,10 @@ Stencil::postprocessRefine(
     int bdry_location_index)
 {
   // no-op
+}
+
+void
+Stencil::registerVisItDataWriter(boost::shared_ptr<appu::VisItDataWriter> viz_writer)
+{
+  d_visit_writer = viz_writer;
 }
