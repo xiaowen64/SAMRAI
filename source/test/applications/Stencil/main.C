@@ -26,6 +26,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
+#include "SAMRAI/mesh/TileClustering.h"
 
 // Headers for basic SAMRAI objects
 
@@ -204,11 +205,11 @@ int main(
       main_db->getStringWithDefault("restart_write_dirname",
           base_name + ".restart");
 
-    bool use_refined_timestepping = true;
+    bool use_refined_timestepping = false;
     if (main_db->keyExists("timestepping")) {
       string timestepping_method = main_db->getString("timestepping");
-      if (timestepping_method == "SYNCHRONIZED") {
-        use_refined_timestepping = false;
+      if (timestepping_method == "REFINED") {
+        use_refined_timestepping = true;
       }
     }
 
@@ -267,13 +268,27 @@ int main(
           hyp_level_integrator.get(),
           input_db->getDatabase("StandardTagAndInitialize")));
 
-    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-        new mesh::BergerRigoutsos(
+    bool use_tile_clustering = false;
+    use_tile_clustering = main_db->getBoolWithDefault(
+        "use_tile_clustering",
+        use_tile_clustering);
+
+    boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
+
+    if (use_tile_clustering) {
+      box_generator = boost::make_shared<mesh::TileClustering>(
           dim,
           input_db->getDatabaseWithDefault(
-            "BergerRigoutsos",
-            boost::shared_ptr<tbox::Database>())));
-    box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+            "TileClustering",
+            boost::shared_ptr<tbox::Database>()));
+    } else {
+      box_generator = boost::make_shared<mesh::BergerRigoutsos>(
+            dim,
+            input_db->getDatabaseWithDefault(
+              "BergerRigoutsos",
+              boost::shared_ptr<tbox::Database>()));
+      //box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+    }
 
     boost::shared_ptr<mesh::CascadePartitioner> load_balancer(
         new mesh::CascadePartitioner(
