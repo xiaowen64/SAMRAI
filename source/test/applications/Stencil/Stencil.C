@@ -6,13 +6,14 @@
 #include "SAMRAI/appu/CartesianBoundaryDefines.h"
 
 #include "SAMRAI/tbox/RAJA_API.h"
+#include "math.h"
 
 #define MAX(a, b) fmax(a, b)
 #define MIN(a, b) fmin(a, b)
 #define ABS(a) fabs(a)
 
 template <typename T, int DIM>
-struct CellView : 
+struct CellView :
   public tbox::ArrayView<DIM, T>
 {
   SAMRAI_INLINE CellView(const boost::shared_ptr<pdat::CellData<T> >& data, int depth = 0)
@@ -29,13 +30,17 @@ Stencil::Stencil(
   algs::HyperbolicPatchStrategy(),
   d_object_name(name),
   d_grid_geometry(grid_geom),
+  d_velocity({1.0,0.0}),
   d_dim(dim),
   d_rho_variables(),
+  d_rho_update(),
   d_nghosts(hier::IntVector(dim, 2))
 {
   const int num_variables = input_db->getIntegerWithDefault("num_variables", 1);
 
   d_tag_threshold = input_db->getDoubleWithDefault("tag_threshold", 0.5);
+
+  d_rho_update = boost::make_shared<pdat::CellVariable<double> >(dim, "update", 1);
 
   for (int i = 0; i < num_variables; ++i) {
     std::ostringstream oss;
@@ -50,9 +55,15 @@ void
 Stencil::registerModelVariables(
   algs::HyperbolicLevelIntegrator* integrator)
 {
-  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+  integrator->registerVariable(
+    d_rho_update,
+    hier::IntVector::getZero(d_dim),
+    algs::HyperbolicLevelIntegrator::TEMPORARY,
+    d_grid_geometry);
+
+    for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
     integrator->registerVariable(
-        rho_var, 
+        rho_var,
         d_nghosts,
         algs::HyperbolicLevelIntegrator::TIME_DEP,
         d_grid_geometry,
@@ -77,17 +88,16 @@ Stencil::initializeDataOnPatch(
   const bool initial_time)
 {
   // initialize
-  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
-    CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
+  if (initial_time) {
+    for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+      CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
-    tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __host__ __device__ (int k, int j) {
-      rho(j,k) = 0.0;
-
-      if (j == 20) {
-        rho(j,k) = 10.0;
-        }
-    });
+      tbox::for_all2<tbox::policy::parallel>(
+        patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) { rho(j,k) = 0.0; }
+        );
+    }
   }
+  // else - do nothing here
 }
 
 double
@@ -96,10 +106,16 @@ Stencil::computeStableDtOnPatch(
   const bool initial_time,
   const double dt_time)
 {
+  const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
-  // TODO: calc dt
+  const double dx = pgeom->getDx()[0];
+  const double dy = pgeom->getDx()[1];
+  const double min_length = dx > dy ? dy : dx;
 
-  return 0.5;
+  double velocity_mag = std::sqrt(d_velocity[0]*d_velocity[0] + d_velocity[1]*d_velocity[1]);
+
+  return min_length / velocity_mag;
 }
 
 void
@@ -107,17 +123,7 @@ Stencil::computeFluxesOnPatch(
   hier::Patch& patch,
   const double time,
   const double dt)
-{
-  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
-    CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
-
-    const int level = patch.getPatchLevelNumber();
-
-    tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __host__ __device__ (int k, int j) {
-      rho(j,k) = level;
-    });
-  }
-}
+{ }
 
 void
 Stencil::conservativeDifferenceOnPatch(
@@ -126,8 +132,37 @@ Stencil::conservativeDifferenceOnPatch(
   const double dt,
   bool at_syncronization)
 {
-  // This function is always a no-op
-  (void) patch;
+  CellView<double, 2> rhoNew(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_update, getDataContext())));
+
+  const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+    BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
+
+  const double dx = pgeom->getDx()[0];
+  const double dy = pgeom->getDx()[1];
+
+  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+    CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
+
+    const double an_abs_lr = ABS(d_velocity[0]) * 0.5;
+    const double an_abs_tb = ABS(d_velocity[1]) * 0.5;
+    const double an_lr = d_velocity[0] * 0.5;
+    const double an_tb = d_velocity[1] * 0.5;
+
+    tbox::for_all2<tbox::policy::parallel>(
+      patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+                        const double FL = (rho(j-1,k) + rho(j,k)) * an_abs_lr + (rho(j-1,k) - rho(j,k)) * an_lr;
+                        const double FR = (rho(j,k) + rho(j+1,k)) * an_abs_lr + (rho(j,k) - rho(j+1,k)) * an_lr;
+                        const double FT = (rho(j,k) + rho(j,k+1)) * an_abs_tb + (rho(j,k) - rho(j,k+1)) * an_tb;
+                        const double FB = (rho(j,k-1) + rho(j,k)) * an_abs_tb + (rho(j,k-1) - rho(j,k)) * an_tb;
+                        rhoNew(j,k) = rho(j,k) - dt * (1.0 / dx * (FR - FL) + 1.0 / dy * (FT - FB));
+                      }
+      );
+    tbox::for_all2<tbox::policy::parallel>(
+      patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+                        rho(j,k) = rhoNew(j,k);
+                      }
+      );
+  }
 }
 
 void
@@ -173,7 +208,7 @@ Stencil::setPhysicalBoundaryConditions(
   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
-  const std::vector<hier::BoundaryBox>& edge_bdry 
+  const std::vector<hier::BoundaryBox>& edge_bdry
     = pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
 
 
@@ -193,64 +228,64 @@ Stencil::setPhysicalBoundaryConditions(
       auto edge = edge_bdry[i].getLocationIndex();
 
       hier::Box boundary_box(pgeom->getBoundaryFillBox(
-            edge_bdry[i],
-            patch.getBox(),
-            ghost_width_to_fill));
+                               edge_bdry[i],
+                               patch.getBox(),
+                               ghost_width_to_fill));
 
-          switch(edge) {
-          case (BdryLoc::YLO) :
-          {
-          tbox::for_all1<tbox::policy::parallel>(
-              boundary_box,
-              0,
-              [=] __host__ __device__ (int j) {
+      switch(edge) {
+      case (BdryLoc::YLO) :
+      {
+        tbox::for_all1<tbox::policy::parallel>(
+          boundary_box,
+          0,
+          [=] SAMRAI_HOST_DEVICE (int j) {
               field(j, ifirst1-1)  = field(j,ifirst1);
-              if (depth == 2) {
+            if (depth == 2) {
               field(j, ifirst1-2)  = field(j,ifirst1+1);
-              }
-              });
-          }
-          break;
-          case (BdryLoc::YHI) :
-          {
-            tbox::for_all1<tbox::policy::parallel>(
-                boundary_box,
-                0,
-                [=] __host__ __device__ (int j) {
-                field(j,ilast1+1) = field(j,ilast1);
-                if (depth == 2) {
-                field(j,ilast1+2) = field(j,ilast1-1);
-                }
-                });
-          }
-          break;
-          case (BdryLoc::XLO) :
-          {
-            tbox::for_all1<tbox::policy::parallel>(
-                boundary_box,
-                1,
-                [=] __host__ __device__ (int k) {
-                field(ifirst0-1,k) = field(ifirst0,k);
-                if (depth == 2) {
-                field(ifirst0-2,k) = field(ifirst0+1,k);
-                }
-                });
-          }
-          break;
-          case (BdryLoc::XHI) :
-          {
-            tbox::for_all1<tbox::policy::parallel>(
-                boundary_box,
-                1,
-                [=] __host__ __device__ (int k) {
-                field(ilast0+1,k) = field(ilast0,k);
-                if (depth == 2) {
-                field(ilast0+2,k) = field(ilast0-1,k);
-                }
-                });
-          }
-          break;
-          }
+            }
+          });
+      }
+      break;
+      case (BdryLoc::YHI) :
+      {
+        tbox::for_all1<tbox::policy::parallel>(
+          boundary_box,
+          0,
+          [=] SAMRAI_HOST_DEVICE (int j) {
+            field(j,ilast1+1) = field(j,ilast1);
+            if (depth == 2) {
+              field(j,ilast1+2) = field(j,ilast1-1);
+            }
+          });
+      }
+      break;
+      case (BdryLoc::XLO) :
+      {
+        tbox::for_all1<tbox::policy::parallel>(
+          boundary_box,
+          1,
+          [=] SAMRAI_HOST_DEVICE (int k) {
+            field(ifirst0-1,k) = 1.0;
+            if (depth == 2) {
+              field(ifirst0-2,k) = 1.0;
+            }
+          });
+      }
+      break;
+      case (BdryLoc::XHI) :
+      {
+        tbox::for_all1<tbox::policy::parallel>(
+          boundary_box,
+          1,
+          [=] SAMRAI_HOST_DEVICE (int k) {
+            field(ilast0+1,k) = field(ilast0,k);
+            if (depth == 2) {
+              field(ilast0+2,k) = field(ilast0-1,k);
+            }
+          });
+      }
+      break;
+      }
     }
   }
 }

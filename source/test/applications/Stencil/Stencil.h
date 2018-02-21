@@ -156,9 +156,12 @@ class Stencil :
 
     boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
+    std::vector<double> d_velocity;
+
     const tbox::Dimension d_dim;
 
     std::vector<boost::shared_ptr<pdat::CellVariable<double> > > d_rho_variables;
+    boost::shared_ptr<pdat::CellVariable<double> > d_rho_update;
 
     hier::IntVector d_nghosts;
 

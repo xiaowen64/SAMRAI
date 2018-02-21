@@ -94,7 +94,7 @@ Main {
 
    // visualization dump parameters
    // frequency at which to dump viz output--zero to turn off
-   viz_dump_interval    = 1
+   viz_dump_interval    = 0
    // directory in which to place viz output
    viz_dump_dirname     = "viz_step2d"
    // number of processors which write to each viz file
