@@ -182,12 +182,23 @@ Stencil::tagGradientDetectorCells(
 
   double tag_threshold = d_tag_threshold;
 
+  const hier::Index ifirst = patch.getBox().lower();
+  const hier::Index ilast = patch.getBox().upper();
+
+  const int ifirst0 = ifirst(0);
+  const int ifirst1 = ifirst(1);
+  const int ilast0 = ilast(0);
+  const int ilast1 = ilast(1);
+
   tbox::for_all2<tbox::policy::parallel>(patch.getBox(), [=] __device__ (int k, int j) {
     double d2x = ABS(rho(j+1,k) - 2.0*rho(j,k) + rho(j-1,k));
     double d2y = ABS(rho(j,k+1) - 2.0*rho(j,k) + rho(j,k-1));
 
-    double dxy = ABS(rho(j+1,k+1) - 2.0*rho(j,k) + rho(j-1,k-1));
-    double dyx = ABS(rho(j-1,k+1) - 2.0*rho(j,k) + rho(j+1,k-1));
+    /*
+     * TODO: fix boundary conditions for diagonal gradient detection
+     */
+    double dxy = 0.0; // ABS(rho(j+1,k+1) - 2.0*rho(j,k) + rho(j-1,k-1));
+    double dyx = 0.0; // ABS(rho(j-1,k+1) - 2.0*rho(j,k) + rho(j+1,k-1));
 
     double dd = MAX(d2x,MAX(d2y,MAX(dxy,dyx)));
 
