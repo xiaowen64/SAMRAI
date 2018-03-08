@@ -26,15 +26,19 @@ struct policy_traits{
 template <>
 struct policy_traits<policy::parallel> {
   typedef RAJA::cuda_exec<128> policy;
+
   typedef RAJA::NestedPolicy< RAJA::ExecList< 
     RAJA::cuda_exec<128> > > raja_1d_policy;
+
   typedef RAJA::NestedPolicy< RAJA::ExecList< 
             RAJA::cuda_threadblock_y_exec<16>, 
             RAJA::cuda_threadblock_x_exec<16> > > raja_2d_policy;
+
   typedef RAJA::NestedPolicy< RAJA::ExecList<
             RAJA::cuda_threadblock_z_exec<8>, 
             RAJA::cuda_threadblock_y_exec<8>, 
             RAJA::cuda_threadblock_x_exec<8> > > raja_3d_policy;
+
 };
 
 struct layout_traits {
@@ -147,7 +151,7 @@ struct ArrayView<1, T>  :
 
    SAMRAI_INLINE ArrayView<2, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
-         &data[depth * (box.size()-1)],
+         &data[depth * (box.size())],
          RAJA::make_permuted_offset_layout(
            std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} }, 
            std::array<RAJA::Index_type, 2>{ {box.upper()[0], box.upper()[1]} },

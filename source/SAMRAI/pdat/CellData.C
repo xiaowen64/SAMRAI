@@ -120,6 +120,18 @@ CellData<TYPE>::getPointer(
 }
 
 template<class TYPE>
+template<int DIM>
+CellData<TYPE>::CellView<DIM>
+CellData<TYPE>::getView(int depth)
+{
+  return CellData<TYPE>::CellView<DIM>(
+      getPointer(0), 
+      getGhostBox(), 
+      depth);
+}
+
+
+template<class TYPE>
 TYPE&
 CellData<TYPE>::operator () (
    const CellIndex& i,

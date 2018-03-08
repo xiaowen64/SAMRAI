@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/RAJA_API.h"
 
 #include "boost/shared_ptr.hpp"
 #include <iostream>
@@ -145,6 +146,17 @@ public:
    const TYPE *
    getPointer(
       int depth = 0) const;
+
+   template <int DIM>
+   struct CellView :
+     public tbox::ArrayView<DIM, TYPE>
+   {
+     using tbox::ArrayView<DIM, TYPE>::ArrayView;
+   };
+
+   template <int DIM>
+   CellView<DIM>
+   getView(int depth = 0);
 
    /*!
     * @brief Return reference to cell data entry corresponding

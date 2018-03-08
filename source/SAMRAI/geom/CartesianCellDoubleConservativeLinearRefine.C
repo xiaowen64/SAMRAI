@@ -16,6 +16,13 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/RAJA_API.h"
+
+#define MAX(a, b) (((b) > (a)) ? (b) : (a))
+#define MIN(a, b) (((b) < (a)) ? (b) : (a))
+#define ABS abs
+#define SQRT sqrt
+#define COPYSIGN copysign
 
 /*
  *************************************************************************
@@ -173,11 +180,18 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index& ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(dim, 0);
-   std::vector<double> diff0(cgbox.numberCells(0) + 1);
-   pdat::CellData<double> slope0(cgbox, 1, tmp_ghosts);
+
+
+   SAMRAI::hier::Box diff_box = coarse_box;
+   diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
+
+   pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts);
+   pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts);
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
+         std::vector<double> diff0(cgbox.numberCells(0) + 1);
+
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
@@ -188,9 +202,69 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            &diff0[0], slope0.getPointer());
+            &diff0[0], slope.getPointer());
       } else if ((dim == tbox::Dimension(2))) {
 
+#if defined(HAVE_RAJA)
+      pdat::CellData<double>::CellView<2> fine_array = fdata->getView<2>(d);
+      pdat::CellData<double>::CellView<2> coarse_array = cdata->getView<2>(d);
+
+      pdat::CellData<double>::CellView<2> diff0 = diff.getView<2>(0);
+      pdat::CellData<double>::CellView<2> diff1 = diff.getView<2>(1);
+
+      pdat::CellData<double>::CellView<2> slope0 = slope.getView<2>(0);
+      pdat::CellData<double>::CellView<2> slope1 = slope.getView<2>(1);
+
+      const double* fdx = fgeom->getDx();
+      const double* cdx = cgeom->getDx();
+
+      const int fdx0 = fdx[0];
+      const int fdx1 = fdx[1];
+      const int cdx0 = cdx[0];
+      const int cdx1 = cdx[1];
+
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+
+      tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+            diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
+            diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
+      });
+
+    tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+          const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
+          const double boundj = 2.0*MIN(ABS(diff0(j+1,k)),ABS(diff0(j,k)));
+
+          if (diff0(j,k)*diff0(j+1,k) > 0.0) {
+            slope0(j,k) = COPYSIGN(MIN(ABS(coef2j),boundj),coef2j)/cdx0;
+          } else {
+            slope0(j,k) = 0.0;
+          }
+
+          const double coef2k = 0.5*(diff1(j,k+1)+diff1(j,k));
+          const double boundk = 2.0*MIN(ABS(diff1(j,k+1)),ABS(diff1(j,k)));
+
+          if (diff1(j,k)*diff1(j,k+1) > 0.0) {
+            slope1(j,k) = COPYSIGN(MIN(ABS(coef2k),boundk),coef2k)/cdx1;
+          } else {
+            slope1(j,k) = 0.0;
+          }
+      });
+
+    tbox::for_all2<tbox::policy::parallel>(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+          const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
+          const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
+
+          const int ir0 = j - ic0*r0;
+          const int ir1 = k - ic1*r1;
+
+          const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+          const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+
+          fine_array(j,k) = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
+      });
+
+#else
          std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
@@ -204,10 +278,12 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            &diff0[0], slope0.getPointer(),
-            &diff1[0], slope1.getPointer());
+            &diff0[0], slope.getPointer(0),
+            &diff1[0], slope.getPointer(1));
+#endif
       } else if ((dim == tbox::Dimension(3))) {
 
+         std::vector<double> diff0(cgbox.numberCells(0) + 1);
          std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
@@ -228,9 +304,9 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            &diff0[0], slope0.getPointer(),
-            &diff1[0], slope1.getPointer(),
-            &diff2[0], slope2.getPointer());
+            &diff0[0], slope.getPointer(0),
+            &diff1[0], slope.getPointer(1),
+            &diff2[0], slope.getPointer(2));
       } else {
          TBOX_ERROR("CartesianCellDoubleConservativeLinearRefine error...\n"
             << "dim > 3 not supported." << std::endl);
