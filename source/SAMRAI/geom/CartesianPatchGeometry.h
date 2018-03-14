@@ -89,6 +89,12 @@ public:
       return d_x_up;
    }
 
+   void
+   putBlueprintCoordsAndTopology(
+      const std::shared_ptr<tbox::Database>& coords_db,
+      const std::shared_ptr<tbox::Database>& topo_db,
+      const hier::Box& box) const;
+
    /**
     * Print CartesianPatchGeometry class data.
     */

@@ -850,6 +850,8 @@ public:
       std::string* data,
       const size_t nelements);
 
+   void toConduitNode(conduit::Node& node);
+
    /**
     * @brief Returns the name of this database.
     *
@@ -914,6 +916,10 @@ private:
    getChildNodeOrExit(
       const std::string& key);
 
+
+   void
+   setConduitDataTypes();
+
    static void
    indentStream(
       std::ostream& os,
@@ -937,6 +943,7 @@ private:
 
    conduit::Node* d_node;
 
+   std::map<std::string, std::shared_ptr<ConduitDatabase> > d_child_dbs;
    std::map<std::string, enum Database::DataType> d_types;
 
    static const int PRINT_DEFAULT;

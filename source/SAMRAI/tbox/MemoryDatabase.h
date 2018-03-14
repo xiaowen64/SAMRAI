@@ -860,6 +860,8 @@ public:
       KeyData* keydata = findKeyData(key);
       return keydata ? keydata->d_accessed : false;
    }
+   void copyDatabase(const std::shared_ptr<Database>& database);
+
 
    /**
     * Print the current database to the specified output stream.  After

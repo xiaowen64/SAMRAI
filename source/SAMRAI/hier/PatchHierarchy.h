@@ -964,6 +964,10 @@ public:
    putBlueprint(
       const std::shared_ptr<tbox::Database>& blueprint_db) const; 
 
+   void
+   putBlueprintCoords(
+      const std::shared_ptr<tbox::Database>& blueprint_db) const;
+
    /*!
     * @brief Read in the entire hierarchy from the restart database.
     *

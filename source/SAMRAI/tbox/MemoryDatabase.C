@@ -1612,6 +1612,116 @@ MemoryDatabase::printDatabase(
    os << "}\n";
 }
 
+void
+MemoryDatabase::copyDatabase(const std::shared_ptr<Database>& database)
+{
+   std::vector<std::string> keys(database->getAllKeys());
+
+   for (std::vector<std::string>::const_iterator k_itr = keys.begin();
+        k_itr != keys.end(); ++k_itr) {
+
+      const std::string& key = *k_itr;
+      Database::DataType my_type = database->getArrayType(key);
+
+      size_t size =  database->getArraySize(key);
+      if (my_type == SAMRAI_DATABASE) {
+         std::shared_ptr<Database> child_db = database->getDatabase(key);
+         std::shared_ptr<MemoryDatabase> new_db =
+            SAMRAI_SHARED_PTR_CAST<MemoryDatabase, Database>(
+               putDatabase(key));
+         new_db->copyDatabase(child_db);
+      } else if (my_type == SAMRAI_BOOL) {
+         if (size == 1) {
+            putBool(key, database->getBool(key));
+         } else if (size % 2 == 0) {
+            bool barray[size];
+            database->getBoolArray(key, barray, size);
+            putBoolArray(key, barray, size);
+         } else {
+            std::vector<bool> bvec(database->getBoolVector(key));
+            putBoolVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_CHAR) {
+         if (size == 1) {
+            putChar(key, database->getChar(key));
+         } else if (size % 2 == 0) {
+            char barray[size];
+            database->getCharArray(key, barray, size);
+            putCharArray(key, barray, size);
+         } else {
+            std::vector<char> bvec(database->getCharVector(key));
+            putCharVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_INT) {
+         if (size == 1) {
+            putInteger(key, database->getInteger(key));
+         } else if (size % 2 == 0) {
+            int barray[size];
+            database->getIntegerArray(key, barray, size);
+            putIntegerArray(key, barray, size);
+         } else {
+            std::vector<int> bvec(database->getIntegerVector(key));
+            putIntegerVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_COMPLEX) {
+         if (size == 1) {
+            putComplex(key, database->getComplex(key));
+         } else if (size % 2 == 0) {
+            dcomplex barray[size];
+            database->getComplexArray(key, barray, size);
+            putComplexArray(key, barray, size);
+         } else {
+            std::vector<dcomplex> bvec(database->getComplexVector(key));
+            putComplexVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_DOUBLE) {
+         if (size == 1) {
+            putDouble(key, database->getDouble(key));
+         } else if (size % 2 == 0) {
+            double barray[size];
+            database->getDoubleArray(key, barray, size);
+            putDoubleArray(key, barray, size);
+         } else {
+            std::vector<double> bvec(database->getDoubleVector(key));
+            putDoubleVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_FLOAT) {
+         if (size == 1) {
+            putFloat(key, database->getFloat(key));
+         } else if (size % 2 == 0) {
+            float barray[size];
+            database->getFloatArray(key, barray, size);
+            putFloatArray(key, barray, size);
+         } else {
+            std::vector<float> bvec(database->getFloatVector(key));
+            putFloatVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_STRING) {
+         if (size == 1) {
+            putString(key, database->getString(key));
+         } else if (size % 2 == 0) {
+            std::string barray[size];
+            database->getStringArray(key, barray, size);
+            putStringArray(key, barray, size);
+         } else {
+            std::vector<std::string> bvec(database->getStringVector(key));
+            putStringVector(key, bvec);
+         }
+      } else if (my_type == SAMRAI_BOX) {
+         if (size == 1) {
+            putDatabaseBox(key, database->getDatabaseBox(key));
+         } else if (size % 2 == 0) {
+            DatabaseBox barray[size];
+            database->getDatabaseBoxArray(key, barray, size);
+            putDatabaseBoxArray(key, barray, size);
+         } else {
+            std::vector<DatabaseBox> bvec(database->getDatabaseBoxVector(key));
+            putDatabaseBoxVector(key, bvec);
+         }
+      }
+   }
+}
+
 }
 }
 
