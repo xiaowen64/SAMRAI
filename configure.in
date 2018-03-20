@@ -1333,6 +1333,22 @@ CASC_AC_LOG_VAR(
 [silo_INCLUDES INC_PATH silo_LIB_PATH silo_LIB_NAME LIB_PATH LIB_NAME])
 
 dnl
+dnl conduit support
+dnl
+AC_LANG_PUSH([C++])
+CASC_SUPPORT_CONDUIT
+if test "${conduit_PREFIX+set}" = set; then
+  SAMRAI_SPLIT_LIBS_STRING(conduit_LIBS,conduit_LIB_PATH,conduit_LIB_NAME)
+  LIB_PATH="$conduit_LIB_PATH $LIB_PATH"
+  LIB_NAME="$conduit_LIB_NAME $LIB_NAME"
+  INC_PATH="$conduit_INCLUDES $INC_PATH"
+  AC_DEFINE([HAVE_CONDUIT],[1],[conduit library is available so use it])
+fi
+CASC_AC_LOG_VAR(
+[conduit_INCLUDES INC_PATH conduit_LIB_PATH conduit_LIB_NAME LIB_PATH LIB_NAME])
+AC_LANG_POP([C++])
+
+dnl
 dnl Set variables for hypre support.
 dnl
 CASC_SUPPORT_HYPRE

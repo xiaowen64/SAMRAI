@@ -72,6 +72,9 @@
 /* HAVE_CMATH_ISNAN */
 #undef HAVE_CMATH_ISNAN
 
+/* conduit library is available so use it */
+#undef HAVE_CONDUIT
+
 /* HAVE_CTIME */
 #undef HAVE_CTIME
 
