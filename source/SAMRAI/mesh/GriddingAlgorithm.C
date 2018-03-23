@@ -839,7 +839,7 @@ GriddingAlgorithm::makeFinerLevel(
           * so if that is the case, we reset it to the default value of 1.
           */
 
-         if (tag_buffer > max_descriptor_ghosts.max()) {
+         if (needResetTagBuffer(max_descriptor_ghosts)) {
             resetTagBufferingData(1);
          }
 
@@ -1673,7 +1673,7 @@ GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
     * greater than any other data managed by the patch descriptor, so if that
     * is the case, we reset it to the default value of 1.
     */
-   if (tag_buffer[tag_ln] > max_descriptor_ghosts.max()) {
+   if (needResetTagBuffer(max_descriptor_ghosts)) {
       resetTagBufferingData(1);
    }
 
@@ -2658,6 +2658,40 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
       d_buf_tag_indx,
       d_buf_tag_indx,
       boost::shared_ptr<hier::RefineOperator>());
+}
+
+/*
+ * *************************************************************************
+ * *************************************************************************
+ */
+bool
+GriddingAlgorithm::needResetTagBuffer(
+   const hier::IntVector& max_ghosts) const
+{
+   bool ret_val = false;
+
+   int buf_max = d_buf_tag_ghosts.max();
+   int ghost_max = max_ghosts.max();
+   if (buf_max > ghost_max) {
+      ret_val = true;
+   } else {
+      int ghost_min = max_ghosts.min();
+
+      if (ghost_min != ghost_max) {
+         const tbox::Dimension& dim = d_hierarchy->getDim();
+         int nblocks = max_ghosts.getNumBlocks();
+
+         for (int b = 0; b < nblocks; ++b) {
+            for (int d = 0; d < dim.getValue(); ++d) {
+               if (d_buf_tag_ghosts[d] > max_ghosts(b,d)) {
+                  ret_val = true;
+                  break;
+               }
+            }
+         }
+      }
+   }
+   return ret_val;
 }
 
 /*
