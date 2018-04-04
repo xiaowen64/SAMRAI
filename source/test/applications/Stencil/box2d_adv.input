@@ -1,4 +1,5 @@
 Stencil {
+  num_variables=10
 }
 
 Main {
@@ -14,7 +15,7 @@ Main {
 
    // visualization dump parameters
    // frequency at which to dump viz output--zero to turn off
-   viz_dump_interval    = 1
+   viz_dump_interval    = 0
    // directory in which to place viz output
    viz_dump_dirname     = "viz_step2d"
    // number of processors which write to each viz file
@@ -22,7 +23,7 @@ Main {
 
    // restart dump parameters
    // frequency at which to dump restart output--zero to turn off
-   restart_interval     = 1
+   restart_interval     = 0
 }
 
 // Refer to tbox::TimerManager for input
@@ -36,7 +37,7 @@ TimerManager{
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry {
-   domain_boxes = [ (0,0) , (50,50) ]
+   domain_boxes = [ (0,0) , (100,100) ]
    x_lo         = 0.e0, 0.e0 // lower end of computational domain.
    x_up         = 1e0, 1e0   // upper end of computational domain.
 }
@@ -56,12 +57,12 @@ PatchHierarchy {
    }
 
    largest_patch_size {
-      level_0 = 32, 32  // largest patch allowed in hierarchy
+      level_0 = 1000, 1000  // largest patch allowed in hierarchy
       // all finer levels will use same values as level_0...
    }
 
    smallest_patch_size {
-      level_0 = 4, 4
+      level_0 = 100, 100
       // all finer levels will use same values as level_0...
    }
 
@@ -91,7 +92,7 @@ TimeRefinementIntegrator {
    start_time            = 0.e0    // initial simulation time
    end_time              = 1.5e0    // final simulation time
    grow_dt               = 2e0     // growth factor for timesteps
-   max_integrator_steps  = 8     // max number of simulation timesteps
+   max_integrator_steps  = 5     // max number of simulation timesteps
 }
 
 // Refer to mesh::TreeLoadBalancer for input

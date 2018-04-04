@@ -21,6 +21,8 @@
 #include "SAMRAI/pdat/SumOperation.h"
 #include "SAMRAI/tbox/ForAll.h"
 
+#include "SAMRAI/tbox/NVTXUtilities.h"
+
 #include "SAMRAI/pdat/ManagedAllocator.h"
 #if defined(HAVE_CUDA)
 #include <cuda_runtime_api.h>
@@ -679,6 +681,7 @@ ArrayData<TYPE>::packStream(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift) const
 {
+  RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
    std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
@@ -687,6 +690,7 @@ ArrayData<TYPE>::packStream(
 
    stream.pack(&buffer[0], size);
 
+  RANGE_POP
 }
 
 template<class TYPE>
@@ -696,6 +700,7 @@ ArrayData<TYPE>::packStream(
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift) const
 {
+  RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
 
@@ -712,6 +717,7 @@ ArrayData<TYPE>::packStream(
 
    stream.pack(&buffer[0], size);
 
+   RANGE_POP
 }
 
 template<class TYPE>
@@ -721,6 +727,7 @@ ArrayData<TYPE>::packStream(
    const hier::Box& dest_box,
    const hier::Transformation& transformation) const
 {
+  RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
    std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
@@ -732,6 +739,7 @@ ArrayData<TYPE>::packStream(
 
    stream.pack(&buffer[0], size);
 
+   RANGE_POP
 }
 
 template<class TYPE>
@@ -741,6 +749,8 @@ ArrayData<TYPE>::packStream(
    const hier::BoxContainer& dest_boxes,
    const hier::Transformation& transformation) const
 {
+  RANGE_PUSH("ArrayData::pack", 2);
+
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
    std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
@@ -759,6 +769,7 @@ ArrayData<TYPE>::packStream(
 
    stream.pack(&buffer[0], size);
 
+    RANGE_POP
 }
 
 /*
@@ -780,6 +791,7 @@ ArrayData<TYPE>::unpackStream(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift)
 {
+  RANGE_PUSH("ArrayData::unpack", 2)
 
    NULL_USE(src_shift);
 
@@ -789,6 +801,7 @@ ArrayData<TYPE>::unpackStream(
    stream.unpack(&buffer[0], size);
    unpackBuffer(&buffer[0], dest_box);
 
+   RANGE_POP
 }
 
 template<class TYPE>
@@ -798,6 +811,7 @@ ArrayData<TYPE>::unpackStream(
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift)
 {
+  RANGE_PUSH("ArrayData::unpack", 2)
 
    NULL_USE(src_shift);
 
@@ -814,6 +828,8 @@ ArrayData<TYPE>::unpackStream(
    }
 
    TBOX_ASSERT(ptr == size);
+
+   RANGE_POP
 }
 
 /*

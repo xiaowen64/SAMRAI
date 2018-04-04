@@ -27,18 +27,29 @@ template <>
 struct policy_traits<policy::parallel> {
   typedef RAJA::cuda_exec<128> policy;
 
-  typedef RAJA::NestedPolicy< RAJA::ExecList< 
-    RAJA::cuda_exec<128> > > raja_1d_policy;
+  typedef 
+    RAJA::KernelPolicy<
+      RAJA::statement::CudaKernel<
+        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<128>, RAJA::statement::Lambda<0> >
+      >
+    > raja_1d_policy;
 
-  typedef RAJA::NestedPolicy< RAJA::ExecList< 
-            RAJA::cuda_threadblock_y_exec<16>, 
-            RAJA::cuda_threadblock_x_exec<16> > > raja_2d_policy;
+  typedef 
+    RAJA::KernelPolicy<
+      RAJA::statement::CudaKernel<
+        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<32>>,
+        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<32>, RAJA::statement::Lambda<0> >
+      >
+    > raja_2d_policy;
 
-  typedef RAJA::NestedPolicy< RAJA::ExecList<
-            RAJA::cuda_threadblock_z_exec<8>, 
-            RAJA::cuda_threadblock_y_exec<8>, 
-            RAJA::cuda_threadblock_x_exec<8> > > raja_3d_policy;
-
+  typedef 
+    RAJA::KernelPolicy<
+      RAJA::statement::CudaKernel<
+        RAJA::statement::For<2, RAJA::cuda_threadblock_exec<8>>,
+        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<8>>,
+        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<8>, RAJA::statement::Lambda<0> >
+      >
+    > raja_3d_policy;
 };
 
 struct layout_traits {
@@ -71,8 +82,8 @@ inline void for_all1(const hier::Box& box, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-   RAJA::forallN< typename detail::policy_traits<policy>::raja_1d_policy >(
-       RAJA::RangeSegment(ifirst(0), ilast(0)+1),
+   RAJA::kernel<typename detail::policy_traits<policy>::raja_1d_policy >(
+       RAJA::make_tuple(RAJA::RangeSegment(ifirst(0), ilast(0)+1)),
        body);
 }
 
@@ -82,8 +93,8 @@ inline void for_all1(const hier::Box& box, const int dim, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-   RAJA::forallN< typename detail::policy_traits<policy>::raja_1d_policy >(
-       RAJA::RangeSegment(ifirst(dim), ilast(dim)+1),
+   RAJA::kernel< typename detail::policy_traits<policy>::raja_1d_policy >(
+       RAJA::make_tuple(RAJA::RangeSegment(ifirst(dim), ilast(dim)+1)),
        body);
 }
 
@@ -93,9 +104,9 @@ inline void for_all2(const hier::Box& box, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-   RAJA::forallN< typename detail::policy_traits<policy>::raja_2d_policy >(
-       RAJA::RangeSegment(ifirst(1), ilast(1)+1),
-       RAJA::RangeSegment(ifirst(0), ilast(0)+1), 
+   RAJA::kernel< typename detail::policy_traits<policy>::raja_2d_policy >(
+       RAJA::make_tuple(RAJA::RangeSegment(ifirst(1), ilast(1)+1),
+         RAJA::RangeSegment(ifirst(0), ilast(0)+1)),
        body);
 }
 
@@ -105,10 +116,10 @@ inline void for_all3(const hier::Box& box, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-  RAJA::forallN< typename detail::policy_traits<policy>::raja_3d_policy >(
-      RAJA::RangeSegment(ifirst(2), ilast(2)+1),
-      RAJA::RangeSegment(ifirst(1), ilast(1)+1),
-      RAJA::RangeSegment(ifirst(0), ilast(0)+1), 
+  RAJA::kernel< typename detail::policy_traits<policy>::raja_3d_policy >(
+      RAJA::make_tuple(RAJA::RangeSegment(ifirst(2), ilast(2)+1),
+        RAJA::RangeSegment(ifirst(1), ilast(1)+1),
+        RAJA::RangeSegment(ifirst(0), ilast(0)+1)),
       body);
 }
 

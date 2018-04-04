@@ -206,6 +206,7 @@ int main(
           base_name + ".restart");
 
     bool use_refined_timestepping = false;
+
     if (main_db->keyExists("timestepping")) {
       string timestepping_method = main_db->getString("timestepping");
       if (timestepping_method == "REFINED") {
@@ -345,10 +346,11 @@ int main(
     tbox::plog << "\nVariable database..." << endl;
     hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-    visit_data_writer->writePlotData(
-        patch_hierarchy,
-        time_integrator->getIntegratorStep(),
-        time_integrator->getIntegratorTime());
+    if ((viz_dump_interval > 0))
+      visit_data_writer->writePlotData(
+          patch_hierarchy,
+          time_integrator->getIntegratorStep(),
+          time_integrator->getIntegratorTime());
 
     // tbox::plog << "\nCheck Linear Advection data... " << endl;
     // linear_advection_model->printClassData(tbox::plog);

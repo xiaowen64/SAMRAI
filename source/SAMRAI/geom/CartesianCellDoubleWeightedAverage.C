@@ -15,6 +15,7 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <float.h>
 #include <math.h>
@@ -101,6 +102,8 @@ CartesianCellDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
+  RANGE_PUSH("WeightedAverage::coarsen", 4);
+
    const tbox::Dimension& dim(fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
@@ -220,6 +223,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
 
       }
    }
+   RANGE_POP
 }
 
 }

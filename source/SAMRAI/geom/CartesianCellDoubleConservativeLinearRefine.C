@@ -17,6 +17,7 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #define MAX(a, b) (((b) > (a)) ? (b) : (a))
 #define MIN(a, b) (((b) < (a)) ? (b) : (a))
@@ -143,6 +144,8 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
+  RANGE_PUSH("ConservativeLinearRefine::refine", 3);
+
    const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
@@ -313,6 +316,8 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
       }
    }
+
+   RANGE_POP
 }
 
 }

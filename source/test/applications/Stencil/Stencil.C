@@ -5,6 +5,8 @@
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/appu/CartesianBoundaryDefines.h"
 
+#include "SAMRAI/tbox/NVTXUtilities.h"
+
 #include "SAMRAI/tbox/RAJA_API.h"
 #include "math.h"
 
@@ -87,6 +89,9 @@ Stencil::initializeDataOnPatch(
   const double data_time,
   const bool initial_time)
 {
+
+  RANGE_PUSH("Stencil::init", 1)
+
   // initialize
   if (initial_time) {
     for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
@@ -98,6 +103,7 @@ Stencil::initializeDataOnPatch(
     }
   }
   // else - do nothing here
+  RANGE_POP
 }
 
 double
@@ -106,6 +112,8 @@ Stencil::computeStableDtOnPatch(
   const bool initial_time,
   const double dt_time)
 {
+  RANGE_PUSH("Stencil::dt", 1);
+
   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
@@ -114,6 +122,8 @@ Stencil::computeStableDtOnPatch(
   const double min_length = dx > dy ? dy : dx;
 
   double velocity_mag = std::sqrt(d_velocity[0]*d_velocity[0] + d_velocity[1]*d_velocity[1]);
+
+  RANGE_POP
 
   return min_length / velocity_mag;
 }
@@ -132,6 +142,8 @@ Stencil::conservativeDifferenceOnPatch(
   const double dt,
   bool at_syncronization)
 {
+  RANGE_PUSH("Stencil::conservativeDifference", 1);
+
   CellView<double, 2> rhoNew(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_update, getDataContext())));
 
   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
@@ -163,6 +175,8 @@ Stencil::conservativeDifferenceOnPatch(
                       }
       );
   }
+
+  RANGE_POP
 }
 
 void
@@ -173,6 +187,7 @@ Stencil::tagGradientDetectorCells(
   const int tag_index,
   const bool uses_richardson_extrapolation_too)
 {
+  RANGE_PUSH("Stencil::tag", 1);
   /*
    * Only need to tag the first variable.
    */
@@ -206,6 +221,8 @@ Stencil::tagGradientDetectorCells(
       tags(j,k) = 1;
     }
   });
+
+  RANGE_POP
 }
 
 void
@@ -214,6 +231,8 @@ Stencil::setPhysicalBoundaryConditions(
   const double fill_time,
   const hier::IntVector& ghost_width_to_fill)
 {
+  RANGE_PUSH("Stencil::boundaries", 1)
+
   const int depth = ghost_width_to_fill[0];
 
   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
@@ -299,6 +318,8 @@ Stencil::setPhysicalBoundaryConditions(
       }
     }
   }
+
+  RANGE_POP
 }
 
 void

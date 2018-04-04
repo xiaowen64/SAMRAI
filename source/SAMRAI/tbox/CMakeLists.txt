@@ -33,6 +33,7 @@ set ( tbox_headers
   MemoryUtilities.h
   MessageStream.h
   NullDatabase.h
+  NVTXUtilities.h
   OpenMPUtilities.h
   ParallelBuffer.h
   Parser.h
@@ -123,6 +124,8 @@ endif ()
 if (ENABLE_MPI)
   list(APPEND tbox_depends_on mpi)
 endif ()
+
+list (APPEND tbox_depends_on /usr/tce/packages/cuda/cuda-9.1.76/lib64/libnvToolsExt.so)
 
 blt_add_library( NAME SAMRAI_tbox
   SOURCES ${tbox_sources}
