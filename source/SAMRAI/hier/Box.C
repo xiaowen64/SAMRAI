@@ -45,7 +45,7 @@ Box::Box(
    d_block_id(BlockId::invalidId()),
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false),
-   d_empty_flag(true)
+   d_empty_flag(EmptyBoxState::BOX_EMPTY)
 {
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
@@ -67,7 +67,7 @@ Box::Box(
    d_block_id(block_id),
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false),
-   d_empty_flag(boost::logic::indeterminate)
+   d_empty_flag(EmptyBoxState::BOX_UNKNOWN)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(lower, upper);
    TBOX_ASSERT(block_id != BlockId::invalidId());
@@ -135,7 +135,7 @@ Box::Box(
    d_block_id(block_id),
    d_id(local_id, owner_rank, periodic_id),
    d_id_locked(false),
-   d_empty_flag(boost::logic::indeterminate)
+   d_empty_flag(EmptyBoxState::BOX_UNKNOWN)
 {
    TBOX_ASSERT(periodic_id.isValid());
 #ifdef BOX_TELEMETRY
@@ -182,7 +182,7 @@ Box::Box(
    d_block_id(BlockId::invalidId()),
    d_id(global_id, periodic_id),
    d_id_locked(false),
-   d_empty_flag(true)
+   d_empty_flag(EmptyBoxState::BOX_EMPTY)
 {
    TBOX_ASSERT(periodic_id.isValid());
 #ifdef BOX_TELEMETRY
@@ -203,7 +203,7 @@ Box::Box(
    d_hi(dim, tbox::MathUtilities<int>::getMin()),
    d_id(box_id),
    d_id_locked(false),
-   d_empty_flag(true)
+   d_empty_flag(EmptyBoxState::BOX_EMPTY)
 {
    TBOX_ASSERT(box_id.getPeriodicId().isValid());
 #ifdef BOX_TELEMETRY
@@ -478,7 +478,7 @@ Box::operator * (
    } else {
       both.d_lo.max(box.d_lo);
       both.d_hi.min(box.d_hi);
-      both.d_empty_flag = boost::logic::indeterminate;
+      both.d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
    }
 
    return both;
@@ -499,7 +499,7 @@ Box::operator *= (
    } else {
       d_lo.max(box.d_lo);
       d_hi.min(box.d_hi);
-      d_empty_flag = boost::logic::indeterminate;
+      d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
    }
 
    return *this;
@@ -522,7 +522,7 @@ Box::intersect(
    } else {
       result.d_lo.max(other.d_lo);
       result.d_hi.min(other.d_hi);
-      result.d_empty_flag = boost::logic::indeterminate;
+      result.d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
    }
 }
 
@@ -579,7 +579,7 @@ Box::operator += (
       } else if (d_block_id == box.d_block_id) {
          d_lo.min(box.d_lo);
          d_hi.max(box.d_hi);
-         d_empty_flag = boost::logic::indeterminate;
+         d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
       } else {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
       }
@@ -616,7 +616,7 @@ Box::shorten(
       } else {
          d_lo(direction) -= ghosts;
       }
-      d_empty_flag = boost::logic::indeterminate;
+      d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
    }
 }
 
@@ -707,7 +707,7 @@ Box::set_Box_from_DatabaseBox(
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
-   d_empty_flag = boost::logic::indeterminate;
+   d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
 }
 
 void
@@ -743,7 +743,7 @@ Box::getFromIntBuffer(
       d_lo(d) = buffer[d];
       d_hi(d) = buffer[dim + d];
    }
-   d_empty_flag = boost::logic::indeterminate;
+   d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
 
 }
 
@@ -767,7 +767,7 @@ Box::getFromMessageStream(
    d_id.getFromMessageStream(msg);
    msg.unpack(&d_lo[0], d_lo.getDim().getValue());
    msg.unpack(&d_hi[0], d_hi.getDim().getValue());
-   d_empty_flag = boost::logic::indeterminate;
+   d_empty_flag = EmptyBoxState::BOX_UNKNOWN;
 }
 
 /*

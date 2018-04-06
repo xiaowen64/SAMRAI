@@ -43,7 +43,6 @@ int main(
    PIO::logAllNodes(log_name);
 
    int fail_count = 0;
-#ifdef HAVE_BOOST_HEADERS
 
    // Need scope for tester object so it will be destroyed
    // and cleaned up before SAMRAI finalize is called.
@@ -121,7 +120,6 @@ int main(
       }
    }
 
-#endif
 
    if (fail_count == 0) {
       tbox::pout << "\nPASSED:  sparse data test" << std::endl;

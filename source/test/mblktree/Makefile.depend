@@ -68,7 +68,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/BalancedDepthFirstTree.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/CommGraphWriter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
