@@ -41,7 +41,7 @@ class BoxContainer;
  * - hasOverlap()
  * - findOverlapBoxes()
  *
- * Except for two static methods and a destructor needed by boost shared_ptr,
+ * Except for two static methods and a destructor needed by shared_ptr,
  * the entire interface is private.
  */
 

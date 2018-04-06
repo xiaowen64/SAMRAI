@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Boost.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 

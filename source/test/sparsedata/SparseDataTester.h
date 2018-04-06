@@ -54,14 +54,8 @@ private:
    static const int DSIZE = 7;
    static const int ISIZE = 3;
 
-#ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> SparseDataType;
-#else
-   // Dummy type declaraion.
-   typedef int SparseDataType;
-#endif
 
-#ifdef HAVE_BOOST_HEADERS
    void
    _fillObject(
       std::shared_ptr<SparseDataType> sparse_data);
@@ -87,7 +81,6 @@ private:
    _getRandomIndex();
 
    std::shared_ptr<SparseDataType> d_sparse_data;
-#endif
 
    bool d_initialized;
    tbox::Dimension d_dim;
