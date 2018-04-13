@@ -7,6 +7,7 @@
  * Description:   An memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
+#ifdef HAVE_CONDUIT
 
 #include "SAMRAI/tbox/ConduitDatabase.h"
 
@@ -1407,201 +1408,6 @@ ConduitDatabase::getChildNodeOrExit(
    return (*d_node)[key];
 }
 
-void
-ConduitDatabase::copyDatabase(const std::shared_ptr<Database>& database)
-{
-   std::vector<std::string> keys(database->getAllKeys());
-
-   for (std::vector<std::string>::const_iterator k_itr = keys.begin();
-        k_itr != keys.end(); ++k_itr) {
-
-      const std::string& key = *k_itr;
-      Database::DataType my_type = database->getArrayType(key);
-
-      size_t size =  database->getArraySize(key);
-      if (my_type == SAMRAI_DATABASE) {
-         std::shared_ptr<Database> child_db = database->getDatabase(key);
-         std::shared_ptr<ConduitDatabase> new_db =
-            SAMRAI_SHARED_PTR_CAST<ConduitDatabase, Database>(
-               putDatabase(key));
-         new_db->copyDatabase(child_db); 
-      } else if (my_type == SAMRAI_BOOL) {
-         if (size == 1) {
-            putBool(key, database->getBool(key));
-         } else if (size % 2 == 0) {
-            bool barray[size];
-            database->getBoolArray(key, barray, size);
-            putBoolArray(key, barray, size);
-         } else {
-            std::vector<bool> bvec(database->getBoolVector(key));
-            putBoolVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_CHAR) {
-         if (size == 1) {
-            putChar(key, database->getChar(key));
-         } else if (size % 2 == 0) {
-            char barray[size];
-            database->getCharArray(key, barray, size);
-            putCharArray(key, barray, size);
-         } else {
-            std::vector<char> bvec(database->getCharVector(key));
-            putCharVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_INT) {
-         if (size == 1) {
-            putInteger(key, database->getInteger(key));
-         } else if (size % 2 == 0) {
-            int barray[size];
-            database->getIntegerArray(key, barray, size);
-            putIntegerArray(key, barray, size);
-         } else {
-            std::vector<int> bvec(database->getIntegerVector(key));
-            putIntegerVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_COMPLEX) {
-         if (size == 1) {
-            putComplex(key, database->getComplex(key));
-         } else if (size % 2 == 0) {
-            dcomplex barray[size];
-            database->getComplexArray(key, barray, size);
-            putComplexArray(key, barray, size);
-         } else {
-            std::vector<dcomplex> bvec(database->getComplexVector(key));
-            putComplexVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_DOUBLE) {
-         if (size == 1) {
-            putDouble(key, database->getDouble(key));
-         } else if (size % 2 == 0) {
-            double barray[size];
-            database->getDoubleArray(key, barray, size);
-            putDoubleArray(key, barray, size);
-         } else {
-            std::vector<double> bvec(database->getDoubleVector(key));
-            putDoubleVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_FLOAT) {
-         if (size == 1) {
-            putFloat(key, database->getFloat(key));
-         } else if (size % 2 == 0) {
-            float barray[size];
-            database->getFloatArray(key, barray, size);
-            putFloatArray(key, barray, size);
-         } else {
-            std::vector<float> bvec(database->getFloatVector(key));
-            putFloatVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_STRING) {
-         if (size == 1) {
-            putString(key, database->getString(key));
-         } else if (size % 2 == 0) {
-            std::string barray[size];
-            database->getStringArray(key, barray, size);
-            putStringArray(key, barray, size);
-         } else {
-            std::vector<std::string> bvec(database->getStringVector(key));
-            putStringVector(key, bvec);
-         }
-      } else if (my_type == SAMRAI_BOX) {
-         if (size == 1) {
-            putDatabaseBox(key, database->getDatabaseBox(key));
-         } else if (size % 2 == 0) {
-            DatabaseBox barray[size];
-            database->getDatabaseBoxArray(key, barray, size);
-            putDatabaseBoxArray(key, barray, size);
-         } else {
-            std::vector<DatabaseBox> bvec(database->getDatabaseBoxVector(key));
-            putDatabaseBoxVector(key, bvec);
-         }
-      }
-   }
-}
-
-void
-ConduitDatabase::toConduitNode(conduit::Node& node)
-{
-   node.reset();
-   std::vector<std::string> keys(getAllKeys());
-
-   for (std::vector<std::string>::const_iterator k_itr = keys.begin();
-        k_itr != keys.end(); ++k_itr) {
-
-      const std::string& key = *k_itr;
-      Database::DataType my_type = getArrayType(key);
-
-      size_t size = getArraySize(key);
-      if (my_type == SAMRAI_DATABASE) {
-         std::shared_ptr<ConduitDatabase> child_db(
-            SAMRAI_SHARED_PTR_CAST<ConduitDatabase, Database>(getDatabase(key)));
-         child_db->toConduitNode(node[key]);
-      } else if (my_type == SAMRAI_BOOL) {
-         std::vector<bool> bool_vec(getBoolVector(key));
-         node[key].set(conduit::DataType::uint8(size));
-         conduit::uint8_array fill_array = node[key].as_uint8_array();
-         for (size_t i = 0; i < size; ++i) {
-            if (bool_vec[i]) {
-               fill_array[i] = 1;
-            } else {
-               fill_array[i] = 0;
-            }
-         }
-      } else if (my_type == SAMRAI_CHAR) {
-         std::vector<char> char_vec(getCharVector(key));
-         node[key].set(conduit::DataType::c_char(size));
-         std::memcpy(node[key].data_ptr(), &(char_vec[0]), size*sizeof(char));
-      } else if (my_type == SAMRAI_INT) {
-         std::vector<int> int_vec(getIntegerVector(key));
-         node[key].set(conduit::DataType::int64(size));
-         conduit::int64_array fill_array = node[key].as_int64_array();
-         for (size_t i = 0; i < size; ++i) {
-            fill_array[i] = int_vec[i];
-         }
-      } else if (my_type == SAMRAI_COMPLEX) {
-         std::vector<dcomplex> cplx_vec(getComplexVector(key));
-         node[key].set(conduit::DataType::c_double(2*size));
-         conduit::double_array fill_array = node[key].as_double_array();
-         for (size_t i = 0; i < size; ++i) {
-            fill_array[i*2] = cplx_vec[i].real();
-            fill_array[i*2+1] = cplx_vec[i].imag();
-         }
-      } else if (my_type == SAMRAI_DOUBLE) {
-         node[key].set(getDoubleVector(key));
-      } else if (my_type == SAMRAI_FLOAT) {
-         node[key].set(getFloatVector(key));
-      } else if (my_type == SAMRAI_STRING) {
-         std::vector<std::string> str_vec(getStringVector(key));
-         size_t num_chars = 0;
-         for (int i = 0; i < size; ++i) {
-            num_chars += str_vec[i].size();
-            ++num_chars;
-         }
-         node[key].set(conduit::DataType::c_char(num_chars));
-         char* char_ptr = static_cast<char*>(node[key].data_ptr());
-         for (int i = 0; i < size; ++i) {
-            std::memcpy(char_ptr, str_vec[i].c_str(), (str_vec[i].size()+1)*sizeof(char));
-            char_ptr += (str_vec[i].size()+1);
-         }
-      } else if (my_type == SAMRAI_BOX) {
-         std::vector<DatabaseBox> db_box(getDatabaseBoxVector(key));
-         tbox::Dimension dim(db_box[0].getDimVal());
-         size_t array_size = size * 2 * dim.getValue();
-         node[key].set(conduit::DataType::int64(array_size));
-         conduit::int64_array fill_array = node[key].as_int64_array();
-         size_t i = 0;
-         for (size_t b = 0; b < size; ++b) {
-            for (unsigned short d = 0; d < dim.getValue(); ++d) {
-               fill_array[i+d] = db_box[b].lower(d);
-            }
-            i += dim.getValue();
-            for (unsigned short d = 0; d < dim.getValue(); ++d) {
-               fill_array[i+d] = db_box[b].upper(d);
-            }
-            i += dim.getValue();
-         }
-      }
-   }
-}
-
 /*
  *************************************************************************
  *
@@ -1874,4 +1680,6 @@ ConduitDatabase::printDatabase(
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
+#endif
+
 #endif

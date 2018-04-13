@@ -22,6 +22,9 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#ifdef HAVE_CONDUIT
+#include "conduit.hpp"
+#endif
 
 #define INPUT_RANGE_ERROR(param_name)                                     \
    TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
@@ -1619,6 +1622,12 @@ public:
     */
    virtual std::string
    getName() = 0;
+
+   virtual void copyDatabase(const std::shared_ptr<Database>& database);
+
+#ifdef HAVE_CONDUIT
+   virtual void toConduitNode(conduit::Node& node);
+#endif
 
    /**
     * Print the current database to the specified output stream.  If

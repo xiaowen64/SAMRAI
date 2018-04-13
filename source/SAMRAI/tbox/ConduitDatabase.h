@@ -7,6 +7,7 @@
  * Description:   A memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
+#ifdef HAVE_CONDUIT
 
 #ifndef included_tbox_ConduitDatabase
 #define included_tbox_ConduitDatabase
@@ -71,8 +72,6 @@ public:
     * The memory database destructor deallocates the data in the database.
     */
    virtual ~ConduitDatabase();
-
-   void copyDatabase(const std::shared_ptr<Database>& database);
 
    /**
     * Create a new database file.
@@ -850,8 +849,6 @@ public:
       std::string* data,
       const size_t nelements);
 
-   void toConduitNode(conduit::Node& node);
-
    /**
     * @brief Returns the name of this database.
     *
@@ -954,5 +951,7 @@ private:
 
 }
 }
+
+#endif
 
 #endif
