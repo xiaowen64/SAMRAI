@@ -353,7 +353,6 @@ SimpleCellRobinBcCoefs::setBcCoefs(
             for ( ; ai != aiend; ++ai) {
                pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / d_diffusion_coef_constant;
-               tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
          } else {
             diffcoef_data_ptr =
@@ -365,7 +364,6 @@ SimpleCellRobinBcCoefs::setBcCoefs(
             for ( ; ai != aiend; ++ai) {
                pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / diffcoef_array_data(*ai, 0);
-               tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
          }
       }

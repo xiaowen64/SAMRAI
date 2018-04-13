@@ -24,6 +24,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <algorithm>
 //#include <iomanip>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -1946,7 +1947,7 @@ Connector::computeNeighborhoodDifferences(
          std::set<Box, Box::id_less> bnabrs(right.begin(bi), right.end(bi));
          std::set<Box, Box::id_less> diff;
          std::insert_iterator<std::set<Box, Box::id_less> > ii(diff, diff.begin());
-         set_difference(anabrs.begin(),
+         std::set_difference(anabrs.begin(),
             anabrs.end(),
             bnabrs.begin(),
             bnabrs.end(),

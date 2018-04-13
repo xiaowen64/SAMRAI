@@ -22,6 +22,7 @@
 #include <set>
 #include <list>
 #include <vector>
+#include <algorithm>
 
 namespace SAMRAI {
 namespace mesh {

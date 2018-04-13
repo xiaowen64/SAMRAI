@@ -18,16 +18,12 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Boost.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <string>
 #include <memory>
-
-BEGIN_BOOST_WARNING_SUPPRESSION
-#include "boost/unordered_map.hpp"
-END_BOOST_WARNING_SUPPRESSION
+#include <unordered_map>
 
 namespace SAMRAI {
 namespace hier {
@@ -257,7 +253,7 @@ private:
     * package.  Additional operators may be added to this hash map at any time
     * (see addCoarsenOperator() function).
     */
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<CoarsenOperator> > >
    d_coarsen_operators;
 
@@ -269,7 +265,7 @@ private:
     * package.  Additional operators may be added to this hash map at any time
     * (see addRefineOperator() function).
     */
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<RefineOperator> > >
    d_refine_operators;
 
@@ -281,7 +277,7 @@ private:
     * patchdata package.  Additional operators may be added to this hash map at
     * any time (see addTimeInterpolateOperator() function).
     */
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<TimeInterpolateOperator> > >
    d_time_operators;
 

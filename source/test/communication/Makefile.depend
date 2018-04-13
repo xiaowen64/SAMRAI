@@ -78,7 +78,6 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -211,7 +210,6 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/BalancedDepthFirstTree.h		\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/CommGraphWriter.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
@@ -343,7 +341,6 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -470,7 +467,6 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -593,7 +589,6 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -718,7 +713,6 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -843,7 +837,6 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -969,7 +962,6 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -1079,7 +1071,6 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -1186,7 +1177,6 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
@@ -1330,7 +1320,6 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
