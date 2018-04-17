@@ -319,7 +319,8 @@ public:
     *        are assumed.
     * @param initial_zero Use a uniform zero vector as the initial guess of
     *                     the solution rather than the current contents of
-    *                     the u solution vector.
+    *                     the u solution variable.  This can be used as a
+    *                     small optimization to avoid some internal data copies.
     *
     * @return whether solver converged to specified level
     *

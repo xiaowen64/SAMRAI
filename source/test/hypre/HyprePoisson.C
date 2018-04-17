@@ -278,7 +278,7 @@ bool HyprePoisson::solvePoisson()
    tbox::plog << "solving..." << std::endl;
    int solver_ret;
    solver_ret = d_poisson_hypre->solveSystem(d_comp_soln_id,
-         d_rhs_id);
+         d_rhs_id, false, true);
    /*
     * Present data on the solve.
     */
