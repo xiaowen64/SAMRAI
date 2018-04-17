@@ -689,7 +689,7 @@ CellPoissonHypreSolver::copyToHypre(
       HYPRE_StructVectorSetBoxValues(
          vector, &lower[0], &upper[0], src.getPointer(depth)); 
    } else {
-      pdat::CellData<double> tmp(box,1,hier::IntVector::getZero(d_dim));
+      pdat::CellData<double> tmp(box, 1, hier::IntVector::getZero(d_dim));
       tmp.copyDepth(0, src, depth);
       HYPRE_StructVectorSetBoxValues(
          vector, &lower[0], &upper[0], tmp.getPointer());
