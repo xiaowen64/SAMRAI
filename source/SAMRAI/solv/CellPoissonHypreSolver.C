@@ -682,11 +682,18 @@ CellPoissonHypreSolver::copyToHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, src, box);
 
-   pdat::CellIterator cend(pdat::CellGeometry::end(box));
-   for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
-      hier::IntVector ic = *c;
-      HYPRE_StructVectorSetValues(vector, &ic[0], src(*c, depth));
-   }
+   hier::Index lower(box.lower());
+   hier::Index upper(box.upper());
+
+   if (src.getGhostBox().isSpatiallyEqual(box)) {
+      HYPRE_StructVectorSetBoxValues(
+         vector, &lower[0], &upper[0], src.getPointer(depth)); 
+   } else {
+      pdat::CellData<double> tmp(box,1,hier::IntVector::getZero(d_dim));
+      tmp.copyDepth(0, src, depth);
+      HYPRE_StructVectorSetBoxValues(
+         vector, &lower[0], &upper[0], tmp.getPointer());
+   } 
 }
 
 /*
@@ -706,12 +713,16 @@ CellPoissonHypreSolver::copyFromHypre(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, dst, box);
 
-   pdat::CellIterator cend(pdat::CellGeometry::end(box));
-   for (pdat::CellIterator c(pdat::CellGeometry::begin(box)); c != cend; ++c) {
-      double value;
-      hier::IntVector ic = *c;
-      HYPRE_StructVectorGetValues(vector, &ic[0], &value);
-      dst(*c, depth) = value;
+   hier::Index lower(box.lower());
+   hier::Index upper(box.upper());
+   if (dst.getGhostBox().isSpatiallyEqual(box)) {
+      HYPRE_StructVectorGetBoxValues(
+         vector, &lower[0], &upper[0], dst.getPointer(depth));
+   } else {
+      pdat::CellData<double> tmp(box, 1, hier::IntVector::getZero(d_dim));
+      HYPRE_StructVectorGetBoxValues(
+         vector, &lower[0], &upper[0], tmp.getPointer());
+      dst.copyDepth(depth,tmp,0);
    }
 }
 
@@ -1233,7 +1244,8 @@ int
 CellPoissonHypreSolver::solveSystem(
    const int u,
    const int f,
-   bool homogeneous_bc)
+   bool homogeneous_bc,
+   bool initial_zero)
 {
    if (d_physical_bc_coef_strategy == 0) {
       TBOX_ERROR(
@@ -1265,6 +1277,7 @@ CellPoissonHypreSolver::solveSystem(
    }
 
    /*
+    * Modify right-hand-side to account for boundary conditions and
     * Modify right-hand-side to account for boundary conditions and
     * copy solution and right-hand-side to HYPRE structures.
     */
@@ -1301,7 +1314,11 @@ CellPoissonHypreSolver::solveSystem(
        * needed.  If boundary condition is homogenous, this only adds
        * zero, so we skip it.
        */
-      copyToHypre(d_linear_sol, u_data, d_soln_depth, box);
+      if (!initial_zero) { 
+         copyToHypre(d_linear_sol, u_data, d_soln_depth, box);
+      } else {
+         HYPRE_StructVectorSetConstantValues(d_linear_sol, 0.0);
+      }
       rhs_data.copy(*(patch->getPatchData(f)));
       if (!homogeneous_bc) {
          /*

@@ -317,6 +317,9 @@ public:
     * @param f Descriptor of cell-centered source variable.
     * @param homogeneous_bc Whether homogeneous boundary conditions
     *        are assumed.
+    * @param initial_zero Use a uniform zero vector as the initial guess of
+    *                     the solution rather than the current contents of
+    *                     the u solution vector.
     *
     * @return whether solver converged to specified level
     *
@@ -330,7 +333,8 @@ public:
    solveSystem(
       const int u,
       const int f,
-      bool homogeneous_bc = false);
+      bool homogeneous_bc = false,
+      bool initial_zero = false);
 
    /*!
     * @brief Return the number of iterations taken by the solver to converge.
