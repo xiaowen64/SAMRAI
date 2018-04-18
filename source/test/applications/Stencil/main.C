@@ -230,6 +230,8 @@ int main(
             mpi.getSize());
     }
 
+    tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+
     /*
      * Create major algorithm and data objects which comprise application.
      * Each object will be initialized either from input data or restart
@@ -391,6 +393,12 @@ int main(
              loop_time);
        }
     }
+
+
+    /*
+     * Output timer results.
+     */
+    tbox::TimerManager::getManager()->print(tbox::pout);
 
     /*
      * At conclusion of simulation, deallocate objects.

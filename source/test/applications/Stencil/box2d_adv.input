@@ -1,5 +1,5 @@
 Stencil {
-  num_variables=10
+  num_variables=5
 }
 
 Main {
@@ -29,8 +29,8 @@ Main {
 // Refer to tbox::TimerManager for input
 TimerManager{
    print_exclusive      = TRUE   // output exclusive time
-   timer_list               = "apps::main::*",
-                              "apps::Euler::*",
+   timer_list               = "*::*::*",
+                              "algs::TimeRefinementIntegrator::*",
                               "algs::GriddingAlgorithm::*",
                               "algs::HyperbolicLevelIntegrator::*"
 }
