@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real node-centered data.
  *
  ************************************************************************/
@@ -39,10 +39,10 @@ PatchNodeDataMiscellaneousOpsReal<TYPE>::~PatchNodeDataMiscellaneousOpsReal()
 template<class TYPE>
 int
 PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data1,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 
@@ -65,11 +65,11 @@ PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 template<class TYPE>
 void
 PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
 
@@ -91,10 +91,10 @@ PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 template<class TYPE>
 int
 PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
 
@@ -117,8 +117,8 @@ PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 template<class TYPE>
 TYPE
 PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& denom,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& numer,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);
@@ -134,8 +134,8 @@ PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 template<class TYPE>
 TYPE
 PatchNodeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& denom,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& numer,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);

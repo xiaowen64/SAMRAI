@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
@@ -1049,7 +1049,7 @@ OuternodeData<TYPE>::printAxisSide(
 template<class TYPE>
 void
 OuternodeData<TYPE>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -1063,7 +1063,7 @@ OuternodeData<TYPE>::getFromRestart(
 
    d_depth = restart_db->getInteger("d_depth");
 
-   boost::shared_ptr<tbox::Database> array_database;
+   std::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
@@ -1092,7 +1092,7 @@ OuternodeData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 OuternodeData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -1104,7 +1104,7 @@ OuternodeData<TYPE>::putToRestart(
    restart_db->putInteger("d_depth", d_depth);
 
    std::string array_name;
-   boost::shared_ptr<tbox::Database> array_database;
+   std::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_data[i][0]->isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";

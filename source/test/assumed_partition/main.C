@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Test program to test the AssumedPartition classes
  *
  ************************************************************************/
@@ -27,7 +27,7 @@ using namespace SAMRAI;
 
 struct CommonTestParams {
    hier::Box box;
-   boost::shared_ptr<hier::BaseGridGeometry> geometry;
+   std::shared_ptr<hier::BaseGridGeometry> geometry;
    int rank_begin;
    int rank_end;
    int index_begin;
@@ -92,10 +92,10 @@ main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
+      std::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
-      boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
+      std::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -130,8 +130,8 @@ main(
             std::string test_name("Test");
             test_name += tbox::Utilities::intToString(test_number, 2);
 
-            boost::shared_ptr<tbox::Database> test_db =
-               input_db->getDatabaseWithDefault(test_name, boost::shared_ptr<tbox::Database>());
+            std::shared_ptr<tbox::Database> test_db =
+               input_db->getDatabaseWithDefault(test_name, std::shared_ptr<tbox::Database>());
 
             if (!test_db) {
                break;

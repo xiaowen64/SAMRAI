@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Implicit time integration manager class for nonlinear problems.
  *
  ************************************************************************/
@@ -37,10 +37,10 @@ const int ImplicitIntegrator::ALGS_IMPLICIT_INTEGRATOR_VERSION = 1;
 
 ImplicitIntegrator::ImplicitIntegrator(
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    ImplicitEquationStrategy* implicit_equations,
    solv::NonlinearSolverStrategy* nonlinear_solver,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy):
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy):
    d_object_name(object_name),
    d_implicit_equations(implicit_equations),
    d_nonlinear_solver(nonlinear_solver),
@@ -264,7 +264,7 @@ ImplicitIntegrator::updateSolution()
 
 void
 ImplicitIntegrator::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (!is_from_restart && !input_db) {
@@ -335,7 +335,7 @@ ImplicitIntegrator::getFromInput(
 
 void
 ImplicitIntegrator::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -364,14 +364,14 @@ void
 ImplicitIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> root_db(
+   std::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION");
    if (ver != ALGS_IMPLICIT_INTEGRATOR_VERSION) {

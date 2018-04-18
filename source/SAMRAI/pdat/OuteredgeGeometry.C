@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Box geometry information for outeredge centered objects
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -55,7 +54,7 @@ OuteredgeGeometry::~OuteredgeGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuteredgeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -75,7 +74,7 @@ OuteredgeGeometry::calculateOverlap(
    const OuteredgeGeometry* t_src =
       dynamic_cast<const OuteredgeGeometry *>(&src_geometry);
 
-   boost::shared_ptr<hier::BoxOverlap> over;
+   std::shared_ptr<hier::BoxOverlap> over;
 
    if ((t_src != 0) && (t_dst_edge != 0)) {
       over = doOverlap(*t_dst_edge, *t_src, src_mask, fill_box,
@@ -103,7 +102,7 @@ OuteredgeGeometry::calculateOverlap(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuteredgeGeometry::doOverlap(
    const EdgeGeometry& dst_geometry,
    const OuteredgeGeometry& src_geometry,
@@ -196,7 +195,7 @@ OuteredgeGeometry::doOverlap(
    }  // if quick check passes
 
    // Create the edge overlap data object using the boxes and source shift
-   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
+   return std::make_shared<EdgeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -209,7 +208,7 @@ OuteredgeGeometry::doOverlap(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuteredgeGeometry::doOverlap(
    const OuteredgeGeometry& dst_geometry,
    const OuteredgeGeometry& src_geometry,
@@ -348,7 +347,7 @@ OuteredgeGeometry::doOverlap(
    }  // if quick check passes
 
    // Create the edge overlap data object using the boxes and source shift
-   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
+   return std::make_shared<EdgeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -429,7 +428,7 @@ OuteredgeGeometry::toOuteredgeBox(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 OuteredgeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -446,7 +445,7 @@ OuteredgeGeometry::setUpOverlap(
    }
 
    // Create the edge overlap data object using the boxes and transformation
-   return boost::make_shared<EdgeOverlap>(dst_boxes, transformation);
+   return std::make_shared<EdgeOverlap>(dst_boxes, transformation);
 
 }
 

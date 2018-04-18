@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Basic method-of-lines time integration algorithm
  *
  ************************************************************************/
@@ -29,11 +29,11 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <string>
 #include <list>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {
@@ -160,7 +160,7 @@ public:
     */
    MethodOfLinesIntegrator(
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       MethodOfLinesPatchStrategy* patch_strategy);
 
    /*!
@@ -179,7 +179,7 @@ public:
     */
    void
    initializeIntegrator(
-      const boost::shared_ptr<mesh::GriddingAlgorithm>& gridding_alg);
+      const std::shared_ptr<mesh::GriddingAlgorithm>& gridding_alg);
 
    /*!
     * Return a suitable time increment over which to integrate the ODE
@@ -190,7 +190,7 @@ public:
     */
    double
    getTimestep(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double time) const;
 
    /*!
@@ -202,7 +202,7 @@ public:
     */
    void
    advanceHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double time,
       const double dt);
 
@@ -216,10 +216,10 @@ public:
     */
    void
    registerVariable(
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<hier::Variable>& variable,
       const hier::IntVector& ghosts,
       const MOL_VAR_TYPE m_v_type,
-      const boost::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
+      const std::shared_ptr<hier::BaseGridGeometry>& transfer_geom,
       const std::string& coarsen_name = std::string(),
       const std::string& refine_name = std::string());
 
@@ -267,13 +267,13 @@ public:
     */
    void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
 #if !defined(__xlC__)
@@ -295,7 +295,7 @@ public:
     */
    void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -319,7 +319,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -333,7 +333,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * Returns the object name.
@@ -355,14 +355,14 @@ private:
     */
    void
    copyCurrentToScratch(
-      const boost::shared_ptr<hier::PatchLevel>& level) const;
+      const std::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Copy all solution data from scratch context to current context.
     */
    void
    copyScratchToCurrent(
-      const boost::shared_ptr<hier::PatchLevel>& level) const;
+      const std::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Reads in parameters from the input database.  All
@@ -371,7 +371,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*
@@ -427,27 +427,27 @@ private:
     * time a level is regridded.  All ghosts are filled with current
     * data at specified time.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
+   std::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_advance;
+   std::vector<std::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_advance;
 
    /*
     * Algorithm for transferring data from coarse patch to fine patch
     * after a regrid.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_after_regrid;
+   std::shared_ptr<xfer::RefineAlgorithm> d_fill_after_regrid;
 
    /*
     * Algorithm for copying data from current context to scratch context,
     * on the same level.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_before_tagging;
+   std::shared_ptr<xfer::RefineAlgorithm> d_fill_before_tagging;
 
    /*
     * Algorithm and communication schedule for transferring data from
     * fine to coarse grid.
     */
-   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
-   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
+   std::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
+   std::vector<std::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
    /*
     * This algorithm has two variable contexts.  The current context is the
@@ -456,11 +456,11 @@ private:
     * state during the time integration process.  These variables will require
     * ghost cell widths that depend on the spatial discretization.
     */
-   boost::shared_ptr<hier::VariableContext> d_current;
-   boost::shared_ptr<hier::VariableContext> d_scratch;
+   std::shared_ptr<hier::VariableContext> d_current;
+   std::shared_ptr<hier::VariableContext> d_scratch;
 
-   std::list<boost::shared_ptr<hier::Variable> > d_soln_variables;
-   std::list<boost::shared_ptr<hier::Variable> > d_rhs_variables;
+   std::list<std::shared_ptr<hier::Variable> > d_soln_variables;
+   std::list<std::shared_ptr<hier::Variable> > d_rhs_variables;
 
    /*
     * The component selectors for current and scratch are used by the

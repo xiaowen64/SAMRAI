@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -40,11 +40,11 @@ namespace tbox {
 // #define AsyncCommPeer_DEBUG_OUTPUT
 
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_send_timer;
+std::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_send_timer;
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_recv_timer;
+std::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_recv_timer;
 template<class TYPE>
-boost::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_wait_timer;
+std::shared_ptr<Timer> AsyncCommPeer<TYPE>::t_default_wait_timer;
 
 template<class TYPE>
 StartupShutdownManager::Handler
@@ -952,7 +952,7 @@ AsyncCommPeer<TYPE>::clearRecvData()
 template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setSendTimer(
-   const boost::shared_ptr<Timer>& send_timer)
+   const std::shared_ptr<Timer>& send_timer)
 {
    t_send_timer = send_timer ? send_timer : t_default_send_timer;
 }
@@ -964,7 +964,7 @@ AsyncCommPeer<TYPE>::setSendTimer(
 template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setRecvTimer(
-   const boost::shared_ptr<Timer>& recv_timer)
+   const std::shared_ptr<Timer>& recv_timer)
 {
    t_recv_timer = recv_timer ? recv_timer : t_default_recv_timer;
 }
@@ -976,7 +976,7 @@ AsyncCommPeer<TYPE>::setRecvTimer(
 template<class TYPE>
 void
 AsyncCommPeer<TYPE>::setWaitTimer(
-   const boost::shared_ptr<Timer>& wait_timer)
+   const std::shared_ptr<Timer>& wait_timer)
 {
    t_wait_timer = wait_timer ? wait_timer : t_default_wait_timer;
 }

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between PETSc vector interface and SAMRAI vectors.
  *
  ************************************************************************/
@@ -39,7 +39,7 @@ namespace solv {
 template<class TYPE>
 Vec
 PETSc_SAMRAIVectorReal<TYPE>::createPETScVector(
-   const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
+   const std::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
    MPI_Comm comm)
 {
    TBOX_ASSERT(samrai_vec);
@@ -68,7 +68,7 @@ PETSc_SAMRAIVectorReal<TYPE>::destroyPETScVector(
 }
 
 template<class TYPE>
-boost::shared_ptr<SAMRAIVectorReal<TYPE> >
+std::shared_ptr<SAMRAIVectorReal<TYPE> >
 PETSc_SAMRAIVectorReal<TYPE>::getSAMRAIVector(
    Vec petsc_vec)
 {
@@ -94,7 +94,7 @@ PETSc_SAMRAIVectorReal<TYPE>::getSAMRAIVector(
 
 template<class TYPE>
 PETSc_SAMRAIVectorReal<TYPE>::PETSc_SAMRAIVectorReal(
-   const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vector,
+   const std::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vector,
    bool vector_created_via_duplicate,
    MPI_Comm comm):
    PETScAbstractVectorReal<TYPE>(vector_created_via_duplicate, comm),
@@ -129,7 +129,7 @@ PETSc_SAMRAIVectorReal<TYPE>::makeNewVector()
          &comm);
    PETSC_SAMRAI_ERROR(ierr);
 
-   boost::shared_ptr<SAMRAIVectorReal<TYPE> > sam_vec(
+   std::shared_ptr<SAMRAIVectorReal<TYPE> > sam_vec(
       d_samrai_vector->cloneVector(d_samrai_vector->getName()));
    sam_vec->allocateVectorData();
    const bool vector_created_via_duplicate = true;

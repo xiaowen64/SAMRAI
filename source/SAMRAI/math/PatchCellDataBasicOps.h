@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Basic templated cell-centered patch data operations.
  *
  ************************************************************************/
@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -64,9 +64,9 @@ public:
     */
    void
    scale(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
       const TYPE& alpha,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -77,8 +77,8 @@ public:
     */
    void
    addScalar(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box) const;
 
@@ -91,9 +91,9 @@ public:
     */
    void
    add(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -105,9 +105,9 @@ public:
     */
    void
    subtract(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -119,9 +119,9 @@ public:
     */
    void
    multiply(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -133,9 +133,9 @@ public:
     */
    void
    divide(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -146,8 +146,8 @@ public:
     */
    void
    reciprocal(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -159,11 +159,11 @@ public:
     */
    void
    linearSum(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
       const TYPE& alpha,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
       const TYPE& beta,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -175,10 +175,10 @@ public:
     */
    void
    axpy(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
       const TYPE& alpha,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -190,10 +190,10 @@ public:
     */
    void
    axmy(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
       const TYPE& alpha,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-      const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+      const std::shared_ptr<pdat::CellData<TYPE> >& src2,
       const hier::Box& box) const;
 
    /**
@@ -205,7 +205,7 @@ public:
     */
    TYPE
    min(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+      const std::shared_ptr<pdat::CellData<TYPE> >& data,
       const hier::Box& box) const;
 
    /**
@@ -217,7 +217,7 @@ public:
     */
    TYPE
    max(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+      const std::shared_ptr<pdat::CellData<TYPE> >& data,
       const hier::Box& box) const;
 
    /**
@@ -230,7 +230,7 @@ public:
     */
    void
    setRandomValues(
-      const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+      const std::shared_ptr<pdat::CellData<TYPE> >& dst,
       const TYPE& width,
       const TYPE& low,
       const hier::Box& box) const;

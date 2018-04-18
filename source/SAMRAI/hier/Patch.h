@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -25,8 +25,8 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -72,7 +72,7 @@ public:
     */
    Patch(
       const Box& box,
-      const boost::shared_ptr<PatchDescriptor>& descriptor);
+      const std::shared_ptr<PatchDescriptor>& descriptor);
 
    /*!
     * @brief Virtual destructor for patch objects.
@@ -131,7 +131,7 @@ public:
     *
     * @return the patch descriptor for this patch.
     */
-   boost::shared_ptr<PatchDescriptor>
+   std::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const
    {
       return d_descriptor;
@@ -152,7 +152,7 @@ public:
     *
     * @pre (id >= 0) && (id < numPatchData())
     */
-   boost::shared_ptr<PatchData>
+   std::shared_ptr<PatchData>
    getPatchData(
       const int id) const
    {
@@ -178,10 +178,10 @@ public:
     * @pre getDim() == variable->getDim()
     * @pre (id >= 0) && (id < numPatchData())
     */
-   boost::shared_ptr<PatchData>
+   std::shared_ptr<PatchData>
    getPatchData(
-      const boost::shared_ptr<Variable>& variable,
-      const boost::shared_ptr<VariableContext>& context) const
+      const std::shared_ptr<Variable>& variable,
+      const std::shared_ptr<VariableContext>& context) const
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *variable);
       int id = VariableDatabase::getDatabase()->
@@ -212,7 +212,7 @@ public:
    void
    setPatchData(
       const int id,
-      const boost::shared_ptr<PatchData>& data)
+      const std::shared_ptr<PatchData>& data)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *data);
       TBOX_ASSERT((id >= 0) && (id < numPatchData()));
@@ -330,7 +330,7 @@ public:
     */
    void
    setPatchGeometry(
-      const boost::shared_ptr<PatchGeometry>& geometry)
+      const std::shared_ptr<PatchGeometry>& geometry)
    {
       d_patch_geometry = geometry;
    }
@@ -340,7 +340,7 @@ public:
     *
     * @return pointer to patch geometry object.
     */
-   boost::shared_ptr<PatchGeometry>
+   std::shared_ptr<PatchGeometry>
    getPatchGeometry() const
    {
       return d_patch_geometry;
@@ -474,7 +474,7 @@ public:
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write patch data and other patch information to the restart
@@ -490,7 +490,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Print a patch (for debugging).
@@ -560,11 +560,11 @@ private:
     */
    Box d_box;
 
-   boost::shared_ptr<PatchDescriptor> d_descriptor;
+   std::shared_ptr<PatchDescriptor> d_descriptor;
 
-   boost::shared_ptr<PatchGeometry> d_patch_geometry;
+   std::shared_ptr<PatchGeometry> d_patch_geometry;
 
-   std::vector<boost::shared_ptr<PatchData> > d_patch_data;
+   std::vector<std::shared_ptr<PatchData> > d_patch_data;
 
    int d_patch_level_number;
 

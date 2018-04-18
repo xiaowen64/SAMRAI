@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Concrete subclass of tbox::Serializable
  *
  ************************************************************************/
@@ -19,7 +19,7 @@
 #define included_String
 #endif
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;
@@ -64,7 +64,7 @@ public:
     */
    MainRestartData(
       const string& object_name,
-      boost::shared_ptr<tbox::Database> input_db);
+      std::shared_ptr<tbox::Database> input_db);
 
    /**
     * The virtual destructor for the serializable base class does nothing
@@ -135,7 +135,7 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    /**
@@ -146,7 +146,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /**

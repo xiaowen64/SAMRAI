@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -28,10 +28,10 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #define GA_RECORD_STATS
 // #undef GA_RECORD_STATS
@@ -298,14 +298,14 @@ public:
     * @pre balancer
     */
    GriddingAlgorithm(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
-      const boost::shared_ptr<TagAndInitializeStrategy>& level_strategy,
-      const boost::shared_ptr<BoxGeneratorStrategy>& generator,
-      const boost::shared_ptr<LoadBalanceStrategy>& balancer,
-      const boost::shared_ptr<LoadBalanceStrategy>& balancer_zero =
-         boost::shared_ptr<LoadBalanceStrategy>());
+      const std::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<TagAndInitializeStrategy>& level_strategy,
+      const std::shared_ptr<BoxGeneratorStrategy>& generator,
+      const std::shared_ptr<LoadBalanceStrategy>& balancer,
+      const std::shared_ptr<LoadBalanceStrategy>& balancer_zero =
+         std::shared_ptr<LoadBalanceStrategy>());
 
    /*!
     * @brief Destructor
@@ -441,14 +441,14 @@ public:
     * @return pointer to TagAndInitializeStrategy data member.
     */
    virtual
-   boost::shared_ptr<TagAndInitializeStrategy>
+   std::shared_ptr<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const;
 
    /*!
     * @brief Return pointer to load balance strategy data member.
     */
    virtual
-   boost::shared_ptr<LoadBalanceStrategy>
+   std::shared_ptr<LoadBalanceStrategy>
    getLoadBalanceStrategy() const;
 
    /*!
@@ -459,13 +459,13 @@ public:
     * where one processor owns all the initial loads.
     */
    virtual
-   boost::shared_ptr<LoadBalanceStrategy>
+   std::shared_ptr<LoadBalanceStrategy>
    getLoadBalanceStrategyZero() const;
 
    /*!
     * @brief Return pointer to PatchHierarchy data member.
     */
-   boost::shared_ptr<hier::PatchHierarchy>
+   std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /*!
@@ -491,7 +491,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*
     * @brief Write out statistics recorded on numbers of cells and patches generated.
@@ -529,7 +529,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*!
@@ -596,7 +596,7 @@ private:
     */
    void
    regridFinerLevel_doTaggingAfterRecursiveRegrid(
-      boost::shared_ptr<hier::Connector>& tag_to_finer,
+      std::shared_ptr<hier::Connector>& tag_to_finer,
       const int tag_ln,
       const std::vector<int>& tag_buffer,
       double regrid_time);
@@ -614,9 +614,9 @@ private:
    regridFinerLevel_createAndInstallNewLevel(
       const int tag_ln,
       const double regrid_time,
-      boost::shared_ptr<hier::Connector>& tag_to_new,
-      boost::shared_ptr<const hier::Connector> tag_to_finer,
-      boost::shared_ptr<hier::BoxLevel> new_box_level);
+      std::shared_ptr<hier::Connector>& tag_to_new,
+      std::shared_ptr<const hier::Connector> tag_to_finer,
+      std::shared_ptr<hier::BoxLevel> new_box_level);
 
    /*!
     * @brief Set all tags on a level to a given value.
@@ -634,7 +634,7 @@ private:
    void
    fillTags(
       const int tag_value,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_index) const;
 
    /*!
@@ -674,7 +674,7 @@ private:
    void
    fillTagsFromBoxLevel(
       const int tag_value,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       const int index,
       const hier::Connector& tag_level_to_fill_box_level,
       const bool interior_only,
@@ -721,8 +721,8 @@ private:
     */
    void
    makeProperNestingMap(
-      boost::shared_ptr<hier::BoxLevel>& nested_box_level,
-      boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
+      std::shared_ptr<hier::BoxLevel>& nested_box_level,
+      std::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
       const int unnested_ln,
@@ -758,8 +758,8 @@ private:
     */
    void
    makeOverflowNestingMap(
-      boost::shared_ptr<hier::BoxLevel>& nested_box_level,
-      boost::shared_ptr<hier::MappingConnector>& unnested_to_nested,
+      std::shared_ptr<hier::BoxLevel>& nested_box_level,
+      std::shared_ptr<hier::MappingConnector>& unnested_to_nested,
       const hier::BoxLevel& unnested_box_level,
       const hier::Connector& unnested_to_reference) const;
 
@@ -787,8 +787,8 @@ private:
     */
    void
    computeNestingViolator(
-      boost::shared_ptr<hier::BoxLevel>& violator,
-      boost::shared_ptr<hier::MappingConnector>& candidate_to_violator,
+      std::shared_ptr<hier::BoxLevel>& violator,
+      std::shared_ptr<hier::MappingConnector>& candidate_to_violator,
       const hier::BoxLevel& candidate,
       const hier::Connector& candidate_to_hierarchy,
       const int tag_ln,
@@ -917,7 +917,7 @@ private:
    void
    bufferTagsOnLevel(
       const int tag_value,
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const int buffer_size) const;
 
    /*!
@@ -937,8 +937,8 @@ private:
     */
    void
    readLevelBoxes(
-      boost::shared_ptr<hier::BoxLevel>& new_box_level,
-      boost::shared_ptr<hier::Connector>& coarser_to_new,
+      std::shared_ptr<hier::BoxLevel>& new_box_level,
+      std::shared_ptr<hier::Connector>& coarser_to_new,
       const int level_number,
       const double regrid_time,
       const int regrid_cycle,
@@ -960,8 +960,8 @@ private:
     */
    void
    findRefinementBoxes(
-      boost::shared_ptr<hier::BoxLevel>& new_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_new,
+      std::shared_ptr<hier::BoxLevel>& new_box_level,
+      std::shared_ptr<hier::Connector>& tag_to_new,
       const int tag_ln) const;
 
    /*!
@@ -1076,7 +1076,7 @@ private:
     */
    void
    setBooleanTagData(
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       bool preserve_existing_tags) const;
 
    /*!
@@ -1127,6 +1127,15 @@ private:
       const hier::BoxLevel& box_level) const;
 
    /*!
+    * @brief Check if the tag buffer data needs to be reset to a default value
+    * at the conclusion of tagging operations.  This is true when the
+    * tag buffer is larger than maximum ghost width for any
+    * currently registered data.
+    */
+   bool
+   needResetTagBuffer(const hier::IntVector& max_ghosts) const;
+
+   /*!
     * @brief Warn if the domain is too small any periodic direction.
     */
    void
@@ -1156,7 +1165,7 @@ private:
    /*!
     * @brief The hierarchy that this GriddingAlgorithm works on.
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Implementation registered with the hierarchy, telling the
@@ -1177,10 +1186,10 @@ private:
     * and cell tagging, clustering of tagged cells into boxes, and load
     * balancing of patches to processors, respectively.
     */
-   boost::shared_ptr<TagAndInitializeStrategy> d_tag_init_strategy;
-   boost::shared_ptr<BoxGeneratorStrategy> d_box_generator;
-   boost::shared_ptr<LoadBalanceStrategy> d_load_balancer;
-   boost::shared_ptr<LoadBalanceStrategy> d_load_balancer0;
+   std::shared_ptr<TagAndInitializeStrategy> d_tag_init_strategy;
+   std::shared_ptr<BoxGeneratorStrategy> d_box_generator;
+   std::shared_ptr<LoadBalanceStrategy> d_load_balancer;
+   std::shared_ptr<LoadBalanceStrategy> d_load_balancer0;
 
    /*
     * MultiblockGriddingTagger is the RefinePatchStrategy
@@ -1205,24 +1214,24 @@ private:
     * d_boolean_tag does not use the bool type, but rather its associated
     * integer data is treated as a boolean with only two possible values.
     */
-   boost::shared_ptr<pdat::CellVariable<int> > d_user_tag;
-   boost::shared_ptr<pdat::CellVariable<int> > d_saved_tag;
-   boost::shared_ptr<pdat::CellVariable<int> > d_boolean_tag;
-   boost::shared_ptr<pdat::CellVariable<int> > d_buf_tag;
+   std::shared_ptr<pdat::CellVariable<int> > d_user_tag;
+   std::shared_ptr<pdat::CellVariable<int> > d_saved_tag;
+   std::shared_ptr<pdat::CellVariable<int> > d_boolean_tag;
+   std::shared_ptr<pdat::CellVariable<int> > d_buf_tag;
    int d_user_tag_indx;
    int d_saved_tag_indx;
    int d_boolean_tag_indx;
    int d_buf_tag_indx;
 
-   boost::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
+   std::shared_ptr<xfer::RefineAlgorithm> d_bdry_fill_tags;
+   std::vector<std::shared_ptr<xfer::RefineSchedule> > d_bdry_sched_tags;
 
    /*!
     * @brief Refine algorithm and schedule for filling saved tag data on new
     * levels.
     */
-   boost::shared_ptr<xfer::RefineAlgorithm> d_fill_saved_tags;
-   boost::shared_ptr<xfer::RefineSchedule> d_saved_tags_sched;
+   std::shared_ptr<xfer::RefineAlgorithm> d_fill_saved_tags;
+   std::shared_ptr<xfer::RefineSchedule> d_saved_tags_sched;
 
    /*!
     * @brief Tag values defined in the constructor.
@@ -1259,7 +1268,7 @@ private:
     * Has length d_hierarchy->getMaxNumberOfLevels().  The objects are
     * initialized only during gridding/regridding.
     */
-   std::vector<boost::shared_ptr<hier::BoxLevel> > d_proper_nesting_complement;
+   std::vector<std::shared_ptr<hier::BoxLevel> > d_proper_nesting_complement;
 
    /*
     * @brief Connectors from the hierarchy to d_proper_nesting_complement.
@@ -1267,7 +1276,7 @@ private:
     * d_to_nesting_complement[ln] goes from level ln to
     * d_proper_nesting_complement[ln].
     */
-   std::vector<boost::shared_ptr<hier::Connector> > d_to_nesting_complement;
+   std::vector<std::shared_ptr<hier::Connector> > d_to_nesting_complement;
 
    /*!
     * @brief How to resolve user tags that violate nesting requirements.
@@ -1370,55 +1379,55 @@ private:
    /*
     * Timers interspersed throughout the class.
     */
-   boost::shared_ptr<tbox::Timer> t_find_domain_complement;
-   boost::shared_ptr<tbox::Timer> t_load_balance;
-   boost::shared_ptr<tbox::Timer> t_load_balance0;
-   boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_create;
-   boost::shared_ptr<tbox::Timer> t_make_coarsest;
-   boost::shared_ptr<tbox::Timer> t_make_finer;
-   boost::shared_ptr<tbox::Timer> t_regrid_all_finer;
-   boost::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_before;
-   boost::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_after;
-   boost::shared_ptr<tbox::Timer> t_regrid_finer_create_and_install;
-   boost::shared_ptr<tbox::Timer> t_regrid_finer_create;
-   boost::shared_ptr<tbox::Timer> t_fill_tags;
-   boost::shared_ptr<tbox::Timer> t_tag_cells_for_refinement;
-   boost::shared_ptr<tbox::Timer> t_initialize_level_data;
-   boost::shared_ptr<tbox::Timer> t_buffer_tags;
-   boost::shared_ptr<tbox::Timer> t_bdry_fill_tags_comm;
-   boost::shared_ptr<tbox::Timer> t_second_finer_tagging;
-   boost::shared_ptr<tbox::Timer> t_find_refinement;
-   boost::shared_ptr<tbox::Timer> t_bridge_new_to_new;
-   boost::shared_ptr<tbox::Timer> t_find_new_to_new;
-   boost::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
-   boost::shared_ptr<tbox::Timer> t_bridge_new_to_old;
-   boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
-   boost::shared_ptr<tbox::Timer> t_fix_zero_width_clustering;
-   boost::shared_ptr<tbox::Timer> t_enforce_proper_nesting;
-   boost::shared_ptr<tbox::Timer> t_compute_proper_nesting_data;
-   boost::shared_ptr<tbox::Timer> t_make_nesting_map;
-   boost::shared_ptr<tbox::Timer> t_use_nesting_map;
-   boost::shared_ptr<tbox::Timer> t_make_overflow_map;
-   boost::shared_ptr<tbox::Timer> t_use_overflow_map;
-   boost::shared_ptr<tbox::Timer> t_compute_external_parts;
-   boost::shared_ptr<tbox::Timer> t_compute_nesting_violator;
-   boost::shared_ptr<tbox::Timer> t_extend_to_domain_boundary;
-   boost::shared_ptr<tbox::Timer> t_extend_within_domain;
-   boost::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
-   boost::shared_ptr<tbox::Timer> t_renumber_boxes;
-   boost::shared_ptr<tbox::Timer> t_make_domain;
-   boost::shared_ptr<tbox::Timer> t_make_new;
-   boost::shared_ptr<tbox::Timer> t_process_error;
-   boost::shared_ptr<tbox::Timer> t_enforce_overflow_nesting;
-   boost::shared_ptr<tbox::Timer> t_reset_hier;
+   std::shared_ptr<tbox::Timer> t_find_domain_complement;
+   std::shared_ptr<tbox::Timer> t_load_balance;
+   std::shared_ptr<tbox::Timer> t_load_balance0;
+   std::shared_ptr<tbox::Timer> t_bdry_fill_tags_create;
+   std::shared_ptr<tbox::Timer> t_make_coarsest;
+   std::shared_ptr<tbox::Timer> t_make_finer;
+   std::shared_ptr<tbox::Timer> t_regrid_all_finer;
+   std::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_before;
+   std::shared_ptr<tbox::Timer> t_regrid_finer_do_tagging_after;
+   std::shared_ptr<tbox::Timer> t_regrid_finer_create_and_install;
+   std::shared_ptr<tbox::Timer> t_regrid_finer_create;
+   std::shared_ptr<tbox::Timer> t_fill_tags;
+   std::shared_ptr<tbox::Timer> t_tag_cells_for_refinement;
+   std::shared_ptr<tbox::Timer> t_initialize_level_data;
+   std::shared_ptr<tbox::Timer> t_buffer_tags;
+   std::shared_ptr<tbox::Timer> t_bdry_fill_tags_comm;
+   std::shared_ptr<tbox::Timer> t_second_finer_tagging;
+   std::shared_ptr<tbox::Timer> t_find_refinement;
+   std::shared_ptr<tbox::Timer> t_bridge_new_to_new;
+   std::shared_ptr<tbox::Timer> t_find_new_to_new;
+   std::shared_ptr<tbox::Timer> t_bridge_new_to_finer;
+   std::shared_ptr<tbox::Timer> t_bridge_new_to_old;
+   std::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
+   std::shared_ptr<tbox::Timer> t_fix_zero_width_clustering;
+   std::shared_ptr<tbox::Timer> t_enforce_proper_nesting;
+   std::shared_ptr<tbox::Timer> t_compute_proper_nesting_data;
+   std::shared_ptr<tbox::Timer> t_make_nesting_map;
+   std::shared_ptr<tbox::Timer> t_use_nesting_map;
+   std::shared_ptr<tbox::Timer> t_make_overflow_map;
+   std::shared_ptr<tbox::Timer> t_use_overflow_map;
+   std::shared_ptr<tbox::Timer> t_compute_external_parts;
+   std::shared_ptr<tbox::Timer> t_compute_nesting_violator;
+   std::shared_ptr<tbox::Timer> t_extend_to_domain_boundary;
+   std::shared_ptr<tbox::Timer> t_extend_within_domain;
+   std::shared_ptr<tbox::Timer> t_grow_boxes_within_domain;
+   std::shared_ptr<tbox::Timer> t_renumber_boxes;
+   std::shared_ptr<tbox::Timer> t_make_domain;
+   std::shared_ptr<tbox::Timer> t_make_new;
+   std::shared_ptr<tbox::Timer> t_process_error;
+   std::shared_ptr<tbox::Timer> t_enforce_overflow_nesting;
+   std::shared_ptr<tbox::Timer> t_reset_hier;
 
 #ifdef GA_RECORD_STATS
    /*
     * Statistics on number of cells and patches generated.
     */
-   std::vector<boost::shared_ptr<tbox::Statistic> > d_boxes_stat;
-   std::vector<boost::shared_ptr<tbox::Statistic> > d_cells_stat;
-   std::vector<boost::shared_ptr<tbox::Statistic> > d_timestamp_stat;
+   std::vector<std::shared_ptr<tbox::Statistic> > d_boxes_stat;
+   std::vector<std::shared_ptr<tbox::Statistic> > d_cells_stat;
+   std::vector<std::shared_ptr<tbox::Statistic> > d_timestamp_stat;
 #endif
 
    // The following are not yet implemented:

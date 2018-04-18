@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
@@ -1789,7 +1789,7 @@ private:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Read the BoxContainer from a restart database.
@@ -2155,7 +2155,7 @@ private:
 
    bool d_ordered;
 
-   mutable boost::shared_ptr<MultiblockBoxTree> d_tree;
+   mutable std::shared_ptr<MultiblockBoxTree> d_tree;
 };
 
 }

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for cell-centered float data on
  *                a  mesh.
  *
@@ -114,11 +114,11 @@ CellFloatConstantRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<CellData<float> > cdata(
-      BOOST_CAST<CellData<float>, hier::PatchData>(
+   std::shared_ptr<CellData<float> > cdata(
+      SAMRAI_SHARED_PTR_CAST<CellData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<CellData<float> > fdata(
-      BOOST_CAST<CellData<float>, hier::PatchData>(
+   std::shared_ptr<CellData<float> > fdata(
+      SAMRAI_SHARED_PTR_CAST<CellData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);

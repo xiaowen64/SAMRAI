@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   ABRTest class declaration
  *
  ************************************************************************/
@@ -11,9 +11,9 @@
 #define included_ABRTest
 
 #include <string>
+#include <memory>
 using namespace std;
 
-#include "boost/shared_ptr.hpp"
 #include "SAMRAI/tbox/Database.h"
 
 /*
@@ -44,8 +44,8 @@ public:
    ABRTest(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
-      boost::shared_ptr<tbox::Database> database);
+      std::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
+      std::shared_ptr<tbox::Database> database);
 
    ~ABRTest();
 
@@ -94,7 +94,7 @@ public:
     */
    int
    registerVariablesWithPlotter(
-      boost::shared_ptr<appu::VisItDataWriter> writer);
+      std::shared_ptr<appu::VisItDataWriter> writer);
 #endif
 
 private:
@@ -102,7 +102,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    SinusoidalFrontGenerator d_sine_wall;
 

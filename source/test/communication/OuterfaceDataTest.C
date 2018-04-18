@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for outerface-centered patch data
  *
  ************************************************************************/
@@ -33,7 +33,7 @@ using namespace std;
 OuterfaceDataTest::OuterfaceDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -82,7 +82,7 @@ OuterfaceDataTest::~OuterfaceDataTest()
 }
 
 void OuterfaceDataTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -92,7 +92,7 @@ void OuterfaceDataTest::readTestInput(
 
    readVariableInput(db->getDatabase("VariableData"));
 
-   boost::shared_ptr<tbox::Database> var_data(
+   std::shared_ptr<tbox::Database> var_data(
       db->getDatabase("VariableData"));
    std::vector<string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
@@ -100,7 +100,7 @@ void OuterfaceDataTest::readTestInput(
    d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; ++i) {
-      boost::shared_ptr<tbox::Database> var_db(
+      std::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
@@ -192,7 +192,7 @@ void OuterfaceDataTest::registerVariables(
 
 void OuterfaceDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -201,23 +201,23 @@ void OuterfaceDataTest::initializeDataOnPatch(
    hier::VariableDatabase* variable_db =
       hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   std::vector<boost::shared_ptr<hier::Variable> >& variables(
+   std::vector<std::shared_ptr<hier::Variable> >& variables(
       src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
       for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
-         boost::shared_ptr<hier::PatchData> data(
+         std::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
 
          TBOX_ASSERT(data);
 
-         boost::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-            boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+         std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
+            std::dynamic_pointer_cast<pdat::OuterfaceData<double>,
                                         hier::PatchData>(data));
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            boost::dynamic_pointer_cast<pdat::FaceData<double>,
+         std::shared_ptr<pdat::FaceData<double> > face_data(
+            std::dynamic_pointer_cast<pdat::FaceData<double>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
@@ -235,16 +235,16 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
-         boost::shared_ptr<hier::PatchData> data(
+         std::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
 
          TBOX_ASSERT(data);
 
-         boost::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-            boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+         std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
+            std::dynamic_pointer_cast<pdat::OuterfaceData<double>,
                                         hier::PatchData>(data));
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            boost::dynamic_pointer_cast<pdat::FaceData<double>,
+         std::shared_ptr<pdat::FaceData<double> > face_data(
+            std::dynamic_pointer_cast<pdat::FaceData<double>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
@@ -263,9 +263,9 @@ void OuterfaceDataTest::initializeDataOnPatch(
 }
 
 void OuterfaceDataTest::checkPatchInteriorData(
-   const boost::shared_ptr<pdat::OuterfaceData<double> >& data,
+   const std::shared_ptr<pdat::OuterfaceData<double> >& data,
    const hier::Box& interior,
-   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
+   const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
    TBOX_ASSERT(data);
 
@@ -337,14 +337,14 @@ void OuterfaceDataTest::setPhysicalBoundaryConditions(
 }
 
 void OuterfaceDataTest::setLinearData(
-   boost::shared_ptr<pdat::FaceData<double> > data,
+   std::shared_ptr<pdat::FaceData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -404,7 +404,7 @@ void OuterfaceDataTest::setLinearData(
 }
 
 void OuterfaceDataTest::setLinearData(
-   boost::shared_ptr<pdat::OuterfaceData<double> > data,
+   std::shared_ptr<pdat::OuterfaceData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -412,8 +412,8 @@ void OuterfaceDataTest::setLinearData(
 
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -482,7 +482,7 @@ void OuterfaceDataTest::setLinearData(
 
 bool OuterfaceDataTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    NULL_USE(hierarchy);
@@ -500,7 +500,7 @@ bool OuterfaceDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::FaceData<double> > solution(
+      std::shared_ptr<pdat::FaceData<double> > solution(
          new pdat::FaceData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -515,8 +515,8 @@ bool OuterfaceDataTest::verifyResults(
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
          if (i % 2 == 0) {
-            boost::shared_ptr<pdat::FaceData<double> > face_data(
-               BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::FaceData<double> > face_data(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(face_data);
             int depth = face_data->getDepth();
@@ -544,8 +544,8 @@ bool OuterfaceDataTest::verifyResults(
                }
             }
          } else {
-            boost::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-               BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
+               SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(oface_data);
             int depth = oface_data->getDepth();

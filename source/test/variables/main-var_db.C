@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test variable database operations
  *
  ************************************************************************/
@@ -25,8 +25,8 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 using namespace std;
 
 using namespace SAMRAI;
@@ -54,7 +54,7 @@ int main(
 
       hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-      boost::shared_ptr<hier::VariableContext> current_context(
+      std::shared_ptr<hier::VariableContext> current_context(
          var_db->getContext("CURRENT"));
 
       hier::IntVector nghosts(dim, 4);
@@ -62,11 +62,11 @@ int main(
       hier::IntVector zero_ghosts(dim, 0);
 
       /* State variable */
-      boost::shared_ptr<pdat::CellVariable<double> > uval(
+      std::shared_ptr<pdat::CellVariable<double> > uval(
          new pdat::CellVariable<double>(dim, "uval", 1));
 
       /* Flux variable */
-      boost::shared_ptr<pdat::FaceVariable<double> > flux(
+      std::shared_ptr<pdat::FaceVariable<double> > flux(
          new pdat::FaceVariable<double>(dim, "flux", 1));
 
       /* Register uval using ready made context
@@ -92,7 +92,7 @@ int main(
             var_db->getContext("SCRATCH"),
             nghosts);
 
-      boost::shared_ptr<pdat::OuterfaceVariable<double> > fluxsum(
+      std::shared_ptr<pdat::OuterfaceVariable<double> > fluxsum(
          new pdat::OuterfaceVariable<double>(
             dim, "fluxsum", 1));
 
@@ -149,7 +149,7 @@ int main(
        * Although the dummy_ctxt is unused, we are checking for it in
        * the test.  So leave it in despite possible compiler warnings.
        */
-      boost::shared_ptr<hier::VariableContext> dummy_ctxt(
+      std::shared_ptr<hier::VariableContext> dummy_ctxt(
          var_db->getContext("dummy"));
       NULL_USE(dummy_ctxt);
 
@@ -209,7 +209,7 @@ int main(
       // Test #3a: hier::VariableDatabase::getVariable()
       tbox::plog << "Test #3a: hier::VariableDatabase::getVariable()..."
                  << endl;
-      boost::shared_ptr<hier::Variable> tvar_uval(var_db->getVariable("uval"));
+      std::shared_ptr<hier::Variable> tvar_uval(var_db->getVariable("uval"));
       if (!tvar_uval) {
          ++fail_count;
          tbox::perr
@@ -221,7 +221,7 @@ int main(
       // Test #3b: hier::VariableDatabase::getVariable()
       tbox::plog << "Test #3b: hier::VariableDatabase::getVariable()..."
                  << endl;
-      boost::shared_ptr<hier::Variable> tvar_flux(var_db->getVariable("flux"));
+      std::shared_ptr<hier::Variable> tvar_flux(var_db->getVariable("flux"));
       if (!tvar_flux) {
          ++fail_count;
          tbox::perr
@@ -233,7 +233,7 @@ int main(
       // Test #3c: hier::VariableDatabase::getVariable()
       tbox::plog << "Test #3c: hier::VariableDatabase::getVariable()..."
                  << endl;
-      boost::shared_ptr<hier::Variable> tvar_fluxsum(
+      std::shared_ptr<hier::Variable> tvar_fluxsum(
          var_db->getVariable("fluxsum"));
       if (!tvar_fluxsum) {
          ++fail_count;
@@ -247,7 +247,7 @@ int main(
       tbox::plog << "Test #3d: hier::VariableDatabase::getVariable()..."
                  << endl;
       //   tbox::perr << "Attempt to get variable named dummy..." << endl;
-      boost::shared_ptr<hier::Variable> tvar_dummy(
+      std::shared_ptr<hier::Variable> tvar_dummy(
          var_db->getVariable("dummy"));
       if (tvar_dummy) {
          ++fail_count;
@@ -298,7 +298,7 @@ int main(
       // Test #5: Attempt to register (uval,CURRENT) again
       tbox::plog << "Test #5: Attempt to register (uval,CURRENT) again..."
                  << endl;
-      boost::shared_ptr<hier::VariableContext> tctxt_current(
+      std::shared_ptr<hier::VariableContext> tctxt_current(
          var_db->getContext("CURRENT"));
       hier::IntVector tzero_ghosts(dim, 0);
       int ti = var_db->registerVariableAndContext(
@@ -329,7 +329,7 @@ int main(
       << "Test #6b: hier::VariableDatabase::mapVariableAndContextToIndex()..."
       << endl;
       tvar_uval = var_db->getVariable("uval");
-      boost::shared_ptr<hier::VariableContext> tctxt_scratch(
+      std::shared_ptr<hier::VariableContext> tctxt_scratch(
          var_db->getContext("SCRATCH"));
       ti = var_db->mapVariableAndContextToIndex(tvar_uval, tctxt_scratch);
       if (ti != -1) {
@@ -344,7 +344,7 @@ int main(
       tbox::plog
       << "Test #6c: hier::VariableDatabase::mapVariableAndContextToIndex()..."
       << endl;
-      boost::shared_ptr<pdat::CellVariable<double> > dummy_var(
+      std::shared_ptr<pdat::CellVariable<double> > dummy_var(
          new pdat::CellVariable<double>(dim, "dummy", 3));
       tctxt_scratch = var_db->getContext("SCRATCH");
       ti = var_db->mapVariableAndContextToIndex(dummy_var, tctxt_scratch);
@@ -361,7 +361,7 @@ int main(
       << "Test #6d: hier::VariableDatabase::mapVariableAndContextToIndex()..."
       << endl;
       tvar_uval = var_db->getVariable("uval");
-      boost::shared_ptr<hier::VariableContext> tctxt_random(
+      std::shared_ptr<hier::VariableContext> tctxt_random(
          new hier::VariableContext("RANDOM"));
       ti = var_db->mapVariableAndContextToIndex(tvar_uval, tctxt_random);
       if (ti != -1) {
@@ -377,8 +377,8 @@ int main(
       << "Test #7a: hier::VariableDatabase::mapIndexToVariableAndContext()..."
       << endl;
       int search_id = 2;
-      boost::shared_ptr<hier::Variable> search_var;
-      boost::shared_ptr<hier::VariableContext> search_ctxt;
+      std::shared_ptr<hier::Variable> search_var;
+      std::shared_ptr<hier::VariableContext> search_ctxt;
       string flux_variable("flux");
       string scratch_variable("SCRATCH");
 
@@ -553,7 +553,7 @@ int main(
       tbox::plog
       << "Test #8e: Testing registration of new cloned factory to variable..."
       << endl;
-      boost::shared_ptr<hier::Variable> tvar;
+      std::shared_ptr<hier::Variable> tvar;
       if (!var_db->mapIndexToVariable(new_id, tvar)
           || (tvar->getName() != "uval")) {
          ++fail_count;
@@ -648,7 +648,7 @@ int main(
        */
 #if 0
       // Abort Test #1
-      boost::shared_ptr<pdat::CellVariable<double> > dummy(
+      std::shared_ptr<pdat::CellVariable<double> > dummy(
          new pdat::CellVariable<double>("uval", 2));
 
       tbox::plog << "Attempt to add a different variable named uval."

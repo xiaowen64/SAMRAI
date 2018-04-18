@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Example user class for solving Poisson using Hypre.
  *
  ************************************************************************/
@@ -42,7 +42,7 @@
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 using namespace std;
 
@@ -92,8 +92,8 @@ public:
    HyprePoisson(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<solv::CellPoissonHypreSolver>& hypre_solver,
-      boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
+      std::shared_ptr<solv::CellPoissonHypreSolver>& hypre_solver,
+      std::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
 
    virtual ~HyprePoisson();
 
@@ -111,13 +111,13 @@ public:
     */
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    /*!
@@ -125,7 +125,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       int coarsest_level,
       int finest_level);
 
@@ -184,7 +184,7 @@ private:
 
    const tbox::Dimension d_dim;
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    //@{
    /*!
@@ -194,12 +194,12 @@ private:
    /*!
     * @brief HYPRE poisson solver.
     */
-   boost::shared_ptr<solv::CellPoissonHypreSolver> d_poisson_hypre;
+   std::shared_ptr<solv::CellPoissonHypreSolver> d_poisson_hypre;
 
    /*!
     * @brief Boundary condition coefficient implementation.
     */
-   boost::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
+   std::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
 
    //@}
 
@@ -212,7 +212,7 @@ private:
    /*!
     * @brief Context owned by this object.
     */
-   boost::shared_ptr<hier::VariableContext> d_context;
+   std::shared_ptr<hier::VariableContext> d_context;
 
    /*!
     * @brief Descriptor indices of internal data.

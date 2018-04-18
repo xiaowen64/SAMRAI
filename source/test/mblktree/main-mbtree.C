@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -50,7 +50,7 @@ exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& box,
    const hier::IntVector& refinement_ratio,
-   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_boxes);
 
 /*
@@ -108,7 +108,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      std::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -125,7 +125,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -155,7 +155,7 @@ int main(
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
-      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+      std::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
          new geom::GridGeometry(
             dim,
             "GridGeometry",
@@ -175,10 +175,10 @@ int main(
       const bool generate_baseline =
          main_db->getBoolWithDefault("generate_baseline", false);
 
-      boost::shared_ptr<tbox::HDFDatabase> baseline_db(
+      std::shared_ptr<tbox::HDFDatabase> baseline_db(
          new tbox::HDFDatabase("mbtree baseline"));
-      boost::shared_ptr<tbox::Database> box_level_db;
-      boost::shared_ptr<tbox::Database> connector_db;
+      std::shared_ptr<tbox::Database> box_level_db;
+      std::shared_ptr<tbox::Database> connector_db;
       if (generate_baseline) {
          baseline_db->create(baseline_filename);
          box_level_db = baseline_db->putDatabase("MappedBoxLevel");
@@ -331,7 +331,7 @@ int main(
                        << connector_from_exhaustive_search.format("EXHAUSTIVE: ", 2)
                        << std::endl;
 
-            boost::shared_ptr<hier::Connector> exhaustive_minus_tree,
+            std::shared_ptr<hier::Connector> exhaustive_minus_tree,
                                                tree_minus_exhaustive;
             hier::Connector::computeNeighborhoodDifferences(
                exhaustive_minus_tree,
@@ -441,7 +441,7 @@ void breakUpBoxes(
    load_balancer.loadBalanceBoxLevel(
       box_level,
       dummy_connector,
-      boost::shared_ptr<hier::PatchHierarchy>(),
+      std::shared_ptr<hier::PatchHierarchy>(),
       0,
       min_size,
       max_box_size,
@@ -460,7 +460,7 @@ void exhaustiveFindOverlapBoxes(
    hier::Connector& overlap_connector,
    const hier::Box& box,
    const hier::IntVector& refinement_ratio,
-   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<const hier::BaseGridGeometry>& grid_geometry,
    const hier::BoxContainer& search_boxes)
 {
    const hier::BoxId& box_id = box.getBoxId();

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Tile clustering algorithm.
  *
  ************************************************************************/
@@ -22,7 +22,7 @@
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {
@@ -137,8 +137,8 @@ public:
     */
    explicit TileClustering(
       const tbox::Dimension& dim,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.
@@ -158,9 +158,9 @@ public:
     */
    void
    findBoxesContainingTags(
-      boost::shared_ptr<hier::BoxLevel>& new_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_new,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      std::shared_ptr<hier::BoxLevel>& new_box_level,
+      std::shared_ptr<hier::Connector>& tag_to_new,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_data_index,
       const int tag_val,
       const hier::BoxContainer& bound_boxes,
@@ -182,7 +182,7 @@ protected:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
 private:
    /*!
@@ -195,7 +195,7 @@ private:
    clusterWithinProcessBoundaries(
       hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
       int tag_val);
@@ -208,7 +208,7 @@ private:
     * fine cell value is tag_value.  Otherwise, the coarse cell value
     * is set to zero.
     */
-   boost::shared_ptr<pdat::CellData<int> >
+   std::shared_ptr<pdat::CellData<int> >
    makeCoarsenedTagData(
       const pdat::CellData<int>& tag_data,
       int tag_value) const;
@@ -230,9 +230,9 @@ private:
    void
    clusterWholeTiles(
       hier::BoxLevel& new_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_new,
+      std::shared_ptr<hier::Connector>& tag_to_new,
       int& local_tiles_have_remote_extent,
-      const boost::shared_ptr<hier::PatchLevel>& tag_level,
+      const std::shared_ptr<hier::PatchLevel>& tag_level,
       const hier::BoxContainer& bound_boxes,
       int tag_data_index,
       int tag_val);
@@ -243,7 +243,7 @@ private:
     */
    void
    detectSemilocalEdges(
-      boost::shared_ptr<hier::Connector>& tag_to_tile);
+      std::shared_ptr<hier::Connector>& tag_to_tile);
 
    /*!
     * @brief Remove duplicate tiles created when a tile crosses a
@@ -268,7 +268,7 @@ private:
    void
    coalesceClusters(
       hier::BoxLevel& tile_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_tile,
+      std::shared_ptr<hier::Connector>& tag_to_tile,
       int tiles_have_remote_extent);
 
    /*!
@@ -278,7 +278,7 @@ private:
    void
    coalesceClusters(
       hier::BoxLevel& tile_box_level,
-      boost::shared_ptr<hier::Connector>& tag_to_tile);
+      std::shared_ptr<hier::Connector>& tag_to_tile);
 
    /*!
     * @brief Recursive bi-section version of BoxContainer::coalesce,
@@ -356,14 +356,14 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
-      boost::shared_ptr<tbox::Timer> t_cluster;
-      boost::shared_ptr<tbox::Timer> t_cluster_local;
-      boost::shared_ptr<tbox::Timer> t_coalesce;
-      boost::shared_ptr<tbox::Timer> t_coalesce_adjustment;
-      boost::shared_ptr<tbox::Timer> t_global_reductions;
-      boost::shared_ptr<tbox::Timer> t_cluster_setup;
-      boost::shared_ptr<tbox::Timer> t_cluster_wrapup;
+      std::shared_ptr<tbox::Timer> t_find_boxes_containing_tags;
+      std::shared_ptr<tbox::Timer> t_cluster;
+      std::shared_ptr<tbox::Timer> t_cluster_local;
+      std::shared_ptr<tbox::Timer> t_coalesce;
+      std::shared_ptr<tbox::Timer> t_coalesce_adjustment;
+      std::shared_ptr<tbox::Timer> t_global_reductions;
+      std::shared_ptr<tbox::Timer> t_cluster_setup;
+      std::shared_ptr<tbox::Timer> t_cluster_wrapup;
    };
 
    //! @brief Default prefix for Timers.

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real node-centered patch data.
  *
  ************************************************************************/
@@ -41,7 +41,7 @@ PatchNodeDataNormOpsReal<TYPE>::~PatchNodeDataNormOpsReal()
 template<class TYPE>
 size_t
 PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -64,8 +64,8 @@ PatchNodeDataNormOpsReal<TYPE>::numberOfEntries(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::sumControlVolumes(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<double> >& cvol,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data && cvol);
@@ -79,8 +79,8 @@ PatchNodeDataNormOpsReal<TYPE>::sumControlVolumes(
 template<class TYPE>
 void
 PatchNodeDataNormOpsReal<TYPE>::abs(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -95,9 +95,9 @@ PatchNodeDataNormOpsReal<TYPE>::abs(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::L1Norm(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -119,9 +119,9 @@ PatchNodeDataNormOpsReal<TYPE>::L1Norm(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::L2Norm(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -143,10 +143,10 @@ PatchNodeDataNormOpsReal<TYPE>::L2Norm(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -172,9 +172,9 @@ PatchNodeDataNormOpsReal<TYPE>::weightedL2Norm(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::RMSNorm(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -190,10 +190,10 @@ PatchNodeDataNormOpsReal<TYPE>::RMSNorm(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
 
@@ -209,9 +209,9 @@ PatchNodeDataNormOpsReal<TYPE>::weightedRMSNorm(
 template<class TYPE>
 double
 PatchNodeDataNormOpsReal<TYPE>::maxNorm(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -230,10 +230,10 @@ PatchNodeDataNormOpsReal<TYPE>::maxNorm(
 template<class TYPE>
 TYPE
 PatchNodeDataNormOpsReal<TYPE>::dot(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data1,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
+   const std::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 
@@ -256,9 +256,9 @@ PatchNodeDataNormOpsReal<TYPE>::dot(
 template<class TYPE>
 TYPE
 PatchNodeDataNormOpsReal<TYPE>::integral(
-   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::NodeData<double> >& vol) const
+   const std::shared_ptr<pdat::NodeData<double> >& vol) const
 {
    TBOX_ASSERT(data);
 

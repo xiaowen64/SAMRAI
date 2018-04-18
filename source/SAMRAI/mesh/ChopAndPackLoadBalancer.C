@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
@@ -29,7 +29,6 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <list>
@@ -48,7 +47,7 @@ namespace mesh {
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(name),
    d_processor_layout_specified(false),
@@ -67,7 +66,7 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
 
 ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name("ChopAndPackLoadBalancer"),
    d_processor_layout_specified(false),
@@ -154,8 +153,8 @@ ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::CellDataFactory<double> > datafact(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
          hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
          getPatchDataFactory(data_id)));
    TBOX_ASSERT(datafact);
@@ -240,7 +239,7 @@ void
 ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector* balance_to_anchor,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -407,7 +406,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
    hier::BoxContainer& out_boxes,
    hier::ProcessorMapping& mapping,
    const hier::BoxContainer& in_boxes,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::BoxContainer& physical_domain,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -726,7 +725,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    hier::BoxContainer& out_boxes,
    std::vector<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -821,7 +820,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    hier::BoxContainer& out_boxes,
    std::vector<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int level_number,
    const hier::IntVector& ratio_to_hierarchy_level_zero,
    int wrk_indx,
@@ -877,8 +876,8 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   boost::shared_ptr<hier::BoxLevel> tmp_box_level(
-      boost::make_shared<hier::BoxLevel>(
+   std::shared_ptr<hier::BoxLevel> tmp_box_level(
+      std::make_shared<hier::BoxLevel>(
          ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
          mpi,
@@ -891,8 +890,8 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_box_level->addBox(node);
    }
 
-   boost::shared_ptr<hier::PatchLevel> tmp_level(
-      boost::make_shared<hier::PatchLevel>(*tmp_box_level,
+   std::shared_ptr<hier::PatchLevel> tmp_level(
+      std::make_shared<hier::PatchLevel>(*tmp_box_level,
                                            hierarchy->getGridGeometry(),
                                            hierarchy->getPatchDescriptor()));
 
@@ -911,15 +910,15 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
 
    xfer::RefineAlgorithm fill_work_algorithm;
 
-   boost::shared_ptr<hier::RefineOperator> work_refine_op(
-      boost::make_shared<pdat::CellDoubleConstantRefine>());
+   std::shared_ptr<hier::RefineOperator> work_refine_op(
+      std::make_shared<pdat::CellDoubleConstantRefine>());
 
    fill_work_algorithm.registerRefine(wrk_indx,
       wrk_indx,
       wrk_indx,
       work_refine_op);
 
-   boost::shared_ptr<hier::PatchLevel> current_level;
+   std::shared_ptr<hier::PatchLevel> current_level;
    if (level_number <= hierarchy->getFinestLevelNumber()) {
       current_level = hierarchy->getPatchLevel(level_number);
    }
@@ -932,7 +931,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    double local_work = 0;
    for (hier::PatchLevel::iterator ip(tmp_level->begin());
         ip != tmp_level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       double patch_work =
          BalanceUtilities::computeNonUniformWorkload(patch,
@@ -1188,7 +1187,7 @@ ChopAndPackLoadBalancer::printClassData(
 
 void
 ChopAndPackLoadBalancer::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
 
    if (input_db) {

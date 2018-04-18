@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real side-centered data.
  *
  ************************************************************************/
@@ -40,10 +40,10 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::~PatchSideDataMiscellaneousOpsReal()
 template<class TYPE>
 int
 PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const boost::shared_ptr<pdat::SideData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::SideData<TYPE> >& data2,
+   const std::shared_ptr<pdat::SideData<TYPE> >& data1,
+   const std::shared_ptr<pdat::SideData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
@@ -87,11 +87,11 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 template<class TYPE>
 void
 PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
+   const std::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const std::shared_ptr<pdat::SideData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
@@ -129,10 +129,10 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 template<class TYPE>
 int
 PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
+   const std::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const std::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
@@ -176,8 +176,8 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 template<class TYPE>
 TYPE
 PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
+   const std::shared_ptr<pdat::SideData<TYPE> >& numer,
+   const std::shared_ptr<pdat::SideData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);
@@ -199,8 +199,8 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 template<class TYPE>
 TYPE
 PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
+   const std::shared_ptr<pdat::SideData<TYPE> >& numer,
+   const std::shared_ptr<pdat::SideData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);

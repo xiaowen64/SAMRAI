@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Performance tests for tree searches.
  *
  ************************************************************************/
@@ -49,7 +49,7 @@ void
 generateBoxesUniform(
    const tbox::Dimension& dim,
    std::vector<hier::Box>& output,
-   const boost::shared_ptr<Database>& db);
+   const std::shared_ptr<Database>& db);
 
 int main(
    int argc,
@@ -88,7 +88,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(
+      std::shared_ptr<InputDatabase> input_db(
          new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -106,7 +106,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -131,11 +131,11 @@ int main(
 
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
       const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
-      boost::shared_ptr<tbox::Timer> t_build_tree(
+      std::shared_ptr<tbox::Timer> t_build_tree(
          tm->getTimer("apps::main::build_tree[" + dim_str + "]"));
-      boost::shared_ptr<tbox::Timer> t_search_tree_for_set(
+      std::shared_ptr<tbox::Timer> t_search_tree_for_set(
          tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]"));
-      boost::shared_ptr<tbox::Timer> t_search_tree_for_vec(
+      std::shared_ptr<tbox::Timer> t_search_tree_for_vec(
          tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]"));
 
       /*
@@ -338,7 +338,7 @@ int main(
 void generateBoxesUniform(
    const tbox::Dimension& dim,
    std::vector<hier::Box>& output,
-   const boost::shared_ptr<Database>& db)
+   const std::shared_ptr<Database>& db)
 {
    output.clear();
 

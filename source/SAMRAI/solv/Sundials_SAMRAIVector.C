@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between SAMRAI vector object and Sundials vector.
  *
  ************************************************************************/
@@ -26,7 +26,7 @@ namespace solv {
 
 SundialsAbstractVector *
 Sundials_SAMRAIVector::createSundialsVector(
-   const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec)
+   const std::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec)
 {
    TBOX_ASSERT(samrai_vec);
    SundialsAbstractVector* skv = new Sundials_SAMRAIVector(samrai_vec);
@@ -43,7 +43,7 @@ Sundials_SAMRAIVector::destroySundialsVector(
    }
 }
 
-boost::shared_ptr<SAMRAIVectorReal<double> >
+std::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    SundialsAbstractVector* sundials_vec)
 {
@@ -52,7 +52,7 @@ Sundials_SAMRAIVector::getSAMRAIVector(
           getSAMRAIVector();
 }
 
-boost::shared_ptr<SAMRAIVectorReal<double> >
+std::shared_ptr<SAMRAIVectorReal<double> >
 Sundials_SAMRAIVector::getSAMRAIVector(
    N_Vector sundials_vec)
 {
@@ -71,7 +71,7 @@ Sundials_SAMRAIVector::getSAMRAIVector(
  */
 
 Sundials_SAMRAIVector::Sundials_SAMRAIVector(
-   const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vector):
+   const std::shared_ptr<SAMRAIVectorReal<double> >& samrai_vector):
    SundialsAbstractVector(),
    d_samrai_vector(samrai_vector)
 {

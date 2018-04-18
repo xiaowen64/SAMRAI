@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores HDF5 format data.
  *
  ************************************************************************/
@@ -30,9 +30,9 @@
 #endif
 #include "hdf5.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -134,7 +134,7 @@ public:
     *
     * @pre !key.empty()
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -146,7 +146,7 @@ public:
     * @pre !key.empty()
     * @pre isDatabase(key)
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 

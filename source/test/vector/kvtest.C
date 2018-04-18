@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Main program to test SAMRAI-KINSOL vector interface.
  *
  ************************************************************************/
@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <memory>
 
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -57,7 +58,6 @@
 
 #endif
 
-#include "boost/shared_ptr.hpp"
 
 #define NCELL_VARS 2
 #define NFACE_VARS 2
@@ -144,14 +144,14 @@ int main(
       hier::Box coarse_domain_box(coarse_domain_list.front());
       hier::Box fine_level_box(fine_level_list.front());
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             geometry));
@@ -167,11 +167,11 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel> layer0(
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> layer0(
+         std::make_shared<hier::BoxLevel>(
             hier::IntVector(dim3d, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel> layer1(
-         boost::make_shared<hier::BoxLevel>(ratio, geometry));
+      std::shared_ptr<hier::BoxLevel> layer1(
+         std::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_domain_itr) {
@@ -196,12 +196,12 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy(
+      std::shared_ptr<hier::VariableContext> dummy(
          variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim3d, 0);
 
       // Make some dummy variables and data on the hierarchy
-      boost::shared_ptr<pdat::CellVariable<double> > cvar[NCELL_VARS];
+      std::shared_ptr<pdat::CellVariable<double> > cvar[NCELL_VARS];
       int cvindx[NCELL_VARS];
       cvar[0].reset(new pdat::CellVariable<double>(dim3d, "cvar0", 2));
       cvindx[0] = variable_db->registerVariableAndContext(
@@ -210,12 +210,12 @@ int main(
       cvindx[1] = variable_db->registerVariableAndContext(
             cvar[1], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::CellVariable<double> > cwgt(
+      std::shared_ptr<pdat::CellVariable<double> > cwgt(
          new pdat::CellVariable<double>(dim3d, "cwgt", 1));
       int cwgt_id = variable_db->registerVariableAndContext(
             cwgt, dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::FaceVariable<double> > fvar[NFACE_VARS];
+      std::shared_ptr<pdat::FaceVariable<double> > fvar[NFACE_VARS];
       int fvindx[NFACE_VARS];
       fvar[0].reset(new pdat::FaceVariable<double>(dim3d, "fvar0", 1));
       fvindx[0] = variable_db->registerVariableAndContext(
@@ -224,12 +224,12 @@ int main(
       fvindx[1] = variable_db->registerVariableAndContext(
             fvar[1], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::FaceVariable<double> > fwgt(
+      std::shared_ptr<pdat::FaceVariable<double> > fwgt(
          new pdat::FaceVariable<double>(dim3d, "fwgt", 1));
       int fwgt_id = variable_db->registerVariableAndContext(
             fwgt, dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::NodeVariable<double> > nvar[NNODE_VARS];
+      std::shared_ptr<pdat::NodeVariable<double> > nvar[NNODE_VARS];
       int nvindx[NNODE_VARS];
       nvar[0].reset(new pdat::NodeVariable<double>(dim3d, "nvar0", 1));
       nvindx[0] = variable_db->registerVariableAndContext(
@@ -244,7 +244,7 @@ int main(
       nvindx[3] = variable_db->registerVariableAndContext(
             nvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::NodeVariable<double> > nwgt(
+      std::shared_ptr<pdat::NodeVariable<double> > nwgt(
          new pdat::NodeVariable<double>(dim3d, "nwgt", 1));
       int nwgt_id = variable_db->registerVariableAndContext(
             nwgt, dummy, no_ghosts);
@@ -255,16 +255,16 @@ int main(
          hierarchy->getPatchLevel(ln)->allocatePatchData(nwgt_id);
       }
 
-      boost::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
-         BOOST_CAST<math::HierarchyCellDataOpsReal<double>,
+      std::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
+         SAMRAI_SHARED_PTR_CAST<math::HierarchyCellDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt, hierarchy)));
-      boost::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
-         BOOST_CAST<math::HierarchyFaceDataOpsReal<double>,
+      std::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
+         SAMRAI_SHARED_PTR_CAST<math::HierarchyFaceDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt, hierarchy)));
-      boost::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
-         BOOST_CAST<math::HierarchyNodeDataOpsReal<double>,
+      std::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
+         SAMRAI_SHARED_PTR_CAST<math::HierarchyNodeDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt, hierarchy)));
 
@@ -276,11 +276,11 @@ int main(
       face_ops->resetLevels(0, 1);
       node_ops->resetLevels(0, 1);
 
-      boost::shared_ptr<hier::Patch> patch;
-      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom;
-      boost::shared_ptr<pdat::CellData<double> > cdata;
-      boost::shared_ptr<pdat::FaceData<double> > fdata;
-      boost::shared_ptr<pdat::NodeData<double> > ndata;
+      std::shared_ptr<hier::Patch> patch;
+      std::shared_ptr<geom::CartesianPatchGeometry> pgeom;
+      std::shared_ptr<pdat::CellData<double> > cdata;
+      std::shared_ptr<pdat::FaceData<double> > fdata;
+      std::shared_ptr<pdat::NodeData<double> > ndata;
 
       // Set control volume data for vector components
       hier::Box coarse_fine(fine_level_box);
@@ -289,18 +289,18 @@ int main(
       // Initialize control volume data for cell-centered components
 
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+            pgeom = SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                                hier::PatchGeometry>(patch->getPatchGeometry());
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
-            boost::shared_ptr<pdat::CellData<double> > cvdata(
-               BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::CellData<double> > cvdata(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
@@ -311,18 +311,18 @@ int main(
       // Initialize control volume data for face-centered components
       for (ln = 0; ln < 2; ++ln) {
 
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+            pgeom = SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                                hier::PatchGeometry>(patch->getPatchGeometry());
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
-            boost::shared_ptr<pdat::FaceData<double> > data(
-               BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::FaceData<double> > data(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
@@ -442,18 +442,18 @@ int main(
 
       for (ln = 0; ln < 2; ++ln) {
 
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+            pgeom = SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                                hier::PatchGeometry>(patch->getPatchGeometry());
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
-            boost::shared_ptr<pdat::NodeData<double> > data(
-               BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::NodeData<double> > data(
+               SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                   patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
@@ -911,7 +911,7 @@ int main(
       // Create SAMRAI vectors:
       // Each vector has four components (1 cell component with depth = 2,
       // 1 face component with depth = 1, and 2 node components with depth = 1).
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec0(
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec0(
          new solv::SAMRAIVectorReal<double>(
             "my_vec0",
             hierarchy,
@@ -922,7 +922,7 @@ int main(
       my_vec0->addComponent(nvar[0], nvindx[0], nwgt_id);
       my_vec0->addComponent(nvar[1], nvindx[1], nwgt_id);
 
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec1(
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec1(
          new solv::SAMRAIVectorReal<double>(
             "my_vec1",
             hierarchy,
@@ -1046,13 +1046,13 @@ int main(
       // Set some bogus values on Level in my_vec1 that should be masked out
       // in ensuing vector norm calculations
 
-      boost::shared_ptr<hier::PatchLevel> level_zero(
+      std::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
 
-         cdata = BOOST_CAST<pdat::CellData<double>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                             hier::PatchData>(patch->getPatchData(cvindx[1]));
          TBOX_ASSERT(cdata);
          hier::Index cindex0(2, 2, 2);
@@ -1072,7 +1072,7 @@ int main(
             (*cdata)(pdat::CellIndex(cindex3), 1) = -10.0;
          }
 
-         fdata = BOOST_CAST<pdat::FaceData<double>,
+         fdata = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[1]));
          TBOX_ASSERT(fdata);
          hier::Index findex0(2, 2, 2);
@@ -1091,21 +1091,21 @@ int main(
          hier::Index nindex0(2, 2, 2);
          hier::Index nindex1(5, 3, 2);
          if (patch->getBox().contains(nindex0)) {
-            ndata = BOOST_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[2]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LLL)) = 300.0;
-            ndata = BOOST_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[3]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LUL)) = 30.0;
          }
          if (patch->getBox().contains(nindex1)) {
-            ndata = BOOST_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[2]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::UUL)) = -300.0;
-            ndata = BOOST_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[3]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::ULL)) = -3300.0;
@@ -1188,7 +1188,7 @@ int main(
       //       operations that follow.
 
       // Duplicate vectors
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec2(
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > my_vec2(
          my_vec0->cloneVector("my_vec2"));
       my_vec2->allocateVectorData();
 
@@ -1203,7 +1203,7 @@ int main(
 
       N_Vector kvec3 = N_VClone(kvec2);
 
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > sam_vec3(
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > sam_vec3(
          solv::Sundials_SAMRAIVector::getSAMRAIVector(kvec3));
 
       tbox::plog << "\nVariables and data components in new vector...";

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for summing outeredge data
  *
  ************************************************************************/
@@ -36,9 +36,9 @@ namespace algs {
  */
 
 OuteredgeSumTransaction::OuteredgeSumTransaction(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    const xfer::RefineClasses::Data** refine_data,
@@ -139,8 +139,8 @@ void
 OuteredgeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
-   boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
-      BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(oedge_dst_data);
@@ -151,14 +151,14 @@ OuteredgeSumTransaction::unpackStream(
 void
 OuteredgeSumTransaction::copyLocalData()
 {
-   boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
-      BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(oedge_dst_data);
 
-   boost::shared_ptr<pdat::OuteredgeData<double> > oedge_src_data(
-      BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OuteredgeData<double> > oedge_src_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_src_level->getPatch(d_src_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_src)));
    TBOX_ASSERT(oedge_src_data);

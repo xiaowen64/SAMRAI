@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An restart manager singleton class
  *
  ************************************************************************/
@@ -17,9 +17,9 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DatabaseFactory.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -123,9 +123,9 @@ public:
    closeRestartFile();
 
    /**
-    * Returns a boost::shared_ptr to the root of the database.
+    * Returns a std::shared_ptr to the root of the database.
     */
-   boost::shared_ptr<Database>
+   std::shared_ptr<Database>
    getRootDatabase()
    {
       return d_database_root;
@@ -146,7 +146,7 @@ public:
     */
    void
    setRootDatabase(
-      const boost::shared_ptr<Database>& database)
+      const std::shared_ptr<Database>& database)
    {
       if (!database) {
          d_database_root.reset();
@@ -163,7 +163,7 @@ public:
     */
    void
    setDatabaseFactory(
-      const boost::shared_ptr<DatabaseFactory>& database_factory)
+      const std::shared_ptr<DatabaseFactory>& database_factory)
    {
       d_database_factory = database_factory;
    }
@@ -290,7 +290,7 @@ private:
     */
    void
    writeRestartFile(
-      const boost::shared_ptr<Database>& database);
+      const std::shared_ptr<Database>& database);
 
    /*
     * Create the directory structure for the data files.
@@ -326,13 +326,13 @@ private:
     */
    std::list<RestartManager::RestartItem> d_restart_items_list;
 
-   boost::shared_ptr<Database> d_database_root;
+   std::shared_ptr<Database> d_database_root;
 
    /*
     * Database factory use to create new databases.
     * Defaults so HDFDatabaseFactory.
     */
-   boost::shared_ptr<DatabaseFactory> d_database_factory;
+   std::shared_ptr<DatabaseFactory> d_database_factory;
 
    bool d_is_from_restart;
 

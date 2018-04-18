@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
@@ -141,7 +141,7 @@ CoarseFineBoundary::computeFromLevel(
    const BoxLevel& box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
 
-   boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
+   std::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
 
    /*
     * Get the domain's periodic shift.
@@ -275,7 +275,7 @@ CoarseFineBoundary::computeFromMultiblockLevel(
    /*
     * Get the number of blocks from the grid geometry.
     */
-   boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
+   std::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
    size_t nblocks = grid_geometry->getNumberBlocks();
 
    std::vector<BoxContainer> fake_domain(nblocks);

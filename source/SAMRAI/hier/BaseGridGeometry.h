@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
@@ -89,7 +89,7 @@ public:
    BaseGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool allow_multiblock = true);
 
    /*!
@@ -470,7 +470,7 @@ public:
     *
     * @return The pointer to the grid geometry object.
     */
-   virtual boost::shared_ptr<BaseGridGeometry>
+   virtual std::shared_ptr<BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const IntVector& refine_ratio) const = 0;
@@ -487,7 +487,7 @@ public:
     *
     * @return The pointer to a coarsened version of this grid geometry object.
     */
-   virtual boost::shared_ptr<BaseGridGeometry>
+   virtual std::shared_ptr<BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const IntVector& coarsen_ratio) const = 0;
@@ -633,7 +633,7 @@ public:
    void
    addCoarsenOperator(
       const char* var_type_name,
-      const boost::shared_ptr<CoarsenOperator>& coarsen_op)
+      const std::shared_ptr<CoarsenOperator>& coarsen_op)
    {
       d_transfer_operator_registry->addCoarsenOperator(
          var_type_name,
@@ -651,7 +651,7 @@ public:
    void
    addRefineOperator(
       const char* var_type_name,
-      const boost::shared_ptr<RefineOperator>& refine_op)
+      const std::shared_ptr<RefineOperator>& refine_op)
    {
       d_transfer_operator_registry->addRefineOperator(
          var_type_name,
@@ -669,7 +669,7 @@ public:
    void
    addTimeInterpolateOperator(
       const char* var_type_name,
-      const boost::shared_ptr<TimeInterpolateOperator>& time_op)
+      const std::shared_ptr<TimeInterpolateOperator>& time_op)
    {
       d_transfer_operator_registry->addTimeInterpolateOperator(
          var_type_name,
@@ -688,9 +688,9 @@ public:
     *                operator should match.
     * @param[in]     op_name The string identifier of the coarsening operator.
     */
-   boost::shared_ptr<CoarsenOperator>
+   std::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupCoarsenOperator(
@@ -709,9 +709,9 @@ public:
     *                operator should match.
     * @param[in]     op_name The string identifier of the refinement operator.
     */
-   boost::shared_ptr<RefineOperator>
+   std::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name)
    {
       return d_transfer_operator_registry->lookupRefineOperator(
@@ -731,9 +731,9 @@ public:
     * @param[in]     op_name The string identifier of the time interpolation
     *                operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
     */
-   boost::shared_ptr<TimeInterpolateOperator>
+   std::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE")
    {
@@ -1238,7 +1238,7 @@ private:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Class NeighborIterator iterates over the Neighbors of a block.
@@ -1744,7 +1744,7 @@ protected:
    BaseGridGeometry(
       const std::string& object_name,
       BoxContainer& domain,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
+      const std::shared_ptr<TransferOperatorRegistry>& op_reg);
 
    /*!
     * @brief Read multiblock metadata input from the input database
@@ -1755,12 +1755,12 @@ protected:
     */
    void
    readBlockDataFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * The holder of all the transfer operators.
     */
-   boost::shared_ptr<TransferOperatorRegistry> d_transfer_operator_registry;
+   std::shared_ptr<TransferOperatorRegistry> d_transfer_operator_registry;
 
    tbox::Dimension d_dim;
 
@@ -1872,7 +1872,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart,
       bool allow_multiblock);
 
@@ -1963,7 +1963,7 @@ private:
     */
    int d_number_of_block_singularities;
 
-   boost::shared_ptr<SingularityFinder> d_singularity_finder;
+   std::shared_ptr<SingularityFinder> d_singularity_finder;
 
    /*!
     * @brief Associated with each block is a list of Neighbors that
@@ -1988,15 +1988,15 @@ private:
     */
    bool d_has_enhanced_connectivity;
 
-   static boost::shared_ptr<tbox::Timer> t_find_patches_touching_boundaries;
-   static boost::shared_ptr<tbox::Timer> t_touching_boundaries_init;
-   static boost::shared_ptr<tbox::Timer> t_touching_boundaries_loop;
-   static boost::shared_ptr<tbox::Timer> t_set_geometry_on_patches;
-   static boost::shared_ptr<tbox::Timer> t_set_boundary_boxes;
-   static boost::shared_ptr<tbox::Timer> t_set_geometry_data_on_patches;
-   static boost::shared_ptr<tbox::Timer> t_compute_boundary_boxes_on_level;
-   static boost::shared_ptr<tbox::Timer> t_get_boundary_boxes;
-   static boost::shared_ptr<tbox::Timer> t_adjust_multiblock_patch_level_boundaries;
+   static std::shared_ptr<tbox::Timer> t_find_patches_touching_boundaries;
+   static std::shared_ptr<tbox::Timer> t_touching_boundaries_init;
+   static std::shared_ptr<tbox::Timer> t_touching_boundaries_loop;
+   static std::shared_ptr<tbox::Timer> t_set_geometry_on_patches;
+   static std::shared_ptr<tbox::Timer> t_set_boundary_boxes;
+   static std::shared_ptr<tbox::Timer> t_set_geometry_data_on_patches;
+   static std::shared_ptr<tbox::Timer> t_compute_boundary_boxes_on_level;
+   static std::shared_ptr<tbox::Timer> t_get_boundary_boxes;
+   static std::shared_ptr<tbox::Timer> t_adjust_multiblock_patch_level_boundaries;
 
    /*
     * Static initialization and cleanup handler.

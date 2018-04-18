@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -58,7 +58,7 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
    int buf_tag_indx)
 {
 
-   boost::shared_ptr<hier::Variable> check_var;
+   std::shared_ptr<hier::Variable> check_var;
    bool indx_maps_to_variable =
       hier::VariableDatabase::getDatabase()->mapIndexToVariable(buf_tag_indx,
          check_var);
@@ -69,8 +69,8 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
          << " is not in VariableDatabase."
          << std::endl);
    } else {
-      boost::shared_ptr<pdat::CellVariable<int> > t_check_var(
-         BOOST_CAST<pdat::CellVariable<int>, hier::Variable>(check_var));
+      std::shared_ptr<pdat::CellVariable<int> > t_check_var(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<int>, hier::Variable>(check_var));
       TBOX_ASSERT(t_check_var);
    }
 
@@ -87,8 +87,8 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    const tbox::Dimension& dim = patch.getDim();
 
-   const boost::shared_ptr<pdat::CellData<int> > tag_data(
-      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+   const std::shared_ptr<pdat::CellData<int> > tag_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
@@ -97,7 +97,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
       hier::IntVector::min(ghost_width_to_fill,
          tag_data->getGhostCellWidth());
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   std::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    for (int d = 0; d < dim.getValue(); ++d) {
 
@@ -120,10 +120,10 @@ void
 MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   boost::shared_ptr<const hier::Connector> dst_to_encon,
+   std::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
+   const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);
@@ -137,8 +137,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
-   const boost::shared_ptr<pdat::CellData<int> > tag_data(
-      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+   const std::shared_ptr<pdat::CellData<int> > tag_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(d_buf_tag_indx)));
 
    TBOX_ASSERT(tag_data);
@@ -156,7 +156,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
          for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
               ei != dst_to_encon->end(ni); ++ei) {
 
-            boost::shared_ptr<hier::Patch> encon_patch(
+            std::shared_ptr<hier::Patch> encon_patch(
                encon_level.getPatch(ei->getBoxId()));
 
             const hier::BlockId& encon_blk_id = ei->getBlockId();
@@ -193,8 +193,8 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                                                encon_fill_box.getBlockId(),
                                                encon_patch->getBox().getBlockId());
 
-               boost::shared_ptr<pdat::CellData<int> > sing_data(
-                  BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+               std::shared_ptr<pdat::CellData<int> > sing_data(
+                  SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                      encon_patch->getPatchData(d_buf_tag_indx)));
 
                TBOX_ASSERT(sing_data);

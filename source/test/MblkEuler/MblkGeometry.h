@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   this class creates mapped multiblock grid geometries.
  *                The supported grid types include Cartesian, Wedge, and
  *                Spherical shell.  The spherical shell case is a full
@@ -33,7 +33,7 @@ public:
    MblkGeometry(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       const size_t nblocks);
 
    ~MblkGeometry();
@@ -83,7 +83,7 @@ private:
    //
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db);
+      std::shared_ptr<tbox::Database> input_db);
 
    //
    // the cartesian input

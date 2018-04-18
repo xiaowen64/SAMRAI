@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -40,9 +40,9 @@ TimeRefinementIntegrator::s_initialize_handler(
 /*
  * tbox::Timer objects for performance measurement.
  */
-boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_initialize_hier;
-boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_hier;
-boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
+std::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_initialize_hier;
+std::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_hier;
+std::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
 
 /*
  *************************************************************************
@@ -59,10 +59,10 @@ boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
 
 TimeRefinementIntegrator::TimeRefinementIntegrator(
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-   const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
-   const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm):
+   const std::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
+   const std::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm):
    d_object_name(object_name),
    d_patch_hierarchy(hierarchy),
    d_refine_level_integrator(level_integrator),
@@ -352,7 +352,7 @@ TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const std::shared_ptr<hier::PatchLevel> patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
@@ -488,7 +488,7 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const std::shared_ptr<hier::PatchLevel> patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
@@ -664,7 +664,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(end_time >= d_integrator_time);
 
-   const boost::shared_ptr<hier::PatchLevel> patch_level(
+   const std::shared_ptr<hier::PatchLevel> patch_level(
       d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
@@ -1056,7 +1056,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    int level_num;
    for (level_num = 0; level_num <= finest_level_number; ++level_num) {
 
-      boost::shared_ptr<hier::PatchLevel> patch_level(
+      std::shared_ptr<hier::PatchLevel> patch_level(
          d_patch_hierarchy->getPatchLevel(level_num));
 
       if (level_num > 0) {
@@ -1562,7 +1562,7 @@ TimeRefinementIntegrator::printDataForLevel(
 
 void
 TimeRefinementIntegrator::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -1595,7 +1595,7 @@ TimeRefinementIntegrator::putToRestart(
 
 void
 TimeRefinementIntegrator::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (!is_from_restart && !input_db) {
@@ -1757,14 +1757,14 @@ void
 TimeRefinementIntegrator::getFromRestart()
 {
 
-   boost::shared_ptr<tbox::Database> restart_db(
+   std::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file." << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(
+   std::shared_ptr<tbox::Database> db(
       restart_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION");

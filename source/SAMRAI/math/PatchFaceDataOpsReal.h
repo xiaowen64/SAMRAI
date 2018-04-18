@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real face-centered patch data.
  *
  ************************************************************************/
@@ -21,8 +21,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -72,8 +72,8 @@ public:
     */
    void
    copyData(
-      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
+      const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const std::shared_ptr<pdat::FaceData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -81,15 +81,15 @@ public:
     * consistency of depth, box, and ghost box.
     *
     * @pre patch
-    * @pre patch->getPatchData(data1_id) is actually a boost::shared_ptr<pdat::FaceData<TYPE> >
-    * @pre patch->getPatchData(data2_id) is actually a boost::shared_ptr<pdat::FaceData<TYPE> >
+    * @pre patch->getPatchData(data1_id) is actually a std::shared_ptr<pdat::FaceData<TYPE> >
+    * @pre patch->getPatchData(data2_id) is actually a std::shared_ptr<pdat::FaceData<TYPE> >
     * @pre patch->getPatchData(data1_id)->getDepth() == patch->getPatchData(data2_id)->getDepth()
     * @pre patch->getPatchData(data1_id)->getBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getBox())
     * @pre patch->getPatchData(data1_id)->getGhostBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getGhostBox())
     */
    void
    swapData(
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -101,7 +101,7 @@ public:
     */
    void
    printData(
-      const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+      const std::shared_ptr<pdat::FaceData<TYPE> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -113,7 +113,7 @@ public:
     */
    void
    setToScalar(
-      const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+      const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
       const TYPE& alpha,
       const hier::Box& box) const;
 

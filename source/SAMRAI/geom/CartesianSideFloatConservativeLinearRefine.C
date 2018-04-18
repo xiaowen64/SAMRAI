@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for side-centered
  *                float data on a Cartesian mesh.
  *
@@ -138,11 +138,11 @@ CartesianSideFloatConservativeLinearRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
-   boost::shared_ptr<pdat::SideData<float> > cdata(
-      BOOST_CAST<pdat::SideData<float>, hier::PatchData>(
+   std::shared_ptr<pdat::SideData<float> > cdata(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::SideData<float> > fdata(
-      BOOST_CAST<pdat::SideData<float>, hier::PatchData>(
+   std::shared_ptr<pdat::SideData<float> > fdata(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const pdat::SideOverlap* t_overlap =
@@ -166,11 +166,11 @@ CartesianSideFloatConservativeLinearRefine::refine(
    const hier::Index& filo = fdata->getGhostBox().lower();
    const hier::Index& fihi = fdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<CartesianPatchGeometry> cgeom(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<CartesianPatchGeometry> fgeom(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);

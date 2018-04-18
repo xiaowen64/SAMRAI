@@ -2,7 +2,7 @@
 ##
 ## File:        $URL$
 ## Package:     SAMRAI
-## Copyright:   (c) 1997-2016 Lawrence Livermore National Security, LLC
+## Copyright:   (c) 1997-2017 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision$
 ## Description: script to suggest ways to configure SAMRAI
 ##
@@ -128,12 +128,12 @@ EOF
 
 chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
 cat <<-EOF
-	CXXFLAGS="-mpi=mvapich2-intel-1.9 -std=c++11"
+	CXXFLAGS="-mpi=mvapich2-intel-1.9 -std=c++11 -gnu-prefix=/usr/apps/gnu/4.9.3/bin/ -Wl,-rpath,/usr/apps/gnu/4.9.3/lib64"
 	CFLAGS=-mpi=mvapich2-intel-1.9
-        FFLAGS=-mpi=mvapich2-intel-1.9
-        --with-mpi-include=/usr/local/tools/mvapich2-intel-1.9/include
-        --with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel-1.9/lib
-        --with-mpi-libs="mpich fmpich"
+	FFLAGS=-mpi=mvapich2-intel-1.9
+	--with-mpi-include=/usr/local/tools/mvapich2-intel-1.9/include
+	--with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel-1.9/lib
+	--with-mpi-libs="mpich fmpich"
 	--with-CC=mpiicc
 	--with-CXX=mpiicpc
 	--with-F77=mpiifort
@@ -141,7 +141,6 @@ cat <<-EOF
 	--without-x
 	--without-sundials
 	--disable-shared
-	--enable-rpath=-Wl,-R
 	--with-zlib
 	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
 	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib

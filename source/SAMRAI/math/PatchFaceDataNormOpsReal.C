@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real face-centered patch data.
  *
  ************************************************************************/
@@ -40,7 +40,7 @@ PatchFaceDataNormOpsReal<TYPE>::~PatchFaceDataNormOpsReal()
 template<class TYPE>
 size_t
 PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -68,8 +68,8 @@ PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<double> >& cvol,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data && cvol);
@@ -89,8 +89,8 @@ PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
 template<class TYPE>
 void
 PatchFaceDataNormOpsReal<TYPE>::abs(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -109,9 +109,9 @@ PatchFaceDataNormOpsReal<TYPE>::abs(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::L1Norm(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -140,9 +140,9 @@ PatchFaceDataNormOpsReal<TYPE>::L1Norm(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::L2Norm(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -174,10 +174,10 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& weight,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -212,9 +212,9 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::RMSNorm(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -230,10 +230,10 @@ PatchFaceDataNormOpsReal<TYPE>::RMSNorm(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& weight,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
 
@@ -249,9 +249,9 @@ PatchFaceDataNormOpsReal<TYPE>::weightedRMSNorm(
 template<class TYPE>
 double
 PatchFaceDataNormOpsReal<TYPE>::maxNorm(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -282,10 +282,10 @@ PatchFaceDataNormOpsReal<TYPE>::maxNorm(
 template<class TYPE>
 TYPE
 PatchFaceDataNormOpsReal<TYPE>::dot(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data1,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
+   const std::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 
@@ -315,9 +315,9 @@ PatchFaceDataNormOpsReal<TYPE>::dot(
 template<class TYPE>
 TYPE
 PatchFaceDataNormOpsReal<TYPE>::integral(
-   const boost::shared_ptr<pdat::FaceData<TYPE> >& data,
+   const std::shared_ptr<pdat::FaceData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::FaceData<double> >& vol) const
+   const std::shared_ptr<pdat::FaceData<double> >& vol) const
 {
    TBOX_ASSERT(data);
 

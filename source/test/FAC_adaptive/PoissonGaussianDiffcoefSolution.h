@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   PoissonGaussianDiffcoefSolution class declaration
  *
  ************************************************************************/
@@ -106,10 +106,10 @@ public:
 
    virtual void
    setBcCoefs(
-      const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-      const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-      const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
-      const boost::shared_ptr<hier::Variable>& variable,
+      const std::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      const std::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      const std::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const std::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       const double fill_time = 0.0) const;

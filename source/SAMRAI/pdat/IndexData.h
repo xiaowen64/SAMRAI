@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -19,8 +19,8 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -77,9 +77,9 @@ class IndexIterator;
  *             unpackStream(MessageStream\& stream,
  *             const hier::IntVector\& offset)
  *    - \b - Write to restart;
- *             putToRestart(boost::shared_ptr<tbox::Database>\& restart_db)
+ *             putToRestart(std::shared_ptr<tbox::Database>\& restart_db)
  *    - \b - Retrieve from restart;
- *             getFromRestart(boost::shared_ptr<tbox::Database>\& restart_db)
+ *             getFromRestart(std::shared_ptr<tbox::Database>\& restart_db)
  *
  * The BOX_GEOMETRY template parameter defines the geometry.   BOX_GEOMETRY must
  * have a nested class name Overlap that implements he following methods:
@@ -445,7 +445,7 @@ public:
     */
    virtual void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /**
     * Write out the class version number to the restart database.
@@ -454,7 +454,7 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;

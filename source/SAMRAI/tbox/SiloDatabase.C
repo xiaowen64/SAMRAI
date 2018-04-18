@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 #include <vector>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -529,15 +528,15 @@ SiloDatabase::isDatabase(
  *************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 SiloDatabase::putDatabase(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
    std::string path = d_directory + "/" + key;
-   boost::shared_ptr<Database> new_database(
-      boost::make_shared<SiloDatabase>(
+   std::shared_ptr<Database> new_database(
+      std::make_shared<SiloDatabase>(
          key,
          d_file,
          path,
@@ -556,7 +555,7 @@ SiloDatabase::putDatabase(
  ************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 SiloDatabase::getDatabase(
    const std::string& key)
 {
@@ -568,8 +567,8 @@ SiloDatabase::getDatabase(
          << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
-   boost::shared_ptr<Database> new_database(
-      boost::make_shared<SiloDatabase>(
+   std::shared_ptr<Database> new_database(
+      std::make_shared<SiloDatabase>(
          key,
          d_file,
          d_directory + "/" + key,

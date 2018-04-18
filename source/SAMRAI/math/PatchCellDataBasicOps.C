@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Basic templated cell-centered patch data operations.
  *
  ************************************************************************/
@@ -38,9 +38,9 @@ PatchCellDataBasicOps<TYPE>::~PatchCellDataBasicOps()
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::scale(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -54,8 +54,8 @@ PatchCellDataBasicOps<TYPE>::scale(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::addScalar(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
 {
@@ -70,9 +70,9 @@ PatchCellDataBasicOps<TYPE>::addScalar(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::add(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -86,9 +86,9 @@ PatchCellDataBasicOps<TYPE>::add(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::subtract(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -102,9 +102,9 @@ PatchCellDataBasicOps<TYPE>::subtract(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::multiply(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -118,9 +118,9 @@ PatchCellDataBasicOps<TYPE>::multiply(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::divide(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -134,8 +134,8 @@ PatchCellDataBasicOps<TYPE>::divide(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::reciprocal(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -149,11 +149,11 @@ PatchCellDataBasicOps<TYPE>::reciprocal(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::linearSum(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
    const TYPE& beta,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -168,10 +168,10 @@ PatchCellDataBasicOps<TYPE>::linearSum(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::axpy(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -186,10 +186,10 @@ PatchCellDataBasicOps<TYPE>::axpy(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::axmy(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
@@ -204,7 +204,7 @@ PatchCellDataBasicOps<TYPE>::axmy(
 template<class TYPE>
 TYPE
 PatchCellDataBasicOps<TYPE>::min(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -216,7 +216,7 @@ PatchCellDataBasicOps<TYPE>::min(
 template<class TYPE>
 TYPE
 PatchCellDataBasicOps<TYPE>::max(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -228,7 +228,7 @@ PatchCellDataBasicOps<TYPE>::max(
 template<class TYPE>
 void
 PatchCellDataBasicOps<TYPE>::setRandomValues(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const

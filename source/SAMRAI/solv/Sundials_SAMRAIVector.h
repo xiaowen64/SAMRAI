@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between Sundials vector interface and SAMRAI vectors.
  *
  ************************************************************************/
@@ -24,7 +24,7 @@
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {
@@ -72,7 +72,7 @@ public:
     */
    static SundialsAbstractVector *
    createSundialsVector(
-      const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec);
+      const std::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec);
 
    /**
     * Destroy a given Sundials vector object. It is important to note that
@@ -89,7 +89,7 @@ public:
     *
     * @pre sundials_vec != 0
     */
-   static boost::shared_ptr<SAMRAIVectorReal<double> >
+   static std::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
       SundialsAbstractVector* sundials_vec);
 
@@ -99,7 +99,7 @@ public:
     *
     * @pre sundials_vec != 0
     */
-   static boost::shared_ptr<SAMRAIVectorReal<double> >
+   static std::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
       N_Vector sundials_vec);
 
@@ -114,7 +114,7 @@ protected:
     * Constructor for Sundials_SAMRAIVector.
     */
    explicit Sundials_SAMRAIVector(
-      const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vector);
+      const std::shared_ptr<SAMRAIVectorReal<double> >& samrai_vector);
 
    /*
     * Virtual destructor for Sundials_SAMRAIVector.
@@ -125,7 +125,7 @@ private:
    /*
     * Return SAMRAI vector owned by this Sundials_SAMRAIVector object.
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> >
+   std::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector()
    {
       return d_samrai_vector;
@@ -303,7 +303,7 @@ private:
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_samrai_vector;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_samrai_vector;
 
 };
 

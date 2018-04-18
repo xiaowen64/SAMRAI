@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -12,7 +12,8 @@
 #define included_xfer_SingularityPatchStrategy
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "boost/shared_ptr.hpp"
+
+#include <memory>
 
 namespace SAMRAI {
 
@@ -84,10 +85,10 @@ public:
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
-      boost::shared_ptr<const hier::Connector> dst_to_encon,
+      std::shared_ptr<const hier::Connector> dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;
+      const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;
 
 };
 

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -118,9 +118,9 @@ using namespace std;
 LinAdv::LinAdv(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> input_db,
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-   const boost::shared_ptr<MeshGenerationStrategy>& sine_wall):
+   std::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<geom::CartesianGridGeometry> grid_geom,
+   const std::shared_ptr<MeshGenerationStrategy>& sine_wall):
    algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
@@ -239,8 +239,8 @@ void LinAdv::setupLoadBalancer(
       hier::PatchDataRestartManager::getManager();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-         boost::dynamic_pointer_cast<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+      std::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+         std::dynamic_pointer_cast<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
             gridding_algorithm->getLoadBalanceStrategy()));
 
       if (load_balancer) {
@@ -289,13 +289,13 @@ void LinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       t_init_first_time->start();
-      const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
 
-      boost::shared_ptr<pdat::CellData<double> > uval(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > uval(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       TBOX_ASSERT(uval);
       uval->setTime(data_time);
@@ -312,8 +312,8 @@ void LinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      boost::shared_ptr<pdat::CellData<double> > workload_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > workload_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
@@ -338,8 +338,8 @@ double LinAdv::computeStableDtOnPatch(
    NULL_USE(initial_time);
    NULL_USE(dt_time);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -347,8 +347,8 @@ double LinAdv::computeStableDtOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> > uval(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > uval(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -415,8 +415,8 @@ void LinAdv::computeFluxesOnPatch(
 
       TBOX_ASSERT(CELLG == FACEG);
 
-      const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
@@ -425,11 +425,11 @@ void LinAdv::computeFluxesOnPatch(
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
-      boost::shared_ptr<pdat::CellData<double> > uval(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > uval(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
-      boost::shared_ptr<pdat::FaceData<double> > flux(
-         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<double> > flux(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_flux, getDataContext())));
 
       /*
@@ -588,8 +588,8 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
 {
    TBOX_ASSERT(CELLG == FACEG);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -598,11 +598,11 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> > uval(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > uval(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-   boost::shared_ptr<pdat::FaceData<double> > flux(
-      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<double> > flux(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -883,8 +883,8 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 {
    TBOX_ASSERT(CELLG == FACEG);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -893,11 +893,11 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> > uval(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > uval(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-   boost::shared_ptr<pdat::FaceData<double> > flux(
-      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<double> > flux(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1113,8 +1113,8 @@ void LinAdv::conservativeDifferenceOnPatch(
    NULL_USE(dt);
    NULL_USE(at_syncronization);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -1122,11 +1122,11 @@ void LinAdv::conservativeDifferenceOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   boost::shared_ptr<pdat::CellData<double> > uval(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > uval(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
-   boost::shared_ptr<pdat::FaceData<double> > flux(
-      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::FaceData<double> > flux(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1172,16 +1172,16 @@ void LinAdv::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   boost::shared_ptr<pdat::CellData<double> > uval(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > uval(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(uval->getTime() == fill_time);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
 
    for (int codim = 1; codim <= patch.getDim().getValue(); ++codim) {
@@ -1215,8 +1215,8 @@ void LinAdv::setPhysicalBoundaryConditions(
 void LinAdv::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
-   const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
+   const std::shared_ptr<hier::VariableContext>& coarsened_fine,
+   const std::shared_ptr<hier::VariableContext>& advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,
@@ -1228,8 +1228,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
 
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::CellData<int> > tags(
-      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<int> > tags(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
 
@@ -1246,18 +1246,18 @@ void LinAdv::tagRichardsonExtrapolationCells(
         ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       string ref = d_refinement_criteria[ncrit];
-      boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
-      boost::shared_ptr<pdat::CellData<double> > advanced_coarse_var;
+      std::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
+      std::shared_ptr<pdat::CellData<double> > advanced_coarse_var;
       int size;
       double tol;
       bool time_allowed;
 
       if (ref == "UVAL_RICHARDSON") {
          coarsened_fine_var =
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, coarsened_fine));
          advanced_coarse_var =
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, advanced_coarse));
          size = static_cast<int>(d_rich_tol.size());
          tol = ((error_level_number < size)
@@ -1403,14 +1403,14 @@ void LinAdv::tagGradientDetectorCells(
 
    const int error_level_number = patch.getPatchLevelNumber();
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
-   boost::shared_ptr<pdat::CellData<int> > tags(
-      BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<int> > tags(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(tags->getTime() == regrid_time);
@@ -1428,7 +1428,7 @@ void LinAdv::tagGradientDetectorCells(
    /*
     * Create a set of temporary tags and set to untagged value.
     */
-   boost::shared_ptr<pdat::CellData<int> > temp_tags(
+   std::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->setTime(regrid_time);
    temp_tags->fillAll(not_refine_tag_val);
@@ -1454,8 +1454,8 @@ void LinAdv::tagGradientDetectorCells(
            ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
          string ref = d_refinement_criteria[ncrit];
-         boost::shared_ptr<pdat::CellData<double> > var(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > var(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, getDataContext())));
 
          TBOX_ASSERT(var);
@@ -1649,7 +1649,7 @@ void LinAdv::tagGradientDetectorCells(
 
 #ifdef HAVE_HDF5
 void LinAdv::registerVisItDataWriter(
-   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
+   std::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
    TBOX_ASSERT(viz_writer);
 
@@ -1804,7 +1804,7 @@ void LinAdv::printClassData(
  *************************************************************************
  */
 void LinAdv::getFromInput(
-   boost::shared_ptr<tbox::Database> input_db,
+   std::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
    TBOX_ASSERT(input_db);
@@ -1862,7 +1862,7 @@ void LinAdv::getFromInput(
    }
 
    if (input_db->keyExists("Refinement_data")) {
-      boost::shared_ptr<tbox::Database> refine_db(
+      std::shared_ptr<tbox::Database> refine_db(
          input_db->getDatabase("Refinement_data"));
       std::vector<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = static_cast<int>(refinement_keys.size());
@@ -1879,7 +1879,7 @@ void LinAdv::getFromInput(
 
       std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
-      boost::shared_ptr<tbox::Database> error_db;
+      std::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; ++i) {
 
          string error_key = refinement_keys[i];
@@ -2071,7 +2071,7 @@ void LinAdv::getFromInput(
  */
 
 void LinAdv::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -2127,14 +2127,14 @@ void LinAdv::putToRestart(
  */
 void LinAdv::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> root_db(
+   std::shared_ptr<tbox::Database> root_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
-   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
+   std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("LINADV_VERSION");
    if (ver != LINADV_VERSION) {
@@ -2192,7 +2192,7 @@ void LinAdv::getFromRestart()
 }
 
 void LinAdv::readStateDataEntry(
-   boost::shared_ptr<tbox::Database> db,
+   std::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
    std::vector<double>& uval)

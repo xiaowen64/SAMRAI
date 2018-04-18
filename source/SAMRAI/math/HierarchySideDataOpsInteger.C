@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer side data on multiple levels.
  *
  ************************************************************************/
@@ -24,7 +24,7 @@ namespace SAMRAI {
 namespace math {
 
 HierarchySideDataOpsInteger::HierarchySideDataOpsInteger(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsInteger(),
@@ -58,7 +58,7 @@ HierarchySideDataOpsInteger::~HierarchySideDataOpsInteger()
 
 void
 HierarchySideDataOpsInteger::setPatchHierarchy(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -85,7 +85,7 @@ HierarchySideDataOpsInteger::resetLevels(
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer side_boxes;
 
@@ -102,7 +102,7 @@ HierarchySideDataOpsInteger::resetLevels(
    }
 }
 
-const boost::shared_ptr<hier::PatchHierarchy>
+const std::shared_ptr<hier::PatchHierarchy>
 HierarchySideDataOpsInteger::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -133,8 +133,8 @@ HierarchySideDataOpsInteger::numberOfEntries(
 
    if (interior_only) {
 
-      boost::shared_ptr<pdat::SideDataFactory<int> > dfact(
-         BOOST_CAST<pdat::SideDataFactory<int>, hier::PatchDataFactory>(
+      std::shared_ptr<pdat::SideDataFactory<int> > dfact(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<int>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
@@ -142,7 +142,7 @@ HierarchySideDataOpsInteger::numberOfEntries(
       const hier::IntVector& directions = dfact->getDirectionVector();
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -169,12 +169,12 @@ HierarchySideDataOpsInteger::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            boost::shared_ptr<pdat::SideData<int> > d(
-               BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+            std::shared_ptr<pdat::SideData<int> > d(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
@@ -206,17 +206,17 @@ HierarchySideDataOpsInteger::copyData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -235,12 +235,12 @@ HierarchySideDataOpsInteger::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   boost::shared_ptr<pdat::SideDataFactory<int> > d1fact(
-      BOOST_CAST<pdat::SideDataFactory<int>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::SideDataFactory<int> > d1fact(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<int>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
-   boost::shared_ptr<pdat::SideDataFactory<int> > d2fact(
-      BOOST_CAST<pdat::SideDataFactory<int>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::SideDataFactory<int> > d2fact(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<int>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -255,11 +255,11 @@ HierarchySideDataOpsInteger::swapData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -284,14 +284,14 @@ HierarchySideDataOpsInteger::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       s << "Level number = " << ln << std::endl;
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -315,14 +315,14 @@ HierarchySideDataOpsInteger::setToScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -355,17 +355,17 @@ HierarchySideDataOpsInteger::scale(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > dst(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > dst(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > src(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > src(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -391,17 +391,17 @@ HierarchySideDataOpsInteger::addScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > dst(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > dst(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > src(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > src(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -427,20 +427,20 @@ HierarchySideDataOpsInteger::add(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -467,20 +467,20 @@ HierarchySideDataOpsInteger::subtract(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -507,20 +507,20 @@ HierarchySideDataOpsInteger::multiply(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -547,20 +547,20 @@ HierarchySideDataOpsInteger::divide(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -586,17 +586,17 @@ HierarchySideDataOpsInteger::reciprocal(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > src(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > src(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -624,20 +624,20 @@ HierarchySideDataOpsInteger::linearSum(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -665,20 +665,20 @@ HierarchySideDataOpsInteger::axpy(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -706,20 +706,20 @@ HierarchySideDataOpsInteger::axmy(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > s1(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s1(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::SideData<int> > s2(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > s2(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -745,17 +745,17 @@ HierarchySideDataOpsInteger::abs(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::SideData<int> > src(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > src(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -783,14 +783,14 @@ HierarchySideDataOpsInteger::min(
    int minval = tbox::MathUtilities<int>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -824,14 +824,14 @@ HierarchySideDataOpsInteger::max(
    int maxval = -(tbox::MathUtilities<int>::getMax());
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -863,14 +863,14 @@ HierarchySideDataOpsInteger::setRandomValues(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::SideData<int> > d(
-            BOOST_CAST<pdat::SideData<int>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<int> > d(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<int>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);

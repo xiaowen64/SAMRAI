@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Refine algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -25,7 +25,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -152,7 +152,7 @@ public:
     *                      functions.  See the comments for
     *                      RefinePatchStrategy::preprocessRefine() and
     *                      RefinePatchStrategy::postprocessRefine().
-    * @param[in] var_fill_pattern  boost::shared_ptr to the variable fill
+    * @param[in] var_fill_pattern  std::shared_ptr to the variable fill
     *                              pattern, which can be used to restrict the
     *                              filling of data to a specific stencil.  If
     *                              the NULL default is used, then class
@@ -166,9 +166,9 @@ public:
       const int dst,
       const int src,
       const int scratch,
-      const boost::shared_ptr<hier::RefineOperator>& oprefine,
-      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>(),
+      const std::shared_ptr<hier::RefineOperator>& oprefine,
+      const std::shared_ptr<VariableFillPattern>& var_fill_pattern =
+         std::shared_ptr<VariableFillPattern>(),
       const std::vector<int>& work_ids = std::vector<int>());
 
    /*!
@@ -197,7 +197,7 @@ public:
     *                      RefinePatchStrategy::postprocessRefine().
     * @param[in] optime    Time interpolation operator.  This pointer may
     *                      not be null.
-    * @param[in] var_fill_pattern  boost::shared_ptr to the variable fill
+    * @param[in] var_fill_pattern  std::shared_ptr to the variable fill
     *                              pattern, which can be used to restrict the
     *                              filling of data to a specific stencil.  If
     *                              the NULL default is used, then class
@@ -214,10 +214,10 @@ public:
       const int src_told,
       const int src_tnew,
       const int scratch,
-      const boost::shared_ptr<hier::RefineOperator>& oprefine,
-      const boost::shared_ptr<hier::TimeInterpolateOperator>& optime,
-      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>(),
+      const std::shared_ptr<hier::RefineOperator>& oprefine,
+      const std::shared_ptr<hier::TimeInterpolateOperator>& optime,
+      const std::shared_ptr<VariableFillPattern>& var_fill_pattern =
+         std::shared_ptr<VariableFillPattern>(),
       const std::vector<int>& work_ids = std::vector<int>());
 
    /*!
@@ -234,7 +234,7 @@ public:
     * change; thus, it can be used for multiple data communication cycles
     * cycles.
     *
-    * @return boost::shared_ptr to refine schedule that performs the data
+    * @return std::shared_ptr to refine schedule that performs the data
     *         transfers.
     *
     * @param[in] level           Level on which communication occurs.  This
@@ -244,7 +244,7 @@ public:
     *                            filling operations.  If this patch strategy is
     *                            null (default state), then no physical
     *                            boundary filling is performed.
-    * @param[in] transaction_factory Optional boost::shared_ptr to a refine
+    * @param[in] transaction_factory Optional std::shared_ptr to a refine
     *                                transaction factory that creates data
     *                                transactions for the schedule.  If this
     *                                pointer is null (default state), then a
@@ -253,12 +253,12 @@ public:
     *
     * @pre level
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       RefinePatchStrategy* patch_strategy = 0,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*
     * @brief Same as the above, except with fill_pattern specified.
@@ -269,13 +269,13 @@ public:
     *
     * @pre level
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+      const std::shared_ptr<hier::PatchLevel>& level,
       RefinePatchStrategy* patch_strategy = 0,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Create a communication schedule that communicates data between
@@ -296,14 +296,14 @@ public:
     * Note that the schedule remains valid as long as the levels do not
     * change; thus, it can be used for multiple data communication cycles.
     *
-    * @return boost::shared_ptr to refine schedule that performs the data
+    * @return std::shared_ptr to refine schedule that performs the data
     *         transfers.
     *
-    * @param[in] dst_level       boost::shared_ptr to destination level; cannot
+    * @param[in] dst_level       std::shared_ptr to destination level; cannot
     *                            be null.
-    * @param[in] src_level       boost::shared_ptr to source level; cannot be
+    * @param[in] src_level       std::shared_ptr to source level; cannot be
     *                            null.
-    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    * @param[in] patch_strategy  std::shared_ptr to a refine patch strategy
     *                            that provides user-defined physical boundary
     *                            filling operations.  If this patch strategy is
     *                            null (default state), then no physical
@@ -311,7 +311,7 @@ public:
     * @param[in]  use_time_interpolation  Flag to create the schedule with
     *                                     the ability to perform time
     *                                     interpolation.
-    * @param[in] transaction_factory  boost::shared_ptr to a refine transaction
+    * @param[in] transaction_factory  std::shared_ptr to a refine transaction
     *                                 factory that creates data transactions
     *                                 for the schedule.  If this pointer is
     *                                 null (default state), then a
@@ -322,14 +322,14 @@ public:
     * @pre src_level
     * @pre dst_level->getDim() == src_level->getDim()
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
       RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -347,15 +347,15 @@ public:
     * @pre src_level
     * @pre dst_level->getDim() == src_level->getDim()
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
       RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Create a communication schedule that communicates data within a
@@ -386,10 +386,10 @@ public:
     * in its creation do not change; thus, it can be used for multiple
     * data communication cycles.
     *
-    * @return boost::shared_ptr to refine schedule that performs the data
+    * @return std::shared_ptr to refine schedule that performs the data
     *         transfers.
     *
-    * @param[in] level         boost::shared_ptr to destination level; cannot
+    * @param[in] level         std::shared_ptr to destination level; cannot
     *                          be null.
     * @param[in] next_coarser_level  Level number of next coarser patch level
     *                                in the patch hierarchy relative to the
@@ -397,11 +397,11 @@ public:
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should
     *                                value should be < 0.
-    * @param[in] hierarchy     boost::shared_ptr to patch hierarchy from which
+    * @param[in] hierarchy     std::shared_ptr to patch hierarchy from which
     *                          data to fill level should come.  This pointer
     *                          may be null only when the next_coarser_level is
     *                          < 0.
-    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    * @param[in] patch_strategy  std::shared_ptr to a refine patch strategy
     *                            that provides user-defined physical boundary
     *                            filling operations and user-defined spatial
     *                            interpolation operations.  If this patch
@@ -416,7 +416,7 @@ public:
     *                                    interpolation on the destination
     *                                    level.  Default is no time
     *                                    interpolation (false).
-    * @param[in] transaction_factory  boost::shared_ptr to a refine transaction
+    * @param[in] transaction_factory  std::shared_ptr to a refine transaction
     *                                 factory that creates data transactions
     *                                 for the schedule.  If this pointer is
     *                                 null (default state), then a
@@ -427,15 +427,15 @@ public:
     * @pre (next_coarser_level == -1) || hierarchy
     * @pre !hierarchy || (level->getDim() == hierarchy->getDim())
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const int next_coarser_level,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -454,16 +454,16 @@ public:
     * @pre (next_coarser_level == -1) || hierarchy
     * @pre !hierarchy || (level->getDim() == hierarchy->getDim())
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const int next_coarser_level,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Create a communication schedule that communicates data from a
@@ -504,12 +504,12 @@ public:
     * in its creation do not change; thus, it can be used for multiple
     * data communication cycles.
     *
-    * @return boost::shared_ptr to refine schedule that performs the data
+    * @return std::shared_ptr to refine schedule that performs the data
     *         transfers.
     *
-    * @param[in] dst_level      boost::shared_ptr to destination level; cannot
+    * @param[in] dst_level      std::shared_ptr to destination level; cannot
     *                           be null.
-    * @param[in] src_level      boost::shared_ptr to source level. This pointer
+    * @param[in] src_level      std::shared_ptr to source level. This pointer
     *                           may be null.  In this case, data on the
     *                           destination level will be filled only using
     *                           interpolated data from coarser hierarchy
@@ -522,10 +522,10 @@ public:
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should
     *                                value should be < 0.
-    * @param[in] hierarchy    boost::shared_ptr to patch hierarchy from which
+    * @param[in] hierarchy    std::shared_ptr to patch hierarchy from which
     *                         data to fill level should come.  This pointer may
     *                         be null only when the next_coarser_level is < 0.
-    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    * @param[in] patch_strategy  std::shared_ptr to a refine patch strategy
     *                            that provides user-defined physical boundary
     *                            filling operations and user-defined spatial
     *                            interpolation operations.  If this patch
@@ -540,7 +540,7 @@ public:
     *                                    interpolation on the destination
     *                                    level.  Default is no time
     *                                    interpolation (false).
-    * @param[in] transaction_factory  boost::shared_ptr to a refine transaction
+    * @param[in] transaction_factory  std::shared_ptr to a refine transaction
     *                                 factory that creates data transactions
     *                                 for the schedule.  If this pointer is
     *                                 null (default state), then a
@@ -552,16 +552,16 @@ public:
     * @pre !src_level || (dst_level->getDim() == src_level->getDim())
     * @pre !hierarchy || (dst_level->getDim() == hierarchy->getDim())
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
       const int next_coarser_level,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Same as the above, except with fill_pattern specified.
@@ -582,17 +582,17 @@ public:
     * @pre !src_level || (dst_level->getDim() == src_level->getDim())
     * @pre !hierarchy || (dst_level->getDim() == hierarchy->getDim())
     */
-   boost::shared_ptr<RefineSchedule>
+   std::shared_ptr<RefineSchedule>
    createSchedule(
-      const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
       const int next_coarser_level,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
-      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
-         boost::shared_ptr<RefineTransactionFactory>());
+      const std::shared_ptr<RefineTransactionFactory>& transaction_factory =
+         std::shared_ptr<RefineTransactionFactory>());
 
    /*!
     * @brief Given a previously-generated refine schedule, check for
@@ -609,14 +609,14 @@ public:
     *
     * @return true if schedule reset is valid; false otherwise.
     *
-    * @param[in] schedule  boost::shared_ptr to refine schedule, which cannot
+    * @param[in] schedule  std::shared_ptr to refine schedule, which cannot
     *                      be null.
     *
     * @pre schedule
     */
    bool
    checkConsistency(
-      const boost::shared_ptr<RefineSchedule>& schedule) const;
+      const std::shared_ptr<RefineSchedule>& schedule) const;
 
    /*!
     * @brief Given a previously-generated refine schedule, reconfigure it to
@@ -632,7 +632,7 @@ public:
     * consistent with this RefineAlgorithm object according to the criteria
     * in checkConsistency().
     *
-    * @param[in,out] schedule  boost::shared_ptr to refine schedule, which
+    * @param[in,out] schedule  std::shared_ptr to refine schedule, which
     *                          cannot be null.
     *
     * @pre schedule
@@ -640,12 +640,12 @@ public:
     */
    void
    resetSchedule(
-      const boost::shared_ptr<RefineSchedule>& schedule) const;
+      const std::shared_ptr<RefineSchedule>& schedule) const;
 
    /*!
     * @brief Return the refine equivalence classes used in the algorithm.
     */
-   const boost::shared_ptr<RefineClasses>&
+   const std::shared_ptr<RefineClasses>&
    getEquivalenceClasses() const
    {
       return d_refine_classes;
@@ -659,7 +659,7 @@ public:
     */
    void
    setEquivalenceClasses(
-      const boost::shared_ptr<RefineClasses>& refine_classes)
+      const std::shared_ptr<RefineClasses>& refine_classes)
    {
       d_refine_classes = refine_classes;
    }
@@ -683,7 +683,7 @@ private:
    /*!
     * RefineClasses object holds all of the registered refine items
     */
-   boost::shared_ptr<RefineClasses> d_refine_classes;
+   std::shared_ptr<RefineClasses> d_refine_classes;
 
    /*!
     * Tells if any schedule has yet been created using this object.

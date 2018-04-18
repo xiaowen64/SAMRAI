@@ -1,8 +1,8 @@
 c
 c This file is part of the SAMRAI distribution.  For full copyright
-c information, see COPYRIGHT and COPYING.LESSER.
+c information, see COPYRIGHT and LICENSE.
 c
-c Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+c Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
 c Description:   FORTRAN routines for general 2d boundary condition cases,
 c                node boundary conditions, and edge boundary conditions
 c

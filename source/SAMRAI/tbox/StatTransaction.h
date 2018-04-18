@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction structure for statistic data copies
  *
  ************************************************************************/
@@ -16,8 +16,8 @@
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Transaction.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -51,7 +51,7 @@ public:
     * that the copyLocalData() routine has an empty implementation.
     */
    StatTransaction(
-      const boost::shared_ptr<Statistic>& stat,
+      const std::shared_ptr<Statistic>& stat,
       int src_proc_id,
       int dst_proc_id);
 
@@ -132,7 +132,7 @@ private:
    operator = (
       const StatTransaction&);                  // not implemented
 
-   boost::shared_ptr<Statistic> d_stat;
+   std::shared_ptr<Statistic> d_stat;
    int d_src_id;
    int d_dst_id;
 

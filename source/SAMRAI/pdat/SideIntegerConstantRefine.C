@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for side-centered int data on
  *                a  mesh.
  *
@@ -123,11 +123,11 @@ SideIntegerConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<SideData<int> > cdata(
-      BOOST_CAST<SideData<int>, hier::PatchData>(
+   std::shared_ptr<SideData<int> > cdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<int>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<SideData<int> > fdata(
-      BOOST_CAST<SideData<int>, hier::PatchData>(
+   std::shared_ptr<SideData<int> > fdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<int>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&fine_overlap);

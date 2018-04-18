@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   SinusoidalFrontGenerator class declaration
  *
  ************************************************************************/
@@ -13,6 +13,7 @@
 #include "MeshGenerationStrategy.h"
 
 #include <string>
+#include <memory>
 
 /*
  * SAMRAI classes
@@ -31,7 +32,6 @@
 
 #include "DerivedVisOwnerData.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -65,7 +65,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       /*! Input database */
-      const boost::shared_ptr<tbox::Database>& database = boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& database = std::shared_ptr<tbox::Database>());
 
    ~SinusoidalFrontGenerator();
 
@@ -75,7 +75,7 @@ public:
    virtual void
    setTags(
       bool& exact_tagging,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id);
 
@@ -182,7 +182,7 @@ public:
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       /*! Coarsest level */ const int coarsest_level,
       /*! Finest level */ const int finest_level);
 
@@ -195,7 +195,7 @@ public:
    void
    initializeLevelData(
       /*! Hierarchy to initialize */
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Level to initialize */
       const int level_number,
       const double init_data_time,
@@ -203,8 +203,8 @@ public:
       /*! Whether level is being introduced for the first time */
       const bool initial_time,
       /*! Level to copy data from */
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>(),
       /*! Whether data on new patch needs to be allocated */
       const bool allocate_data = true)
    {
@@ -219,7 +219,7 @@ public:
 
    virtual void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -245,7 +245,7 @@ private:
     * @brief PatchHierarchy for use in implementations of some
     * abstract interfaces that do not specify a hierarch.
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Period of sinusoid.
@@ -279,11 +279,11 @@ private:
 
    DerivedVisOwnerData d_vis_owner_data;
 
-   boost::shared_ptr<tbox::Timer> t_setup;
-   boost::shared_ptr<tbox::Timer> t_node_pos;
-   boost::shared_ptr<tbox::Timer> t_distance;
-   boost::shared_ptr<tbox::Timer> t_uval;
-   boost::shared_ptr<tbox::Timer> t_tag_cells;
+   std::shared_ptr<tbox::Timer> t_setup;
+   std::shared_ptr<tbox::Timer> t_node_pos;
+   std::shared_ptr<tbox::Timer> t_distance;
+   std::shared_ptr<tbox::Timer> t_uval;
+   std::shared_ptr<tbox::Timer> t_tag_cells;
 
 };
 

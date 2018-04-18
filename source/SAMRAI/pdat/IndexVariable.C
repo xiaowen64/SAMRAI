@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   IndexVariable implementation
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -36,7 +35,7 @@ IndexVariable<TYPE, BOX_GEOMETRY>::IndexVariable(
    // default zero ghost cells
    hier::Variable(
       name,
-      boost::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(
+      std::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(
          hier::IntVector::getZero(dim)))
 {
 }

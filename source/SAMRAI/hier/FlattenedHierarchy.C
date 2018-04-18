@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A flattened representation of a hierarchy
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/hier/HierarchyNeighbors.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -42,7 +41,7 @@ FlattenedHierarchy::FlattenedHierarchy(
    LocalId local_id(0);
 
    for (int ln = finest_level; ln >= coarsest_level; --ln) {
-      const boost::shared_ptr<PatchLevel>& current_level =
+      const std::shared_ptr<PatchLevel>& current_level =
          hierarchy.getPatchLevel(ln);
 
       if (ln != finest_level) {
@@ -59,7 +58,7 @@ FlattenedHierarchy::FlattenedHierarchy(
          for (PatchLevel::iterator ip(current_level->begin());
               ip != current_level->end(); ++ip) {
 
-            const boost::shared_ptr<Patch>& patch = *ip;
+            const std::shared_ptr<Patch>& patch = *ip;
             const Box& box = patch->getBox();
             const BlockId& block_id = box.getBlockId();
             const BoxId& box_id = box.getBoxId();
@@ -98,7 +97,7 @@ FlattenedHierarchy::FlattenedHierarchy(
       } else {
          for (PatchLevel::iterator ip(current_level->begin());
               ip != current_level->end(); ++ip) {
-            const boost::shared_ptr<Patch>& patch = *ip;
+            const std::shared_ptr<Patch>& patch = *ip;
             const Box& box = patch->getBox();
             const BoxId& box_id = box.getBoxId();
             BoxContainer& visible_boxes = d_visible_boxes[ln][box_id];

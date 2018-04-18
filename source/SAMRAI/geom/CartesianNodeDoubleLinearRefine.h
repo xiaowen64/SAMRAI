@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Linear refine operator for node-centered double data on
  *                a Cartesian mesh.
  *
@@ -19,8 +19,8 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace geom {
@@ -94,8 +94,8 @@ public:
     * @pre (fine.getDim() == coarse.getDim()) &&
     *      (fine.getDim() == fine_box.getDim()) &&
     *      (fine.getDim() == ratio.getDim())
-    * @pre coarse.getPatchData(src_component) is actually a boost::shared_ptr<pdat::NodeData<double> >
-    * @pre fine.getPatchData(dst_component) is actually a boost::shared_ptr<pdat::NodeData<double> >
+    * @pre coarse.getPatchData(src_component) is actually a std::shared_ptr<pdat::NodeData<double> >
+    * @pre fine.getPatchData(dst_component) is actually a std::shared_ptr<pdat::NodeData<double> >
     * @pre coarse.getPatchData(src_component)->getDepth() == fine.getPatchData(dst_component)->getDepth()
     * @pre (fine.getDim().getValue() == 1) ||
     *      (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3)

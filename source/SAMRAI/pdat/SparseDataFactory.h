@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   SparseDataFactory
  *
  ************************************************************************/
@@ -13,20 +13,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-/*
- ************************************************************************
- *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
- ************************************************************************
- */
-#ifdef HAVE_BOOST_HEADERS
-
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -71,7 +64,7 @@ public:
     *
     * @pre getDim() == ghosts.getDim()
     */
-   boost::shared_ptr<hier::PatchDataFactory>
+   std::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -85,7 +78,7 @@ public:
     *
     * @pre getDim() == patch.getDim()
     */
-   boost::shared_ptr<hier::PatchData>
+   std::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -99,7 +92,7 @@ public:
     *
     * @pre getDim() == box.getDim()
     */
-   boost::shared_ptr<hier::BoxGeometry>
+   std::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -150,7 +143,7 @@ public:
     */
    bool
    validCopyTo(
-      const boost::shared_ptr<PatchDataFactory>& dst_pdf) const;
+      const std::shared_ptr<PatchDataFactory>& dst_pdf) const;
 
 private:
    /*
@@ -173,5 +166,4 @@ private:
 
 #include "SAMRAI/pdat/SparseDataFactory.C"
 
-#endif
 #endif

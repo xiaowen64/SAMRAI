@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex edge-centered patch data.
  *
  ************************************************************************/
@@ -31,7 +31,7 @@ PatchEdgeDataNormOpsComplex::~PatchEdgeDataNormOpsComplex()
 
 size_t
 PatchEdgeDataNormOpsComplex::numberOfEntries(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -57,8 +57,8 @@ PatchEdgeDataNormOpsComplex::numberOfEntries(
 
 double
 PatchEdgeDataNormOpsComplex::sumControlVolumes(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data && cvol);
@@ -75,8 +75,8 @@ PatchEdgeDataNormOpsComplex::sumControlVolumes(
 
 void
 PatchEdgeDataNormOpsComplex::abs(
-   const boost::shared_ptr<pdat::EdgeData<double> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& src,
+   const std::shared_ptr<pdat::EdgeData<double> >& dst,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -92,9 +92,9 @@ PatchEdgeDataNormOpsComplex::abs(
 
 double
 PatchEdgeDataNormOpsComplex::L1Norm(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -122,9 +122,9 @@ PatchEdgeDataNormOpsComplex::L1Norm(
 
 double
 PatchEdgeDataNormOpsComplex::L2Norm(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -155,10 +155,10 @@ PatchEdgeDataNormOpsComplex::L2Norm(
 
 double
 PatchEdgeDataNormOpsComplex::weightedL2Norm(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -192,9 +192,9 @@ PatchEdgeDataNormOpsComplex::weightedL2Norm(
 
 double
 PatchEdgeDataNormOpsComplex::RMSNorm(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    double retval = L2Norm(data, box, cvol);
@@ -208,10 +208,10 @@ PatchEdgeDataNormOpsComplex::RMSNorm(
 
 double
 PatchEdgeDataNormOpsComplex::weightedRMSNorm(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    double retval = weightedL2Norm(data, weight, box, cvol);
@@ -225,9 +225,9 @@ PatchEdgeDataNormOpsComplex::weightedRMSNorm(
 
 double
 PatchEdgeDataNormOpsComplex::maxNorm(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    int dimVal = box.getDim().getValue();
@@ -254,10 +254,10 @@ PatchEdgeDataNormOpsComplex::maxNorm(
 
 dcomplex
 PatchEdgeDataNormOpsComplex::dot(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data1,
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data2,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data1,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
    int dimVal = box.getDim().getValue();
@@ -285,9 +285,9 @@ PatchEdgeDataNormOpsComplex::dot(
 
 dcomplex
 PatchEdgeDataNormOpsComplex::integral(
-   const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::EdgeData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& vol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& vol) const
 {
    TBOX_ASSERT(data);
 

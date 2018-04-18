@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Algorithms to work with MapingConnectors.
  *
  ************************************************************************/
@@ -419,15 +419,15 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_modify;
-      boost::shared_ptr<tbox::Timer> t_modify_public;
-      boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
-      boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
-      boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
-      boost::shared_ptr<tbox::Timer> t_modify_find_overlaps_for_one_process;
-      boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
-      boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
-      boost::shared_ptr<tbox::Timer> t_modify_misc;
+      std::shared_ptr<tbox::Timer> t_modify;
+      std::shared_ptr<tbox::Timer> t_modify_public;
+      std::shared_ptr<tbox::Timer> t_modify_setup_comm;
+      std::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
+      std::shared_ptr<tbox::Timer> t_modify_discover_and_send;
+      std::shared_ptr<tbox::Timer> t_modify_find_overlaps_for_one_process;
+      std::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
+      std::shared_ptr<tbox::Timer> t_modify_MPI_wait;
+      std::shared_ptr<tbox::Timer> t_modify_misc;
    };
 
    //! @brief Default prefix for Timers.

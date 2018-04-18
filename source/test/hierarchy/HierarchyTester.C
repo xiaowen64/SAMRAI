@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch hierarchy refine/coarsen tests.
  *
  ************************************************************************/
@@ -38,7 +38,7 @@ namespace SAMRAI {
 HierarchyTester::HierarchyTester(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<Database> hier_test_db):
+   std::shared_ptr<Database> hier_test_db):
    d_dim(dim),
    d_ratio(hier::IntVector::getZero(dim))
 {
@@ -109,11 +109,11 @@ HierarchyTester::~HierarchyTester()
  */
 
 void HierarchyTester::setupInitialHierarchy(
-   boost::shared_ptr<Database> main_input_db)
+   std::shared_ptr<Database> main_input_db)
 {
    TBOX_ASSERT(main_input_db);
 
-   boost::shared_ptr<CartesianGridGeometry> grid_geometry(
+   std::shared_ptr<CartesianGridGeometry> grid_geometry(
       new CartesianGridGeometry(
          d_dim,
          "CartesianGridGeometry",
@@ -124,18 +124,18 @@ void HierarchyTester::setupInitialHierarchy(
          grid_geometry,
          main_input_db->getDatabase("PatchHierarchy")));
 
-   boost::shared_ptr<BergerRigoutsos> box_generator(new BergerRigoutsos(
+   std::shared_ptr<BergerRigoutsos> box_generator(new BergerRigoutsos(
                                                        d_dim,
                                                        main_input_db->getDatabase("BergerRigoutsos")));
 
-   boost::shared_ptr<TreeLoadBalancer> load_balancer(
+   std::shared_ptr<TreeLoadBalancer> load_balancer(
       new TreeLoadBalancer(
          d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   boost::shared_ptr<StandardTagAndInitialize> dummy_error_detector(
+   std::shared_ptr<StandardTagAndInitialize> dummy_error_detector(
       new StandardTagAndInitialize(
          "StandardTagAndInitialize",
          this,
@@ -191,9 +191,9 @@ int HierarchyTester::runHierarchyTestAndVerify()
     **************************************************************
     */
 
-   boost::shared_ptr<BaseGridGeometry> init_geometry(
+   std::shared_ptr<BaseGridGeometry> init_geometry(
       d_initial_patch_hierarchy->getGridGeometry());
-   boost::shared_ptr<BaseGridGeometry> test_geometry(
+   std::shared_ptr<BaseGridGeometry> test_geometry(
       d_test_patch_hierarchy->getGridGeometry());
 
    const hier::IntVector& one_vector(hier::IntVector::getOne(d_dim));
@@ -269,9 +269,9 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
 
    for (int ln = 0; ln < nlevels; ++ln) {
-      boost::shared_ptr<PatchLevel> init_level(
+      std::shared_ptr<PatchLevel> init_level(
          d_initial_patch_hierarchy->getPatchLevel(ln));
-      boost::shared_ptr<PatchLevel> test_level(
+      std::shared_ptr<PatchLevel> test_level(
          d_test_patch_hierarchy->getPatchLevel(ln));
 
       // Test #2:
@@ -462,9 +462,9 @@ int HierarchyTester::runHierarchyTestAndVerify()
       for (PatchLevel::iterator tip(test_level->begin());
            tip != test_level->end(); ++tip) {
          const BoxId& box_id = tip->getBox().getBoxId();
-         boost::shared_ptr<Patch> test_patch(
+         std::shared_ptr<Patch> test_patch(
             test_level->getPatch(box_id));
-         boost::shared_ptr<Patch> init_patch(
+         std::shared_ptr<Patch> init_patch(
             init_level->getPatch(box_id));
 
          // Test #13:
@@ -536,9 +536,9 @@ int HierarchyTester::runHierarchyTestAndVerify()
           **************************************************************
           */
 
-         boost::shared_ptr<PatchGeometry> init_patch_geom(
+         std::shared_ptr<PatchGeometry> init_patch_geom(
             init_patch->getPatchGeometry());
-         boost::shared_ptr<PatchGeometry> test_patch_geom(
+         std::shared_ptr<PatchGeometry> test_patch_geom(
             test_patch->getPatchGeometry());
 
          // Test #18a:

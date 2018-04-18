@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Parameters in load balancing.
  *
  ************************************************************************/
@@ -97,7 +97,7 @@ public:
       return *d_workload_level;
    }
 
-   void setWorkloadPatchLevel(boost::shared_ptr<hier::PatchLevel>& level) {
+   void setWorkloadPatchLevel(std::shared_ptr<hier::PatchLevel>& level) {
       TBOX_ASSERT(level.get());
       d_workload_level = level;
    }
@@ -143,7 +143,7 @@ private:
    /*!
     * @brief Pointer to level holding nonuniform workload
     */
-   boost::shared_ptr<hier::PatchLevel> d_workload_level;
+   std::shared_ptr<hier::PatchLevel> d_workload_level;
 };
 
 }

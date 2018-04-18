@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex side-centered patch data.
  *
  ************************************************************************/
@@ -34,7 +34,7 @@ PatchSideDataNormOpsComplex::~PatchSideDataNormOpsComplex()
 
 int
 PatchSideDataNormOpsComplex::numberOfEntries(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -64,8 +64,8 @@ PatchSideDataNormOpsComplex::numberOfEntries(
 
 double
 PatchSideDataNormOpsComplex::sumControlVolumes(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<double> >& cvol,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data && cvol);
@@ -89,8 +89,8 @@ PatchSideDataNormOpsComplex::sumControlVolumes(
 
 void
 PatchSideDataNormOpsComplex::abs(
-   const boost::shared_ptr<pdat::SideData<double> >& dst,
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& src,
+   const std::shared_ptr<pdat::SideData<double> >& dst,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -110,9 +110,9 @@ PatchSideDataNormOpsComplex::abs(
 
 double
 PatchSideDataNormOpsComplex::L1Norm(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -147,9 +147,9 @@ PatchSideDataNormOpsComplex::L1Norm(
 
 double
 PatchSideDataNormOpsComplex::L2Norm(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -187,10 +187,10 @@ PatchSideDataNormOpsComplex::L2Norm(
 
 double
 PatchSideDataNormOpsComplex::weightedL2Norm(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -235,9 +235,9 @@ PatchSideDataNormOpsComplex::weightedL2Norm(
 
 double
 PatchSideDataNormOpsComplex::RMSNorm(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -252,10 +252,10 @@ PatchSideDataNormOpsComplex::RMSNorm(
 
 double
 PatchSideDataNormOpsComplex::weightedRMSNorm(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& weight,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
 
@@ -270,9 +270,9 @@ PatchSideDataNormOpsComplex::weightedRMSNorm(
 
 double
 PatchSideDataNormOpsComplex::maxNorm(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -309,10 +309,10 @@ PatchSideDataNormOpsComplex::maxNorm(
 
 dcomplex
 PatchSideDataNormOpsComplex::dot(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data1,
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data2,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data1,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
+   const std::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
@@ -350,9 +350,9 @@ PatchSideDataNormOpsComplex::dot(
 
 dcomplex
 PatchSideDataNormOpsComplex::integral(
-   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
+   const std::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::SideData<double> >& vol) const
+   const std::shared_ptr<pdat::SideData<double> >& vol) const
 {
    TBOX_ASSERT(data);
 

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed
  *                box graph.
  *
@@ -295,8 +295,8 @@ MappingConnector::findMappingErrors(
     */
 
    BoxLevelConnectorUtils blcu;
-   boost::shared_ptr<BoxLevel> bad_parts;
-   boost::shared_ptr<MappingConnector> pre_to_bad;
+   std::shared_ptr<BoxLevel> bad_parts;
+   std::shared_ptr<MappingConnector> pre_to_bad;
    const Connector* transpose = createTranspose();
    blcu.computeExternalParts(bad_parts,
       pre_to_bad,

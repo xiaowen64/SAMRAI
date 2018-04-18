@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
@@ -72,7 +72,7 @@ public:
     */
    void
    findOverlaps(
-      boost::shared_ptr<Connector>& connector,
+      std::shared_ptr<Connector>& connector,
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
       const IntVector& base_width,
@@ -100,7 +100,7 @@ public:
     */
    void
    findOverlapsWithTranspose(
-      boost::shared_ptr<Connector>& connector,
+      std::shared_ptr<Connector>& connector,
       const BoxLevel& base_box_level,
       const BoxLevel& head_box_level,
       const IntVector& base_width,
@@ -324,7 +324,7 @@ public:
     */
    void
    bridgeWithNesting(
-      boost::shared_ptr<Connector>& west_to_east,
+      std::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const IntVector& center_growth_to_nest_west,
@@ -357,7 +357,7 @@ public:
     */
    void
    bridge(
-      boost::shared_ptr<Connector>& west_to_east,
+      std::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
       const IntVector& connector_width_limit,
@@ -380,7 +380,7 @@ public:
     */
    void
    bridge(
-      boost::shared_ptr<Connector>& west_to_east,
+      std::shared_ptr<Connector>& west_to_east,
       const Connector& west_to_center,
       const Connector& center_to_east,
       bool compute_transpose) const;
@@ -706,21 +706,21 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
-      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition;
-      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_get_ap;
-      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_connect_to_ap;
-      boost::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_transpose;
+      std::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
+      std::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition;
+      std::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_get_ap;
+      std::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_connect_to_ap;
+      std::shared_ptr<tbox::Timer> t_find_overlaps_assumed_partition_transpose;
 
-      boost::shared_ptr<tbox::Timer> t_bridge;
-      boost::shared_ptr<tbox::Timer> t_bridge_setup_comm;
-      boost::shared_ptr<tbox::Timer> t_bridge_remove_and_cache;
-      boost::shared_ptr<tbox::Timer> t_bridge_discover_and_send;
-      boost::shared_ptr<tbox::Timer> t_bridge_discover_get_neighbors;
-      boost::shared_ptr<tbox::Timer> t_bridge_discover_form_rbbt;
-      boost::shared_ptr<tbox::Timer> t_bridge_share;
-      boost::shared_ptr<tbox::Timer> t_bridge_receive_and_unpack;
-      boost::shared_ptr<tbox::Timer> t_bridge_MPI_wait;
+      std::shared_ptr<tbox::Timer> t_bridge;
+      std::shared_ptr<tbox::Timer> t_bridge_setup_comm;
+      std::shared_ptr<tbox::Timer> t_bridge_remove_and_cache;
+      std::shared_ptr<tbox::Timer> t_bridge_discover_and_send;
+      std::shared_ptr<tbox::Timer> t_bridge_discover_get_neighbors;
+      std::shared_ptr<tbox::Timer> t_bridge_discover_form_rbbt;
+      std::shared_ptr<tbox::Timer> t_bridge_share;
+      std::shared_ptr<tbox::Timer> t_bridge_receive_and_unpack;
+      std::shared_ptr<tbox::Timer> t_bridge_MPI_wait;
    };
 
    //! @brief Default prefix for Timers.

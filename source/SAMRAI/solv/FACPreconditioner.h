@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -20,8 +20,8 @@
 
 #include <algorithm>
 #include <cctype>
+#include <memory>
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace solv {
@@ -136,9 +136,9 @@ public:
     */
    FACPreconditioner(
       const std::string& name,
-      boost::shared_ptr<FACOperatorStrategy> user_ops,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      std::shared_ptr<FACOperatorStrategy> user_ops,
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * Virtual destructor.
@@ -482,7 +482,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * @brief Compute composite residual on all levels and
@@ -608,7 +608,7 @@ private:
     *
     * Reference is initialized by constructor @em never changes.
     */
-   boost::shared_ptr<FACOperatorStrategy> d_fac_operator;
+   std::shared_ptr<FACOperatorStrategy> d_fac_operator;
 
    //@{
    /*!
@@ -619,29 +619,29 @@ private:
     * and used only during the solve process.
     */
 
-   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
    int d_coarsest_ln;
    int d_finest_ln;
 
    /*!
     * @brief Clone of solution vector to store residual.
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_residual_vector;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_residual_vector;
 
    /*!
     * @brief Clone of solution vector to store temporary residual.
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_tmp_residual;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_tmp_residual;
 
    /*!
     * @brief Error vector.
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_error_vector;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_error_vector;
 
    /*!
     * @brief Error vector for homogeneous boundary condition problem..
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_tmp_error;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_tmp_error;
 
    //@}
 
@@ -687,13 +687,13 @@ private:
     * @brief Objects facilitating operations over a specific range
     * of levels.
     */
-   std::vector<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
+   std::vector<std::shared_ptr<math::HierarchyDataOpsReal<double> > >
    d_controlled_level_ops;
 
    /*!
     * Timers for performance measurement.
     */
-   boost::shared_ptr<tbox::Timer> t_solve_system;
+   std::shared_ptr<tbox::Timer> t_solve_system;
 };
 
 }

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all transfer operators.
  *
  ************************************************************************/
@@ -18,16 +18,12 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Boost.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
-
-BEGIN_BOOST_WARNING_SUPPRESSION
-#include "boost/unordered_map.hpp"
-END_BOOST_WARNING_SUPPRESSION
+#include <memory>
+#include <unordered_map>
 
 namespace SAMRAI {
 namespace hier {
@@ -92,7 +88,7 @@ public:
    void
    addCoarsenOperator(
       const char* var_type_name,
-      const boost::shared_ptr<CoarsenOperator>& coarsen_op);
+      const std::shared_ptr<CoarsenOperator>& coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -105,7 +101,7 @@ public:
    void
    addRefineOperator(
       const char* var_type_name,
-      const boost::shared_ptr<RefineOperator>& refine_op);
+      const std::shared_ptr<RefineOperator>& refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -118,7 +114,7 @@ public:
    void
    addTimeInterpolateOperator(
       const char* var_type_name,
-      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
+      const std::shared_ptr<TimeInterpolateOperator>& time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -135,9 +131,9 @@ public:
     * @pre var
     * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
-   boost::shared_ptr<CoarsenOperator>
+   std::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -155,9 +151,9 @@ public:
     * @pre var
     * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
-   boost::shared_ptr<RefineOperator>
+   std::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -176,9 +172,9 @@ public:
     * @pre var
     * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
-   boost::shared_ptr<TimeInterpolateOperator>
+   std::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE");
 
@@ -257,8 +253,8 @@ private:
     * package.  Additional operators may be added to this hash map at any time
     * (see addCoarsenOperator() function).
     */
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
-                                                          boost::shared_ptr<CoarsenOperator> > >
+   std::unordered_map<std::string, std::unordered_map<std::string,
+                                                          std::shared_ptr<CoarsenOperator> > >
    d_coarsen_operators;
 
    /*
@@ -269,8 +265,8 @@ private:
     * package.  Additional operators may be added to this hash map at any time
     * (see addRefineOperator() function).
     */
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
-                                                          boost::shared_ptr<RefineOperator> > >
+   std::unordered_map<std::string, std::unordered_map<std::string,
+                                                          std::shared_ptr<RefineOperator> > >
    d_refine_operators;
 
    /*
@@ -281,8 +277,8 @@ private:
     * patchdata package.  Additional operators may be added to this hash map at
     * any time (see addTimeInterpolateOperator() function).
     */
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
-                                                          boost::shared_ptr<TimeInterpolateOperator> > >
+   std::unordered_map<std::string, std::unordered_map<std::string,
+                                                          std::shared_ptr<TimeInterpolateOperator> > >
    d_time_operators;
 
    /*!

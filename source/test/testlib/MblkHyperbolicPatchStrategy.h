@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -23,7 +23,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 /**
  * Class MblkHyperbolicPatchStrategy is an abstract base class defining the
@@ -202,7 +202,7 @@ public:
     */
    virtual void
    preprocessAdvanceLevelState(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -245,7 +245,7 @@ public:
     */
    virtual void
    postprocessAdvanceLevelState(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -327,8 +327,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
-      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
+      const std::shared_ptr<hier::VariableContext> coarsened_fine,
+      const std::shared_ptr<hier::VariableContext> advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -479,7 +479,7 @@ public:
    /**
     * Return pointer to patch data context.
     */
-   boost::shared_ptr<hier::VariableContext> getDataContext() const
+   std::shared_ptr<hier::VariableContext> getDataContext() const
    {
       return d_data_context;
    }
@@ -491,7 +491,7 @@ public:
     * data on a patch on which to operate.
     */
    void setDataContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      std::shared_ptr<hier::VariableContext> context)
    {
       d_data_context = context;
    }
@@ -515,7 +515,7 @@ public:
 private:
    const tbox::Dimension d_dim;
 
-   boost::shared_ptr<hier::VariableContext> d_data_context;
+   std::shared_ptr<hier::VariableContext> d_data_context;
 
 };
 

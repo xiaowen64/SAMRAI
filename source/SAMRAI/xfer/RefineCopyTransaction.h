@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for data copies during data
  *                refining
  *
@@ -53,9 +53,9 @@ public:
     * data copy, (2) packing a message stream with source patch data, or (3)
     * unpacking destination patch data from a message stream.
     *
-    * @param dst_level        boost::shared_ptr to destination patch level.
-    * @param src_level        boost::shared_ptr to source patch level.
-    * @param overlap          boost::shared_ptr to overlap region between
+    * @param dst_level        std::shared_ptr to destination patch level.
+    * @param src_level        std::shared_ptr to source patch level.
+    * @param overlap          std::shared_ptr to overlap region between
     *                         patches.
     * @param dst_box          Destination Box in destination patch level.
     * @param src_box          Source Box in source patch level.
@@ -75,9 +75,9 @@ public:
     *      (dst_level->getDim() == src_box.getDim())
     */
    RefineCopyTransaction(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const boost::shared_ptr<hier::BoxOverlap>& overlap,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
       const RefineClasses::Data ** refine_data,
@@ -159,11 +159,11 @@ private:
    operator = (
       const RefineCopyTransaction&);                    // not implemented
 
-   boost::shared_ptr<hier::Patch> d_dst_patch;
+   std::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
-   boost::shared_ptr<hier::Patch> d_src_patch;
+   std::shared_ptr<hier::Patch> d_src_patch;
    int d_src_patch_rank;
-   boost::shared_ptr<hier::BoxOverlap> d_overlap;
+   std::shared_ptr<hier::BoxOverlap> d_overlap;
    const RefineClasses::Data** d_refine_data;
    int d_item_id;
    size_t d_incoming_bytes;

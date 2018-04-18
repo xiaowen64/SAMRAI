@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
@@ -14,9 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
-#include "boost/shared_ptr.hpp"
 #include <utility>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -65,13 +65,13 @@ public:
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const std::pair<boost::shared_ptr<Patch>, Box>&
+   const std::pair<std::shared_ptr<Patch>, Box>&
    operator * () const;
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const std::pair<boost::shared_ptr<Patch>, Box> *
+   const std::pair<std::shared_ptr<Patch>, Box> *
    operator -> () const;
 
    /*!
@@ -168,7 +168,7 @@ private:
    BoxContainer::const_iterator d_uncovered_boxes_itr_end;
 
    /* The current item in the iteration. */
-   std::pair<boost::shared_ptr<Patch>, Box>* d_item;
+   std::pair<std::shared_ptr<Patch>, Box>* d_item;
 
    /* The number of the finest level in the hierarchy. */
    int d_finest_level_num;

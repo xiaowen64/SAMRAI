@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Test class for SparseData.
  *
  ************************************************************************/
@@ -18,9 +18,9 @@
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/hier/Index.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace sam_test {
 
@@ -54,17 +54,11 @@ private:
    static const int DSIZE = 7;
    static const int ISIZE = 3;
 
-#ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> SparseDataType;
-#else
-   // Dummy type declaraion.
-   typedef int SparseDataType;
-#endif
 
-#ifdef HAVE_BOOST_HEADERS
    void
    _fillObject(
-      boost::shared_ptr<SparseDataType> sparse_data);
+      std::shared_ptr<SparseDataType> sparse_data);
    void
    _getDblKeys(
       std::vector<std::string>& keys);
@@ -79,15 +73,14 @@ private:
       int* values);
    bool
    _testCopy(
-      boost::shared_ptr<SparseDataType> src,
-      boost::shared_ptr<SparseDataType> dst);
-   boost::shared_ptr<SparseDataType>
+      std::shared_ptr<SparseDataType> src,
+      std::shared_ptr<SparseDataType> dst);
+   std::shared_ptr<SparseDataType>
    _createEmptySparseData();
    hier::Index
    _getRandomIndex();
 
-   boost::shared_ptr<SparseDataType> d_sparse_data;
-#endif
+   std::shared_ptr<SparseDataType> d_sparse_data;
 
    bool d_initialized;
    tbox::Dimension d_dim;

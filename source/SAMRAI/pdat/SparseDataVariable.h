@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   SparseDataVariable
  *
  ************************************************************************/
@@ -11,13 +11,6 @@
 #define included_pdat_SparseDataVariable
 
 #include "SAMRAI/SAMRAI_config.h"
-
-/*
- ************************************************************************
- *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
- ************************************************************************
- */
-#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
@@ -98,5 +91,4 @@ private:
 
 #include "SAMRAI/pdat/SparseDataVariable.C"
 
-#endif
 #endif

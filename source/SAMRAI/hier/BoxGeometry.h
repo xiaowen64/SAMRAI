@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Box geometry description for overlap computations
  *
  ************************************************************************/
@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {
@@ -103,7 +103,7 @@ public:
     * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
-   boost::shared_ptr<BoxOverlap>
+   std::shared_ptr<BoxOverlap>
    calculateOverlap(
       const BoxGeometry& src_geometry,
       const Box& src_mask,
@@ -139,7 +139,7 @@ public:
     * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
-   virtual boost::shared_ptr<BoxOverlap>
+   virtual std::shared_ptr<BoxOverlap>
    calculateOverlap(
       const BoxGeometry& dst_geometry,
       const BoxGeometry& src_geometry,
@@ -154,7 +154,7 @@ public:
     * Set up a BoxOverlap object that consists simply of the given boxes
     * and the transformation.
     */
-   virtual boost::shared_ptr<BoxOverlap>
+   virtual std::shared_ptr<BoxOverlap>
    setUpOverlap(
       const BoxContainer& boxes,
       const Transformation& offset) const = 0;

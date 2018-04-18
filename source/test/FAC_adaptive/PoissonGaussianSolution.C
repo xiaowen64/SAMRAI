@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   PoissonGaussianSolution class implementation
  *
  ************************************************************************/
@@ -121,8 +121,8 @@ void PoissonGaussianSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
@@ -170,10 +170,10 @@ std::ostream& operator << (
 }
 
 void PoissonGaussianSolution::setBcCoefs(
-   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
-   const boost::shared_ptr<hier::Variable>& variable,
+   const std::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const std::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const std::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const std::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
@@ -181,8 +181,8 @@ void PoissonGaussianSolution::setBcCoefs(
    NULL_USE(variable);
    NULL_USE(fill_time);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*

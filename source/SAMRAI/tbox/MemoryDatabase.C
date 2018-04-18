@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   An memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
@@ -211,7 +211,7 @@ MemoryDatabase::isDatabase(
    return keydata ? keydata->d_type == Database::SAMRAI_DATABASE : false;
 }
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 MemoryDatabase::putDatabase(
    const std::string& key)
 {
@@ -227,7 +227,7 @@ MemoryDatabase::putDatabase(
    return keydata.d_database;
 }
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 MemoryDatabase::getDatabase(
    const std::string& key)
 {
@@ -1602,8 +1602,8 @@ MemoryDatabase::printDatabase(
    for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
         j != d_keyvalues.end(); ++j) {
       if (j->d_type == Database::SAMRAI_DATABASE) {
-         boost::shared_ptr<MemoryDatabase> db(
-            BOOST_CAST<MemoryDatabase, Database>(j->d_database));
+         std::shared_ptr<MemoryDatabase> db(
+            SAMRAI_SHARED_PTR_CAST<MemoryDatabase, Database>(j->d_database));
          db->printDatabase(os, indent + 3, toprint);
       }
    }

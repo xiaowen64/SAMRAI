@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory for create standard copy transactions
  *                for coarsen schedules.
  *
@@ -12,7 +12,6 @@
 
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -41,11 +40,11 @@ StandardCoarsenTransactionFactory::~StandardCoarsenTransactionFactory()
  *************************************************************************
  */
 
-boost::shared_ptr<tbox::Transaction>
+std::shared_ptr<tbox::Transaction>
 StandardCoarsenTransactionFactory::allocate(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
    const CoarsenClasses::Data** coarsen_data,
@@ -56,7 +55,7 @@ StandardCoarsenTransactionFactory::allocate(
       dst_box,
       src_box);
 
-   return boost::make_shared<CoarsenCopyTransaction>(
+   return std::make_shared<CoarsenCopyTransaction>(
              dst_level,
              src_level,
              overlap,

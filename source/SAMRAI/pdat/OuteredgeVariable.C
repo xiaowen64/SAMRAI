@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Variable class for defining outeredge centered variables
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/OuteredgeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -34,7 +33,7 @@ OuteredgeVariable<TYPE>::OuteredgeVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::make_shared<OuteredgeDataFactory<TYPE> >(dim, depth))
+                  std::make_shared<OuteredgeDataFactory<TYPE> >(dim, depth))
 {
 }
 
@@ -46,8 +45,8 @@ OuteredgeVariable<TYPE>::~OuteredgeVariable()
 template<class TYPE>
 int OuteredgeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<OuteredgeDataFactory<TYPE> > factory(
-      BOOST_CAST<OuteredgeDataFactory<TYPE>, hier::PatchData>(
+   std::shared_ptr<OuteredgeDataFactory<TYPE> > factory(
+      SAMRAI_SHARED_PTR_CAST<OuteredgeDataFactory<TYPE>, hier::PatchData>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

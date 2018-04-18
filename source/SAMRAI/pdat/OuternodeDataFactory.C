@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outernode data objects
  *
  ************************************************************************/
@@ -19,7 +19,6 @@
 #include "SAMRAI/pdat/OuternodeGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -57,13 +56,13 @@ OuternodeDataFactory<TYPE>::~OuternodeDataFactory()
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchDataFactory>
+std::shared_ptr<hier::PatchDataFactory>
 OuternodeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return boost::make_shared<OuternodeDataFactory<TYPE> >(
+   return std::make_shared<OuternodeDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth);
 }
@@ -77,13 +76,13 @@ OuternodeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchData>
+std::shared_ptr<hier::PatchData>
 OuternodeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-   return boost::make_shared<OuternodeData<TYPE> >(patch.getBox(), d_depth);
+   return std::make_shared<OuternodeData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -95,7 +94,7 @@ OuternodeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::BoxGeometry>
+std::shared_ptr<hier::BoxGeometry>
 OuternodeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -103,7 +102,7 @@ OuternodeDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
-   return boost::make_shared<OuternodeGeometry>(box, zero_vector);
+   return std::make_shared<OuternodeGeometry>(box, zero_vector);
 }
 
 template<class TYPE>
@@ -146,7 +145,7 @@ OuternodeDataFactory<TYPE>::getSizeOfMemory(
 template<class TYPE>
 bool
 OuternodeDataFactory<TYPE>::validCopyTo(
-   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
+   const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
@@ -156,8 +155,8 @@ OuternodeDataFactory<TYPE>::validCopyTo(
     * Valid options are NodeData and OuternodeData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<NodeDataFactory<TYPE> > ndf(
-         boost::dynamic_pointer_cast<NodeDataFactory<TYPE>,
+      std::shared_ptr<NodeDataFactory<TYPE> > ndf(
+         std::dynamic_pointer_cast<NodeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (ndf) {
          valid_copy = true;
@@ -165,8 +164,8 @@ OuternodeDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
-         boost::dynamic_pointer_cast<OuternodeDataFactory<TYPE>,
+      std::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
+         std::dynamic_pointer_cast<OuternodeDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));
       if (ondf) {

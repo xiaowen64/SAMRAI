@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for summing outeredge data
  *
  ************************************************************************/
@@ -54,9 +54,9 @@ public:
     * message stream with source patch data, or (3) unpacking and summing
     * destination patch data from a message stream.
     *
-    * @param dst_level        boost::shared_ptr to destination patch level.
-    * @param src_level        boost::shared_ptr to source patch level.
-    * @param overlap          boost::shared_ptr to overlap region between
+    * @param dst_level        std::shared_ptr to destination patch level.
+    * @param src_level        std::shared_ptr to source patch level.
+    * @param overlap          std::shared_ptr to overlap region between
     *                         patches.
     * @param dst_node         Destination box.
     * @param src_node         Source box.
@@ -76,9 +76,9 @@ public:
     *      (dst_level->getDim() == src_node.getDim())
     */
    OuteredgeSumTransaction(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const boost::shared_ptr<hier::BoxOverlap>& overlap,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       const xfer::RefineClasses::Data ** refine_data,
@@ -136,7 +136,7 @@ public:
    /*!
     * Unpack the transaction data from the message stream.
     *
-    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(_refine_data[d_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuteredgeData<double> >
+    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(_refine_data[d_item_id]->d_scratch) is actually a std::shared_ptr<pdat::OuteredgeData<double> >
     */
    virtual void
    unpackStream(
@@ -145,8 +145,8 @@ public:
    /*!
     * Perform the local data copy for the transaction.
     *
-    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_scratch) is actually a boost::shared_ptr<pdat::OuteredgeData<double> >
-    * @pre d_src_level->getPatch(d_src_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_src) is actually a boost::shared_ptr<pdat::OuteredgeData<double> >
+    * @pre d_dst_level->getPatch(d_dst_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_scratch) is actually a std::shared_ptr<pdat::OuteredgeData<double> >
+    * @pre d_src_level->getPatch(d_src_node.getGlobalId())->getPatchData(d_refine_data[d_item_id]->d_src) is actually a std::shared_ptr<pdat::OuteredgeData<double> >
     */
    virtual void
    copyLocalData();
@@ -165,9 +165,9 @@ private:
    operator = (
       const OuteredgeSumTransaction&);             // not implemented
 
-   boost::shared_ptr<hier::PatchLevel> d_dst_level;
-   boost::shared_ptr<hier::PatchLevel> d_src_level;
-   boost::shared_ptr<hier::BoxOverlap> d_overlap;
+   std::shared_ptr<hier::PatchLevel> d_dst_level;
+   std::shared_ptr<hier::PatchLevel> d_src_level;
+   std::shared_ptr<hier::BoxOverlap> d_overlap;
    hier::Box d_dst_node;
    hier::Box d_src_node;
    const xfer::RefineClasses::Data** d_refine_data;

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
@@ -17,7 +17,8 @@
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
+
 
 namespace SAMRAI {
 namespace algs {
@@ -47,9 +48,9 @@ public:
    /*!
     * @brief Allocate an OuteredgeSumTransaction object.
     *
-    * @param dst_level      boost::shared_ptr to destination patch level.
-    * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between
+    * @param dst_level      std::shared_ptr to destination patch level.
+    * @param src_level      std::shared_ptr to source patch level.
+    * @param overlap        std::shared_ptr to overlap region between
     *                       patches.
     * @param dst_node       Destination Box in destination patch level.
     * @param src_node       Source Box in source patch level.
@@ -73,11 +74,11 @@ public:
     *      (dst_level->getDim() == dst_node.getDim()) &&
     *      (dst_level->getDim() == src_node.getDim())
     */
-   boost::shared_ptr<tbox::Transaction>
+   std::shared_ptr<tbox::Transaction>
    allocate(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const boost::shared_ptr<hier::BoxOverlap>& overlap,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       const xfer::RefineClasses::Data ** refine_data,
@@ -101,11 +102,11 @@ public:
     *      (dst_level->getDim() == dst_node.getDim()) &&
     *      (dst_level->getDim() == src_node.getDim())
     */
-   boost::shared_ptr<tbox::Transaction>
+   std::shared_ptr<tbox::Transaction>
    allocate(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const boost::shared_ptr<hier::BoxOverlap>& overlap,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       const xfer::RefineClasses::Data ** refine_data,
@@ -115,7 +116,7 @@ public:
     * @brief Function to initialize scratch space data for the sum transactions
     * (patch data components indicated by the component selector) to zero.
     *
-    * @param level        boost::shared_ptr to patch level holding scratch
+    * @param level        std::shared_ptr to patch level holding scratch
     *                     data.
     * @param fill_time    Double value of simulation time at which preprocess
     *                     operation is called.
@@ -127,7 +128,7 @@ public:
     */
    void
    preprocessScratchSpace(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       double fill_time,
       const hier::ComponentSelector& preprocess_vector) const;
 

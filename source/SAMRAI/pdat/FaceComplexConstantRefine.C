@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for face-centered complex data on
  *                a  mesh.
  *
@@ -121,11 +121,11 @@ FaceComplexConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<FaceData<dcomplex> > cdata(
-      BOOST_CAST<FaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<FaceData<dcomplex> > cdata(
+      SAMRAI_SHARED_PTR_CAST<FaceData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<FaceData<dcomplex> > fdata(
-      BOOST_CAST<FaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<FaceData<dcomplex> > fdata(
+      SAMRAI_SHARED_PTR_CAST<FaceData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap =

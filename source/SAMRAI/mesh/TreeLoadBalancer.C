@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -60,8 +60,8 @@ const int TreeLoadBalancer::s_default_data_id = -1;
 TreeLoadBalancer::TreeLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   const boost::shared_ptr<tbox::Database>& input_db,
-   const boost::shared_ptr<tbox::RankTreeStrategy>& rank_tree):
+   const std::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::RankTreeStrategy>& rank_tree):
    d_dim(dim),
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
@@ -70,7 +70,7 @@ TreeLoadBalancer::TreeLoadBalancer(
    d_max_spread_procs(500),
    d_voucher_mode(false),
    d_allow_box_breaking(true),
-   d_rank_tree(rank_tree ? rank_tree : boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::
+   d_rank_tree(rank_tree ? rank_tree : std::shared_ptr<tbox::RankTreeStrategy>(new tbox::
                                                                                  CenteredRankTree)),
    d_comm_graph_writer(),
    d_master_workload_data_id(s_default_data_id),
@@ -124,8 +124,8 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      BOOST_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::CellDataFactory<double> > datafact(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
          hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
          getPatchDataFactory(data_id)));
 
@@ -165,7 +165,7 @@ void
 TreeLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector* balance_to_reference,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -287,7 +287,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 
    t_load_balance_box_level->start();
 
-   d_pparams = boost::make_shared<PartitioningParams>(
+   d_pparams = std::make_shared<PartitioningParams>(
          *balance_box_level.getGridGeometry(),
          balance_box_level.getRefinementRatio(),
          min_size, max_size, bad_interval, effective_cut_factor,
@@ -627,12 +627,12 @@ TreeLoadBalancer::loadBalanceWithinRankGroup(
        * Create a concrete TransitLoad container to hold the work
        * being redistributed.
        */
-      boost::shared_ptr<TransitLoad> balanced_work;
+      std::shared_ptr<TransitLoad> balanced_work;
       if (d_voucher_mode) {
-         balanced_work = boost::make_shared<VoucherTransitLoad>(*d_pparams);
+         balanced_work = std::make_shared<VoucherTransitLoad>(*d_pparams);
          balanced_work->setTimerPrefix(d_object_name + "::VoucherTransitLoad");
       } else {
-         balanced_work = boost::make_shared<BoxTransitSet>(*d_pparams);
+         balanced_work = std::make_shared<BoxTransitSet>(*d_pparams);
          balanced_work->setTimerPrefix(d_object_name + "::BoxTransitSet");
       }
 
@@ -1599,7 +1599,7 @@ TreeLoadBalancer::computeLocalLoad(
 
 void
 TreeLoadBalancer::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
 
    if (input_db) {
@@ -1732,8 +1732,8 @@ TreeLoadBalancer::setTimers()
          getTimer(d_object_name + "::compute_tree_load");
 
       const int max_cycles_to_time = 5;
-      t_compute_tree_load_for_cycle.resize(max_cycles_to_time, boost::shared_ptr<tbox::Timer>());
-      t_load_balance_for_cycle.resize(max_cycles_to_time, boost::shared_ptr<tbox::Timer>());
+      t_compute_tree_load_for_cycle.resize(max_cycles_to_time, std::shared_ptr<tbox::Timer>());
+      t_load_balance_for_cycle.resize(max_cycles_to_time, std::shared_ptr<tbox::Timer>());
       for (int i = 0; i < max_cycles_to_time; ++i) {
          t_compute_tree_load_for_cycle[i] = tbox::TimerManager::getManager()->
             getTimer(d_object_name + "::compute_tree_load_for_cycle["

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Templated outerface centered patch data type
  *
  ************************************************************************/
@@ -676,7 +676,7 @@ OuterfaceData<TYPE>::printAxisFace(
 template<class TYPE>
 void
 OuterfaceData<TYPE>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -691,7 +691,7 @@ OuterfaceData<TYPE>::getFromRestart(
 
    d_depth = restart_db->getInteger("d_depth");
 
-   boost::shared_ptr<tbox::Database> array_database;
+   std::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
@@ -716,7 +716,7 @@ OuterfaceData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 OuterfaceData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
 
    TBOX_ASSERT(restart_db);
@@ -728,7 +728,7 @@ OuterfaceData<TYPE>::putToRestart(
 
    restart_db->putInteger("d_depth", d_depth);
 
-   boost::shared_ptr<tbox::Database> array_database;
+   std::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";

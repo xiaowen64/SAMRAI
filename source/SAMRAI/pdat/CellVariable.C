@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -35,7 +34,7 @@ CellVariable<TYPE>::CellVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  boost::make_shared<CellDataFactory<TYPE> >(depth,
+                  std::make_shared<CellDataFactory<TYPE> >(depth,
                                                              hier::IntVector::getZero(dim))) // default zero ghost cells
 {
 }
@@ -49,8 +48,8 @@ template<class TYPE>
 int
 CellVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<CellDataFactory<TYPE> > cell_factory(
-      BOOST_CAST<CellDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<CellDataFactory<TYPE> > cell_factory(
+      SAMRAI_SHARED_PTR_CAST<CellDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();

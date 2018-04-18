@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
@@ -83,7 +83,7 @@ int
 Parser::parse(
    const std::string& filename,
    FILE* fstream,
-   const boost::shared_ptr<Database>& database)
+   const std::shared_ptr<Database>& database)
 {
    d_errors = 0;
    d_warnings = 0;
@@ -226,17 +226,17 @@ Parser::warning(
  *************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 Parser::getDatabaseWithKey(
    const std::string& key)
 {
-   std::list<boost::shared_ptr<Database> >::iterator i = d_scope_stack.begin();
+   std::list<std::shared_ptr<Database> >::iterator i = d_scope_stack.begin();
    for ( ; i != d_scope_stack.end(); ++i) {
       if ((*i)->keyExists(key)) {
          return *i;
       }
    }
-   return boost::shared_ptr<Database>();
+   return std::shared_ptr<Database>();
 }
 
 /*

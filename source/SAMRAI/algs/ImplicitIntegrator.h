@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Implicit time integration manager class.
  *
  ************************************************************************/
@@ -22,8 +22,8 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {
@@ -123,10 +123,10 @@ public:
     */
    ImplicitIntegrator(
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       ImplicitEquationStrategy* implicit_equations,
       solv::NonlinearSolverStrategy* nonlinear_solver,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Empty destructor for ImplicitIntegrator
@@ -285,7 +285,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Returns the object name.
@@ -309,7 +309,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /*
@@ -331,14 +331,14 @@ private:
     */
    ImplicitEquationStrategy * d_implicit_equations;
    solv::NonlinearSolverStrategy * d_nonlinear_solver;
-   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
 
    int d_finest_level;
 
    /*
     * Solution vector advanced during the time integration process.
     */
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
 
    /*
     * Data members representing integrator times, time increments,

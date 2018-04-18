@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -55,7 +54,7 @@ FirstLayerSideVariableFillPattern::~FirstLayerSideVariableFillPattern()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FirstLayerSideVariableFillPattern::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -88,7 +87,7 @@ FirstLayerSideVariableFillPattern::calculateOverlap(
       dst_boxes[d].intersectBoxes(stencil_boxes[d]);
    }
 
-   return boost::make_shared<SideOverlap>(dst_boxes, transformation);
+   return std::make_shared<SideOverlap>(dst_boxes, transformation);
 
 }
 
@@ -156,7 +155,7 @@ FirstLayerSideVariableFillPattern::computeStencilBoxes(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::BoxContainer& node_fill_boxes,
@@ -198,7 +197,7 @@ FirstLayerSideVariableFillPattern::computeFillBoxesOverlap(
       overlap_boxes[d].coalesce();
    }
 
-   return boost::make_shared<SideOverlap>(
+   return std::make_shared<SideOverlap>(
              overlap_boxes,
              hier::Transformation(hier::IntVector::getZero(dim)));
 }

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -20,8 +20,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include "boost/make_shared.hpp"
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {
@@ -122,7 +121,7 @@ public:
     *
     * @pre getBox().getDim() == src_mask.getDim()
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -154,7 +153,7 @@ public:
     * @brief Set up a EdgeOverlap object based on the given boxes and the
     * transformation.
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -185,7 +184,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have node centered geometry.
     */
-   static boost::shared_ptr<hier::BoxOverlap>
+   static std::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const NodeGeometry& dst_geometry,
       const NodeGeometry& src_geometry,
@@ -205,7 +204,7 @@ private:
          dst_restrict_boxes);
 
       // Create the node overlap data object using the boxes and source shift
-      return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
+      return std::make_shared<NodeOverlap>(dst_boxes, transformation);
    }
 
    static void

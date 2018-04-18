@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Singleton timer manager class.
  *
  ************************************************************************/
@@ -18,11 +18,11 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -36,7 +36,7 @@ namespace tbox {
  * output generation.  Within the source code, timer objects are retrieved
  * as follows:
  *
- *    boost::shared_ptr<Timer> name_timer =
+ *    std::shared_ptr<Timer> name_timer =
  *        TimerManager::getManager->getTimer("name");
  *
  * Here `name' is the name string identifier for the timer.
@@ -261,8 +261,8 @@ public:
     */
    static void
    createManager(
-      const boost::shared_ptr<Database>& input_db =
-         boost::shared_ptr<Database>());
+      const std::shared_ptr<Database>& input_db =
+         std::shared_ptr<Database>());
 
    /*!
     * Return a pointer to the singleton instance of the timer manager.
@@ -288,7 +288,7 @@ public:
     *
     * @pre !name.empty()
     */
-   boost::shared_ptr<Timer>
+   std::shared_ptr<Timer>
    getTimer(
       const std::string& name,
       bool ignore_timer_input = false);
@@ -303,7 +303,7 @@ public:
     */
    bool
    checkTimerExists(
-      boost::shared_ptr<Timer>& timer,
+      std::shared_ptr<Timer>& timer,
       const std::string& name) const;
 
    /*!
@@ -337,8 +337,8 @@ protected:
     * can have access to the constructor for the class.
     */
    explicit TimerManager(
-      const boost::shared_ptr<Database>& input_db =
-         boost::shared_ptr<Database>());
+      const std::shared_ptr<Database>& input_db =
+         std::shared_ptr<Database>());
 
    /*!
     * TimerManager is a Singleton class; its destructor is protected.
@@ -414,9 +414,9 @@ private:
     */
    bool
    checkTimerExistsInArray(
-      boost::shared_ptr<Timer>& timer,
+      std::shared_ptr<Timer>& timer,
       const std::string& name,
-      const std::vector<boost::shared_ptr<Timer> >& timer_array) const;
+      const std::vector<std::shared_ptr<Timer> >& timer_array) const;
 
    /*
     * Print a table of values, using values specified in the timer_values
@@ -504,7 +504,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<Database>& input_db);
+      const std::shared_ptr<Database>& input_db);
 
    /*
     * Private member used by the above routine (getFromInput)
@@ -583,19 +583,19 @@ private:
     * Main timer used to time overall run time (time between
     * creation and print, or deletion, of TimerManager.
     */
-   boost::shared_ptr<Timer> d_main_timer;
+   std::shared_ptr<Timer> d_main_timer;
 
    /*
     * Count of timers registered with the timer manager and an
     * array of pointers to those timers.
     */
-   std::vector<boost::shared_ptr<Timer> > d_timers;
+   std::vector<std::shared_ptr<Timer> > d_timers;
 
    /*
     * An array of dummy inactive timers is used to record
     * number of accesses to non-active timers.
     */
-   std::vector<boost::shared_ptr<Timer> > d_inactive_timers;
+   std::vector<std::shared_ptr<Timer> > d_inactive_timers;
 
    /*
     * Timer which measures overall run time.  All other timers are

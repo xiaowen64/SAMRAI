@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex face-centered data.
  *
  ************************************************************************/
@@ -19,7 +19,8 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
+
 
 namespace SAMRAI {
 namespace math {
@@ -71,7 +72,7 @@ public:
     */
    int
    numberOfEntries(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box) const;
 
    /**
@@ -81,8 +82,8 @@ public:
     */
    double
    sumControlVolumes(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<double> >& cvol,
       const hier::Box& box) const;
 
    /**
@@ -95,8 +96,8 @@ public:
     */
    void
    abs(
-      const boost::shared_ptr<pdat::FaceData<double> >& dst,
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& src,
+      const std::shared_ptr<pdat::FaceData<double> >& dst,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& src,
       const hier::Box& box) const;
 
    /**
@@ -112,10 +113,10 @@ public:
     */
    double
    L1Norm(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -131,10 +132,10 @@ public:
     */
    double
    L2Norm(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -151,11 +152,11 @@ public:
     */
    double
    weightedL2Norm(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -168,10 +169,10 @@ public:
     */
    double
    RMSNorm(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -184,11 +185,11 @@ public:
     */
    double
    weightedRMSNorm(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& weight,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& weight,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -201,10 +202,10 @@ public:
     */
    double
    maxNorm(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -216,11 +217,11 @@ public:
     */
    dcomplex
    dot(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data1,
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data2,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data1,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data2,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& cvol =
-         boost::shared_ptr<pdat::FaceData<double> >()) const;
+      const std::shared_ptr<pdat::FaceData<double> >& cvol =
+         std::shared_ptr<pdat::FaceData<double> >()) const;
 
    /**
     * Return the integral of the function represented by the data array.
@@ -230,9 +231,9 @@ public:
     */
    dcomplex
    integral(
-      const boost::shared_ptr<pdat::FaceData<dcomplex> >& data,
+      const std::shared_ptr<pdat::FaceData<dcomplex> >& data,
       const hier::Box& box,
-      const boost::shared_ptr<pdat::FaceData<double> >& vol) const;
+      const std::shared_ptr<pdat::FaceData<double> >& vol) const;
 
 private:
    // The following are not implemented:

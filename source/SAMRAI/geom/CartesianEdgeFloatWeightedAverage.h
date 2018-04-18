@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for edge-centered float data on
  *                a Cartesian mesh.
  *
@@ -22,7 +22,8 @@
 #endif
 #include "SAMRAI/hier/CoarsenOperator.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
+
 
 namespace SAMRAI {
 namespace geom {
@@ -76,8 +77,8 @@ public:
     * @pre (fine.getDim() == coarse.getDim()) &&
     *      (fine.getDim() == coarse_box.getDim()) &&
     *      (fine.getDim() == ratio.getDim())
-    * @pre fine.getPatchData(src_component) is actually a boost::shared_ptr<pdat::EdgeData<float> >
-    * @pre coarse.getPatchData(dst_component) is actually a boost::shared_ptr<pdat::EdgeData<float> >
+    * @pre fine.getPatchData(src_component) is actually a std::shared_ptr<pdat::EdgeData<float> >
+    * @pre coarse.getPatchData(dst_component) is actually a std::shared_ptr<pdat::EdgeData<float> >
     * @pre fine.getPatchData(src_component)->getDepth() == coarse.getPatchData(dst_component)->getDepth()
     * @pre (fine.getDim().getValue() == 1) ||
     *      (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3)

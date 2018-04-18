@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Manages PatchData objects created at coarse-fine stencils
  *
  ************************************************************************/
@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/xfer/CompositeBoundarySchedule.h"
 
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {
@@ -63,7 +63,7 @@ public:
     * @pre stencil_width >= 1
     */
    CompositeBoundaryAlgorithm(
-      boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int stencil_width);
 
    /*!
@@ -95,7 +95,7 @@ public:
     *
     * @param level_num   level number for a level from hierarchy.
     */
-   boost::shared_ptr<CompositeBoundarySchedule>
+   std::shared_ptr<CompositeBoundarySchedule>
    createSchedule(int level_num);
 
 private:
@@ -108,7 +108,7 @@ private:
    /*!
     * @brief Hierarchy where the stencils exist
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Width of the stencils.  The width represents a width in

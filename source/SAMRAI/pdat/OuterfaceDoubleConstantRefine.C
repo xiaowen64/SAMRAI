@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for outerface double data on
  *                a  mesh.
  *
@@ -131,11 +131,11 @@ OuterfaceDoubleConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<OuterfaceData<double> > cdata(
-      BOOST_CAST<OuterfaceData<double>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<double> > cdata(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<OuterfaceData<double> > fdata(
-      BOOST_CAST<OuterfaceData<double>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<double> > fdata(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&fine_overlap);

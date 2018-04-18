@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Interface to operations for integer data on hierarchy.
  *
  ************************************************************************/
@@ -15,8 +15,8 @@
 
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {
@@ -62,7 +62,7 @@ public:
    virtual
    void
    setPatchHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) = 0;
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy) = 0;
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -76,7 +76,7 @@ public:
     * Return const pointer to patch hierarchy associated with operations.
     */
    virtual
-   const boost::shared_ptr<hier::PatchHierarchy>
+   const std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const = 0;
 
    /**

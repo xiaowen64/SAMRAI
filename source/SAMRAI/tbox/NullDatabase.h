@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A null database that does nothing for all database methods.
  *
  ************************************************************************/
@@ -15,8 +15,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
-#include "boost/shared_ptr.hpp"
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {
@@ -120,14 +119,14 @@ public:
    /**
     * Returns a pointer to the null database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
    /**
     * Returns a pointer to the null database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 

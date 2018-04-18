@@ -7,7 +7,7 @@
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 11
-#define SAMRAI_VERSION_PATCHLEVEL 2
+#define SAMRAI_VERSION_PATCHLEVEL 5
 
 
 
@@ -63,9 +63,6 @@
 
 /* BLAS library is available so use it */
 #undef HAVE_BLAS
-
-/* BOOST headers are available to use */
-#undef HAVE_BOOST_HEADERS
 
 /* HAVE_CMATH */
 #undef HAVE_CMATH

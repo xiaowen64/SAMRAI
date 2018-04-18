@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Manager class for variables used in a SAMRAI application.
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -68,7 +67,7 @@ VariableDatabase::shutdownCallback()
  */
 
 VariableDatabase::VariableDatabase():
-   d_patch_descriptor(boost::make_shared<PatchDescriptor>())
+   d_patch_descriptor(std::make_shared<PatchDescriptor>())
 {
    d_max_variable_id = idUndefined();
    d_max_context_id = idUndefined();
@@ -104,7 +103,7 @@ VariableDatabase::registerSingletonSubclassInstance(
  *************************************************************************
  */
 
-boost::shared_ptr<PatchDescriptor>
+std::shared_ptr<PatchDescriptor>
 VariableDatabase::getPatchDescriptor() const
 {
    return d_patch_descriptor;
@@ -133,11 +132,11 @@ VariableDatabase::getNumberOfRegisteredVariableContexts() const
  *************************************************************************
  */
 
-boost::shared_ptr<VariableContext>
+std::shared_ptr<VariableContext>
 VariableDatabase::getContext(
    const std::string& name)
 {
-   boost::shared_ptr<VariableContext> context;
+   std::shared_ptr<VariableContext> context;
 
    if (!name.empty()) {
 
@@ -184,7 +183,7 @@ VariableDatabase::checkContextExists(
 
 void
 VariableDatabase::addVariable(
-   const boost::shared_ptr<Variable>& variable)
+   const std::shared_ptr<Variable>& variable)
 {
    TBOX_ASSERT(variable);
 
@@ -210,11 +209,11 @@ VariableDatabase::addVariable(
  *************************************************************************
  */
 
-boost::shared_ptr<Variable>
+std::shared_ptr<Variable>
 VariableDatabase::getVariable(
    const std::string& name) const
 {
-   boost::shared_ptr<Variable> variable;
+   std::shared_ptr<Variable> variable;
 
    int var_id = getVariableId(name);
 
@@ -259,7 +258,7 @@ VariableDatabase::checkVariableExists(
 
 int
 VariableDatabase::registerClonedPatchDataIndex(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    int old_id)
 {
    TBOX_ASSERT(variable);
@@ -321,7 +320,7 @@ VariableDatabase::registerClonedPatchDataIndex(
 
 int
 VariableDatabase::registerPatchDataIndex(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    int data_id)
 {
    TBOX_ASSERT(variable);
@@ -382,7 +381,7 @@ VariableDatabase::removePatchDataIndex(
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
+      std::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
       if (variable) {
 
@@ -430,7 +429,7 @@ VariableDatabase::removePatchDataIndex(
 
 bool
 VariableDatabase::checkVariablePatchDataIndex(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    int data_id) const
 {
    TBOX_ASSERT(variable);
@@ -439,7 +438,7 @@ VariableDatabase::checkVariablePatchDataIndex(
 
    bool ret_value = false;
 
-   boost::shared_ptr<Variable> test_variable;
+   std::shared_ptr<Variable> test_variable;
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
       test_variable = d_index2variable_map[data_id];
@@ -465,7 +464,7 @@ VariableDatabase::checkVariablePatchDataIndex(
 
 bool
 VariableDatabase::checkVariablePatchDataIndexType(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    int data_id) const
 {
    TBOX_ASSERT(variable);
@@ -476,7 +475,7 @@ VariableDatabase::checkVariablePatchDataIndexType(
 
    if (d_patch_descriptor->getPatchDataFactory(data_id)) {
 
-      boost::shared_ptr<PatchDataFactory> dfact(
+      std::shared_ptr<PatchDataFactory> dfact(
          d_patch_descriptor->getPatchDataFactory(data_id));
 
       if (dfact &&
@@ -500,8 +499,8 @@ VariableDatabase::checkVariablePatchDataIndexType(
 
 int
 VariableDatabase::registerVariableAndContext(
-   const boost::shared_ptr<Variable>& variable,
-   const boost::shared_ptr<VariableContext>& context,
+   const std::shared_ptr<Variable>& variable,
+   const std::shared_ptr<VariableContext>& context,
    const IntVector& ghosts)
 {
    TBOX_ASSERT(variable);
@@ -528,8 +527,8 @@ VariableDatabase::registerVariableAndContext(
 
 int
 VariableDatabase::mapVariableAndContextToIndex(
-   const boost::shared_ptr<Variable>& variable,
-   const boost::shared_ptr<VariableContext>& context) const
+   const std::shared_ptr<Variable>& variable,
+   const std::shared_ptr<VariableContext>& context) const
 {
    TBOX_ASSERT(variable);
    TBOX_ASSERT(context);
@@ -563,7 +562,7 @@ VariableDatabase::mapVariableAndContextToIndex(
 bool
 VariableDatabase::mapIndexToVariable(
    const int index,
-   boost::shared_ptr<Variable>& variable) const
+   std::shared_ptr<Variable>& variable) const
 {
    variable.reset();
 
@@ -587,8 +586,8 @@ VariableDatabase::mapIndexToVariable(
 bool
 VariableDatabase::mapIndexToVariableAndContext(
    const int index,
-   boost::shared_ptr<Variable>& variable,
-   boost::shared_ptr<VariableContext>& context) const
+   std::shared_ptr<Variable>& variable,
+   std::shared_ptr<VariableContext>& context) const
 {
    bool found = false;
 
@@ -745,7 +744,7 @@ VariableDatabase::printClassData(
 
 int
 VariableDatabase::registerInternalSAMRAIVariable(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    const IntVector& ghosts)
 {
    TBOX_ASSERT(variable);
@@ -795,7 +794,7 @@ VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
 {
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
+      std::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
       if (variable &&
           !d_is_user_variable[variable->getInstanceIdentifier()]) {
@@ -862,7 +861,7 @@ VariableDatabase::getContextId_Private(
 
 void
 VariableDatabase::addContext_Private(
-   const boost::shared_ptr<VariableContext>& context)
+   const std::shared_ptr<VariableContext>& context)
 {
    int new_id = context->getIndex();
    int oldsize = static_cast<int>(d_contexts.size());
@@ -888,7 +887,7 @@ VariableDatabase::addContext_Private(
 
 void
 VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    int data_id,
    bool user_variable)
 {
@@ -974,7 +973,7 @@ VariableDatabase::removeVariable(
 
 bool
 VariableDatabase::addVariable_Private(
-   const boost::shared_ptr<Variable>& variable,
+   const std::shared_ptr<Variable>& variable,
    bool user_variable)
 {
    bool ret_value = true;
@@ -1063,8 +1062,8 @@ VariableDatabase::addVariable_Private(
 
 int
 VariableDatabase::registerVariableAndContext_Private(
-   const boost::shared_ptr<Variable>& variable,
-   const boost::shared_ptr<VariableContext>& context,
+   const std::shared_ptr<Variable>& variable,
+   const std::shared_ptr<VariableContext>& context,
    const IntVector& ghosts,
    bool user_variable)
 {
@@ -1091,7 +1090,7 @@ VariableDatabase::registerVariableAndContext_Private(
          // Check the descriptor id. If valid, get the associated
          // PatchDataFactory instance.
          if (desc_id != idUndefined()) {
-            boost::shared_ptr<PatchDataFactory> factory(
+            std::shared_ptr<PatchDataFactory> factory(
                d_patch_descriptor->getPatchDataFactory(desc_id));
 
             // Ensure the factory is not null and that the ghost
@@ -1119,7 +1118,7 @@ VariableDatabase::registerVariableAndContext_Private(
    // Create the new factory if necessary
    if (make_new_factory) {
 
-      boost::shared_ptr<PatchDataFactory> new_factory(
+      std::shared_ptr<PatchDataFactory> new_factory(
          variable->getPatchDataFactory()->cloneFactory(ghosts));
 
       std::string tmp(variable->getName());

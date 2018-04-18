@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -27,8 +27,8 @@
 namespace SAMRAI {
 namespace tbox {
 
-typedef std::list<boost::shared_ptr<Transaction> >::iterator Iterator;
-typedef std::list<boost::shared_ptr<Transaction> >::const_iterator ConstIterator;
+typedef std::list<std::shared_ptr<Transaction> >::iterator Iterator;
+typedef std::list<std::shared_ptr<Transaction> >::const_iterator ConstIterator;
 
 const int Schedule::s_default_first_tag = 0;
 const int Schedule::s_default_second_tag = 1;
@@ -94,7 +94,7 @@ Schedule::~Schedule()
  */
 void
 Schedule::addTransaction(
-   const boost::shared_ptr<Transaction>& transaction)
+   const std::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
@@ -119,7 +119,7 @@ Schedule::addTransaction(
  */
 void
 Schedule::appendTransaction(
-   const boost::shared_ptr<Transaction>& transaction)
+   const std::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
@@ -279,7 +279,7 @@ Schedule::postReceives()
       TBOX_ASSERT(mi->first == recv_coms[icom].getPeerRank());
 
       // Compute incoming message size, if possible.
-      const std::list<boost::shared_ptr<Transaction> >& transactions =
+      const std::list<std::shared_ptr<Transaction> >& transactions =
          mi->second;
       unsigned int byte_count = 0;
       bool can_estimate_incoming_message_size = true;
@@ -356,7 +356,7 @@ Schedule::postSends()
       TBOX_ASSERT(mi->first == send_coms[icom].getPeerRank());
 
       // Compute message size and whether receiver can estimate it.
-      const std::list<boost::shared_ptr<Transaction> >& transactions =
+      const std::list<std::shared_ptr<Transaction> >& transactions =
          mi->second;
       size_t byte_count = 0;
       bool can_estimate_incoming_message_size = true;
@@ -554,7 +554,7 @@ Schedule::printClassData(
 
    for (TransactionSets::const_iterator ss = d_send_sets.begin();
         ss != d_send_sets.end(); ++ss) {
-      const std::list<boost::shared_ptr<Transaction> >& send_set = ss->second;
+      const std::list<std::shared_ptr<Transaction> >& send_set = ss->second;
       stream << "Send Set: " << ss->first << std::endl;
       for (ConstIterator send = send_set.begin();
            send != send_set.end(); ++send) {
@@ -564,7 +564,7 @@ Schedule::printClassData(
 
    for (TransactionSets::const_iterator rs = d_recv_sets.begin();
         rs != d_recv_sets.end(); ++rs) {
-      const std::list<boost::shared_ptr<Transaction> >& recv_set = rs->second;
+      const std::list<std::shared_ptr<Transaction> >& recv_set = rs->second;
       stream << "Recv Set: " << rs->first << std::endl;
       for (ConstIterator recv = recv_set.begin();
            recv != recv_set.end(); ++recv) {
@@ -592,10 +592,10 @@ Schedule::getFromInput()
    if (s_ignore_external_timer_prefix == '\0') {
       s_ignore_external_timer_prefix = 'n';
       if (InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<Database> idb(
+         std::shared_ptr<Database> idb(
             InputManager::getInputDatabase());
          if (idb->isDatabase("Schedule")) {
-            boost::shared_ptr<Database> sched_db(
+            std::shared_ptr<Database> sched_db(
                idb->getDatabase("Schedule"));
             s_ignore_external_timer_prefix =
                sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",

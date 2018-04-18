@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Set of boxes in a box_level of a distributed box graph.
  *
  ************************************************************************/
@@ -35,9 +35,9 @@ namespace hier {
 const int BoxLevel::HIER_BOX_LEVEL_VERSION = 0;
 const int BoxLevel::BOX_LEVEL_NUMBER_OF_STATS = 20;
 
-boost::shared_ptr<tbox::Timer> BoxLevel::t_initialize_private;
-boost::shared_ptr<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
-boost::shared_ptr<tbox::Timer> BoxLevel::t_cache_global_reduced_data;
+std::shared_ptr<tbox::Timer> BoxLevel::t_initialize_private;
+std::shared_ptr<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
+std::shared_ptr<tbox::Timer> BoxLevel::t_cache_global_reduced_data;
 
 const LocalId BoxLevel::s_negative_one_local_id(-1);
 
@@ -52,7 +52,7 @@ BoxLevel::s_initialize_finalize_handler(
 BoxLevel::BoxLevel(
    const tbox::Dimension& dim,
    tbox::Database& restart_db,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom):
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom):
 
    d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
    d_ratio(IntVector::getZero(dim)),
@@ -126,7 +126,7 @@ BoxLevel::BoxLevel(
 
 BoxLevel::BoxLevel(
    const IntVector& ratio,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(MPI_COMM_NULL),
@@ -165,7 +165,7 @@ BoxLevel::BoxLevel(
 BoxLevel::BoxLevel(
    const BoxContainer& boxes,
    const IntVector& ratio,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state):
    d_mpi(MPI_COMM_NULL),
@@ -264,7 +264,7 @@ void
 BoxLevel::initialize(
    const BoxContainer& boxes,
    const IntVector& ratio,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -286,7 +286,7 @@ void
 BoxLevel::swapInitialize(
    BoxContainer& boxes,
    const IntVector& ratio,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -327,7 +327,7 @@ BoxLevel::finalize()
 void
 BoxLevel::initializePrivate(
    const IntVector& ratio,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom,
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
@@ -531,7 +531,7 @@ BoxLevel::swap(
       ParallelState tmpstate;
       const BoxLevel* tmpmbl;
       tbox::SAMRAI_MPI tmpmpi(MPI_COMM_NULL);
-      boost::shared_ptr<const BaseGridGeometry> tmpgridgeom(
+      std::shared_ptr<const BaseGridGeometry> tmpgridgeom(
          level_a.getGridGeometry());
 
       tmpstate = level_a.d_parallel_state;
@@ -1517,7 +1517,7 @@ BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
 
 void
 BoxLevel::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    // This appears to be used in the RedistributedRestartUtility.
    restart_db->putBool("d_is_mapped_box_level", true);
@@ -1551,7 +1551,7 @@ BoxLevel::putToRestart(
 void
 BoxLevel::getFromRestart(
    tbox::Database& restart_db,
-   const boost::shared_ptr<const BaseGridGeometry>& grid_geom)
+   const std::shared_ptr<const BaseGridGeometry>& grid_geom)
 {
    TBOX_ASSERT(restart_db.isInteger("dim"));
    const tbox::Dimension dim(static_cast<unsigned short>(

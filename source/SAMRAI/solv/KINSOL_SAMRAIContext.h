@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
@@ -329,8 +329,8 @@ public:
    KINSOL_SAMRAIContext(
       const std::string& object_name,
       KINSOLAbstractFunctions* my_functions,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /**
     * Destructor for algs::KINSOL_SAMRAIContext destroys the KINSOL
@@ -347,7 +347,7 @@ public:
     */
    void
    initialize(
-      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution);
+      const std::shared_ptr<SAMRAIVectorReal<double> >& solution);
 
    /**
     * Solve the nonlinear problem and return and integer value defined by
@@ -378,7 +378,7 @@ public:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
    /**
@@ -398,7 +398,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Print out all members of integrator instance to given output stream.

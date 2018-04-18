@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
@@ -239,7 +239,7 @@ IntVector::putToRestart(
    tbox::Database& restart_db,
    const std::string& name) const
 {
-   boost::shared_ptr<tbox::Database> intvec_db =
+   std::shared_ptr<tbox::Database> intvec_db =
       restart_db.putDatabase(name);
    intvec_db->putInteger("d_num_blocks", static_cast<int>(d_num_blocks));
    intvec_db->putIntegerVector("d_vector",
@@ -252,7 +252,7 @@ IntVector::getFromRestart(
    tbox::Database& restart_db,
    const std::string& name)
 {
-   boost::shared_ptr<tbox::Database> intvec_db =
+   std::shared_ptr<tbox::Database> intvec_db =
       restart_db.getDatabase(name);
 
    d_num_blocks = static_cast<size_t>(intvec_db->getInteger("d_num_blocks"));

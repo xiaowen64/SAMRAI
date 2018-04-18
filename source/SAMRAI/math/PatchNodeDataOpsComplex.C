@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex node-centered patch data.
  *
  ************************************************************************/
@@ -31,17 +31,17 @@ PatchNodeDataOpsComplex::~PatchNodeDataOpsComplex()
 
 void
 PatchNodeDataOpsComplex::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::NodeData<dcomplex> > d1(
-      BOOST_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<dcomplex> > d1(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::NodeData<dcomplex> > d2(
-      BOOST_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<dcomplex> > d2(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -55,7 +55,7 @@ PatchNodeDataOpsComplex::swapData(
 
 void
 PatchNodeDataOpsComplex::printData(
-   const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+   const std::shared_ptr<pdat::NodeData<dcomplex> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
