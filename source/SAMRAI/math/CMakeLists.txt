@@ -155,8 +155,7 @@ set (math_sources
 set (math_depends_on
   SAMRAI_hier
   SAMRAI_pdat
-  SAMRAI_tbox
-  boost)
+  SAMRAI_tbox)
 
 if (ENABLE_CUDA)
   set (math_depends_on

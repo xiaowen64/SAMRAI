@@ -63,8 +63,7 @@ process_m4(NAME fortran/mesh_coarsentags3d)
 set (mesh_depends_on
   SAMRAI_hier
   SAMRAI_tbox
-  SAMRAI_xfer
-  boost)
+  SAMRAI_xfer)
 
 if (ENABLE_CUDA)
   set (mesh_depends_on

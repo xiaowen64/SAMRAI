@@ -130,8 +130,7 @@ set (hier_sources
   VariableDatabase.C)
 
 set (hier_depends_on
-  SAMRAI_tbox
-  boost)
+  SAMRAI_tbox)
 
 if (ENABLE_MPI)
   set (hier_depends_on

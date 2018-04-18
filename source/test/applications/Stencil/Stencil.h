@@ -22,8 +22,8 @@ class Stencil :
     Stencil(
         const std::string& name,
         const tbox::Dimension& dim,
-        boost::shared_ptr<tbox::Database> input_db,
-        boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
+        std::shared_ptr<tbox::Database> input_db,
+        std::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
     void
       registerModelVariables(
@@ -132,7 +132,7 @@ class Stencil :
 
    void
    readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index);
 
@@ -143,29 +143,29 @@ class Stencil :
     */
    void
    readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index);
 
    void
      registerVisItDataWriter(
-        boost::shared_ptr<appu::VisItDataWriter> viz_writer);
+        std::shared_ptr<appu::VisItDataWriter> viz_writer);
 
   private:
     std::string d_object_name;
 
-    boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+    std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
     std::vector<double> d_velocity;
 
     const tbox::Dimension d_dim;
 
-    std::vector<boost::shared_ptr<pdat::CellVariable<double> > > d_rho_variables;
-    boost::shared_ptr<pdat::CellVariable<double> > d_rho_update;
+    std::vector<std::shared_ptr<pdat::CellVariable<double> > > d_rho_variables;
+    std::shared_ptr<pdat::CellVariable<double> > d_rho_update;
 
     hier::IntVector d_nghosts;
 
-    boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
+    std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 
     double d_tag_threshold;
 };

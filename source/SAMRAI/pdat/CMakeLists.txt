@@ -298,8 +298,7 @@ set (pdat_sources
 
 set (pdat_depends_on
   SAMRAI_hier
-  SAMRAI_tbox
-  boost)
+  SAMRAI_tbox)
 
 if (ENABLE_MPI)
   set (pdat_depends_on

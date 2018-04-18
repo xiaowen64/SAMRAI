@@ -18,7 +18,7 @@ template <typename T, int DIM>
 struct CellView :
   public tbox::ArrayView<DIM, T>
 {
-  SAMRAI_INLINE CellView(const boost::shared_ptr<pdat::CellData<T> >& data, int depth = 0)
+  SAMRAI_INLINE CellView(const std::shared_ptr<pdat::CellData<T> >& data, int depth = 0)
     : tbox::ArrayView<DIM, T>(data->getPointer(depth), data->getGhostBox(), depth)
   {
   }
@@ -27,8 +27,8 @@ struct CellView :
 Stencil::Stencil(
         const std::string& name,
         const tbox::Dimension& dim,
-        boost::shared_ptr<tbox::Database> input_db,
-        boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
+        std::shared_ptr<tbox::Database> input_db,
+        std::shared_ptr<geom::CartesianGridGeometry> grid_geom):
   algs::HyperbolicPatchStrategy(),
   d_object_name(name),
   d_grid_geometry(grid_geom),
@@ -42,14 +42,14 @@ Stencil::Stencil(
 
   d_tag_threshold = input_db->getDoubleWithDefault("tag_threshold", 0.5);
 
-  d_rho_update = boost::make_shared<pdat::CellVariable<double> >(dim, "update", 1);
+  d_rho_update = std::make_shared<pdat::CellVariable<double> >(dim, "update", 1);
 
   for (int i = 0; i < num_variables; ++i) {
     std::ostringstream oss;
     oss << "rho_" << i;
     std::string var_name = oss.str();
 
-    d_rho_variables.push_back( boost::make_shared<pdat::CellVariable<double> >(dim, var_name, 1));
+    d_rho_variables.push_back( std::make_shared<pdat::CellVariable<double> >(dim, var_name, 1));
   }
 }
 
@@ -63,7 +63,7 @@ Stencil::registerModelVariables(
     algs::HyperbolicLevelIntegrator::TEMPORARY,
     d_grid_geometry);
 
-    for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+    for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
     integrator->registerVariable(
         rho_var,
         d_nghosts,
@@ -94,8 +94,8 @@ Stencil::initializeDataOnPatch(
 
   // initialize
   if (initial_time) {
-    for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
-      CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
+    for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+      CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
       tbox::for_all2<tbox::policy::parallel>(
         patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) { rho(j,k) = 0.0; }
@@ -114,8 +114,8 @@ Stencil::computeStableDtOnPatch(
 {
   RANGE_PUSH("Stencil::dt", 1);
 
-  const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
+  const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
   const double dx = pgeom->getDx()[0];
   const double dy = pgeom->getDx()[1];
@@ -144,16 +144,16 @@ Stencil::conservativeDifferenceOnPatch(
 {
   RANGE_PUSH("Stencil::conservativeDifference", 1);
 
-  CellView<double, 2> rhoNew(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_update, getDataContext())));
+  CellView<double, 2> rhoNew(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_update, getDataContext())));
 
-  const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-    BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
+  const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+    SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
   const double dx = pgeom->getDx()[0];
   const double dy = pgeom->getDx()[1];
 
-  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
-    CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
+  for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+    CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
     const double an_abs_lr = ABS(d_velocity[0]) * 0.5;
     const double an_abs_tb = ABS(d_velocity[1]) * 0.5;
@@ -191,9 +191,9 @@ Stencil::tagGradientDetectorCells(
   /*
    * Only need to tag the first variable.
    */
-  CellView<double, 2> rho(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_variables[0], getDataContext())));
+  CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_variables[0], getDataContext())));
 
-  CellView<int, 2> tags(BOOST_CAST<pdat::CellData<int> >(patch.getPatchData(tag_index)));
+  CellView<int, 2> tags(SAMRAI_SHARED_PTR_CAST<pdat::CellData<int> >(patch.getPatchData(tag_index)));
 
   double tag_threshold = d_tag_threshold;
 
@@ -235,15 +235,15 @@ Stencil::setPhysicalBoundaryConditions(
 
   const int depth = ghost_width_to_fill[0];
 
-  const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
+  const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
 
   const std::vector<hier::BoundaryBox>& edge_bdry
     = pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
 
 
-  for ( const boost::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
-    CellView<double, 2> field(BOOST_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
+  for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+    CellView<double, 2> field(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
     const hier::Index ifirst = patch.getBox().lower();
     const hier::Index ilast = patch.getBox().upper();
@@ -344,7 +344,7 @@ Stencil::postprocessRefine(
 
  void
  Stencil::readDirichletBoundaryDataEntry(
-    const boost::shared_ptr<tbox::Database>& db,
+    const std::shared_ptr<tbox::Database>& db,
     std::string& db_name,
     int bdry_location_index)
 {
@@ -353,7 +353,7 @@ Stencil::postprocessRefine(
 
  void
  Stencil::readNeumannBoundaryDataEntry(
-    const boost::shared_ptr<tbox::Database>& db,
+    const std::shared_ptr<tbox::Database>& db,
     std::string& db_name,
     int bdry_location_index)
 {
@@ -361,7 +361,7 @@ Stencil::postprocessRefine(
 }
 
 void
-Stencil::registerVisItDataWriter(boost::shared_ptr<appu::VisItDataWriter> viz_writer)
+Stencil::registerVisItDataWriter(std::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
   d_visit_writer = viz_writer;
 }

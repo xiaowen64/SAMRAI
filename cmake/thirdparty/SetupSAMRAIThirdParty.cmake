@@ -35,16 +35,6 @@ blt_register_library(
 
 set(HAVE_RAJA True)
 
-# Boost
-find_package(Boost REQUIRED)
-if (${Boost_FOUND})
-  set(HAVE_BOOST_HEADERS True)
-endif ()
-
-blt_register_library(
-  NAME boost
-  INCLUDES ${Boost_INCLUDE_DIR})
-
 if (ENABLE_HDF5)
   if (NOT ENABLE_MPI)
     message(FATAL_ERROR "HDF5 requires MPI.")

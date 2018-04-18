@@ -80,8 +80,7 @@ set (geom_sources
 set (geom_depends_on
   SAMRAI_hier
   SAMRAI_pdat
-  SAMRAI_tbox
-  boost)
+  SAMRAI_tbox)
 
 if (ENABLE_CUDA)
   set (geom_depends_on

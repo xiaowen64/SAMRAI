@@ -59,8 +59,7 @@ set (xfer_sources
   VariableFillPattern.C)
 
 set ( xfer_depends_on
-  SAMRAI_hier
-  boost)
+  SAMRAI_hier)
 
 blt_add_library(
   NAME SAMRAI_xfer

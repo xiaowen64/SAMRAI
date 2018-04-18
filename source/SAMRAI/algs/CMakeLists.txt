@@ -40,8 +40,7 @@ set (algs_sources
 set (algs_depends_on
   SAMRAI_hier
   SAMRAI_tbox
-  SAMRAI_pdat
-  boost)
+  SAMRAI_pdat)
 
 if (ENABLE_CUDA)
   set (algs_depends_on

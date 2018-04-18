@@ -79,8 +79,7 @@ set_source_files_properties(
 set (solv_depends_on
   SAMRAI_hier
   SAMRAI_math
-  SAMRAI_tbox
-  boost)
+  SAMRAI_tbox)
 
 if (ENABLE_CUDA)
   set (solv_depends_on

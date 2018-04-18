@@ -42,8 +42,6 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
-
 #ifndef _MSC_VER
 #include <unistd.h>
 #endif
@@ -53,6 +51,7 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <memory>
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include <cuda_runtime.h>
@@ -152,7 +151,7 @@ int main(
      * Create input database and parse all data in input file.
      */
 
-    boost::shared_ptr<tbox::InputDatabase> input_db(
+    std::shared_ptr<tbox::InputDatabase> input_db(
         new tbox::InputDatabase("input_db"));
     tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -164,7 +163,7 @@ int main(
      * database.
      */
 
-    boost::shared_ptr<tbox::Database> main_db(
+    std::shared_ptr<tbox::Database> main_db(
         input_db->getDatabase("Main"));
 
     const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
@@ -240,13 +239,13 @@ int main(
      * for this application, see comments at top of file.
      */
 
-    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+    std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
         new geom::CartesianGridGeometry(
           dim,
           "CartesianGeometry",
           input_db->getDatabase("CartesianGeometry")));
 
-    boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+    std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
         new hier::PatchHierarchy(
           "PatchHierarchy",
           grid_geometry,
@@ -258,14 +257,14 @@ int main(
         input_db->getDatabase("Stencil"),
         grid_geometry);
 
-    boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
+    std::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
         new algs::HyperbolicLevelIntegrator(
           "HyperbolicLevelIntegrator",
           input_db->getDatabase("HyperbolicLevelIntegrator"),
           stencil_model,
           use_refined_timestepping));
 
-    boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
+    std::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
         new mesh::StandardTagAndInitialize(
           "StandardTagAndInitialize",
           hyp_level_integrator.get(),
@@ -276,24 +275,24 @@ int main(
         "use_tile_clustering",
         use_tile_clustering);
 
-    boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
+    std::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
 
     if (use_tile_clustering) {
-      box_generator = boost::make_shared<mesh::TileClustering>(
+      box_generator = std::make_shared<mesh::TileClustering>(
           dim,
           input_db->getDatabaseWithDefault(
             "TileClustering",
-            boost::shared_ptr<tbox::Database>()));
+            std::shared_ptr<tbox::Database>()));
     } else {
-      box_generator = boost::make_shared<mesh::BergerRigoutsos>(
+      box_generator = std::make_shared<mesh::BergerRigoutsos>(
             dim,
             input_db->getDatabaseWithDefault(
               "BergerRigoutsos",
-              boost::shared_ptr<tbox::Database>()));
+              std::shared_ptr<tbox::Database>()));
       //box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
     }
 
-    boost::shared_ptr<mesh::CascadePartitioner> load_balancer(
+    std::shared_ptr<mesh::CascadePartitioner> load_balancer(
         new mesh::CascadePartitioner(
           dim,
           "LoadBalancer",
@@ -301,7 +300,7 @@ int main(
     load_balancer->setSAMRAI_MPI(
         tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-    boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+    std::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
         new mesh::GriddingAlgorithm(
           patch_hierarchy,
           "GriddingAlgorithm",
@@ -310,7 +309,7 @@ int main(
           box_generator,
           load_balancer));
 
-    boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
+    std::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
         new algs::TimeRefinementIntegrator(
           "TimeRefinementIntegrator",
           input_db->getDatabase("TimeRefinementIntegrator"),
@@ -318,7 +317,7 @@ int main(
           hyp_level_integrator,
           gridding_algorithm));
 
-    boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+    std::shared_ptr<appu::VisItDataWriter> visit_data_writer(
        new appu::VisItDataWriter(
           dim,
           "Euler VisIt Writer",
