@@ -1193,16 +1193,20 @@ Database::toConduitNode(conduit::Node& node)
          node[key].set(getFloatVector(key));
       } else if (my_type == SAMRAI_STRING) {
          std::vector<std::string> str_vec(getStringVector(key));
-         size_t num_chars = 0;
-         for (int i = 0; i < size; ++i) {
-            num_chars += str_vec[i].size();
-            ++num_chars;
-         }
-         node[key].set(conduit::DataType::c_char(num_chars));
-         char* char_ptr = static_cast<char*>(node[key].data_ptr());
-         for (int i = 0; i < size; ++i) {
-            std::memcpy(char_ptr, str_vec[i].c_str(), (str_vec[i].size()+1)*sizeof(char));
-            char_ptr += (str_vec[i].size()+1);
+         if (size == 1) {
+            node[key].set(str_vec[0]);
+         } else {
+            size_t num_chars = 0;
+            for (int i = 0; i < size; ++i) {
+               num_chars += str_vec[i].size();
+               ++num_chars;
+            }
+            node[key].set(conduit::DataType::c_char(num_chars));
+            char* char_ptr = static_cast<char*>(node[key].data_ptr());
+            for (int i = 0; i < size; ++i) {
+               std::memcpy(char_ptr, str_vec[i].c_str(), (str_vec[i].size()+1)*sizeof(char));
+               char_ptr += (str_vec[i].size()+1);
+            }
          }
       } else if (my_type == SAMRAI_BOX) {
          std::vector<DatabaseBox> db_box(getDatabaseBoxVector(key));

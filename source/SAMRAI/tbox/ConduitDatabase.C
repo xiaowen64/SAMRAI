@@ -7,6 +7,8 @@
  * Description:   An memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
+#include "SAMRAI/SAMRAI_config.h"
+
 #ifdef HAVE_CONDUIT
 
 #include "SAMRAI/tbox/ConduitDatabase.h"
