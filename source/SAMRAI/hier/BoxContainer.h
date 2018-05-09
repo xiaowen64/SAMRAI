@@ -105,7 +105,7 @@ public:
 public:
       typedef std::bidirectional_iterator_tag iterator_category;
       typedef const Box value_type;
-      typedef ptrdiff_t difference_type;
+      typedef std::ptrdiff_t difference_type;
       typedef const Box * pointer;
       typedef const Box& reference;
 
@@ -325,7 +325,7 @@ private:
 public:
       typedef std::bidirectional_iterator_tag iterator_category;
       typedef Box value_type;
-      typedef ptrdiff_t difference_type;
+      typedef std::ptrdiff_t difference_type;
       typedef Box * pointer;
       typedef Box& reference;
 

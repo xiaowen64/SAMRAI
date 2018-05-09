@@ -151,8 +151,8 @@ EOF
 
 chaos5_clang) # CHAOS5, clang compilers and MPI2
 cat <<-EOF
-	--with-CC=/usr/apps/gnu/clang/bin/clang
-	--with-CXX=/usr/apps/gnu/clang/bin/clang++
+	--with-CC=/usr/global/tools/clang/chaos_5_x86_64_ib/clang-4.0.1/bin/clang
+	--with-CXX=/usr/global/tools/clang/chaos_5_x86_64_ib/clang-4.0.1/bin/clang++
 	--with-F77=/usr/local/bin/gfortran-4.6.1
 	--without-petsc
         --without-blas
