@@ -104,9 +104,9 @@ EOF
 
 chaos5_mpiicc) # CHAOS5, Intel compilers with LLNL mpiicpc front ends
 cat <<-EOF
-	--with-CC=/usr/local/bin/mpiicc-17.0.174
-	--with-CXX=/usr/local/bin/mpiicpc-17.0.174
-	--with-F77=/usr/local/bin/ifort-17.0.174
+	--with-CC="/usr/local/bin/mpiicc-17.0.174 -gcc-name=/usr/apps/gnu/4.9.2/bin/gcc"
+	--with-CXX="/usr/local/bin/mpiicpc-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++"
+	--with-F77="/usr/local/bin/ifort-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++"
 	--without-petsc
 	--without-x
 	--without-sundials
