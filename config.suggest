@@ -175,8 +175,8 @@ cat <<-EOF
 	--disable-shared
 	--enable-rpath=-Wl,-R
 	--with-zlib
-	--with-hdf5=/usr/gapps/bdiv/toss_3_x86_64_ib/intel-16-mvapich2-2.2/hdf5/1.8.10p1
-	--with-silo=/usr/gapps/bdiv/toss_3_x86_64_ib/intel-16-mvapich2-2.2/silo/4.10.3
+	--with-hdf5=/usr/tce/packages/hdf5/hdf5-serial-1.8.18-intel-16.0.3
+	--with-silo=/usr/gapps/silo/4.10.3/toss_3_x86_64_icc
 	--without-hypre
 	--without-tbb
 EOF
