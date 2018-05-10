@@ -123,31 +123,21 @@ EOF
 
 chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
 cat <<-EOF
-	CXXFLAGS="-mpi=mvapich2-intel-1.9 -std=c++11 -gnu-prefix=/usr/apps/gnu/4.9.3/bin/ -Wl,-rpath,/usr/apps/gnu/4.9.3/lib64"
-	CFLAGS=-mpi=mvapich2-intel-1.9
-	FFLAGS=-mpi=mvapich2-intel-1.9
-	--with-mpi-include=/usr/local/tools/mvapich2-intel-1.9/include
-	--with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel-1.9/lib
-	--with-mpi-libs="mpich fmpich"
-	--with-CC=mpiicc
-	--with-CXX=mpiicpc
-	--with-F77=mpiifort
-	--without-petsc
-	--without-x
-	--without-sundials
-	--disable-shared
-	--with-zlib
-	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
-	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt-mvapich2
-	--without-tbb
+        --with-CC="/usr/local/bin/mpiicc-17.0.174 -gcc-name=/usr/apps/gnu/4.9.2/bin/gcc -mpi=mvapich2-intel-2.2"
+        --with-CXX="/usr/local/bin/mpiicpc-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++ -mpi=mvapich2-intel-2.2"
+        --with-F77="/usr/local/bin/mpiifort-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++ -mpi=mvapich2-intel-2.2"
+        --without-petsc
+        --without-x
+        --without-sundials
+        --disable-shared
+        --with-zlib
+        --with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
+        --with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
+        --with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt-mvapich2
+        --without-tbb
 EOF
 # Maintained by Noah Elliott
 ;;
-# With the above configure options, these "use" commands must precede the
-# use of configure
-# % use ic-17.0.174
-# % use gcc-4.9.2p
 
 chaos5_clang) # CHAOS5, clang compilers and MPI2
 cat <<-EOF
