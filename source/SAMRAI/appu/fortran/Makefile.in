@@ -27,7 +27,8 @@ library:	$(OBJS)
 
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
-	$(RM) *.f
+	$(RM) appu_cartbdry2d.f 
+	$(RM) appu_cartbdry3d.f 
 
 include $(SRCDIR)/Makefile.depend
 

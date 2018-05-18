@@ -78,7 +78,7 @@ checkclean:
 	$(RM) viz*
 
 clean: checkclean
-	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) *.o 
 	$(RM) main
 
 redo: 
