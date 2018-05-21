@@ -81,6 +81,6 @@ checkclean:
 
 clean: checkclean
 	$(CLEAN_COMMON_TEST_FILES)
-	$(RM) *vtest*
+	$(RM) *vtest
 
 include $(SRCDIR)/Makefile.depend
