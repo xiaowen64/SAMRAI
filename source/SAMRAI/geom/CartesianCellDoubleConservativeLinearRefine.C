@@ -19,6 +19,8 @@
 #include "SAMRAI/tbox/RAJA_API.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
+#include "SAMRAI/tbox/AllocatorDatabase.h"
+
 #define MAX(a, b) (((b) > (a)) ? (b) : (a))
 #define MIN(a, b) (((b) < (a)) ? (b) : (a))
 #define ABS abs
@@ -188,8 +190,10 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    SAMRAI::hier::Box diff_box = coarse_box;
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
-   pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts);
-   pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts);
+   tbox::AllocatorDatabase* alloc_db = tbox::AllocatorDatabase::getDatabase();
+
+   pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
+   pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {

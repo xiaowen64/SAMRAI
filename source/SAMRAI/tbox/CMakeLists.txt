@@ -1,4 +1,5 @@
 set ( tbox_headers
+  AllocatorDatabase.h
   Array.h
   Array.C
   AsyncCommGroup.h
@@ -65,6 +66,7 @@ set_source_files_properties(
   PROPERTIES HEADER_FILE_ONLY TRUE)
 
 set (tbox_sources
+  AllocatorDatabase.C
   ArraySpecial.C
   AsyncCommGroup.C
   AsyncCommStage.C
@@ -113,7 +115,7 @@ set (tbox_sources
   Transaction.C
   Utilities.C)
 
-set (tbox_depends_on)
+set (tbox_depends_on umpire)
 
 if (HAVE_HDF5)
     list(APPEND tbox_depends_on hdf5)

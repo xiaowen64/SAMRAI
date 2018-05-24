@@ -22,6 +22,9 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 #include "SAMRAI/tbox/MessageStream.h"
+#include "SAMRAI/tbox/AllocatorDatabase.h"
+
+#include "umpire/Allocator.hpp"
 
 #include <typeinfo>
 #include <vector>
@@ -102,6 +105,21 @@ public:
    ArrayData(
       const hier::Box& box,
       unsigned int depth);
+
+   /*!
+    * Construct an array data object.
+    *
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space associated with the array data object.
+    * @param depth Integer number of data values at each spatial location in
+    *              the array.
+    *
+    * @pre depth > 0
+    */
+   ArrayData(
+      const hier::Box& box,
+      unsigned int depth,
+      umpire::Allocator allocator);
 
    /*!
     * The destructor for an array data object releases all memory allocated
@@ -620,6 +638,8 @@ private:
    ArrayData&
    operator = (
       const ArrayData&);
+
+   void allocate(umpire::Allocator allocator);
 
    /*
     * Static integer constant describing this class's version number.

@@ -16,7 +16,9 @@
 
 // Headers for major algorithm/data structure objects
 
+#if 0
 #include "SAMRAI/appu/VisItDataWriter.h"
+#endif
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
@@ -37,7 +39,9 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
+#if 0
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
+#endif
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -64,6 +68,7 @@ class DeviceManager
 private:
    static void initializeCallback()
    {
+#if 0
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       if (mpi.getSize() < 2) return;
 
@@ -82,6 +87,7 @@ private:
       const int my_device = local_rank % num_devices;
       cudaSetDevice(my_device);
       std::cout << "My device = " << my_device << std::endl;
+#endif
    }
 
    static void finalizeCallback()
@@ -189,11 +195,13 @@ int main(
       viz_dump_interval = main_db->getInteger("viz_dump_interval");
     }
 
+#if 0
     const std::string viz_dump_dirname =
       main_db->getStringWithDefault("viz_dump_dirname", base_name + ".visit");
     int visit_number_procs_per_file = 1;
 
     const bool viz_dump_data = (viz_dump_interval > 0);
+#endif
 
     int restart_interval = 0;
     if (main_db->keyExists("restart_interval")) {
@@ -317,6 +325,7 @@ int main(
           hyp_level_integrator,
           gridding_algorithm));
 
+#if 0
     std::shared_ptr<appu::VisItDataWriter> visit_data_writer(
        new appu::VisItDataWriter(
           dim,
@@ -324,6 +333,7 @@ int main(
           viz_dump_dirname,
           visit_number_procs_per_file));
     stencil_model->registerVisItDataWriter(visit_data_writer);
+#endif
 
     /*
      * Initialize hierarchy configuration and data on all patches.
@@ -347,11 +357,13 @@ int main(
     tbox::plog << "\nVariable database..." << endl;
     hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
+#if 0
     if ((viz_dump_interval > 0))
       visit_data_writer->writePlotData(
           patch_hierarchy,
           time_integrator->getIntegratorStep(),
           time_integrator->getIntegratorTime());
+#endif
 
     // tbox::plog << "\nCheck Linear Advection data... " << endl;
     // linear_advection_model->printClassData(tbox::plog);
@@ -385,12 +397,14 @@ int main(
       tbox::pout << "Simulation time is " << loop_time << endl;
       tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
+#if 0
        if ((viz_dump_interval > 0)
            && (iteration_num % viz_dump_interval) == 0) {
           visit_data_writer->writePlotData(patch_hierarchy,
              iteration_num,
              loop_time);
        }
+#endif
     }
 
 

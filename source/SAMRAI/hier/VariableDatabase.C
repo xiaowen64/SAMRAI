@@ -13,6 +13,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include "SAMRAI/tbox/AllocatorDatabase.h"
+
 
 namespace SAMRAI {
 namespace hier {
@@ -76,6 +78,7 @@ VariableDatabase::VariableDatabase():
 
    d_internal_SAMRAI_context = getContext("Internal_SAMRAI_Variable");
 
+   auto allocator_db = tbox::AllocatorDatabase::getDatabase();
 }
 
 VariableDatabase::~VariableDatabase()

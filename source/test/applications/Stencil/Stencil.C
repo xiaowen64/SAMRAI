@@ -74,11 +74,14 @@ Stencil::registerModelVariables(
 
     hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
+
+#if 0
     d_visit_writer->registerPlotQuantity(
       rho_var->getName(),
        "SCALAR",
        vardb->mapVariableAndContextToIndex(
           rho_var, integrator->getPlotContext()));
+#endif
 
   }
 }
@@ -360,8 +363,10 @@ Stencil::postprocessRefine(
   // no-op
 }
 
+#if 0
 void
 Stencil::registerVisItDataWriter(std::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
   d_visit_writer = viz_writer;
 }
+#endif

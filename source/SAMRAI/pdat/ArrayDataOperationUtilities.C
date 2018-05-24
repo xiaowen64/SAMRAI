@@ -286,11 +286,11 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
        case 2: {
          tbox::ArrayView<2, TYPE> dest(src_is_buffer ?
              tbox::ArrayView<2, TYPE>(const_cast<ArrayData<TYPE>&>(arraydata), d) :
-             tbox::ArrayView<2, TYPE>(const_cast<TYPE *>(buffer), arraydata.getBox(), d));
+             tbox::ArrayView<2, TYPE>(const_cast<TYPE *>(buffer), opbox, d));
 
          //tbox::ArrayView<2, const TYPE> source(src_is_buffer ?
          tbox::ArrayView<2, const TYPE> source(src_is_buffer ?
-             tbox::ArrayView<2, const TYPE>(buffer, arraydata.getBox(), d) :
+             tbox::ArrayView<2, const TYPE>(buffer, opbox, d) :
              tbox::ArrayView<2, const TYPE>(arraydata, d));
 
          tbox::for_all2<tbox::policy::parallel>(opbox, [=] SAMRAI_DEVICE (int j, int i) {

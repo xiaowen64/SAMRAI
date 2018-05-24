@@ -22,6 +22,8 @@
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
+#include "SAMRAI/tbox/RAJA_API.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -3073,6 +3075,8 @@ void GriddingAlgorithm::setBooleanTagData(
    const std::shared_ptr<hier::PatchLevel>& tag_level,
    bool preserve_existing_tags) const
 {
+   tbox::synchronize<tbox::policy::parallel>();
+
    for (hier::PatchLevel::iterator ip(tag_level->begin());
         ip != tag_level->end(); ++ip) {
       const std::shared_ptr<hier::Patch>& patch = *ip;

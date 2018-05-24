@@ -115,6 +115,12 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+   CellData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+
    /*!
     * @brief The virtual destructor for a cell data object.
     */

@@ -59,7 +59,8 @@ set (xfer_sources
   VariableFillPattern.C)
 
 set ( xfer_depends_on
-  SAMRAI_hier)
+  SAMRAI_hier
+  cuda_runtime)
 
 blt_add_library(
   NAME SAMRAI_xfer

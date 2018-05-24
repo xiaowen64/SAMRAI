@@ -10,6 +10,8 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include "SAMRAI/tbox/AllocatorDatabase.h"
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -27,7 +29,7 @@ MessageStream::MessageStream(
    const void* data_to_read,
    bool deep_copy):
    d_mode(mode),
-   d_write_buffer(),
+   d_write_buffer(AllocatorDatabase::getDatabase()->getStreamAllocator()),
    d_read_buffer(0),
    d_buffer_size(0),
    d_buffer_index(0),
@@ -55,7 +57,7 @@ MessageStream::MessageStream(
 
 MessageStream::MessageStream():
    d_mode(Write),
-   d_write_buffer(),
+   d_write_buffer(AllocatorDatabase::getDatabase()->getStreamAllocator()),
    d_read_buffer(0),
    d_buffer_size(0),
    d_buffer_index(0),

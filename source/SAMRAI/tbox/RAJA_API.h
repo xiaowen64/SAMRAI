@@ -1,7 +1,7 @@
 #ifndef DEQN_AMR_RAJA_API_H
 #define DEQN_AMR_RAJA_API_H
 
-#include "SAMRAI/pdat/ArrayData.h"
+// #include "SAMRAI/pdat/ArrayData.h"
 
 #include "RAJA/RAJA.hpp"
 
@@ -25,18 +25,18 @@ struct policy_traits{
 
 template <>
 struct policy_traits<policy::parallel> {
-  typedef RAJA::cuda_exec<128> policy;
+  typedef RAJA::cuda_exec_async<128> policy;
 
   typedef 
     RAJA::KernelPolicy<
-      RAJA::statement::CudaKernel<
+      RAJA::statement::CudaKernelAsync<
         RAJA::statement::For<0, RAJA::cuda_threadblock_exec<128>, RAJA::statement::Lambda<0> >
       >
     > raja_1d_policy;
 
   typedef 
     RAJA::KernelPolicy<
-      RAJA::statement::CudaKernel<
+      RAJA::statement::CudaKernelAsync<
         RAJA::statement::For<1, RAJA::cuda_threadblock_exec<32>>,
         RAJA::statement::For<0, RAJA::cuda_threadblock_exec<32>, RAJA::statement::Lambda<0> >
       >
@@ -44,7 +44,7 @@ struct policy_traits<policy::parallel> {
 
   typedef 
     RAJA::KernelPolicy<
-      RAJA::statement::CudaKernel<
+      RAJA::statement::CudaKernelAsync<
         RAJA::statement::For<2, RAJA::cuda_threadblock_exec<8>>,
         RAJA::statement::For<1, RAJA::cuda_threadblock_exec<8>>,
         RAJA::statement::For<0, RAJA::cuda_threadblock_exec<8>, RAJA::statement::Lambda<0> >
@@ -59,6 +59,18 @@ struct layout_traits {
 };
 
 }
+
+template <typename policy>
+inline void
+synchronize();
+
+template<>
+inline void
+synchronize<tbox::policy::parallel>()
+{
+  RAJA::synchronize<RAJA::cuda_synchronize>();
+}
+
 
 /*
  * Simple forall

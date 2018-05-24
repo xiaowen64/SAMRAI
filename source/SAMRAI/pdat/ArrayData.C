@@ -31,6 +31,8 @@
 #endif
 #endif
 
+#include "umpire/ResourceManager.hpp"
+
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -94,17 +96,8 @@ ArrayData<TYPE>::ArrayData(
 {
    TBOX_ASSERT(depth > 0);
 
-#if defined(HAVE_CUDA)
-#if defined(HAVE_CNMEM)
-   appu::MemoryPool* pool = appu::MemoryPool::getMemoryPool();
-   d_array = static_cast<TYPE*>(pool->alloc(sizeof(TYPE) * d_depth * d_offset));
-#elif defined(ENABLE_SIMPOOL)
-   DynamicPoolAllocator<UMAllocator> &m = DynamicPoolAllocator<UMAllocator>::getInstance();
-   d_array = static_cast<TYPE*>(m.allocate(sizeof(TYPE) * d_depth * d_offset));
-#else
-   cudaMallocManaged((void**)&d_array, sizeof(TYPE) * d_depth * d_offset);
-#endif
-#endif
+   auto alloc = umpire::ResourceManager::getInstance().getAllocator("SAMRAI_pool");
+   allocate(alloc);
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
@@ -112,19 +105,38 @@ ArrayData<TYPE>::ArrayData(
 }
 
 template<class TYPE>
+ArrayData<TYPE>::ArrayData(
+   const hier::Box& box,
+   unsigned int depth,
+   umpire::Allocator allocator):
+   d_depth(depth),
+   d_offset(box.size()),
+   d_box(box)
+#if !defined(HAVE_CUDA)
+   , d_array(d_depth * d_offset)
+#endif
+{
+   TBOX_ASSERT(depth > 0);
+
+   allocate(allocator);
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   undefineData();
+#endif
+}
+
+template<class TYPE>
+void
+ArrayData<TYPE>::allocate(umpire::Allocator allocator)
+{
+   d_array = static_cast<TYPE*>(allocator.allocate(sizeof(TYPE) * d_depth * d_offset));
+}
+
+template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
-#if defined(HAVE_CUDA)
-#if defined(HAVE_CNMEM)
-  appu::MemoryPool* pool = appu::MemoryPool::getMemoryPool();
-  pool->free(d_array);
-#elif defined(ENABLE_SIMPOOL)
-   DynamicPoolAllocator<UMAllocator> &m = DynamicPoolAllocator<UMAllocator>::getInstance();
-   m.deallocate(d_array);
-#else
-  cudaFree(d_array);
-#endif
-#endif
+   auto alloc = umpire::ResourceManager::getInstance().getAllocator("SAMRAI_pool");
+   alloc.deallocate(d_array);
 }
 
 template<class TYPE>
@@ -684,11 +696,12 @@ ArrayData<TYPE>::packStream(
   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size*sizeof(TYPE)));
+   //std::vector< TYPE, umpire::TypedAllocator<TYPE> > buffer(size);
 
    packBuffer(&buffer[0], hier::Box::shift(dest_box, -src_shift));
 
-   stream.pack(&buffer[0], size);
+   //stream.pack(&buffer[0], size);
 
   RANGE_POP
 }
@@ -704,7 +717,8 @@ ArrayData<TYPE>::packStream(
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
 
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -715,7 +729,7 @@ ArrayData<TYPE>::packStream(
 
    TBOX_ASSERT(ptr == size);
 
-   stream.pack(&buffer[0], size);
+   //stream.pack(&buffer[0], size);
 
    RANGE_POP
 }
@@ -730,14 +744,15 @@ ArrayData<TYPE>::packStream(
   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    hier::Box pack_box(dest_box);
    transformation.inverseTransform(pack_box);
    packBuffer(&buffer[0], pack_box);
 //      hier::Box::shift(dest_box, -src_shift));
 
-   stream.pack(&buffer[0], size);
+   //stream.pack(&buffer[0], size);
 
    RANGE_POP
 }
@@ -753,7 +768,8 @@ ArrayData<TYPE>::packStream(
 
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -767,7 +783,7 @@ ArrayData<TYPE>::packStream(
 
    TBOX_ASSERT(ptr == size);
 
-   stream.pack(&buffer[0], size);
+   //stream.pack(&buffer[0], size);
 
     RANGE_POP
 }
@@ -796,9 +812,10 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
-   stream.unpack(&buffer[0], size);
+   //stream.unpack(&buffer[0], size);
    unpackBuffer(&buffer[0], dest_box);
 
    RANGE_POP
@@ -816,9 +833,10 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
-   stream.unpack(&buffer[0], size);
+   //stream.unpack(&buffer[0], size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -855,9 +873,10 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
-   stream.unpack(&buffer[0], size);
+   //stream.unpack(&buffer[0], size);
    unpackBufferAndSum(&buffer[0], dest_box);
 
 }
@@ -873,9 +892,10 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
-   stream.unpack(&buffer[0], size);
+   //stream.unpack(&buffer[0], size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();

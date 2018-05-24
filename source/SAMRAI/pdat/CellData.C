@@ -88,6 +88,25 @@ CellData<TYPE>::CellData(
 }
 
 template<class TYPE>
+CellData<TYPE>::CellData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+
+   t_copy = tbox::TimerManager::getManager()->
+      getTimer("pdat::CellData::copy");
+
+   d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth, allocator));
+}
+
+template<class TYPE>
 CellData<TYPE>::~CellData()
 {
 }

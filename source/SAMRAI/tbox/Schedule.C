@@ -16,6 +16,8 @@
 
 #include <cstring>
 
+#include <cuda_runtime.h>
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -376,6 +378,7 @@ Schedule::postSends()
          (*pack)->packStream(outgoing_stream);
       }
       d_object_timers->t_pack_stream->stop();
+      cudaDeviceSynchronize();
 
       if (can_estimate_incoming_message_size) {
          // Receiver knows message size so set it exactly.
@@ -450,6 +453,9 @@ Schedule::processCompletedCommunications()
               recv != d_recv_sets[sender].end(); ++recv) {
             (*recv)->unpackStream(incoming_stream);
          }
+
+         cudaDeviceSynchronize();
+
          d_object_timers->t_unpack_stream->stop();
          completed_comm.clearRecvData();
 
@@ -488,6 +494,9 @@ Schedule::processCompletedCommunications()
                  recv != d_recv_sets[sender].end(); ++recv) {
                (*recv)->unpackStream(incoming_stream);
             }
+
+            cudaDeviceSynchronize();
+
             d_object_timers->t_unpack_stream->stop();
             completed_comm->clearRecvData();
          } else {

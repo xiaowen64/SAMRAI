@@ -65,6 +65,12 @@ set (mesh_depends_on
   SAMRAI_tbox
   SAMRAI_xfer)
 
+if (ENABLE_OPENMP)
+  set(mesh_depends_on
+    ${mesh_depends_on}
+    openmp)
+endif()
+
 if (ENABLE_CUDA)
   set (mesh_depends_on
     ${mesh_depends_on}
@@ -84,6 +90,8 @@ install(TARGETS
   RUNTIME DESTINATION lib
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib)
+
+set_target_properties(SAMRAI_mesh PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(
   SAMRAI_mesh

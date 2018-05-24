@@ -128,3 +128,10 @@ if (ENABLE_SUNDIALS)
       LIBRARIES ${SUNDIALS_LIBRARIES})
   endif ()
 endif ()
+
+find_package(umpire)
+
+blt_register_library(
+  NAME umpire
+  INCLUDES ${UMPIRE_INCLUDE_DIRS}
+  LIBRARIES umpire)

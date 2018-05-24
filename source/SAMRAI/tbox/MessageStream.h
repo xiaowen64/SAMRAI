@@ -16,6 +16,8 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include "umpire/TypedAllocator.hpp"
+
 #include <cstring>
 #include <iostream>
 #include <vector>
@@ -151,6 +153,28 @@ public:
    {
       TBOX_ASSERT(readMode());
       return d_buffer_index >= d_buffer_size;
+   }
+
+   /*!
+    * @brief Returns a pointer into the message stream valid for num_bytes.
+    *
+    * @param[in] num_bytes  Number of bytes requested for window.
+    *
+    * @pre writeMode()
+    */
+   void *
+   getBufferForBytes(
+      size_t num_bytes)
+   {
+      if (!growAsNeeded()) {
+         TBOX_ASSERT(canCopyIn(num_bytes));
+      }
+      d_write_buffer.resize(d_write_buffer.size() + num_bytes);
+      d_buffer_size = d_write_buffer.size();
+      void *buffer = static_cast<void *>(
+          d_write_buffer.data() + d_buffer_index);
+      d_buffer_index += num_bytes;
+      return buffer;
    }
 
    /*!
@@ -367,7 +391,7 @@ private:
    /*!
     * The buffer for the streamed data to be written.
     */
-   std::vector<char> d_write_buffer;
+   std::vector<char, umpire::TypedAllocator<char> > d_write_buffer;
 
    /*!
     * @brief Pointer to the externally supplied memory to read from in
