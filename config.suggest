@@ -105,7 +105,7 @@ EOF
 chaos5_mpiicc) # CHAOS5, Intel compilers with LLNL mpiicpc front ends
 cat <<-EOF
 	--with-CC="/usr/local/bin/mpiicc-17.0.174 -gcc-name=/usr/apps/gnu/4.9.2/bin/gcc"
-	--with-CXX="/usr/local/bin/mpiicpc-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++"
+	--with-CXX="/usr/local/bin/mpiicpc-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++ -std=c++11"
 	--with-F77="/usr/local/bin/ifort-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++"
 	--without-petsc
 	--without-x
@@ -124,7 +124,7 @@ EOF
 chaos5_mpiicc14_cxx11_mpi2) # CHAOS5, Intel v. 14 compilers with LLNL mpiicpc front ends, using C++ 11 standard and MPI2
 cat <<-EOF
         --with-CC="/usr/local/bin/mpiicc-17.0.174 -gcc-name=/usr/apps/gnu/4.9.2/bin/gcc -mpi=mvapich2-intel-2.2"
-        --with-CXX="/usr/local/bin/mpiicpc-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++ -mpi=mvapich2-intel-2.2"
+        --with-CXX="/usr/local/bin/mpiicpc-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++ -mpi=mvapich2-intel-2.2 -std=c++11"
         --with-F77="/usr/local/bin/mpiifort-17.0.174 -gxx-name=/usr/apps/gnu/4.9.2/bin/g++ -mpi=mvapich2-intel-2.2"
         --without-petsc
         --without-x
@@ -142,7 +142,7 @@ EOF
 chaos5_clang) # CHAOS5, clang compilers and MPI2
 cat <<-EOF
 	--with-CC=/usr/global/tools/clang/chaos_5_x86_64_ib/clang-4.0.1/bin/clang
-	--with-CXX=/usr/global/tools/clang/chaos_5_x86_64_ib/clang-4.0.1/bin/clang++
+	--with-CXX="/usr/global/tools/clang/chaos_5_x86_64_ib/clang-4.0.1/bin/clang++ -std=c++11"
 	--with-F77=/usr/apps/gnu/4.9.3/bin/gfortran
 	--without-petsc
         --without-blas
