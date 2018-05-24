@@ -527,15 +527,6 @@ CASC_CXX_STD_FILL_N_RETURNS_VOID
 
 CASC_CXX_CTIME
 
-AC_LANG_PUSH([C++])
-AX_CHECK_COMPILE_FLAG([-std=c++11], [
-  CXX_FLAGS+=" -std=c++11"
-], [
-  echo "C++ compiler cannot compile C++11 code"
-  exit -1
-])
-AC_LANG_POP([C++])
-
 AC_CHECK_HEADERS([sys/times.h])
 AC_CHECK_HEADERS([unistd.h])
 
