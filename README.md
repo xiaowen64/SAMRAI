@@ -42,7 +42,7 @@ We maintain a list of publications
 
 ## Release
 
-Copyright (c) 1997-2017, Lawrence Livermore National Security, LLC.
+Copyright (c) 1997-2018, Lawrence Livermore National Security, LLC.
 
 Produced at the Lawrence Livermore National Laboratory.
 
