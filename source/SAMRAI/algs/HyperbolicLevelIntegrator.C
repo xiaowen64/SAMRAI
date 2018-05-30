@@ -1809,12 +1809,23 @@ HyperbolicLevelIntegrator::registerVariable(
          std::shared_ptr<hier::TimeInterpolateOperator> time_int(
             transfer_geom->lookupTimeInterpolateOperator(var));
 
+         // d_bdry_fill_advance->registerRefine(
+         //    scr_id, cur_id, cur_id, new_id, scr_id, refine_op, time_int);
+
+         // d_bdry_fill_advance_new->registerRefine(
+         //    scr_id, new_id, cur_id, new_id, scr_id, refine_op, time_int);
+
+         // d_fill_new_level->registerRefine(
+         //    cur_id, cur_id, cur_id, new_id, scr_id, refine_op, time_int);
+
          d_bdry_fill_advance->registerRefine(
-            scr_id, cur_id, cur_id, new_id, scr_id, refine_op, time_int);
+            scr_id, cur_id, scr_id, refine_op);
+
          d_bdry_fill_advance_new->registerRefine(
-            scr_id, new_id, cur_id, new_id, scr_id, refine_op, time_int);
+            scr_id, new_id, scr_id, refine_op);
+
          d_fill_new_level->registerRefine(
-            cur_id, cur_id, cur_id, new_id, scr_id, refine_op, time_int);
+            cur_id, cur_id, scr_id, refine_op);
 
          /*
           * For data synchronization between levels, the coarsen algorithm
@@ -1849,8 +1860,11 @@ HyperbolicLevelIntegrator::registerVariable(
                   zero_ghosts);
             d_old_time_dep_data.setFlag(old_id);
 
+            //d_bdry_fill_advance_old->registerRefine(
+            //   scr_id, cur_id, old_id, new_id, scr_id, refine_op, time_int);
+
             d_bdry_fill_advance_old->registerRefine(
-               scr_id, cur_id, old_id, new_id, scr_id, refine_op, time_int);
+               scr_id, cur_id, scr_id, refine_op);
 
             d_coarsen_rich_extrap_init->
             registerCoarsen(cur_id, old_id, coarsen_op);
