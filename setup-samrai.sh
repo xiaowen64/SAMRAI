@@ -16,6 +16,10 @@ if [[ "$1" == "-c" ]]; then
     dir=${build_prefix}/$pkg
     echo Removing $dir ...
     rm -rf $dir
+elif [[ "$1" == "-b" ]]; then
+    pkg=$2
+    echo ${build_prefix}/${pkg}
+    exit 0
 fi
 
 if [[ "$compiler" == "xl" ]]; then
@@ -34,6 +38,7 @@ fi
 
 build_dir=${build_prefix}/${pkg}
 install_dir=${install_prefix}/${pkg}
+
 if [ "$pkg" == "RAJA" ]; then
     source_dir=${source_prefix}/${pkg}
     mkdir -p $build_dir && cd $build_dir
@@ -74,7 +79,7 @@ elif [ "$pkg" == "samrai-uvm" ]; then
     source_dir=${source_prefix}/${pkg}
     cd $source_dir && {
         branch=$(git rev-parse --abbrev-ref HEAD)
-        [[ "$branch" != "feature/uvm" ]] && exit 1
+	echo "Configuring SAMRAI on branch $branch"
     }
     mkdir -p $build_dir && cd $build_dir
     cmake -DCMAKE_CXX_COMPILER=$cpp \
