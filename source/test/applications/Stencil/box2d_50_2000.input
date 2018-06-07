@@ -37,7 +37,7 @@ TimerManager{
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry {
-   domain_boxes = [ (0,0) , (500,500) ]
+   domain_boxes = [ (0,0) , (2000,2000) ]
    x_lo         = 0.e0, 0.e0 // lower end of computational domain.
    x_up         = 1e0, 1e0   // upper end of computational domain.
 }
