@@ -1123,7 +1123,8 @@ PatchHierarchy::putToRestart(
 
 void
 PatchHierarchy::putBlueprint(
-   const std::shared_ptr<tbox::Database>& blueprint_db) const
+   const std::shared_ptr<tbox::Database>& blueprint_db,
+   const BlueprintUtils& bp_utils) const
 {
    TBOX_ASSERT(blueprint_db);
 
@@ -1143,28 +1144,44 @@ PatchHierarchy::putBlueprint(
            ++p) {
 
          const std::shared_ptr<hier::Patch>& patch = *p;
-         const BoxId& box_id = patch->getBox().getBoxId();
+         const Box& patch_box = patch->getBox();
+         const BoxId& box_id = patch_box.getBoxId();
          const LocalId& local_id = box_id.getLocalId();
 
-         int mesh_id = first_patch_id[i] + local_id.getValue();
-         std::string mesh_name =
-            "mesh_" + tbox::Utilities::intToString(mesh_id);
+         int domain_id = first_patch_id[i] + local_id.getValue();
+         std::string domain_name =
+            "domain_" + tbox::Utilities::intToString(domain_id);
 
-         std::shared_ptr<tbox::Database> mesh_db(
-            blueprint_db->putDatabase(mesh_name));
+         std::shared_ptr<tbox::Database> domain_db(
+            blueprint_db->putDatabase(domain_name));
 
          std::shared_ptr<tbox::Database> state_db(
-            mesh_db->putDatabase("state"));
+            domain_db->putDatabase("state"));
 
-         state_db->putInteger("domain_id", mesh_id);
+         state_db->putInteger("domain_id", domain_id);
          state_db->putInteger("level_id", i);
+
+         std::shared_ptr<tbox::Database> topologies_db(
+            domain_db->putDatabase("topologies"));
+
+         std::shared_ptr<tbox::Database> topo_db(
+            topologies_db->putDatabase("mesh"));
+
+         std::shared_ptr<tbox::Database> elem_db(
+            topo_db->putDatabase("elements"));
+         std::shared_ptr<tbox::Database> origin_db(
+            elem_db->putDatabase("origin"));
+         origin_db->putInteger("i0", patch_box.lower(0));
+         if (d_dim.getValue() > 1) {
+            origin_db->putInteger("j0", patch_box.lower(1));
+         }
+         if (d_dim.getValue() > 2) {
+            origin_db->putInteger("k0", patch_box.lower(2));
+         }
 
          if (d_number_levels == 1) {
             break;
          }
-
-         std::shared_ptr<tbox::Database> nestsets_db(
-            mesh_db->putDatabase("nestsets"));
 
       }
 
@@ -1183,10 +1200,6 @@ PatchHierarchy::putBlueprint(
                true);
 
          const IntVector& ratio = c_to_f.getRatio();
-         std::vector<int> ratio_vec(d_dim.getValue());
-         for (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-            ratio_vec[d] = ratio[d];
-         }
 
          for (PatchLevel::Iterator p(level->begin()); p != level->end();
               ++p) {
@@ -1196,15 +1209,14 @@ PatchHierarchy::putBlueprint(
             const BoxId& box_id = pbox.getBoxId();
             const LocalId& local_id = box_id.getLocalId();
 
-            int mesh_id = first_patch_id[i] + local_id.getValue();
-            std::string mesh_name =
-               "mesh_" + tbox::Utilities::intToString(mesh_id);
+            int domain_id = first_patch_id[i] + local_id.getValue();
+            std::string domain_name =
+               "domain_" + tbox::Utilities::intToString(domain_id);
 
-            std::shared_ptr<tbox::Database> mesh_db(
-               blueprint_db->getDatabase(mesh_name));
+            std::shared_ptr<tbox::Database> domain_db(
+               blueprint_db->getDatabase(domain_name));
 
-            std::shared_ptr<tbox::Database> nestsets_db(
-               mesh_db->getDatabase("nestsets"));
+            std::shared_ptr<tbox::Database> nestsets_db;
 
             int ncount = 0;
             Connector::ConstNeighborhoodIterator nbh = c_to_f.findLocal(box_id);
@@ -1222,36 +1234,68 @@ PatchHierarchy::putBlueprint(
                Box overlap(crse_nbr*pbox);
                if (!overlap.empty()) {
 
-                  std::string set_name =
-                     "nestset_" + tbox::Utilities::intToString(ncount);
-                  std::shared_ptr<tbox::Database> set_db(
-                     nestsets_db->putDatabase(set_name));
+                  if (domain_db->keyExists("nestsets")) {
+                     nestsets_db = domain_db->getDatabase("nestsets");  
+                  } else {
+                     nestsets_db = domain_db->putDatabase("nestsets");
+                  }
+
+                  std::shared_ptr<tbox::Database> set_db;
+                  if (nestsets_db->keyExists("nestset")) {
+                     set_db = nestsets_db->getDatabase("nestset");
+                  } else {
+                     set_db = nestsets_db->putDatabase("nestset");
+                  }
+
+                  if (!set_db->keyExists("association")) {
+                     set_db->putString("association", "element");
+                  }
+                  if (!set_db->keyExists("topology")) {
+                     set_db->putString("topology", "mesh");
+                  }
+
+                  std::shared_ptr<tbox::Database> windows_db;
+                  if (set_db->keyExists("windows")) {
+                     windows_db = set_db->getDatabase("windows");
+                  } else {
+                     windows_db = set_db->putDatabase("windows");
+                  }
+
+                  std::string window_name =
+                     "window_" + tbox::Utilities::intToString(ncount);
+                  std::shared_ptr<tbox::Database> window_db(
+                     windows_db->putDatabase(window_name));
 
                   const LocalId& nbr_id = nbr_box.getLocalId();
                   int child_id = first_patch_id[i+1] + nbr_id.getValue();
 
-                  set_db->putInteger("child", child_id);
-                  set_db->putIntegerVector("ratio", ratio_vec);
-                  set_db->putString("association", "element");
+                  window_db->putString("type", "child");
+                  window_db->putInteger("domain_id", child_id);
 
-                  std::vector<int> ovlp_vec;
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.lower(d));
-                  } 
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.upper(d));
-                  }
-                  set_db->putIntegerVector("local", ovlp_vec);
+                  std::shared_ptr<tbox::Database> ratio_db(
+                     window_db->putDatabase("ratio"));
 
-                  ovlp_vec.clear();
-                  overlap.refine(ratio);
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.lower(d));
+                  std::shared_ptr<tbox::Database> origin_db(
+                     window_db->putDatabase("origin"));
+
+                  std::shared_ptr<tbox::Database> width_db(
+                     window_db->putDatabase("dims"));
+
+                  IntVector box_width(overlap.numberCells());
+
+                  ratio_db->putInteger("i", ratio[0]);
+                  origin_db->putInteger("i", overlap.lower(0));
+                  width_db->putInteger("i", box_width[0]);
+                  if (d_dim.getValue() > 1) {
+                     ratio_db->putInteger("j", ratio[1]);
+                     origin_db->putInteger("j", overlap.lower(1));
+                     width_db->putInteger("j", box_width[1]);
                   }
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.upper(d));
+                  if (d_dim.getValue() > 2) {
+                     ratio_db->putInteger("k", ratio[2]);
+                     origin_db->putInteger("k", overlap.lower(2));
+                     width_db->putInteger("k", box_width[2]);
                   }
-                  set_db->putIntegerVector("remote", ovlp_vec);
 
                   ++ncount;
                }
@@ -1274,10 +1318,6 @@ PatchHierarchy::putBlueprint(
                true);
 
          const IntVector& ratio = f_to_c.getRatio();
-         std::vector<int> ratio_vec(d_dim.getValue());
-         for (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-            ratio_vec[d] = ratio[d];
-         }
 
          for (PatchLevel::Iterator p(level->begin()); p != level->end();
               ++p) {
@@ -1287,17 +1327,21 @@ PatchHierarchy::putBlueprint(
             const BoxId& box_id = pbox.getBoxId();
             const LocalId& local_id = box_id.getLocalId();
 
-            int mesh_id = first_patch_id[i] + local_id.getValue();
-            std::string mesh_name =
-               "mesh_" + tbox::Utilities::intToString(mesh_id);
+            int domain_id = first_patch_id[i] + local_id.getValue();
+            std::string domain_name =
+               "domain_" + tbox::Utilities::intToString(domain_id);
 
-            std::shared_ptr<tbox::Database> mesh_db(
-               blueprint_db->getDatabase(mesh_name));
+            std::shared_ptr<tbox::Database> domain_db(
+               blueprint_db->getDatabase(domain_name));
 
-            std::shared_ptr<tbox::Database> nestsets_db(
-               mesh_db->getDatabase("nestsets"));
+            std::shared_ptr<tbox::Database> windows_db;
+            int ncount = 0;
 
-            int ncount = nestsets_db->getAllKeys().size();
+            if (domain_db->keyExists("nestsets")) {
+               windows_db = domain_db->getDatabase("nestsets")->getDatabase("nestset")->getDatabase("windows");
+               ncount = windows_db->getAllKeys().size();
+            }
+
             Connector::ConstNeighborhoodIterator nbh = f_to_c.findLocal(box_id);
 
             if (nbh == f_to_c.end())  {
@@ -1314,44 +1358,79 @@ PatchHierarchy::putBlueprint(
                Box overlap(fine_nbr*pbox);
                if (!overlap.empty()) {
 
-                  std::string set_name =
-                     "nestset_" + tbox::Utilities::intToString(ncount);
-                  std::shared_ptr<tbox::Database> set_db(
-                     nestsets_db->putDatabase(set_name));
+                  std::shared_ptr<tbox::Database> nestsets_db;
+                  if (domain_db->keyExists("nestsets")) {
+                     nestsets_db = domain_db->getDatabase("nestsets");
+                  } else {
+                     nestsets_db = domain_db->putDatabase("nestsets");
+                  }
+
+                  std::shared_ptr<tbox::Database> set_db;
+                  if (nestsets_db->keyExists("nestset")) {
+                     set_db = nestsets_db->getDatabase("nestset");
+                  } else {
+                     set_db = nestsets_db->putDatabase("nestset");
+                  }
+
+                  if (!set_db->keyExists("association")) {
+                     set_db->putString("association", "element");
+                  }
+                  if (!set_db->keyExists("topology")) {
+                     set_db->putString("topology", "mesh");
+                  }
+
+                  if (set_db->keyExists("windows")) {
+                     windows_db = set_db->getDatabase("windows");
+                  } else {
+                     windows_db = set_db->putDatabase("windows");
+                  }
+
+                  std::string window_name =
+                     "window_" + tbox::Utilities::intToString(ncount);
+                  std::shared_ptr<tbox::Database> window_db(
+                     windows_db->putDatabase(window_name));
 
                   const LocalId& nbr_id = nbr_box.getLocalId();
                   int parent_id = first_patch_id[i-1] + nbr_id.getValue();
 
-                  set_db->putInteger("parent", parent_id);
-                  set_db->putIntegerVector("ratio", ratio_vec);
-                  set_db->putString("association", "element");
+                  window_db->putString("type", "parent");
+                  window_db->putInteger("domain_id", parent_id);
 
-                  std::vector<int> ovlp_vec;
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.lower(d));
-                  } 
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.upper(d));
-                  }
-                  set_db->putIntegerVector("local", ovlp_vec);
+                  std::shared_ptr<tbox::Database> ratio_db(
+                     window_db->putDatabase("ratio"));
 
-                  ovlp_vec.clear();
-                  overlap.coarsen(ratio);
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.lower(d));
+                  std::shared_ptr<tbox::Database> origin_db(
+                     window_db->putDatabase("origin"));
+
+                  std::shared_ptr<tbox::Database> width_db(
+                     window_db->putDatabase("dims"));
+
+                  IntVector box_width(overlap.numberCells());
+
+                  ratio_db->putInteger("i", ratio[0]);
+                  origin_db->putInteger("i", overlap.lower(0));
+                  width_db->putInteger("i", box_width[0]);
+                  if (d_dim.getValue() > 1) {
+                     ratio_db->putInteger("j", ratio[1]);
+                     origin_db->putInteger("j", overlap.lower(1));
+                     width_db->putInteger("j", box_width[1]);
                   }
-                  for  (unsigned short d = 0; d < d_dim.getValue(); ++d) {
-                     ovlp_vec.push_back(overlap.upper(d));
+                  if (d_dim.getValue() > 2) {
+                     ratio_db->putInteger("k", ratio[2]);
+                     origin_db->putInteger("k", overlap.lower(2));
+                     width_db->putInteger("k", box_width[2]);
                   }
-                  set_db->putIntegerVector("remote", ovlp_vec);
+
                   ++ncount;
                }
             }
          }
       }
    }
-}
 
+   bp_utils.putTopologyAndCoordinatesToDatabase(blueprint_db, *this);
+}
+/*
 void
 PatchHierarchy::putBlueprintCoords(
    const std::shared_ptr<tbox::Database>& blueprint_db) const
@@ -1379,7 +1458,7 @@ PatchHierarchy::putBlueprintCoords(
 
          int mesh_id = first_patch_id[i] + local_id.getValue();
          std::string mesh_name =
-            "mesh_" + tbox::Utilities::intToString(mesh_id);
+            "domain_" + tbox::Utilities::intToString(mesh_id);
 
          std::shared_ptr<tbox::Database> mesh_db(
             blueprint_db->getDatabase(mesh_name));
@@ -1390,18 +1469,20 @@ PatchHierarchy::putBlueprintCoords(
          std::shared_ptr<tbox::Database> coords_db(
             coordsets_db->putDatabase("coords"));
 
+         patch->getPatchGeometry()->putBlueprintCoords(coords_db, patch->getBox());
+
          std::shared_ptr<tbox::Database> topologies_db(
-            mesh_db->putDatabase("topologies"));
+            mesh_db->getDatabase("topologies"));
 
          std::shared_ptr<tbox::Database> topo_db(
-            topologies_db->putDatabase("topo"));
+            topologies_db->getDatabase("mesh"));
 
-         patch->getPatchGeometry()->putBlueprintCoordsAndTopology(coords_db, topo_db, patch->getBox());
+         topo_db->putString("coordset", "coords");
 
       }
    }
 }
-
+*/
 
 /*
  *************************************************************************

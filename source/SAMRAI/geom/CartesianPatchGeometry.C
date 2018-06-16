@@ -48,9 +48,8 @@ CartesianPatchGeometry::CartesianPatchGeometry(
 }
 
 void
-CartesianPatchGeometry::putBlueprintCoordsAndTopology(
+CartesianPatchGeometry::putBlueprintCoords(
    const std::shared_ptr<tbox::Database>& coords_db,
-   const std::shared_ptr<tbox::Database>& topo_db,
    const hier::Box& box) const
 {
    const tbox::Dimension& dim(box.getDim());
@@ -68,24 +67,19 @@ CartesianPatchGeometry::putBlueprintCoordsAndTopology(
    dims_db->putInteger("i", box_size[0]);
    origin_db->putDouble("x", d_x_lo[0]);
    spacing_db->putDouble("dx", d_dx[0]);
-   topo_db->putInteger("i0",box.lower()(0));
 
    if (dim.getValue() > 1) {
       dims_db->putInteger("j", box_size[1]);
       origin_db->putDouble("y", d_x_lo[1]);
       spacing_db->putDouble("dy", d_dx[1]);
-      topo_db->putInteger("j0",box.lower()(1));
    }
 
    if (dim.getValue() > 2) {
       dims_db->putInteger("k", box_size[2]);
       origin_db->putDouble("z", d_x_lo[2]);
-      spacing_db->putDouble("dy", d_dx[2]);
-      topo_db->putInteger("k0",box.lower()(2));
+      spacing_db->putDouble("dz", d_dx[2]);
    }
 
-   topo_db->putString("coordset",coords_db->getName());
-   topo_db->putString("type","uniform");
 }
 
 /*

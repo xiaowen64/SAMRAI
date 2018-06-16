@@ -182,8 +182,6 @@ enum Database::DataType
 ConduitDatabase::getArrayType(
    const std::string& key)
 {
-   conduit::Node& child = getChildNodeOrExit(key);
-
    if (isBool(key)) {
       return SAMRAI_BOOL;
    } else if (isChar(key)) {
@@ -278,7 +276,6 @@ std::shared_ptr<Database>
 ConduitDatabase::getDatabase(
    const std::string& key)
 {
-   conduit::Node& child = getChildNodeOrExit(key);
    if (!isDatabase(key)) {
       TBOX_CONDUIT_DB_ERROR("Key=" << key << " is not a database...");
    }

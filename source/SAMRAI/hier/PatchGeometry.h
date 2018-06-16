@@ -328,19 +328,6 @@ private:
       return d_touches_regular_bdry(axis, upperlower);
    }
 
-   virtual
-   void
-   putBlueprintCoordsAndTopology(
-      const std::shared_ptr<tbox::Database>& coords_db,
-      const std::shared_ptr<tbox::Database>& topo_db,
-      const Box& box) const
-   {
-      NULL_USE(coords_db);
-      NULL_USE(topo_db);
-      NULL_USE(box);
-   }
-
-
    /**
     * Print object data to the specified output stream.
     */

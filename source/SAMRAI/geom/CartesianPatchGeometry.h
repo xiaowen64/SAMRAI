@@ -90,9 +90,8 @@ public:
    }
 
    void
-   putBlueprintCoordsAndTopology(
+   putBlueprintCoords(
       const std::shared_ptr<tbox::Database>& coords_db,
-      const std::shared_ptr<tbox::Database>& topo_db,
       const hier::Box& box) const;
 
    /**
