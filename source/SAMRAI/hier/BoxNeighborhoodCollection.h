@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   A class describing the adjacency of Boxes.
  *
  ************************************************************************/
@@ -553,7 +553,7 @@ private:
 public:
       typedef std::forward_iterator_tag iterator_category;
       typedef Box value_type;
-      typedef ptrdiff_t difference_type;
+      typedef std::ptrdiff_t difference_type;
       typedef Box * pointer;
       typedef Box& reference;
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -317,6 +317,10 @@ public:
     * @param f Descriptor of cell-centered source variable.
     * @param homogeneous_bc Whether homogeneous boundary conditions
     *        are assumed.
+    * @param initial_zero Use a uniform zero vector as the initial guess of
+    *                     the solution rather than the current contents of
+    *                     the u solution variable.  This can be used as a
+    *                     small optimization to avoid some internal data copies.
     *
     * @return whether solver converged to specified level
     *
@@ -330,7 +334,8 @@ public:
    solveSystem(
       const int u,
       const int f,
-      bool homogeneous_bc = false);
+      bool homogeneous_bc = false,
+      bool initial_zero = false);
 
    /*!
     * @brief Return the number of iterations taken by the solver to converge.
