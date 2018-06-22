@@ -19,6 +19,8 @@ using namespace std;
 #include "CommTester.h"
 #include "test/testlib/DerivedVisOwnerData.h"
 
+#include "SAMRAI/hier/BlueprintUtils.h"
+#include "SAMRAI/tbox/ConduitDatabase.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -42,6 +44,8 @@ using namespace std;
 #include "OuterfaceDataTest.h"
 //#include "MultiVariableDataTest.h"
 
+
+#include "conduit_blueprint.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -510,6 +514,53 @@ int main(
          }
       }
 
+      std::shared_ptr<tbox::MemoryDatabase> memory_db(
+         new tbox::MemoryDatabase("mem_hierarchy"));
+
+      patch_hierarchy->putToRestart(memory_db);
+
+      std::shared_ptr<tbox::ConduitDatabase> conduit_db(
+         new tbox::ConduitDatabase("conduit_hierarchy"));
+
+      hier::BlueprintUtils bp_utils(comm_tester.get());
+      patch_hierarchy->putBlueprint(conduit_db, bp_utils);
+
+      conduit::Node n;
+      conduit_db->toConduitNode(n);
+
+      std::vector<int> first_patch_id;
+      first_patch_id.push_back(0);
+
+      int patch_count = 0;
+      for (int i = 1; i <  patch_hierarchy->getNumberOfLevels(); ++i) {
+         patch_count += patch_hierarchy->getPatchLevel(i-1)->getNumberOfPatches();
+         first_patch_id.push_back(patch_count);
+      }
+
+      for (int i = 0; i < patch_hierarchy->getNumberOfLevels(); ++i) {
+         const std::shared_ptr<hier::PatchLevel>& level =  patch_hierarchy->getPatchLevel(i);
+
+         for (hier::PatchLevel::Iterator p(level->begin()); p != level->end();
+              ++p) {
+
+            const std::shared_ptr<hier::Patch>& patch = *p;
+            const hier::BoxId& box_id = patch->getBox().getBoxId();
+            const hier::LocalId& local_id = box_id.getLocalId();
+   
+            int mesh_id = first_patch_id[i] + local_id.getValue();
+
+            if (test_to_run == "CellDataTest") {
+               CellDataTest* cell_test = (CellDataTest*)patch_data_test;
+
+               cell_test->addFields(n,mesh_id,patch); 
+            }
+         }
+      }
+
+//      n.print();
+
+//      conduit::Node info;
+//      TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
 

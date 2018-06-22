@@ -10,15 +10,10 @@
 
 #include "CommTester.h"
 
+#include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
-#include "SAMRAI/hier/CoarsenOperator.h"
-#include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
-#include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
-#include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/xfer/CompositeBoundaryAlgorithm.h"
 
 namespace SAMRAI {
@@ -738,5 +733,21 @@ void CommTester::setupHierarchy(
    }
 
 }
+
+void
+CommTester::putCoordinatesToDatabase(
+   std::shared_ptr<tbox::Database>& coords_db,
+   const hier::Patch& patch)
+{
+
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
+
+   if (pgeom) {
+      pgeom->putBlueprintCoords(coords_db, patch.getBox());
+   }
+}
+
 
 }

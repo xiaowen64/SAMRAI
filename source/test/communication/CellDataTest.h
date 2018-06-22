@@ -132,6 +132,9 @@ public:
       int level_number,
       const std::vector<std::shared_ptr<hier::PatchData> >& bdry_data);
 
+   void addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch);
+   void addFieldsToDatabase(std::shared_ptr<tbox::Database> database, int domain_id, const std::shared_ptr<hier::Patch>& patch);
+
 private:
    /**
     * Function for reading test data from input file.
