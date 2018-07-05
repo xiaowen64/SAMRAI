@@ -1,7 +1,9 @@
 #ifndef included_NVTXUtilities
 #define included_NVTXUtilities
 
+#include "cuda_runtime.h"
 #include "nvToolsExt.h"
+#include "cuda_profiler_api.h"
 
 const uint32_t colors[] = { 0x0000ff00, 0x000000ff, 0x00ffff00, 0x00ff00ff, 0x0000ffff, 0x00ff0000, 0x00ffffff };
 const int num_colors = sizeof(colors)/sizeof(uint32_t);
@@ -16,8 +18,12 @@ const int num_colors = sizeof(colors)/sizeof(uint32_t);
     eventAttrib.color = colors[color_id]; \
     eventAttrib.messageType = NVTX_MESSAGE_TYPE_ASCII; \
     eventAttrib.message.ascii = name; \
+    cudaDeviceSynchronize();\
     nvtxRangePushEx(&eventAttrib); \
 }
-#define RANGE_POP nvtxRangePop();
+#define RANGE_POP {\
+  cudaDeviceSynchronize();\
+  nvtxRangePop();\
+  }
 
 #endif
