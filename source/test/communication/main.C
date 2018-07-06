@@ -553,9 +553,15 @@ int main(
                CellDataTest* cell_test = (CellDataTest*)patch_data_test;
 
                cell_test->addFields(n,mesh_id,patch); 
+            } else if (test_to_run == "NodeDataTest") {
+               NodeDataTest* node_test = (NodeDataTest*)patch_data_test;
+
+               node_test->addFields(n,mesh_id,patch);
             }
          }
       }
+
+      n.save("celltest","json");
 
 //      n.print();
 

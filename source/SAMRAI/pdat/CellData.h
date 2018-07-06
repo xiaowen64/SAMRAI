@@ -448,11 +448,14 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
+#ifdef HAVE_CONDUIT
    void
    putBlueprintField(
       conduit::Node& mesh_node,
       const std::string& field_name,
-      const std::string& topology_name);
+      const std::string& topology_name,
+      int depth = 0);
+#endif
 
    /*!
     * The cell iterator iterates over the elements of a cell

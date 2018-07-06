@@ -731,14 +731,10 @@ void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
    std::string mesh_name =
       "domain_" + tbox::Utilities::intToString(domain_id);
 
-   cell_data->putBlueprintField(node[mesh_name], "cell_data", "mesh");
-
-/*
-   node[mesh_name]["fields/cell_data/values"].set_external(cell_data->getPointer(), data_size);
-   node[mesh_name]["fields/cell_data/association"].set_string("element");
-   node[mesh_name]["fields/cell_data/type"].set_string("scalar");
-   node[mesh_name]["fields/cell_data/topology"].set_string("mesh");
-*/
+   for (int d = 0; d < cell_data->getDepth(); ++d) {
+      std::string data_name = "cell_data_" + tbox::Utilities::intToString(d); 
+      cell_data->putBlueprintField(node[mesh_name], data_name, "mesh", d);
+   }
 }
 
 

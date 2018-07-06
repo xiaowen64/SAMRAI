@@ -78,6 +78,7 @@ ConduitDatabase::ConduitDatabase(
 
 ConduitDatabase::~ConduitDatabase()
 {
+   d_child_dbs.clear();
    if (!(d_node->parent())) {
       delete d_node;
    }

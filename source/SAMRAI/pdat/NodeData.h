@@ -430,6 +430,14 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
+#ifdef HAVE_CONDUIT
+   void
+   putBlueprintField(
+      conduit::Node& mesh_node,
+      const std::string& field_name,
+      const std::string& topology_name);
+#endif
+
    /*!
     * The node iterator iterates over the elements of a node
     * centered box geometry.  This typedef is a convenience for
