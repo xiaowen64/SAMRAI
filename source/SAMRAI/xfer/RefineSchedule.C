@@ -32,7 +32,7 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
-
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -2007,6 +2007,7 @@ RefineSchedule::fillData(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
+  RANGE_PUSH("fillData", 1);
    if (s_barrier_and_time) {
       t_fill_data->barrierAndStart();
    }
@@ -2088,6 +2089,7 @@ RefineSchedule::fillData(
    if (s_barrier_and_time) {
       t_fill_data->stop();
    }
+   RANGE_POP;
 }
 
 /*

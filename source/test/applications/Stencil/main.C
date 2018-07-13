@@ -29,6 +29,7 @@
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 #include "SAMRAI/algs/TimeRefinementLevelStrategy.h"
 #include "SAMRAI/mesh/TileClustering.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 // Headers for basic SAMRAI objects
 
@@ -387,9 +388,15 @@ int main(
       tbox::pout << "At begining of timestep # " << iteration_num - 1
         << endl;
       tbox::pout << "Simulation time is " << loop_time << endl;
-
+      char buf[50];
+      sprintf(buf, "Timestep %d", iteration_num);
+      RANGE_PUSH(buf, 2);
+      if (iteration_num == 11) 
+        cudaProfilerStart();
       double dt_new = time_integrator->advanceHierarchy(dt_now);
-
+      if (iteration_num == 13) 
+        cudaProfilerStop();
+      RANGE_POP;
       loop_time += dt_now;
       dt_now = dt_new;
 

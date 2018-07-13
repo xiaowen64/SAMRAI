@@ -21,6 +21,7 @@
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include "SAMRAI/tbox/RAJA_API.h"
 
@@ -1332,16 +1333,17 @@ GriddingAlgorithm::regridFinerLevel(
        * load balance in preparation for constructing new refined level.
        */
       if (do_tagging) {
-
          /*
           * Tagging stuff have been factored out to shorten this method.
           */
+        RANGE_PUSH("doTaggingBefore", 3);
          regridFinerLevel_doTaggingBeforeRecursiveRegrid(
             tag_ln,
             level_is_coarsest_sync_level,
             regrid_start_time,
             regrid_time,
             regrid_cycle);
+         RANGE_POP;
 
          /*
           * Perform regridding recursively on finer levels, if appropriate.
@@ -1375,20 +1377,24 @@ GriddingAlgorithm::regridFinerLevel(
          /*
           * Tagging stuff have been factored out to shorten this method.
           */
+        RANGE_PUSH("doTaggingAfter", 3);
          regridFinerLevel_doTaggingAfterRecursiveRegrid(
             tag_to_finer,
             tag_ln,
             tag_buffer,
             regrid_time);
+         RANGE_POP;
 
          /*
           * Determine boxes containing cells on level with a true tag
           * value.
           */
+         RANGE_PUSH("findbox", 3);
          findRefinementBoxes(
             new_box_level,
             tag_to_new,
             tag_ln);
+         RANGE_POP;
 
          d_tag_init_strategy->checkUserTagData(d_hierarchy,
             tag_ln,
@@ -1447,6 +1453,7 @@ GriddingAlgorithm::regridFinerLevel(
        * next finer level if it is no longer needed.
        */
 
+      RANGE_PUSH("nex_box_level", 3);
       if (new_box_level && new_box_level->isInitialized()) {
 
          /*
@@ -1486,6 +1493,7 @@ GriddingAlgorithm::regridFinerLevel(
          }
 
       } // if we are not re-regenerating level new_ln.
+      RANGE_POP;
 
       if (do_tagging) {
          tag_level->deallocatePatchData(d_user_tag_indx);
