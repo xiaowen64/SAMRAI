@@ -63,7 +63,9 @@ Stencil::registerModelVariables(
     algs::HyperbolicLevelIntegrator::TEMPORARY,
     d_grid_geometry);
 
+    int i = 0;
     for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+
     integrator->registerVariable(
         rho_var,
         d_nghosts,
@@ -72,17 +74,16 @@ Stencil::registerModelVariables(
         "CONSERVATIVE_COARSEN",
         "CONSERVATIVE_LINEAR_REFINE");
 
-    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
+      if (i == 0) {
+        hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
-
-#if 0
-    d_visit_writer->registerPlotQuantity(
-      rho_var->getName(),
-       "SCALAR",
-       vardb->mapVariableAndContextToIndex(
-          rho_var, integrator->getPlotContext()));
-#endif
-
+        d_visit_writer->registerPlotQuantity(
+          rho_var->getName(),
+           "SCALAR",
+           vardb->mapVariableAndContextToIndex(
+              rho_var, integrator->getPlotContext()));
+      }
+      i++;
   }
 }
 
@@ -363,7 +364,7 @@ Stencil::postprocessRefine(
   // no-op
 }
 
-#if 0
+#if 1
 void
 Stencil::registerVisItDataWriter(std::shared_ptr<appu::VisItDataWriter> viz_writer)
 {

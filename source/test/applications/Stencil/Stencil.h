@@ -7,7 +7,7 @@
 #include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
-#if 0
+#if 1
 #include "SAMRAI/appu/VisItDataWriter.h"
 #endif
 
@@ -149,7 +149,7 @@ class Stencil :
       std::string& db_name,
       int bdry_location_index);
 
-#if 0
+#if 1
    void
      registerVisItDataWriter(
         std::shared_ptr<appu::VisItDataWriter> viz_writer);
@@ -169,7 +169,7 @@ class Stencil :
 
     hier::IntVector d_nghosts;
 
-#if 0
+#if 1
     std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
