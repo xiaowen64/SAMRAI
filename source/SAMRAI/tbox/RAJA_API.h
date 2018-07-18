@@ -11,6 +11,7 @@ namespace tbox {
 namespace policy {
   struct sequential {};
   struct parallel {};
+  struct host {};
 }
 
 namespace detail {
@@ -37,19 +38,35 @@ struct policy_traits<policy::parallel> {
   typedef 
     RAJA::KernelPolicy<
       RAJA::statement::CudaKernelAsync<
-        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<32>>,
-        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<32>, RAJA::statement::Lambda<0> >
+        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<32>,
+        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<32>, RAJA::statement::Lambda<0> > >
       >
     > raja_2d_policy;
 
   typedef 
     RAJA::KernelPolicy<
       RAJA::statement::CudaKernelAsync<
-        RAJA::statement::For<2, RAJA::cuda_threadblock_exec<8>>,
-        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<8>>,
-        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<8>, RAJA::statement::Lambda<0> >
+        RAJA::statement::For<2, RAJA::cuda_threadblock_exec<8>,
+        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<8>,
+        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<8>, RAJA::statement::Lambda<0> > > >
       >
     > raja_3d_policy;
+};
+
+template <>
+struct policy_traits<policy::host> {
+  typedef RAJA::seq_exec policy;
+
+  typedef 
+    RAJA::KernelPolicy<
+        RAJA::statement::For<0, RAJA::seq_exec, RAJA::statement::Lambda<0> >
+    > raja_1d_policy;
+
+  typedef 
+    RAJA::KernelPolicy<
+        RAJA::statement::For<1, RAJA::seq_exec,
+          RAJA::statement::For<0, RAJA::seq_exec, RAJA::statement::Lambda<0> > >
+    > raja_2d_policy;
 };
 
 struct layout_traits {
