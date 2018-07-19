@@ -28,14 +28,14 @@ template <>
 struct policy_traits<policy::parallel> {
   typedef RAJA::cuda_exec_async<128> policy;
 
-  typedef 
+  typedef
     RAJA::KernelPolicy<
       RAJA::statement::CudaKernelAsync<
         RAJA::statement::For<0, RAJA::cuda_threadblock_exec<128>, RAJA::statement::Lambda<0> >
       >
     > raja_1d_policy;
 
-  typedef 
+  typedef
     RAJA::KernelPolicy<
       RAJA::statement::CudaKernelAsync<
         RAJA::statement::For<1, RAJA::cuda_threadblock_exec<32>,
@@ -43,7 +43,7 @@ struct policy_traits<policy::parallel> {
       >
     > raja_2d_policy;
 
-  typedef 
+  typedef
     RAJA::KernelPolicy<
       RAJA::statement::CudaKernelAsync<
         RAJA::statement::For<2, RAJA::cuda_threadblock_exec<8>,
@@ -51,18 +51,20 @@ struct policy_traits<policy::parallel> {
         RAJA::statement::For<0, RAJA::cuda_threadblock_exec<8>, RAJA::statement::Lambda<0> > > >
       >
     > raja_3d_policy;
+
+  typedef RAJA::cuda_reduce<128> raja_reduction_policy;
 };
 
 template <>
 struct policy_traits<policy::host> {
   typedef RAJA::seq_exec policy;
 
-  typedef 
+  typedef
     RAJA::KernelPolicy<
         RAJA::statement::For<0, RAJA::seq_exec, RAJA::statement::Lambda<0> >
     > raja_1d_policy;
 
-  typedef 
+  typedef
     RAJA::KernelPolicy<
         RAJA::statement::For<1, RAJA::seq_exec,
           RAJA::statement::For<0, RAJA::seq_exec, RAJA::statement::Lambda<0> > >
@@ -157,7 +159,7 @@ template <size_t dim, typename T>
 struct ArrayView {};
 
 template <typename T>
-struct ArrayView<1, T>  : 
+struct ArrayView<1, T>  :
   public RAJA::View<T, detail::layout_traits::layout1d >
 {
   using Layout = detail::layout_traits::layout1d;
@@ -185,7 +187,7 @@ struct ArrayView<1, T>  :
      RAJA::View<T, Layout>(
          data.getPointer(depth),
          RAJA::make_permuted_offset_layout(
-           std::array<RAJA::Index_type, 2>{ {data.getBox().lower()[0], data.getBox().lower()[1]} }, 
+           std::array<RAJA::Index_type, 2>{ {data.getBox().lower()[0], data.getBox().lower()[1]} },
            std::array<RAJA::Index_type, 2>{ {data.getBox().upper()[0], data.getBox().upper()[1]} },
            RAJA::as_array<RAJA::PERM_JI>::get())){}
 
@@ -193,11 +195,11 @@ struct ArrayView<1, T>  :
      RAJA::View<T, Layout>(
          &data[depth * (box.size())],
          RAJA::make_permuted_offset_layout(
-           std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} }, 
+           std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} },
            std::array<RAJA::Index_type, 2>{ {box.upper()[0], box.upper()[1]} },
            RAJA::as_array<RAJA::PERM_JI>::get())){}
  };
- 
+
  template <typename T>
  struct ArrayView<3, T> : public RAJA::View<T, detail::layout_traits::layout3d >
  {
@@ -207,7 +209,7 @@ struct ArrayView<1, T>  :
      RAJA::View<T, Layout>(
          data.getPointer(depth),
          RAJA::make_permuted_offset_layout(
-           std::array<RAJA::Index_type, 3>{ {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]} }, 
+           std::array<RAJA::Index_type, 3>{ {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]} },
            std::array<RAJA::Index_type, 3>{ {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]} },
            RAJA::as_array<RAJA::PERM_KJI>::get())) {}
 
@@ -215,23 +217,23 @@ struct ArrayView<1, T>  :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
          RAJA::make_permuted_offset_layout(
-           std::array<RAJA::Index_type, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} }, 
+           std::array<RAJA::Index_type, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} },
            std::array<RAJA::Index_type, 3>{ {box.upper()[0], box.upper()[1], box.upper()[2]} },
            RAJA::as_array<RAJA::PERM_KJI>::get())){};
  };
 
  template <typename T>
- struct ArrayView<1, const T>  : 
+ struct ArrayView<1, const T>  :
    public RAJA::View<const T, detail::layout_traits::layout1d >
  {
    using Layout = detail::layout_traits::layout1d;
- 
+
    ArrayView<1, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
      RAJA::View<const T, Layout >(
          data.getPointer(depth),
          RAJA::make_permuted_offset_layout(
            std::array<RAJA::Index_type, 1>{ {data.getBox().lower()[0]} }, std::array<RAJA::Index_type, 1>{ {data.getBox().upper()[0]} }, RAJA::as_array<RAJA::PERM_I>::get())){}
- 
+
    // T could be const?
    ArrayView<1, const T>(const T* data, const hier::Box& box, int depth = 0) :
       RAJA::View<const T, Layout>(
@@ -241,7 +243,7 @@ struct ArrayView<1, T>  :
  };
 
 template <typename T>
-struct ArrayView<2, const T> : 
+struct ArrayView<2, const T> :
   public RAJA::View<const T, detail::layout_traits::layout2d >
 {
  using Layout = detail::layout_traits::layout2d;
@@ -258,13 +260,13 @@ struct ArrayView<2, const T> :
     RAJA::View<const T, Layout>(
         &data[depth * (box.size()-1)],
         RAJA::make_permuted_offset_layout(
-          std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} }, 
+          std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} },
           std::array<RAJA::Index_type, 2>{ {box.upper()[0], box.upper()[1]} },
           RAJA::as_array<RAJA::PERM_JI>::get())){}
 };
 
 template <typename T>
-struct ArrayView<3, const T> : 
+struct ArrayView<3, const T> :
   public RAJA::View<const T, detail::layout_traits::layout3d >
 {
  using Layout = detail::layout_traits::layout3d;
@@ -273,7 +275,7 @@ struct ArrayView<3, const T> :
     RAJA::View<const T, Layout>(
         data.getPointer(depth),
         RAJA::make_permuted_offset_layout(
-          std::array<RAJA::Index_type, 3>{ {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]} }, 
+          std::array<RAJA::Index_type, 3>{ {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]} },
           std::array<RAJA::Index_type, 3>{ {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]} },
           RAJA::as_array<RAJA::PERM_KJI>::get())) {}
 
@@ -281,11 +283,11 @@ struct ArrayView<3, const T> :
     RAJA::View<const T, Layout>(
         &data[depth * (box.size()-1)],
         RAJA::make_permuted_offset_layout(
-          std::array<RAJA::Index_type, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} }, 
+          std::array<RAJA::Index_type, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} },
           std::array<RAJA::Index_type, 3>{ {box.upper()[0], box.upper()[1], box.upper()[2]} },
           RAJA::as_array<RAJA::PERM_KJI>::get())){};
 };
- 
+
 }
 }
 

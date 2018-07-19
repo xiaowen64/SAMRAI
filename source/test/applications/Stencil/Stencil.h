@@ -149,6 +149,9 @@ class Stencil :
       std::string& db_name,
       int bdry_location_index);
 
+  double
+  computeNorm(const std::shared_ptr<hier::VariableContext>& context, hier::Patch& patch) const;
+
 #if 1
    void
      registerVisItDataWriter(

@@ -326,6 +326,25 @@ Stencil::setPhysicalBoundaryConditions(
   RANGE_POP
 }
 
+double
+Stencil::computeNorm(const std::shared_ptr<hier::VariableContext>& context, hier::Patch& patch) const
+{
+  const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+    SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry>(patch.getPatchGeometry()));
+
+  const double dx = pgeom->getDx()[0];
+  const double dy = pgeom->getDx()[1];
+
+  RAJA::ReduceSum<tbox::detail::policy_traits<tbox::policy::parallel>::raja_reduction_policy, double> norm(0.0);
+  for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+    CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, context)));
+    tbox::for_all2<tbox::policy::parallel>(
+      patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) { norm += ABS(rho(j,k)) * dx * dy; }
+      );
+  }
+  return norm.get();
+}
+
 void
 Stencil::postprocessRefine(
   hier::Patch& fine,
