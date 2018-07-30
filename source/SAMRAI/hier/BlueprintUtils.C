@@ -60,7 +60,7 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
 
          int domain_id = first_patch_id[i] + local_id.getValue();
          std::string domain_name =
-            "domain_" + tbox::Utilities::intToString(domain_id);
+            "domain_" + tbox::Utilities::intToString(domain_id, 6);
 
          std::shared_ptr<tbox::Database> domain_db;
          if (database->isDatabase(domain_name)) {

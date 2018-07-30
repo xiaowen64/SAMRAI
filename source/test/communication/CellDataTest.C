@@ -729,7 +729,7 @@ void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
    size_t data_size = cell_data->getGhostBox().size();
 
    std::string mesh_name =
-      "domain_" + tbox::Utilities::intToString(domain_id);
+      "domain_" + tbox::Utilities::intToString(domain_id, 6);
 
    for (int d = 0; d < cell_data->getDepth(); ++d) {
       std::string data_name = "cell_data_" + tbox::Utilities::intToString(d); 

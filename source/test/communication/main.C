@@ -46,6 +46,7 @@ using namespace std;
 
 
 #include "conduit_blueprint.hpp"
+#include "conduit_relay.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -560,13 +561,85 @@ int main(
             }
          }
       }
+/*
+      conduit::Node bpindex;
+      conduit::NodeConstIterator d_itr(n.children());
+      while(d_itr.has_next())
+      {
+         const conduit::Node &n_domain = d_itr.next();
+         const std::string domain_name = d_itr.name();
+         conduit::blueprint::mesh::generate_index(n_domain,domain_name,
+                                                  1,bpindex[domain_name]);
+      }
+*/
+    conduit::Node index;
+#if 0
+    if(conduit::blueprint::mesh::is_multi_domain(n))
+    {
+        index["data"].set_external(n);
+    }
+    else
+    {
+        index["data/mesh"].set_external(n);
+    }
+#endif
+    conduit::Node &bpindex = index["blueprint_index"];
+    {
+#if 0
+        conduit::NodeConstIterator domain_iter = n.children();
+        while(domain_iter.has_next())
+        {
+            const conduit::Node &domain = domain_iter.next();
+            const std::string domain_name = domain_iter.name();
 
-      n.save("celltest","json");
+            // NOTE: Skip all domains containing one or more mixed-shape topologies
+            // because this type of mesh isn't fully supported yet.
+            bool is_domain_index_valid = true;
+            conduit::NodeConstIterator topo_iter = domain["topologies"].children();
+            while(topo_iter.has_next())
+            {
+                const conduit::Node &topo = topo_iter.next();
+                conduit::Node info;
+                is_domain_index_valid &= (
+                !conduit::blueprint::mesh::topology::unstructured::verify(topo, info) ||
+                !topo["elements"].has_child("element_types"));
+            }
+
+            if(is_domain_index_valid)
+            {
+                conduit::blueprint::mesh::generate_index(
+                   domain,domain_name,1,bpindex[domain_name]);
+            }
+        }
+#endif
+        conduit::blueprint::mesh::generate_index(
+           n["domain_000000"],"",n.number_of_children(),bpindex["amr_mesh"]);
+    }
+    int my_rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
+    std::string file_pattern = "celldata" + tbox::Utilities::intToString(my_rank);
+    if(bpindex.number_of_children() == 0)
+    {
+    }
+    else
+    {
+       index["protocol/name"].set("json");
+       index["protocol/version"].set(CONDUIT_VERSION);
+
+       index["number_of_files"].set(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize());
+       index["number_of_trees"].set(n.number_of_children());
+       index["file_pattern"].set(file_pattern);
+       index["tree_pattern"].set("/domain_%06d");
+//       conduit::relay::io::save(index,path,"json");
+    }
+
+      index.save("bpindex","json");
+
+      n.save(file_pattern,"json");
 
 //      n.print();
 
-//      conduit::Node info;
-//      TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
+      conduit::Node info;
+      TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
 
