@@ -10,6 +10,12 @@ solution methods, and which require high-performance parallel computing
 hardware. SAMRAI enables integration of SAMR technology into existing codes and
 simplifies the exploration of SAMR methods in new application domains. 
 
+## New Release
+
+SAMRAI v. 2.13.0 is now available! The major change is that we no longer use
+the Boost library. This affects many interfaces in the API that used
+boost::shared_ptr, which has been replaced by std::shared_ptr.
+
 ## Get Involved
 
 SAMRAI is an open source project, and questions, discussion and contributions
@@ -42,7 +48,7 @@ We maintain a list of publications
 
 ## Release
 
-Copyright (c) 1997-2017, Lawrence Livermore National Security, LLC.
+Copyright (c) 1997-2018, Lawrence Livermore National Security, LLC.
 
 Produced at the Lawrence Livermore National Laboratory.
 

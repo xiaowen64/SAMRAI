@@ -4,7 +4,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and LICENSE. 
 ##
-## Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
 ## Description:   perl script to generate dependencies for SAMRAI files 
 ##
 #########################################################################
@@ -82,7 +82,7 @@ print OUTFILE <<__EOM__;
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and LICENSE. 
 ##
-## Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
 ## Description:   makefile dependencies
 ##
 #########################################################################

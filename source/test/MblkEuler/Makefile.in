@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and LICENSE. 
 ##
-## Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
 ## Description:   makefile for multiblock sample application 
 ##
 #########################################################################
@@ -78,7 +78,7 @@ checkclean:
 	$(RM) viz*
 
 clean: checkclean
-	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) *.o 
 	$(RM) main
 
 redo: 

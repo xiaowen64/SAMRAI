@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and LICENSE. 
 ##
-## Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
 ## Description:   makefile for fortran files for appu directory 
 ##
 #########################################################################
@@ -27,7 +27,8 @@ library:	$(OBJS)
 
 clean:
 	$(CLEAN_COMMON_LIB_FILES)
-	$(RM) *.f
+	$(RM) appu_cartbdry2d.f 
+	$(RM) appu_cartbdry3d.f 
 
 include $(SRCDIR)/Makefile.depend
 

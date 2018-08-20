@@ -6490,59 +6490,6 @@ $as_echo "#define LACKS_CTIME 1" >>confdefs.h
    fi
 
 
-ac_ext=cpp
-ac_cpp='$CXXCPP $CPPFLAGS'
-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether C++ compiler accepts -std=c++11" >&5
-$as_echo_n "checking whether C++ compiler accepts -std=c++11... " >&6; }
-if ${ax_cv_check_cxxflags___std_cpp11+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-  ax_check_save_flags=$CXXFLAGS
-  CXXFLAGS="$CXXFLAGS  -std=c++11"
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-
-int
-main ()
-{
-
-  ;
-  return 0;
-}
-_ACEOF
-if ac_fn_cxx_try_compile "$LINENO"; then :
-  ax_cv_check_cxxflags___std_cpp11=yes
-else
-  ax_cv_check_cxxflags___std_cpp11=no
-fi
-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-  CXXFLAGS=$ax_check_save_flags
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_check_cxxflags___std_cpp11" >&5
-$as_echo "$ax_cv_check_cxxflags___std_cpp11" >&6; }
-if test "x$ax_cv_check_cxxflags___std_cpp11" = xyes; then :
-
-  CXX_FLAGS+=" -std=c++11"
-
-else
-
-  echo "C++ compiler cannot compile C++11 code"
-  exit -1
-
-fi
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
 $as_echo_n "checking for ANSI C header files... " >&6; }
 if ${ac_cv_header_stdc+:} false; then :
@@ -6975,7 +6922,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:6978:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:6925:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -7089,7 +7036,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:7092:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:7039:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -7692,7 +7639,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:7695:" "after using ac_f77_library_ldflags: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:7642:" "after using ac_f77_library_ldflags: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -9077,7 +9024,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:9080:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:9027:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -9132,7 +9079,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:9135:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:9082:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -9279,12 +9226,12 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:9282:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:9229:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
 
-echo "configure:9287:" begin stringize >&5
+echo "configure:9234:" begin stringize >&5
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for preprocessor stringizing operator" >&5
 $as_echo_n "checking for preprocessor stringizing operator... " >&6; }
 if ${ac_cv_c_stringize+:} false; then :
@@ -9313,7 +9260,7 @@ $as_echo "#define HAVE_STRINGIZE 1" >>confdefs.h
 
 fi
 
-echo "configure:9316:" end stringize >&5
+echo "configure:9263:" end stringize >&5
 
 
 
@@ -9511,7 +9458,7 @@ fi
     if test -n "$btng_header_found"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $file is the header sought" >&5
 $as_echo_n "checking whether $file is the header sought... " >&6; }
-      echo "configure:9514:" found header file $file >&5
+      echo "configure:9461:" found header file $file >&5
       CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -9589,7 +9536,7 @@ $as_echo "$as_me: WARNING: cannot find a working iostream header file.
 
 $as_echo "#define IOSTREAM_IS_BROKEN 1" >>confdefs.h
 
-  echo "configure:9592:" header file iostream is broken >&5
+  echo "configure:9539:" header file iostream is broken >&5
 else
   unset iostream_header_is_broken
 
@@ -9597,7 +9544,7 @@ cat >>confdefs.h <<_ACEOF
 #define IOSTREAM_HEADER_FILE <$IOSTREAM_HEADER_FILE>
 _ACEOF
 
-  echo "configure:9600:" header file iostream is ok >&5
+  echo "configure:9547:" header file iostream is ok >&5
 fi
 # End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
@@ -9642,7 +9589,7 @@ fi
     if test -n "$btng_header_found"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $file is the header sought" >&5
 $as_echo_n "checking whether $file is the header sought... " >&6; }
-      echo "configure:9645:" found header file $file >&5
+      echo "configure:9592:" found header file $file >&5
       CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -9717,7 +9664,7 @@ $as_echo "$as_me: WARNING: cannot find a working iomanip header file.
 
 $as_echo "#define IOMANIP_IS_BROKEN 1" >>confdefs.h
 
-  echo "configure:9720:" header file iomanip is broken >&5
+  echo "configure:9667:" header file iomanip is broken >&5
 else
   unset iomanip_header_is_broken
 
@@ -9725,7 +9672,7 @@ cat >>confdefs.h <<_ACEOF
 #define IOMANIP_HEADER_FILE <$IOMANIP_HEADER_FILE>
 _ACEOF
 
-  echo "configure:9728:" header file iomanip is ok >&5
+  echo "configure:9675:" header file iomanip is ok >&5
 fi
 # End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
@@ -9770,7 +9717,7 @@ fi
     if test -n "$btng_header_found"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $file is the header sought" >&5
 $as_echo_n "checking whether $file is the header sought... " >&6; }
-      echo "configure:9773:" found header file $file >&5
+      echo "configure:9720:" found header file $file >&5
       CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -9848,7 +9795,7 @@ $as_echo "$as_me: WARNING: cannot find a working iostream header file.
 
 $as_echo "#define IOSTREAM_IS_BROKEN 1" >>confdefs.h
 
-  echo "configure:9851:" header file iostream is broken >&5
+  echo "configure:9798:" header file iostream is broken >&5
 else
   unset iostream_header_is_broken
 
@@ -9856,7 +9803,7 @@ cat >>confdefs.h <<_ACEOF
 #define IOSTREAM_HEADER_FILE <$IOSTREAM_HEADER_FILE>
 _ACEOF
 
-  echo "configure:9859:" header file iostream is ok >&5
+  echo "configure:9806:" header file iostream is ok >&5
 fi
 # End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
@@ -9906,7 +9853,7 @@ fi
     if test -n "$btng_header_found"; then
       { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether $file is the header sought" >&5
 $as_echo_n "checking whether $file is the header sought... " >&6; }
-      echo "configure:9909:" found header file $file >&5
+      echo "configure:9856:" found header file $file >&5
       CPPFLAGS="$CPPFLAGS_SAVE $CXX_OPTIONS"
       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -9981,7 +9928,7 @@ $as_echo "$as_me: WARNING: cannot find a working stl-sstream header file.
 
 $as_echo "#define STL_SSTREAM_IS_BROKEN 1" >>confdefs.h
 
-  echo "configure:9984:" header file stl-sstream is broken >&5
+  echo "configure:9931:" header file stl-sstream is broken >&5
 else
   unset stl_sstream_header_is_broken
 
@@ -9989,7 +9936,7 @@ cat >>confdefs.h <<_ACEOF
 #define STL_SSTREAM_HEADER_FILE <$STL_SSTREAM_HEADER_FILE>
 _ACEOF
 
-  echo "configure:9992:" header file stl-sstream is ok >&5
+  echo "configure:9939:" header file stl-sstream is ok >&5
 fi
 # End macro CASC_TREAT_VARIABLE_HEADER_FILENAME
 
@@ -10447,7 +10394,7 @@ case "$with_dl_includes" in
       if test "${with_dl_includes}" = yes ; then
   as_fn_error $? "If you specify --with-dl-includes, you must give it the path as in --with-dl-includes=/installation/path" "$LINENO" 5
 fi
-echo "configure:10450:" environment dl_INCLUDES not defined >&5
+echo "configure:10397:" environment dl_INCLUDES not defined >&5
 
 
     fi
@@ -10516,7 +10463,7 @@ case "$with_dl_libs" in
       if test "${with_dl_libs}" = yes ; then
   as_fn_error $? "If you specify --with-dl-libs, you must give it the path as in --with-dl-libs=/installation/path" "$LINENO" 5
 fi
-echo "configure:10519:" environment dl_LIBS not defined >&5
+echo "configure:10466:" environment dl_LIBS not defined >&5
 
 
     fi
@@ -10637,7 +10584,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:10640:" "After finding dl flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:10587:" "After finding dl flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -10655,7 +10602,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:10658:" "Found dl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:10605:" "Found dl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -10673,7 +10620,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:10676:" "Did not find dl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:10623:" "Did not find dl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -10684,7 +10631,7 @@ fi
     unset btng_extra_libs
     unset btng_save_LIBS
   else
-    echo "configure:10687:" Not looking for dl because dl_LIBS is already set >&5
+    echo "configure:10634:" Not looking for dl because dl_LIBS is already set >&5
   fi
 fi
 # End macro CASC_VAR_SET_DL
@@ -10803,7 +10750,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:10806:" "before looking: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:10753:" "before looking: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -10844,7 +10791,7 @@ case "$with_nsl_includes" in
       if test "${with_nsl_includes}" = yes ; then
   as_fn_error $? "If you specify --with-nsl-includes, you must give it the path as in --with-nsl-includes=/installation/path" "$LINENO" 5
 fi
-echo "configure:10847:" environment nsl_INCLUDES not defined >&5
+echo "configure:10794:" environment nsl_INCLUDES not defined >&5
 
 
     fi
@@ -10913,7 +10860,7 @@ case "$with_nsl_libs" in
       if test "${with_nsl_libs}" = yes ; then
   as_fn_error $? "If you specify --with-nsl-libs, you must give it the path as in --with-nsl-libs=/installation/path" "$LINENO" 5
 fi
-echo "configure:10916:" environment nsl_LIBS not defined >&5
+echo "configure:10863:" environment nsl_LIBS not defined >&5
 
 
     fi
@@ -11033,7 +10980,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11036:" "After finding nsl flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:10983:" "After finding nsl flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11051,7 +10998,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11054:" "Found nsl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11001:" "Found nsl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11069,7 +11016,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11072:" "Did not find nsl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11019:" "Did not find nsl library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11080,7 +11027,7 @@ fi
     unset btng_extra_libs
     unset btng_save_LIBS
   else
-    echo "configure:11083:" Not looking for nsl because nsl_LIBS is already set >&5
+    echo "configure:11030:" Not looking for nsl because nsl_LIBS is already set >&5
   fi
 fi
 
@@ -11210,7 +11157,7 @@ case "$with_blas_includes" in
       if test "${with_blas_includes}" = yes ; then
   as_fn_error $? "If you specify --with-blas-includes, you must give it the path as in --with-blas-includes=/installation/path" "$LINENO" 5
 fi
-echo "configure:11213:" environment blas_INCLUDES not defined >&5
+echo "configure:11160:" environment blas_INCLUDES not defined >&5
 
 
     fi
@@ -11279,7 +11226,7 @@ case "$with_blas_libs" in
       if test "${with_blas_libs}" = yes ; then
   as_fn_error $? "If you specify --with-blas-libs, you must give it the path as in --with-blas-libs=/installation/path" "$LINENO" 5
 fi
-echo "configure:11282:" environment blas_LIBS not defined >&5
+echo "configure:11229:" environment blas_LIBS not defined >&5
 
 
     fi
@@ -11399,7 +11346,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11402:" "After finding blas flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11349:" "After finding blas flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11417,7 +11364,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11420:" "Found blas library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11367:" "Found blas library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11435,7 +11382,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11438:" "Did not find blas library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11385:" "Did not find blas library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11453,7 +11400,7 @@ fi
     unset btng_extra_libs
     unset btng_save_LIBS
   else
-    echo "configure:11456:" Not looking for blas because blas_LIBS is already set >&5
+    echo "configure:11403:" Not looking for blas because blas_LIBS is already set >&5
   fi
 fi
 
@@ -11468,7 +11415,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11471:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11418:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11505,7 +11452,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11508:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11455:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11616,7 +11563,7 @@ case "$with_lapack_includes" in
       if test "${with_lapack_includes}" = yes ; then
   as_fn_error $? "If you specify --with-lapack-includes, you must give it the path as in --with-lapack-includes=/installation/path" "$LINENO" 5
 fi
-echo "configure:11619:" environment lapack_INCLUDES not defined >&5
+echo "configure:11566:" environment lapack_INCLUDES not defined >&5
 
 
     fi
@@ -11685,7 +11632,7 @@ case "$with_lapack_libs" in
       if test "${with_lapack_libs}" = yes ; then
   as_fn_error $? "If you specify --with-lapack-libs, you must give it the path as in --with-lapack-libs=/installation/path" "$LINENO" 5
 fi
-echo "configure:11688:" environment lapack_LIBS not defined >&5
+echo "configure:11635:" environment lapack_LIBS not defined >&5
 
 
     fi
@@ -11805,7 +11752,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11808:" "After finding lapack flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11755:" "After finding lapack flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11823,7 +11770,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11826:" "Found lapack library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11773:" "Found lapack library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11841,7 +11788,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11844:" "Did not find lapack library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11791:" "Did not find lapack library flag: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11859,7 +11806,7 @@ fi
     unset btng_extra_libs
     unset btng_save_LIBS
   else
-    echo "configure:11862:" Not looking for lapack because lapack_LIBS is already set >&5
+    echo "configure:11809:" Not looking for lapack because lapack_LIBS is already set >&5
   fi
 fi
 
@@ -11874,7 +11821,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11877:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11824:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -11911,7 +11858,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:11914:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:11861:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -12914,7 +12861,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:12917:" "After successfully finding MPI using casc_find_mpi: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:12864:" "After successfully finding MPI using casc_find_mpi: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -12940,7 +12887,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:12943:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:12890:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -13534,7 +13481,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:13537:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:13484:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -13615,7 +13562,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:13618:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:13565:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -13847,7 +13794,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:13850:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:13797:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 fi
@@ -13861,7 +13808,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:13864:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:13811:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -13970,7 +13917,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:13973:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:13920:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14072,7 +14019,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14075:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14022:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14091,7 +14038,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14094:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14041:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14143,7 +14090,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14146:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14093:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14157,7 +14104,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14160:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14107:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14195,7 +14142,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14198:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14145:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14291,7 +14238,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14294:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14241:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14414,7 +14361,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14417:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14364:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14554,7 +14501,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14557:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14504:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14581,7 +14528,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14584:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14531:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14705,7 +14652,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14708:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14655:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14769,7 +14716,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14772:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14719:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -14822,9 +14769,9 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 
 $as_echo "#define NAN_IS_BROKEN 1" >>confdefs.h
 
-echo "configure:14825:" "NAN is broken (not in float.h)" >&5
+echo "configure:14772:" "NAN is broken (not in float.h)" >&5
 else
-  echo "configure:14827:" "NAN is ok (in float.h)" >&5
+  echo "configure:14774:" "NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -14842,9 +14789,9 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 
 $as_echo "#define FLT_SNAN_IS_BROKEN 1" >>confdefs.h
 
-echo "configure:14845:" "FLT_NAN is broken (not in float.h)" >&5
+echo "configure:14792:" "FLT_NAN is broken (not in float.h)" >&5
 else
-  echo "configure:14847:" "FLT_NAN is ok (in float.h)" >&5
+  echo "configure:14794:" "FLT_NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -14862,9 +14809,9 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 
 $as_echo "#define DBL_SNAN_IS_BROKEN 1" >>confdefs.h
 
-echo "configure:14865:" "DBL_NAN is broken (not in float.h)" >&5
+echo "configure:14812:" "DBL_NAN is broken (not in float.h)" >&5
 else
-  echo "configure:14867:" "DBL_NAN is ok (in float.h)" >&5
+  echo "configure:14814:" "DBL_NAN is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -14882,9 +14829,9 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 
 $as_echo "#define FLT_MAX_IS_BROKEN 1" >>confdefs.h
 
-echo "configure:14885:" "FLT_MAX is broken (not in float.h)" >&5
+echo "configure:14832:" "FLT_MAX is broken (not in float.h)" >&5
 else
-  echo "configure:14887:" "FLT_MAX is ok (in float.h)" >&5
+  echo "configure:14834:" "FLT_MAX is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -14902,9 +14849,9 @@ if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
 
 $as_echo "#define DBL_MAX_IS_BROKEN 1" >>confdefs.h
 
-echo "configure:14905:" "DBL_MAX is broken (not in float.h)" >&5
+echo "configure:14852:" "DBL_MAX is broken (not in float.h)" >&5
 else
-  echo "configure:14907:" "DBL_MAX is ok (in float.h)" >&5
+  echo "configure:14854:" "DBL_MAX is ok (in float.h)" >&5
 
 fi
 rm -f conftest*
@@ -14957,7 +14904,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:14960:" "before adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:14907:" "before adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15319,7 +15266,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15322:" "forming rpaths: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15269:" "forming rpaths: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15385,7 +15332,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15388:" "after adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15335:" "after adding rpath syntax: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15428,7 +15375,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15431:" "with-parallel-run-bin given: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15378:" "with-parallel-run-bin given: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15447,7 +15394,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15450:" "with-parallel-run-bin NOT given: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15397:" "with-parallel-run-bin NOT given: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15472,7 +15419,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15475:" "after setting PARALLEL_RUN_BIN: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15422:" "after setting PARALLEL_RUN_BIN: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15504,7 +15451,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15507:" "in support-serpa-run: $btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15454:" "in support-serpa-run: $btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15685,7 +15632,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15688:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15635:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 
@@ -15699,7 +15646,7 @@ for btng_log_vars_index in $btng_log_vars ; do
   else
     btng_log_vars_value="unset";
   fi
-  echo "configure:15702:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
+  echo "configure:15649:" "$btng_log_vars_index is $btng_log_vars_value" >&5;
 done
 
 

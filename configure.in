@@ -1,7 +1,7 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2017 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2018 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
@@ -16,8 +16,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 11
-#define SAMRAI_VERSION_PATCHLEVEL 5
+#define SAMRAI_VERSION_MINOR 12
+#define SAMRAI_VERSION_PATCHLEVEL 0
 ])
 AH_BOTTOM([
 
@@ -526,15 +526,6 @@ CASC_CXX_ISNAN_TEMPLATE
 CASC_CXX_STD_FILL_N_RETURNS_VOID
 
 CASC_CXX_CTIME
-
-AC_LANG_PUSH([C++])
-AX_CHECK_COMPILE_FLAG([-std=c++11], [
-  CXX_FLAGS+=" -std=c++11"
-], [
-  echo "C++ compiler cannot compile C++11 code"
-  exit -1
-])
-AC_LANG_POP([C++])
 
 AC_CHECK_HEADERS([sys/times.h])
 AC_CHECK_HEADERS([unistd.h])
