@@ -155,18 +155,18 @@ CartesianCellDoubleWeightedAverage::coarsen(
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();
 
-      const int fdx0 = fdx[0];
-      const int fdx1 = fdx[1];
-      const int cdx0 = cdx[0];
-      const int cdx1 = cdx[1];
+      const double fdx0 = fdx[0];
+      const double fdx1 = fdx[1];
+      const double cdx0 = cdx[0];
+      const double cdx1 = cdx[1];
 
       const int r0 = ratio[0];
       const int r1 = ratio[1];
 
-      const int dVf = fdx0*fdx1;
-      const int dVc = cdx0*cdx1;
+      const double dVf = fdx0*fdx1;
+      const double dVc = cdx0*cdx1;
 
-      tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      tbox::for_all2<tbox::policy::host>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
           double spv = 0.0;
 
           for (int rx = 0; rx < r0; rx++) {
