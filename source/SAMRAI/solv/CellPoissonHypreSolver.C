@@ -35,7 +35,7 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include <cstdlib>
-using namespace std;
+
 extern "C" {
 
 #ifdef __INTEL_COMPILER
