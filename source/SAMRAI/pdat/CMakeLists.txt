@@ -298,7 +298,8 @@ set (pdat_sources
 
 set (pdat_depends_on
   SAMRAI_hier
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  SAMRAI_xfer)
 
 process_m4(NAME fortran/pdat_concoarsen1d)
 process_m4(NAME fortran/pdat_concoarsen2d)

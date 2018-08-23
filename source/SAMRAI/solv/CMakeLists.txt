@@ -68,7 +68,8 @@ set (solv_sources
 set (solv_depends_on
   SAMRAI_hier
   SAMRAI_math
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  SAMRAI_xfer)
 
 blt_add_library(
   NAME SAMRAI_solv
