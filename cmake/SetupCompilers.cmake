@@ -10,5 +10,6 @@ set (CUDA_NVCC_FLAGS
   -Xcompiler; ${OpenMP_CXX_FLAGS};
   -O3;
   -arch sm_60;
+  --expt-relaxed-constexpr;
   --expt-extended-lambda;
   -std=c++11)

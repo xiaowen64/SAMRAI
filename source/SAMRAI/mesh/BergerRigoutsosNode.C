@@ -21,6 +21,7 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -1182,6 +1183,7 @@ BergerRigoutsosNode::broadcastToDropouts_check()
 void
 BergerRigoutsosNode::makeLocalTagHistogram()
 {
+   RANGE_PUSH("make-histogram", 4);
    d_common->d_object_timers->t_local_histogram->start();
 
    /*
@@ -1217,6 +1219,8 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
             pdat::CellData<int>& tag_data = *tag_data_;
 
+            tbox::synchronize<tbox::policy::parallel>();
+
             pdat::CellIterator ciend(pdat::CellGeometry::end(intersection));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(intersection));
                  ci != ciend; ++ci) {
@@ -1231,6 +1235,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
       }
    }
    d_common->d_object_timers->t_local_histogram->stop();
+   RANGE_POP;
 }
 
 /*

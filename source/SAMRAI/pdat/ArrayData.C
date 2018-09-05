@@ -986,7 +986,15 @@ ArrayData<TYPE>::fill(
    const hier::Box ispace = d_box * box;
 
    if (!ispace.empty()) {
+#if defined(HAVE_CUDA)
+     auto data = tbox::ArrayView<2, TYPE>(*this, d);
 
+     tbox::for_all2<tbox::policy::parallel>(
+         ispace,
+         [=] SAMRAI_DEVICE (int k, int j) {
+         data(j,k) = t;
+     });
+#else
       const tbox::Dimension& dim = box.getDim();
 
       int box_w[SAMRAI::MAX_DIM_VAL];
@@ -1038,6 +1046,7 @@ ArrayData<TYPE>::fill(
             }
          }
       }
+#endif
    }
 }
 

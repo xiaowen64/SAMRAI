@@ -2,6 +2,10 @@
 
 #include "umpire/ResourceManager.hpp"
 
+#include "umpire/resource/MemoryResourceTypes.hpp"
+#include "umpire/strategy/DynamicPool.hpp"
+#include "umpire/strategy/AllocationAdvisor.hpp"
+
 #include <iostream>
 
 namespace SAMRAI {
@@ -59,20 +63,23 @@ AllocatorDatabase::initialize()
   /*
    * Register internal SAMRAI pool
    */
-  rm.makeAllocator("SAMRAI_pool",
-      "POOL",
-      {0,0,0},
-      {rm.getAllocator(umpire::resource::UnifiedMemory)});
+  auto um_alloc = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
+      "SAMRAI_UM",
+      rm.getAllocator(umpire::resource::UnifiedMemory),
+      // Set preferred location to GPU
+      "PREFERRED_LOCATION");
 
-  rm.makeAllocator("SAMRAI_device_pool",
-      "POOL",
-      {0,0,0},
-      {rm.getAllocator(umpire::resource::Device)});
+  rm.makeAllocator<umpire::strategy::DynamicPool>(
+      "SAMRAI_pool",
+      um_alloc);
 
-  rm.makeAllocator("SAMRAI_stream_pool",
-      "POOL",
-      {0,0,0},
-      {rm.getAllocator(umpire::resource::PinnedMemory)});
+  rm.makeAllocator<umpire::strategy::DynamicPool>(
+      "SAMRAI_device_pool",
+      rm.getAllocator(umpire::resource::Device));
+
+  rm.makeAllocator<umpire::strategy::DynamicPool>(
+      "SAMRAI_stream_pool",
+      rm.getAllocator(umpire::resource::PinnedMemory));
 }
 
 umpire::Allocator

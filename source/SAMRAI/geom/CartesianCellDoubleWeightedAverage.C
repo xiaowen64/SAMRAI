@@ -166,7 +166,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
       const double dVf = fdx0*fdx1;
       const double dVc = cdx0*cdx1;
 
-      tbox::for_all2<tbox::policy::host>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
           double spv = 0.0;
 
           for (int rx = 0; rx < r0; rx++) {

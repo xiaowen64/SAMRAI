@@ -270,7 +270,6 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
           fine_array(j,k) = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
       });
-
 #else
          std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
