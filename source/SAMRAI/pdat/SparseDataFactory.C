@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Implementation for SparseDataFactory
  *
  ************************************************************************/
@@ -11,8 +11,6 @@
 #define included_pdat_SparseDataFactory_C
 
 #include "SAMRAI/pdat/SparseDataFactory.h"
-
-#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/SparseData.h"
@@ -114,5 +112,4 @@ SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
 } // end namespace pdat
 } // end namespace SAMRAI
 
-#endif
 #endif

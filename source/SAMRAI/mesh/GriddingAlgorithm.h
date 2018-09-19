@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -1125,6 +1125,15 @@ private:
    void
    checkOverlappingPatches(
       const hier::BoxLevel& box_level) const;
+
+   /*!
+    * @brief Check if the tag buffer data needs to be reset to a default value
+    * at the conclusion of tagging operations.  This is true when the
+    * tag buffer is larger than maximum ghost width for any
+    * currently registered data.
+    */
+   bool
+   needResetTagBuffer(const hier::IntVector& max_ghosts) const;
 
    /*!
     * @brief Warn if the domain is too small any periodic direction.

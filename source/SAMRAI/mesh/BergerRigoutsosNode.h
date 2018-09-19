@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -22,6 +22,7 @@
 #include <set>
 #include <list>
 #include <vector>
+#include <algorithm>
 
 namespace SAMRAI {
 namespace mesh {

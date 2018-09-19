@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -30,7 +30,7 @@ class BoxContainer;
  * box overlaps.  Boxes are sorted by BlockId and then a BoxTree is constructed
  * for each block in a BoxContainer.
  *
- * Except for a destructor needed by boost shared_ptr, the entire interface is
+ * Except for a destructor needed by shared_ptr, the entire interface is
  * private.  This class is intended to be only used by BoxContainer, which
  * is made a friend class.
  */

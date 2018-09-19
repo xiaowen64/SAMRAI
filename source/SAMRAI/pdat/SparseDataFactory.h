@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   SparseDataFactory
  *
  ************************************************************************/
@@ -12,13 +12,6 @@
 #define included_pdat_SparseDataFactory
 
 #include "SAMRAI/SAMRAI_config.h"
-
-/*
- ************************************************************************
- *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
- ************************************************************************
- */
-#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -173,5 +166,4 @@ private:
 
 #include "SAMRAI/pdat/SparseDataFactory.C"
 
-#endif
 #endif

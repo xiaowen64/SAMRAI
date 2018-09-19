@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all tranfer operators.
  *
  ************************************************************************/
@@ -57,14 +57,14 @@ TransferOperatorRegistry::addCoarsenOperator(
          }
       }
    }
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<CoarsenOperator> > >::
    iterator coarsen_ops =
       d_coarsen_operators.find(coarsen_op->getOperatorName());
    if (coarsen_ops == d_coarsen_operators.end()) {
       coarsen_ops = d_coarsen_operators.insert(
             std::make_pair(coarsen_op->getOperatorName(),
-               boost::unordered_map<std::string,
+               std::unordered_map<std::string,
                                     std::shared_ptr<CoarsenOperator> >(0))).first;
    }
    coarsen_ops->second.insert(std::make_pair(var_type_name, coarsen_op));
@@ -86,14 +86,14 @@ TransferOperatorRegistry::addRefineOperator(
          }
       }
    }
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<RefineOperator> > >::
    iterator refine_ops =
       d_refine_operators.find(refine_op->getOperatorName());
    if (refine_ops == d_refine_operators.end()) {
       refine_ops = d_refine_operators.insert(
             std::make_pair(refine_op->getOperatorName(),
-               boost::unordered_map<std::string,
+               std::unordered_map<std::string,
                                     std::shared_ptr<RefineOperator> >(0))).first;
    }
    refine_ops->second.insert(std::make_pair(var_type_name, refine_op));
@@ -104,14 +104,14 @@ TransferOperatorRegistry::addTimeInterpolateOperator(
    const char* var_type_name,
    const std::shared_ptr<TimeInterpolateOperator>& time_op)
 {
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<TimeInterpolateOperator> > >
    ::iterator time_ops =
       d_time_operators.find(time_op->getOperatorName());
    if (time_ops == d_time_operators.end()) {
       time_ops = d_time_operators.insert(
             std::make_pair(time_op->getOperatorName(),
-               boost::unordered_map<std::string,
+               std::unordered_map<std::string,
                                     std::shared_ptr<TimeInterpolateOperator> >(0))).first;
    }
    time_ops->second.insert(std::make_pair(var_type_name, time_op));
@@ -140,7 +140,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
        (op_name.empty())) {
    } else {
 
-      boost::unordered_map<std::string, boost::unordered_map<std::string,
+      std::unordered_map<std::string, std::unordered_map<std::string,
                                                              std::shared_ptr<CoarsenOperator> > >
       ::iterator coarsen_ops =
          d_coarsen_operators.find(op_name);
@@ -150,7 +150,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
             << " could not find any operators with name " << op_name
             << std::endl);
       }
-      boost::unordered_map<std::string,
+      std::unordered_map<std::string,
                            std::shared_ptr<CoarsenOperator> >::iterator the_op =
          coarsen_ops->second.find(typeid(*var).name());
       if (the_op == coarsen_ops->second.end()) {
@@ -180,7 +180,7 @@ TransferOperatorRegistry::lookupRefineOperator(
        (op_name.empty())) {
    } else {
 
-      boost::unordered_map<std::string, boost::unordered_map<std::string,
+      std::unordered_map<std::string, std::unordered_map<std::string,
                                                              std::shared_ptr<RefineOperator> > >
       ::iterator refine_ops =
          d_refine_operators.find(op_name);
@@ -190,7 +190,7 @@ TransferOperatorRegistry::lookupRefineOperator(
             << " could not find any operators with name " << op_name
             << std::endl);
       }
-      boost::unordered_map<std::string,
+      std::unordered_map<std::string,
                            std::shared_ptr<RefineOperator> >::iterator the_op =
          refine_ops->second.find(typeid(*var).name());
       if (the_op == refine_ops->second.end()) {
@@ -219,7 +219,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
        (op_name.empty())) {
    } else {
 
-      boost::unordered_map<std::string, boost::unordered_map<std::string,
+      std::unordered_map<std::string, std::unordered_map<std::string,
                                                              std::shared_ptr<
                                                                 TimeInterpolateOperator> > >::
       iterator time_ops =
@@ -230,7 +230,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
             << " could not find any operators with name " << op_name
             << std::endl);
       }
-      boost::unordered_map<std::string,
+      std::unordered_map<std::string,
                            std::shared_ptr<TimeInterpolateOperator> >::iterator the_op =
          time_ops->second.find(typeid(*var).name());
       if (the_op == time_ops->second.end()) {
@@ -281,13 +281,13 @@ TransferOperatorRegistry::printClassData(
       << (TransferOperatorRegistry *)this << std::endl;
 
    os << "Coarsen operators: " << std::endl;
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<CoarsenOperator> > >::
    const_iterator cop =
       d_coarsen_operators.begin();
    while (cop != d_coarsen_operators.end()) {
       os << cop->first << std::endl;
-      boost::unordered_map<std::string,
+      std::unordered_map<std::string,
                            std::shared_ptr<CoarsenOperator> >::const_iterator ccop =
          cop->second.begin();
       while (ccop != cop->second.end()) {
@@ -298,13 +298,13 @@ TransferOperatorRegistry::printClassData(
    }
 
    os << "Refine operators: " << std::endl;
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<RefineOperator> > >::
    const_iterator rop =
       d_refine_operators.begin();
    while (rop != d_refine_operators.end()) {
       os << rop->first << std::endl;
-      boost::unordered_map<std::string,
+      std::unordered_map<std::string,
                            std::shared_ptr<RefineOperator> >::const_iterator rrop =
          rop->second.begin();
       while (rrop != rop->second.end()) {
@@ -315,13 +315,13 @@ TransferOperatorRegistry::printClassData(
    }
 
    os << "Time interpolate operators: " << std::endl;
-   boost::unordered_map<std::string, boost::unordered_map<std::string,
+   std::unordered_map<std::string, std::unordered_map<std::string,
                                                           std::shared_ptr<TimeInterpolateOperator> > >
    ::const_iterator top =
       d_time_operators.begin();
    while (top != d_time_operators.end()) {
       os << top->first << std::endl;
-      boost::unordered_map<std::string,
+      std::unordered_map<std::string,
                            std::shared_ptr<TimeInterpolateOperator> >::const_iterator ttop =
          top->second.begin();
       while (ttop != top->second.end()) {

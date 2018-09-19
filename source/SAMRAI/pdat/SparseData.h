@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -13,26 +13,15 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-/*
- ************************************************************************
- *  THIS CLASS WILL BE UNDEFINED IF THE LIBRARY IS BUILT WITHOUT BOOST
- ************************************************************************
- */
-#ifdef HAVE_BOOST_HEADERS
-
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/pdat/IntegerAttributeId.h"
 #include "SAMRAI/pdat/DoubleAttributeId.h"
-#include "SAMRAI/tbox/Boost.h"
-
-BEGIN_BOOST_WARNING_SUPPRESSION
-#include "boost/unordered_map.hpp"
-END_BOOST_WARNING_SUPPRESSION
 
 #include <list>
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace SAMRAI {
 namespace pdat {
@@ -134,6 +123,13 @@ class SparseData:public hier::PatchData
 private:
    class Attributes;
    struct index_hash;
+
+   template <class T>
+   static
+   void hash_combine(std::size_t& seed, const T& v);
+
+   template <class T>
+   void to_lower(T& input);
 
 public:
    /*!
@@ -484,11 +480,11 @@ public:
 private:
    // Internal typedefs
    typedef std::list<Attributes> AttributeList;
-   typedef boost::unordered_map<
+   typedef std::unordered_map<
       hier::Index, AttributeList, index_hash> IndexMap;
-   typedef boost::unordered_map<
+   typedef std::unordered_map<
       std::string, DoubleAttributeId> DoubleAttrNameMap;
-   typedef boost::unordered_map<
+   typedef std::unordered_map<
       std::string, IntegerAttributeId> IntAttrNameMap;
 
    /*
@@ -562,7 +558,7 @@ private:
       const hier::Box& box);
 
    /*
-    * The index hash function for adding elements to the boost::unordered_map's
+    * The index hash function for adding elements to the std::unordered_map's
     * buckets.
     */
    struct index_hash:
@@ -964,5 +960,4 @@ private:
 
 #include "SAMRAI/pdat/SparseData.C"
 
-#endif
 #endif // included_pdat_SparseData

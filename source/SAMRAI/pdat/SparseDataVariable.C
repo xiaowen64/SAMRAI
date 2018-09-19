@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   SparseDataVariable
  *
  ************************************************************************/
@@ -13,8 +13,6 @@
 
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
-
-#ifdef HAVE_BOOST_HEADERS
 
 #include "SAMRAI/pdat/SparseDataFactory.h"
 
@@ -41,5 +39,4 @@ SparseDataVariable<BOX_GEOMETRY>::~SparseDataVariable()
 
 } // end namespace pdat
 } // end namespace SAMRAI
-#endif
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for example Hypre Poisson solver
  *
  ************************************************************************/
@@ -278,7 +278,7 @@ bool HyprePoisson::solvePoisson()
    tbox::plog << "solving..." << std::endl;
    int solver_ret;
    solver_ret = d_poisson_hypre->solveSystem(d_comp_soln_id,
-         d_rhs_id);
+         d_rhs_id, false, true);
    /*
     * Present data on the solve.
     */

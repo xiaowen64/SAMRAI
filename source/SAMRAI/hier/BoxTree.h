@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Binary tree of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -41,7 +41,7 @@ class BoxContainer;
  * - hasOverlap()
  * - findOverlapBoxes()
  *
- * Except for two static methods and a destructor needed by boost shared_ptr,
+ * Except for two static methods and a destructor needed by shared_ptr,
  * the entire interface is private.
  */
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed
  *                box graph.
  *
@@ -24,6 +24,7 @@
 #include <map>
 #include <vector>
 #include <set>
+#include <algorithm>
 //#include <iomanip>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -1946,7 +1947,7 @@ Connector::computeNeighborhoodDifferences(
          std::set<Box, Box::id_less> bnabrs(right.begin(bi), right.end(bi));
          std::set<Box, Box::id_less> diff;
          std::insert_iterator<std::set<Box, Box::id_less> > ii(diff, diff.begin());
-         set_difference(anabrs.begin(),
+         std::set_difference(anabrs.begin(),
             anabrs.end(),
             bnabrs.begin(),
             bnabrs.end(),
