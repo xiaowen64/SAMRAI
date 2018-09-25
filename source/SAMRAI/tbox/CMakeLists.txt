@@ -6,7 +6,6 @@ set ( tbox_headers
   AsyncCommPeer.C
   AsyncCommStage.h
   BalancedDepthFirstTree.h
-  Boost.h
   BreadthFirstRankTree.h
   CenteredRankTree.h
   Clock.h
@@ -109,9 +108,6 @@ set (tbox_sources
   Tracer.C
   Transaction.C
   Utilities.C)
-
-set (tbox_depends_on
-  boost)
 
 if (HAVE_HDF5)
     list(APPEND tbox_depends_on hdf5)

@@ -39,10 +39,11 @@ option(ENABLE_TIMERS "Enable SAMRAI timers." On)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 
-
 include(GNUInstallDirs)
 
 include(blt/SetupBLT.cmake)
+
+include_directories(${CMAKE_BINARY_DIR}/include)
 
 include(cmake/CMakeBasics.cmake)
 
