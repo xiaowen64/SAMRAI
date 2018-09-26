@@ -42,16 +42,8 @@ set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 
 include(blt/SetupBLT.cmake)
 
-set(CMAKE_Fortran_COMPILER "/usr/tce/packages/xl/xl-beta-2017.11.28/bin/xlf" CACHE PATH "")
-
-# Convert C-style comments to Fortran and link fortran exes to C++ libraries
-set(BLT_FORTRAN_FLAGS "-WF,-C! -Wl,-lstdc++ -Wl,/usr/tce/packages/xl/xl-beta-2017.11.28/xlC/13.1.6/lib/libibmc++.so" CACHE STRING "")
-
 # Converts C-style comments to Fortran style in preprocessed files
 set(BLT_FORTRAN_FLAGS "-WF,-C!" CACHE STRING "")
-
-# Adds a missing rpath for libraries associated with the fortran compiler
-set(BLT_EXE_LINKER_FLAGS "-Wl,-rpath,/usr/tce/packages/xl/xl-beta-2017.11.28/lib" CACHE STRING "")
 
 include_directories(${CMAKE_BINARY_DIR}/include)
 

@@ -149,8 +149,8 @@ CartesianCellDoubleWeightedAverage::coarsen(
             cdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
-      pdat::CellData<double>::CellView<2> fine_array = fdata->getView<2>(d);
-      pdat::CellData<double>::CellView<2> coarse_array = cdata->getView<2>(d);
+      pdat::CellData<double>::View<2> fine_array = fdata->getView<2>(d);
+      pdat::CellData<double>::View<2> coarse_array = cdata->getView<2>(d);
 
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();

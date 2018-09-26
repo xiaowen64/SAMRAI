@@ -140,13 +140,10 @@ CellData<TYPE>::getPointer(
 
 template<class TYPE>
 template<int DIM>
-CellData<TYPE>::CellView<DIM>
+CellData<TYPE>::View<DIM>
 CellData<TYPE>::getView(int depth)
 {
-  return CellData<TYPE>::CellView<DIM>(
-      getPointer(0), 
-      getGhostBox(), 
-      depth);
+        return CellData<TYPE>::View<DIM>(*d_data, depth);
 }
 
 

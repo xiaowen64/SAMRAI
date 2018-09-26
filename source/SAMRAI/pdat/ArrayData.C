@@ -23,7 +23,6 @@
 
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
-#include "SAMRAI/pdat/ManagedAllocator.h"
 #if defined(HAVE_CUDA)
 #include <cuda_runtime_api.h>
 #if defined(HAVE_CNMEM)
@@ -717,7 +716,6 @@ ArrayData<TYPE>::packStream(
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
 
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    size_t ptr = 0;
@@ -744,7 +742,6 @@ ArrayData<TYPE>::packStream(
   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    hier::Box pack_box(dest_box);
@@ -768,7 +765,6 @@ ArrayData<TYPE>::packStream(
 
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    size_t ptr = 0;
@@ -812,7 +808,6 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    //stream.unpack(&buffer[0], size);
@@ -833,7 +828,6 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    //stream.unpack(&buffer[0], size);
@@ -873,7 +867,6 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    //stream.unpack(&buffer[0], size);
@@ -892,7 +885,6 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   //std::vector< TYPE, ManagedAllocator<TYPE> > buffer(size);
    TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
 
    //stream.unpack(&buffer[0], size);

@@ -128,6 +128,16 @@ SideData<TYPE>::getPointer(
 }
 
 template<class TYPE>
+template<int DIM>
+SideData<TYPE>::View<DIM>
+SideData<TYPE>::getView(
+        int side_normal,
+        int depth)
+{
+   return SideData<TYPE>::View<DIM>(*d_data[side_normal], depth);
+}
+
+template<class TYPE>
 TYPE&
 SideData<TYPE>::operator () (
    const SideIndex& i,

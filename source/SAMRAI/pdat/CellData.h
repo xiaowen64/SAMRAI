@@ -154,14 +154,14 @@ public:
       int depth = 0) const;
 
    template <int DIM>
-   struct CellView :
+   struct View :
      public tbox::ArrayView<DIM, TYPE>
    {
      using tbox::ArrayView<DIM, TYPE>::ArrayView;
    };
 
    template <int DIM>
-   CellView<DIM>
+   View<DIM>
    getView(int depth = 0);
 
    /*!

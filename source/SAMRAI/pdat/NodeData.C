@@ -98,6 +98,14 @@ NodeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
+template<int DIM>
+NodeData<TYPE>::View<DIM>
+NodeData<TYPE>::getView(int depth)
+{
+   return NodeData<TYPE>::View<DIM>(*d_data, depth);
+}
+
+template<class TYPE>
 TYPE&
 NodeData<TYPE>::operator () (
    const NodeIndex& i,

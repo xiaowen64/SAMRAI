@@ -1,5 +1,6 @@
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
+#include "umpire/strategy/DynamicPool.hpp"
 #include "umpire/ResourceManager.hpp"
 
 #include "umpire/resource/MemoryResourceTypes.hpp"
@@ -59,7 +60,7 @@ AllocatorDatabase::initialize()
 {
   std::cout << "Initializing database" << std::endl;
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
-  
+
   /*
    * Register internal SAMRAI pool
    */

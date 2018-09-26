@@ -17,7 +17,6 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/RAJA_API.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
@@ -213,14 +212,14 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       } else if ((dim == tbox::Dimension(2))) {
 
 #if defined(HAVE_RAJA)
-      pdat::CellData<double>::CellView<2> fine_array = fdata->getView<2>(d);
-      pdat::CellData<double>::CellView<2> coarse_array = cdata->getView<2>(d);
+      pdat::CellData<double>::View<2> fine_array = fdata->getView<2>(d);
+      pdat::CellData<double>::View<2> coarse_array = cdata->getView<2>(d);
 
-      pdat::CellData<double>::CellView<2> diff0 = diff.getView<2>(0);
-      pdat::CellData<double>::CellView<2> diff1 = diff.getView<2>(1);
+      pdat::CellData<double>::View<2> diff0 = diff.getView<2>(0);
+      pdat::CellData<double>::View<2> diff1 = diff.getView<2>(1);
 
-      pdat::CellData<double>::CellView<2> slope0 = slope.getView<2>(0);
-      pdat::CellData<double>::CellView<2> slope1 = slope.getView<2>(1);
+      pdat::CellData<double>::View<2> slope0 = slope.getView<2>(0);
+      pdat::CellData<double>::View<2> slope1 = slope.getView<2>(1);
 
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();
