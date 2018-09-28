@@ -9,7 +9,6 @@ blt_add_executable(
   DEPENDS_ON
     raja
     cuda
-    openmp
     SAMRAI_algs
     SAMRAI_appu
     SAMRAI_geom

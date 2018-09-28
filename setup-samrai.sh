@@ -2,13 +2,22 @@
 
 arch=$(uname -m)
 compiler=clang
-scratch_dir=${HOME}/Projects/SAMRAI/
-build_prefix=${scratch_dir}/build/${arch}-${compiler}/
-install_prefix=${scratch_dir}/install/${arch}-${compiler}/
-source_prefix=${HOME}/Projects/SAMRAI/code
+build_type=Debug
+scratch_dir=${HOME}/Projects/Cleverleaf/build
+# if [ -z ${SCRATCHDIR+x} ]; then
+#     scratch_dir=${HOME}/Projects/SAMRAI
+# else
+#     scratch_dir=${SCRATCHDIR}
+# fi
+build_prefix=${scratch_dir}/build/${arch}-${compiler}/${build_type}
+install_prefix=${scratch_dir}/install/${arch}-${compiler}/${build_type}
+source_prefix=${HOME}/Projects/Cleverleaf
 
-module load spectrum-mpi/2018.02.05
-module load cuda/9.0.184
+# module load spectrum-mpi/2018.02.05
+# module load cuda/9.0.184
+
+echo "Build prefix: $build_prefix"
+echo "Install prefix: $install_prefix"
 
 pkg=$1
 if [[ "$1" == "-c" ]]; then
@@ -44,20 +53,19 @@ if [ "$pkg" == "RAJA" ]; then
     mkdir -p $build_dir && cd $build_dir
     cmake -DCMAKE_CXX_COMPILER=$cpp \
           -DCMAKE_C_COMPILER=$cc \
-          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_BUILD_TYPE=$build_type \
           -DCMAKE_INSTALL_PREFIX=$install_dir \
-          -DENABLE_OPENMP=Off \
+          -DENABLE_OPENMP=OFF \
           -DENABLE_CUDA=ON \
           -DENABLE_TESTS=OFF \
-          -DENABLE_NESTED=ON \
-          -DRAJA_CUDA_ARCH=sm_60 \
           $source_dir
-elif [ "$pkg" == "umpire" ]; then
+          # -DRAJA_CUDA_ARCH=sm_60 \
+elif [ "$pkg" == "Umpire" ]; then
     source_dir=${source_prefix}/${pkg}
     mkdir -p $build_dir && cd $build_dir
     cmake -DCMAKE_CXX_COMPILER=$cpp \
           -DCMAKE_C_COMPILER=$cc \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=$build_type \
           -DENABLE_OPENMP=On \
           -DENABLE_CUDA=ON \
           -DOpenMP_Fortran_FLAGS="-qsmp" \
@@ -72,10 +80,10 @@ elif [ "$pkg" == "HDF5" ]; then
     cmake -DCMAKE_CXX_COMPILER=$cpp \
           -DCMAKE_C_COMPILER=$cc \
           -DCMAKE_INSTALL_PREFIX=$install_dir \
-          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_BUILD_TYPE=$build_type \
           -DHDF5_BUILD_EXAMPLES=OFF \
           $source_dir
-elif [ "$pkg" == "samrai-uvm" ]; then
+elif [ "$pkg" == "SAMRAI" ]; then
     source_dir=${source_prefix}/${pkg}
     cd $source_dir && {
         branch=$(git rev-parse --abbrev-ref HEAD)
@@ -86,13 +94,16 @@ elif [ "$pkg" == "samrai-uvm" ]; then
           -DCMAKE_C_COMPILER=$cc \
           -DCMAKE_Fortran_COMPILER=$fc \
           -DCMAKE_INSTALL_PREFIX=$install_dir \
-          -DCMAKE_BUILD_TYPE=Debug \
-          -DCMAKE_PREFIX_PATH="${install_prefix}/RAJA/share/raja/cmake;${install_prefix}/HDF5/share/cmake" \
-          -Dumpire_DIR="${install_prefix}/umpire/share/umpire/cmake" \
+          -DCMAKE_BUILD_TYPE=$build_type \
+          -DRAJA_DIR="${install_prefix}/RAJA/share/raja/cmake" \
+          -DHDF5_DIR="${install_prefix}/HDF5/share/cmake" \
+          -Dumpire_DIR="${install_prefix}/Umpire/share/umpire/cmake" \
+          -DCUDA_NVCC_FLAGS_DEBUG="--expt-relaxed-constexpr" \
+          -DCUDA_NVCC_FLAGS_RELEASE="--expt-relaxed-constexpr" \
           -DMPI_Fortran_COMPILER=mpixlf \
-          -DENABLE_HDF5=On \
-          -DENABLE_MPI=On \
-          -DENABLE_OPENMP=ON \
+          -DENABLE_HDF5=ON \
+          -DENABLE_MPI=ON \
+          -DENABLE_OPENMP=OFF \
           -DOpenMP_Fortran_FLAGS="-qsmp" \
           -DOpenMP_Fortran_LIB_NAMES="" \
           -DENABLE_CUDA=ON \
@@ -101,5 +112,25 @@ elif [ "$pkg" == "samrai-uvm" ]; then
           -DBUILD_GTEST=ON \
           -DBUILD_TESTING=ON \
           -DENABLE_EXAMPLES=OFF \
+          $source_dir
+elif [ "$pkg" == "cleverleaf" ]; then
+    source_dir=${source_prefix}/${pkg}
+    cd $source_dir && {
+        branch=$(git rev-parse --abbrev-ref HEAD)
+	echo "Configuring cleverleaf on branch $branch"
+    }
+    mkdir -p $build_dir && cd $build_dir
+    echo $install_prefix
+    cmake \
+          -DCMAKE_CXX_COMPILER=$cpp \
+          -DCMAKE_C_COMPILER=$cc \
+          -DCMAKE_INSTALL_PREFIX=$install_dir \
+          -DCMAKE_BUILD_TYPE=$build_type \
+          -DCMAKE_CUDA_FLAGS="-arch=sm_70" \
+          -DRAJA_DIR="${install_prefix}/RAJA/share/raja/cmake" \
+          -DHDF5_DIR="${install_prefix}/HDF5/share/cmake" \
+          -Dumpire_DIR="${install_prefix}/Umpire/share/umpire/cmake" \
+          -DCMAKE_PREFIX_PATH="${install_prefix}/SAMRAI" \
+          -DENABLE_OPENMP=OFF \
           $source_dir
 fi
