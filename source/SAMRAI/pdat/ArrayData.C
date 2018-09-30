@@ -89,14 +89,14 @@ ArrayData<TYPE>::ArrayData(
    d_depth(depth),
    d_offset(box.size()),
    d_box(box)
-#if !defined(HAVE_CUDA)
+#if defined(HAVE_CUDA)
+   , d_allocator(umpire::ResourceManager::getInstance().getAllocator("SAMRAI_pool"))
+   , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
+#else
    , d_array(d_depth * d_offset)
 #endif
 {
    TBOX_ASSERT(depth > 0);
-
-   auto alloc = umpire::ResourceManager::getInstance().getAllocator("SAMRAI_pool");
-   allocate(alloc);
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
@@ -111,13 +111,14 @@ ArrayData<TYPE>::ArrayData(
    d_depth(depth),
    d_offset(box.size()),
    d_box(box)
-#if !defined(HAVE_CUDA)
+#if defined(HAVE_CUDA)
+   , d_allocator(allocator)
+   , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
+#else
    , d_array(d_depth * d_offset)
 #endif
 {
    TBOX_ASSERT(depth > 0);
-
-   allocate(allocator);
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
@@ -125,18 +126,13 @@ ArrayData<TYPE>::ArrayData(
 }
 
 template<class TYPE>
-void
-ArrayData<TYPE>::allocate(umpire::Allocator allocator)
-{
-   d_array = static_cast<TYPE*>(allocator.allocate(sizeof(TYPE) * d_depth * d_offset));
-}
-
-template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
-   auto alloc = umpire::ResourceManager::getInstance().getAllocator("SAMRAI_pool");
-   alloc.deallocate(d_array);
+#if defined(HAVE_CUDA)
+   d_allocator.deallocate(d_array, d_depth * d_offset * sizeof(TYPE));
+#endif
 }
+
 
 template<class TYPE>
 bool

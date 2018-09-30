@@ -639,8 +639,6 @@ private:
    operator = (
       const ArrayData&);
 
-   void allocate(umpire::Allocator allocator);
-
    /*
     * Static integer constant describing this class's version number.
     */
@@ -690,6 +688,7 @@ private:
    size_t d_offset;
    hier::Box d_box;
 #if defined(HAVE_CUDA)
+   umpire::TypedAllocator<TYPE> d_allocator;
    TYPE* d_array;
 #else
    std::vector<TYPE> d_array;
