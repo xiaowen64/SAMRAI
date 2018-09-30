@@ -79,7 +79,8 @@ set_source_files_properties(
 set (solv_depends_on
   SAMRAI_hier
   SAMRAI_math
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  SAMRAI_xfer)
 
 if (ENABLE_CUDA)
   set (solv_depends_on
@@ -104,4 +105,12 @@ set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(
   SAMRAI_solv
-  PUBLIC ${PROJECT_SOURCE_DIR}/source)
+  PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/source>
+  $<INSTALL_INTERFACE:include>)
+
+install(TARGETS SAMRAI_solv
+  EXPORT SAMRAITargets
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
