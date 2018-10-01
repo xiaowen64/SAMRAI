@@ -25,7 +25,6 @@ AllocatorDatabase::s_startup_handler(
 void
 AllocatorDatabase::startupCallback()
 {
-  std::cout << "In startup Callback for AllocatorDatabase" << std::endl;
   AllocatorDatabase::getDatabase()->initialize();
 }
 
@@ -58,7 +57,6 @@ AllocatorDatabase::~AllocatorDatabase()
 void
 AllocatorDatabase::initialize()
 {
-  std::cout << "Initializing database" << std::endl;
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
 
   /*
