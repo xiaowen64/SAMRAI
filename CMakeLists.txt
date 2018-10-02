@@ -19,7 +19,6 @@ endif ()
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
 set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
-set(ENABLE_COPY_HEADERS On Bool "Copy headers")
 
 # Third party libraries
 option(ENABLE_HDF5 "Enable HDF5." On)
