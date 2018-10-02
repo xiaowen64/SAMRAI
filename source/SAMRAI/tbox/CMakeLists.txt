@@ -130,7 +130,6 @@ list (APPEND tbox_depends_on /usr/tce/packages/cuda/cuda-9.1.76/lib64/libnvTools
 blt_add_library( NAME SAMRAI_tbox
   SOURCES ${tbox_sources}
   HEADERS ${tbox_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/tbox
   DEPENDS_ON ${tbox_depends_on})
 
 target_include_directories( SAMRAI_tbox
@@ -143,3 +142,6 @@ install(TARGETS SAMRAI_tbox
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${tbox_headers}
+  DESTINATION include/SAMRAI/tbox)

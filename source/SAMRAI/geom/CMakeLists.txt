@@ -100,7 +100,6 @@ blt_add_library(
   NAME SAMRAI_geom
   SOURCES ${geom_sources}
   HEADERS ${geom_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/geom
   DEPENDS_ON ${geom_depends_on})
 
 set_target_properties(SAMRAI_geom PROPERTIES LINKER_LANGUAGE CXX)
@@ -115,3 +114,6 @@ install(TARGETS SAMRAI_geom
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${geom_headers}
+  DESTINATION include/SAMRAI/geom)

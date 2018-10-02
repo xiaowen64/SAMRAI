@@ -22,7 +22,6 @@ set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
 set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_CUDA On CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
-set(ENABLE_COPY_HEADERS On CACHE Bool "Copy headers")
 
 # Third party libraries
 option(ENABLE_HDF5 "Enable HDF5." On)

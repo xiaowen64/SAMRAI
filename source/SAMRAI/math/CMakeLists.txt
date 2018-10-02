@@ -167,7 +167,6 @@ blt_add_library(
   NAME SAMRAI_math
   SOURCES ${math_sources}
   HEADERS ${math_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/math
   DEPENDS_ON ${math_depends_on})
 
 target_include_directories( SAMRAI_math
@@ -180,3 +179,6 @@ install(TARGETS SAMRAI_math
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${math_headers}
+  DESTINATION include/SAMRAI/math)

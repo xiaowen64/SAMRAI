@@ -50,7 +50,6 @@ blt_add_library(
   NAME SAMRAI_appu
   SOURCES ${appu_sources}
   HEADERS ${appu_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/appu
   DEPENDS_ON ${appu_depends_on})
 
 set_target_properties(SAMRAI_appu PROPERTIES LINKER_LANGUAGE CXX)
@@ -65,3 +64,6 @@ install(TARGETS SAMRAI_appu
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${appu_headers}
+  DESTINATION include/SAMRAI/appu)
