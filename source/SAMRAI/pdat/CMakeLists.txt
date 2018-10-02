@@ -334,12 +334,6 @@ blt_add_library(
   HEADERS_OUTPUT_SUBDIR SAMRAI/pdat
   DEPENDS_ON ${pdat_depends_on})
 
-install(TARGETS
-  SAMRAI_pdat
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
 set_target_properties(SAMRAI_pdat PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(

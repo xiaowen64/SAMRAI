@@ -95,12 +95,6 @@ blt_add_library(
   HEADERS_OUTPUT_SUBDIR SAMRAI/solv
   DEPENDS_ON ${solv_depends_on})
 
-install(TARGETS
-  SAMRAI_solv
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
 set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(

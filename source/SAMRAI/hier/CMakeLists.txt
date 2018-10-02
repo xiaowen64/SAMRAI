@@ -145,12 +145,6 @@ blt_add_library(
   HEADERS_OUTPUT_SUBDIR SAMRAI/hier
   DEPENDS_ON ${hier_depends_on})
 
-install(TARGETS
-  SAMRAI_hier
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
 target_include_directories(
   SAMRAI_hier
   PUBLIC

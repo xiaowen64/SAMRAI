@@ -60,12 +60,6 @@ blt_add_library( NAME SAMRAI_algs
   HEADERS_OUTPUT_SUBDIR SAMRAI/algs
   DEPENDS_ON ${algs_depends_on})
 
-install(TARGETS
-  SAMRAI_algs
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
 set_target_properties(SAMRAI_algs PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories( SAMRAI_algs

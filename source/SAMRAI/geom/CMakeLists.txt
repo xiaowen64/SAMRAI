@@ -103,12 +103,6 @@ blt_add_library(
   HEADERS_OUTPUT_SUBDIR SAMRAI/geom
   DEPENDS_ON ${geom_depends_on})
 
-install(TARGETS
-  SAMRAI_geom
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
 set_target_properties(SAMRAI_geom PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories( SAMRAI_geom

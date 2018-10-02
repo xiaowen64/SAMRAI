@@ -133,13 +133,6 @@ blt_add_library( NAME SAMRAI_tbox
   HEADERS_OUTPUT_SUBDIR SAMRAI/tbox
   DEPENDS_ON ${tbox_depends_on})
 
-install(TARGETS
-  SAMRAI_tbox
-  RUNTIME DESTINATION lib
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib)
-
-
 target_include_directories( SAMRAI_tbox
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/source>
