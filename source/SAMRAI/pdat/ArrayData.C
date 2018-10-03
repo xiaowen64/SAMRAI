@@ -257,7 +257,7 @@ ArrayData<TYPE>::copy(
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 #if defined(HAVE_CUDA)
-      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
+      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -458,8 +458,10 @@ ArrayData<TYPE>::copyDepth(
       TYPE * const dst_ptr_d = dst_ptr + dst_depth * d_offset;
       const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
 
-#if defined(CUDA)
-      tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVCIE (int i) {
+      const size_t n = d_offset * d_depth;
+
+#if defined(HAVE_CUDA)
+      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       });
 #else
@@ -528,8 +530,8 @@ ArrayData<TYPE>::sum(
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 
-#if defined(CUDA)
-      tbox::for_all(0, n, [=] SAMRAI_DEVICE (int i) {
+#if defined(HAVE_CUDA)
+      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          sumop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -913,7 +915,7 @@ ArrayData<TYPE>::fillAll(
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
 #if defined(HAVE_CUDA)
-     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
+     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
      });
 #else
@@ -947,7 +949,7 @@ ArrayData<TYPE>::fill(
 #if defined(HAVE_CUDA)
      TYPE* ptr = &d_array[d * d_offset];
      const size_t n = d_offset;
-     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
+     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
      });
 #else
@@ -977,9 +979,8 @@ ArrayData<TYPE>::fill(
 #if defined(HAVE_CUDA)
      auto data = tbox::ArrayView<2, TYPE>(*this, d);
 
-     tbox::for_all2<tbox::policy::parallel>(
-         ispace,
-         [=] SAMRAI_DEVICE (int k, int j) {
+     tbox::for_all2<tbox::policy::parallel>(ispace,
+         [=] SAMRAI_HOST_DEVICE (int k, int j) {
          data(j,k) = t;
      });
 #else
