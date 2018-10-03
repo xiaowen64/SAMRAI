@@ -318,7 +318,6 @@ blt_add_library(
   NAME SAMRAI_pdat
   SOURCES ${pdat_sources}
   HEADERS ${pdat_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/pdat
   DEPENDS_ON ${pdat_depends_on})
 
 set_target_properties(SAMRAI_pdat PROPERTIES LINKER_LANGUAGE CXX)
@@ -334,3 +333,6 @@ install(TARGETS SAMRAI_pdat
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${pdat_headers}
+  DESTINATION include/SAMRAI/pdat)

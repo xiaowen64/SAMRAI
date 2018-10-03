@@ -65,7 +65,6 @@ blt_add_library(
   NAME SAMRAI_xfer
   SOURCES ${xfer_sources}
   HEADERS ${xfer_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/xfer
   DEPENDS_ON ${xfer_depends_on})
 
 target_include_directories(
@@ -79,3 +78,6 @@ install(TARGETS SAMRAI_xfer
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${xfer_headers}
+  DESTINATION include/SAMRAI/xfer)

@@ -51,7 +51,6 @@ process_m4(NAME fortran/algs_upfluxsum3d)
 blt_add_library( NAME SAMRAI_algs
   SOURCES ${algs_sources}
   HEADERS ${algs_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/algs
   DEPENDS_ON ${algs_depends_on})
 
 set_target_properties(SAMRAI_algs PROPERTIES LINKER_LANGUAGE CXX)
@@ -66,3 +65,6 @@ install(TARGETS SAMRAI_algs
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${algs_headers}
+  DESTINATION include/SAMRAI/algs)

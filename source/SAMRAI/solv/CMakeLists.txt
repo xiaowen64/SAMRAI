@@ -75,7 +75,6 @@ blt_add_library(
   NAME SAMRAI_solv
   SOURCES ${solv_sources}
   HEADERS ${solv_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/solv
   DEPENDS_ON ${solv_depends_on})
 
 set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
@@ -91,3 +90,6 @@ install(TARGETS SAMRAI_solv
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${solv_headers}
+  DESTINATION include/SAMRAI/solv)

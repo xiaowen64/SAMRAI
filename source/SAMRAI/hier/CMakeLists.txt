@@ -136,7 +136,6 @@ blt_add_library(
   NAME SAMRAI_hier
   SOURCES ${hier_sources}
   HEADERS ${hier_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/hier
   DEPENDS_ON ${hier_depends_on})
 
 target_include_directories(
@@ -150,3 +149,6 @@ install(TARGETS SAMRAI_hier
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${hier_headers}
+  DESTINATION include/SAMRAI/hier)

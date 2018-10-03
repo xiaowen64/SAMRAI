@@ -69,7 +69,6 @@ blt_add_library(
   NAME SAMRAI_mesh
   SOURCES ${mesh_sources}
   HEADERS ${mesh_headers}
-  HEADERS_OUTPUT_SUBDIR SAMRAI/mesh
   DEPENDS_ON ${mesh_depends_on})
 
 target_include_directories(
@@ -84,3 +83,6 @@ install(TARGETS SAMRAI_mesh
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+install(FILES ${mesh_headers}
+  DESTINATION include/SAMRAI/mesh)
