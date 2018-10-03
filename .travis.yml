@@ -1,0 +1,18 @@
+services: docker
+dist: trusty
+language: cpp
+env:
+  global:
+  - DO_BUILD=yes
+  - DO_TEST=yes
+matrix:
+  include:
+  - compiler: gcc8
+    env:
+    - COMPILER=g++
+    - IMG=gcc-8
+    - CMAKE_EXTRA_FLAGS="-DENABLE_CUDA=Off"
+
+script: 
+- docker run --rm --user='root' -v ${TRAVIS_BUILD_DIR}:/home/axom davidbeckingsale/samrai:$IMG chown -R axom /home/axom
+- docker run --rm  -v ${TRAVIS_BUILD_DIR}:/home/axom -e COMPILER -e DO_BUILD -e DO_TEST -e CMAKE_EXTRA_FLAGS davidbeckingsale/samrai:$IMG ./source/scripts/travis/build_and_test.sh
