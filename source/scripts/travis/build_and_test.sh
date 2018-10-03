@@ -12,6 +12,7 @@ function or_die () {
 or_die mkdir travis-build
 cd travis-build
 if [[ "$DO_BUILD" == "yes" ]] ; then
+    export F77=gfortran
     or_die ../configure 
     or_die make -j 3 VERBOSE=1
 fi
