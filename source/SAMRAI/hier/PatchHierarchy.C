@@ -1238,7 +1238,7 @@ PatchHierarchy::putBlueprint(
                }
 
                std::string set_name =
-                  "adjset_" + tbox::Utilities::intToString(adjcount);
+                  "adjset_" + tbox::Utilities::intToString(adjcount, 6);
                std::shared_ptr<tbox::Database> set_db;
                if (adjsets_db->keyExists(set_name)) {
                   set_db = adjsets_db->getDatabase(set_name);
@@ -1350,14 +1350,14 @@ PatchHierarchy::putBlueprint(
                   }
 
                   std::string window_name =
-                     "window_" + tbox::Utilities::intToString(ncount);
+                     "window_" + tbox::Utilities::intToString(ncount, 6);
                   std::shared_ptr<tbox::Database> window_db(
                      windows_db->putDatabase(window_name));
 
                   const LocalId& nbr_id = nbr_box.getLocalId();
                   int child_id = first_patch_id[i+1] + nbr_id.getValue();
 
-                  window_db->putString("type", "child");
+                  window_db->putString("domain_type", "child");
                   window_db->putInteger("domain_id", child_id);
 
                   std::shared_ptr<tbox::Database> ratio_db(
@@ -1474,14 +1474,14 @@ PatchHierarchy::putBlueprint(
                   }
 
                   std::string window_name =
-                     "window_" + tbox::Utilities::intToString(ncount);
+                     "window_" + tbox::Utilities::intToString(ncount, 6);
                   std::shared_ptr<tbox::Database> window_db(
                      windows_db->putDatabase(window_name));
 
                   const LocalId& nbr_id = nbr_box.getLocalId();
                   int parent_id = first_patch_id[i-1] + nbr_id.getValue();
 
-                  window_db->putString("type", "parent");
+                  window_db->putString("domain_type", "parent");
                   window_db->putInteger("domain_id", parent_id);
 
                   std::shared_ptr<tbox::Database> ratio_db(

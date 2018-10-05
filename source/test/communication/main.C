@@ -583,6 +583,7 @@ int main(
         index["data/mesh"].set_external(n);
     }
 #endif
+    int my_rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
     conduit::Node &bpindex = index["blueprint_index"];
     {
 #if 0
@@ -612,29 +613,25 @@ int main(
             }
         }
 #endif
-        conduit::blueprint::mesh::generate_index(
-           n["domain_000000"],"",n.number_of_children(),bpindex["amr_mesh"]);
+       if (my_rank == 0) {
+          conduit::blueprint::mesh::generate_index(
+             n["domain_000000"],"",n.number_of_children(),bpindex["amr_mesh"]);
+       }
     }
-    int my_rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
-    std::string file_pattern = "celldata" + tbox::Utilities::intToString(my_rank);
-    if(bpindex.number_of_children() == 0)
-    {
-    }
-    else
-    {
+    std::string file_name = "celldata" + tbox::Utilities::intToString(my_rank, 6);
+    if (my_rank == 0) {
        index["protocol/name"].set("json");
        index["protocol/version"].set(CONDUIT_VERSION);
 
        index["number_of_files"].set(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize());
        index["number_of_trees"].set(n.number_of_children());
-       index["file_pattern"].set(file_pattern);
+       index["file_pattern"].set("celldata%06d");
        index["tree_pattern"].set("/domain_%06d");
 //       conduit::relay::io::save(index,path,"json");
-    }
 
-      index.save("bpindex","json");
-
-      n.save(file_pattern,"json");
+       index.save("bpindex.root","json");
+   }
+      n.save(file_name, "json");
 
 //      n.print();
 
