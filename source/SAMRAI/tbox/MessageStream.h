@@ -173,17 +173,17 @@ public:
          if (!growAsNeeded()) {
             TBOX_ASSERT(canCopyIn(num_bytes));
          }
-         else {
+         else if (num_bytes > 0) {
             d_write_buffer.resize(getCurrentSize() + num_bytes);
             d_buffer_size = d_write_buffer.size();
          }
-         buffer = static_cast<void *>(&d_write_buffer[d_buffer_index]);
+         buffer = static_cast<void *>(&d_write_buffer[getCurrentSize()]);
       }
       else // readMode()
       {
          TBOX_ASSERT(canCopyOut(num_bytes));
          buffer = const_cast<void *>(
-            static_cast<const void *>(&d_read_buffer[d_buffer_index]));
+            static_cast<const void *>(&d_read_buffer[getCurrentSize()]));
       }
       d_buffer_index += num_bytes;
       return buffer;
