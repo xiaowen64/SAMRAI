@@ -986,6 +986,7 @@ ArrayData<TYPE>::fill(
             ispace, [=] SAMRAI_HOST_DEVICE (int k) {
                data(k) = t;
             });
+         break;
       }
       case 2:
       {
@@ -994,6 +995,7 @@ ArrayData<TYPE>::fill(
             ispace, [=] SAMRAI_HOST_DEVICE (int k, int j) {
                data(j,k) = t;
             });
+         break;
       }
       case 3:
       {
@@ -1002,6 +1004,7 @@ ArrayData<TYPE>::fill(
             ispace, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
                data(i,j,k) = t;
             });
+         break;
       }
       default:
          TBOX_ERROR("tbox::for_all undefined for dim > 3" << std::endl);
