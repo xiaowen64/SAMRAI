@@ -458,10 +458,8 @@ ArrayData<TYPE>::copyDepth(
       TYPE * const dst_ptr_d = dst_ptr + dst_depth * d_offset;
       const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
 
-      const size_t n = d_offset * d_depth;
-
 #if defined(HAVE_CUDA)
-      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+      tbox::for_all<tbox::policy::parallel>(0, d_offset, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       });
 #else
