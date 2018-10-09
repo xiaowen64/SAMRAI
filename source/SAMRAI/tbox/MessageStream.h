@@ -156,7 +156,9 @@ public:
    }
 
    /*!
-    * @brief Returns a pointer into the message stream valid for num_bytes.
+    * @brief Returns a pointer into the message stream valid for
+    * num_bytes. WARNING: use at your own risk. This lets you edit
+    * read-only buffers.
     *
     * @param[in] num_bytes  Number of bytes requested for window.
     *
