@@ -691,12 +691,13 @@ ArrayData<TYPE>::packStream(
   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size*sizeof(TYPE)));
-   //std::vector< TYPE, umpire::TypedAllocator<TYPE> > buffer(size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                             tbox::MessageStream::getSizeof<TYPE>(size)));
 
    packBuffer(&buffer[0], hier::Box::shift(dest_box, -src_shift));
 
-   //stream.pack(&buffer[0], size);
+   // std::vector< TYPE, umpire::TypedAllocator<TYPE> > buffer(size);
+   // stream.pack(&buffer[0], size);
 
   RANGE_POP
 }
@@ -712,7 +713,8 @@ ArrayData<TYPE>::packStream(
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
 
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                        tbox::MessageStream::getSizeof<TYPE>(size)));
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -723,7 +725,7 @@ ArrayData<TYPE>::packStream(
 
    TBOX_ASSERT(ptr == size);
 
-   //stream.pack(&buffer[0], size);
+   // stream.pack(&buffer[0], size);
 
    RANGE_POP
 }
@@ -738,7 +740,8 @@ ArrayData<TYPE>::packStream(
   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                        tbox::MessageStream::getSizeof<TYPE>(size)));
 
    hier::Box pack_box(dest_box);
    transformation.inverseTransform(pack_box);
@@ -761,7 +764,8 @@ ArrayData<TYPE>::packStream(
 
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                             tbox::MessageStream::getSizeof<TYPE>(size)));
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -775,7 +779,7 @@ ArrayData<TYPE>::packStream(
 
    TBOX_ASSERT(ptr == size);
 
-   //stream.pack(&buffer[0], size);
+   // stream.pack(&buffer[0], size);
 
     RANGE_POP
 }
@@ -804,9 +808,10 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                             tbox::MessageStream::getSizeof<TYPE>(size)));
 
-   //stream.unpack(&buffer[0], size);
+   // stream.unpack(&buffer[0], size);
    unpackBuffer(&buffer[0], dest_box);
 
    RANGE_POP
@@ -824,9 +829,10 @@ ArrayData<TYPE>::unpackStream(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                             tbox::MessageStream::getSizeof<TYPE>(size)));
 
-   //stream.unpack(&buffer[0], size);
+   // stream.unpack(&buffer[0], size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -863,9 +869,10 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
-
-   //stream.unpack(&buffer[0], size);
+   // std::vector<TYPE> buffer(size);
+   // stream.unpack(&buffer[0], size);
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                        tbox::MessageStream::getSizeof<TYPE>(size)));
    unpackBufferAndSum(&buffer[0], dest_box);
 
 }
@@ -881,8 +888,8 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(size * sizeof(TYPE)));
-
+   TYPE* buffer = static_cast<TYPE*>(stream.getBufferForBytes(
+                                        tbox::MessageStream::getSizeof<TYPE>(size)));
    //stream.unpack(&buffer[0], size);
 
    size_t ptr = 0;
@@ -943,16 +950,14 @@ ArrayData<TYPE>::fill(
 {
    TBOX_ASSERT((d < d_depth));
 
+   TYPE* ptr = &d_array[d * d_offset];
+   const size_t n = d_offset;
    if (!d_box.empty()) {
 #if defined(HAVE_CUDA)
-     TYPE* ptr = &d_array[d * d_offset];
-     const size_t n = d_offset;
-     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
-     });
+      });
 #else
-      TYPE* ptr = &d_array[d * d_offset];
-      const size_t n = d_offset;
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
       }
@@ -967,20 +972,40 @@ ArrayData<TYPE>::fill(
    const hier::Box& box,
    const unsigned int d)
 {
-
-  // TODO: Fill on GPU
    TBOX_ASSERT((d < d_depth));
 
    const hier::Box ispace = d_box * box;
 
    if (!ispace.empty()) {
 #if defined(HAVE_CUDA)
-     auto data = tbox::ArrayView<2, TYPE>(*this, d);
-
-     tbox::for_all2<tbox::policy::parallel>(ispace,
-         [=] SAMRAI_HOST_DEVICE (int k, int j) {
-         data(j,k) = t;
-     });
+      switch (ispace.getDim().getValue()) {
+      case 1:
+      {
+         tbox::ArrayView<1, TYPE> data(*this, d);
+         tbox::for_all1<tbox::policy::parallel>(
+            ispace, [=] SAMRAI_HOST_DEVICE (int k) {
+               data(k) = t;
+            });
+      }
+      case 2:
+      {
+         tbox::ArrayView<2, TYPE> data(*this, d);
+         tbox::for_all2<tbox::policy::parallel>(
+            ispace, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+               data(j,k) = t;
+            });
+      }
+      case 3:
+      {
+         tbox::ArrayView<3, TYPE> data(*this, d);
+         tbox::for_all3<tbox::policy::parallel>(
+            ispace, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+               data(i,j,k) = t;
+            });
+      }
+      default:
+         TBOX_ERROR("tbox::for_all undefined for dim > 3" << std::endl);
+      }
 #else
       const tbox::Dimension& dim = box.getDim();
 

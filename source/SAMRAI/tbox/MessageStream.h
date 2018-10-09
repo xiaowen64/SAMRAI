@@ -173,8 +173,7 @@ public:
          d_write_buffer.resize(getCurrentSize() + num_bytes);
          d_buffer_size = d_write_buffer.size();
       }
-      void *buffer = static_cast<void *>(
-          d_write_buffer.data() + d_buffer_index);
+      void *buffer = static_cast<void *>(&d_write_buffer[d_buffer_index]);
       d_buffer_index += num_bytes;
       return buffer;
    }
