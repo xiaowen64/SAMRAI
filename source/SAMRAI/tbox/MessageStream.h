@@ -169,8 +169,10 @@ public:
       if (!growAsNeeded()) {
          TBOX_ASSERT(canCopyIn(num_bytes));
       }
-      d_write_buffer.resize(d_write_buffer.size() + num_bytes);
-      d_buffer_size = d_write_buffer.size();
+      else {
+         d_write_buffer.resize(getCurrentSize() + num_bytes);
+         d_buffer_size = d_write_buffer.size();
+      }
       void *buffer = static_cast<void *>(
           d_write_buffer.data() + d_buffer_index);
       d_buffer_index += num_bytes;
