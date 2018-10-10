@@ -11,6 +11,9 @@
 
 #include "SAMRAI/hier/PatchHierarchy.h"
 
+#include "conduit_blueprint.hpp"
+#include "conduit_relay.hpp"
+
 namespace SAMRAI {
 namespace hier {
 
@@ -134,6 +137,42 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
       }
    }
 }
+
+void BlueprintUtils::writeBlueprintMesh(
+   const conduit::Node& reference,
+   const tbox::SAMRAI_MPI& samrai_mpi,
+   const int num_global_domains,
+   const std::string& mesh_name,
+   const std::string& data_name,
+   const std::string& rootfile_name,
+   const std::string& io_protocol) const
+{
+   conduit::Node index;
+   int my_rank = samrai_mpi.getRank();
+
+   if (my_rank == 0) {
+      conduit::Node &bpindex = index["blueprint_index"];
+         conduit::blueprint::mesh::generate_index(
+            reference["domain_000000"], "",
+            num_global_domains, bpindex[mesh_name]);
+
+      std::string file_pattern = data_name + "%06d." + io_protocol;
+      index["protocol/name"].set(io_protocol);
+      index["protocol/version"].set(CONDUIT_VERSION);
+
+      index["number_of_files"].set(samrai_mpi.getSize());
+      index["number_of_trees"].set(num_global_domains);
+      index["file_pattern"].set(file_pattern);
+      index["tree_pattern"].set("/domain_%06d");
+
+      index.save(rootfile_name, io_protocol);
+   }
+
+   std::string file_name = data_name + tbox::Utilities::intToString(my_rank, 6) + "." + io_protocol;
+
+   reference.save(file_name, io_protocol);
+}
+
 
 
 }

@@ -555,15 +555,24 @@ int main(
             if (test_to_run == "CellDataTest") {
                CellDataTest* cell_test = (CellDataTest*)patch_data_test;
 
-               cell_test->addFields(n,mesh_id,patch); 
+               cell_test->addFields(n, mesh_id, patch); 
             } else if (test_to_run == "NodeDataTest") {
                NodeDataTest* node_test = (NodeDataTest*)patch_data_test;
 
-               node_test->addFields(n,mesh_id,patch);
+               node_test->addFields(n, mesh_id, patch);
             }
          }
       }
 
+      bp_utils.writeBlueprintMesh(
+         n,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         num_hier_patches,
+         "amr_mesh",
+         "celldata",
+         "bpindex.root",
+         "json");
+#if 0 
       conduit::Node index;
 
       int my_rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
@@ -588,7 +597,7 @@ int main(
       n.save(file_name, "json");
 
 //     n.print();
-
+#endif
       conduit::Node info;
       TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
 

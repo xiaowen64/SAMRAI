@@ -737,7 +737,7 @@ void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
    }
 }
 
-
+/*
 void CellDataTest::addFieldsToDatabase(std::shared_ptr<tbox::Database> database, int domain_id, const std::shared_ptr<hier::Patch>& patch)
 {
 
@@ -779,7 +779,7 @@ void CellDataTest::addFieldsToDatabase(std::shared_ptr<tbox::Database> database,
    cell_data_db->putString("type", "scalar");
    cell_data_db->putString("topology", "mesh");
 }
-
+*/
 
 
 }

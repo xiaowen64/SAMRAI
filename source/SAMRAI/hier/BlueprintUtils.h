@@ -44,6 +44,15 @@ public:
       const std::shared_ptr<tbox::Database>& database,
       const PatchHierarchy& hierarchy) const;
 
+   void writeBlueprintMesh(
+      const conduit::Node& reference,
+      const tbox::SAMRAI_MPI& samrai_mpi,
+      const int num_global_domains,
+      const std::string& mesh_name,
+      const std::string& data_name,
+      const std::string& rootfile_name,
+      const std::string& io_protocol) const;
+
 private:
 
    BlueprintUtilsStrategy* d_strategy;
