@@ -14001,7 +14001,7 @@ if test "${conduit_PREFIX+set}" = set ; then
     test -n "${conduit_PREFIX}" && conduit_INCLUDES="-I${conduit_PREFIX}/include/conduit"
   fi
   if test ! "${conduit_LIBS+set}" = set ; then
-    conduit_LIBS='-lconduit'
+    conduit_LIBS='-lconduit -lconduit_blueprint'
     if test -n "${conduit_PREFIX}" ; then
       for i in ${conduit_LIBS} ; do
 	tmp_name=`echo $i | sed 's/^-l//'`

@@ -55,7 +55,7 @@ if test "${$1+set}" = set ; then
     test -n "${$1}" && $2="-I${$1}/include/conduit"
   fi
   if test ! "${$3+set}" = set ; then
-    $3='-lconduit'
+    $3='-lconduit -lconduit_blueprint'
     if test -n "${$1}" ; then
       for i in ${$3} ; do
 	tmp_name=`echo $i | sed 's/^-l//'`
