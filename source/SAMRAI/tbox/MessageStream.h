@@ -167,7 +167,7 @@ public:
       size_t num_entries)
    {
       TBOX_ASSERT(readMode());
-      const size_t num_bytes = num_entries * sizeof(DATA_TYPE);
+      const size_t num_bytes = getSizeof<DATA_TYPE>(num_entries);
       TBOX_ASSERT(canCopyOut(num_bytes));
       const DATA_TYPE *buffer =
          reinterpret_cast<const DATA_TYPE *>(&d_read_buffer[getCurrentSize()]);
@@ -189,7 +189,7 @@ public:
       size_t num_entries)
    {
       TBOX_ASSERT(writeMode());
-      const size_t num_bytes = num_entries * sizeof(DATA_TYPE);
+      const size_t num_bytes = getSizeof<DATA_TYPE>(num_entries);
       if (!growAsNeeded()) {
          TBOX_ASSERT(canCopyIn(num_bytes));
       }
