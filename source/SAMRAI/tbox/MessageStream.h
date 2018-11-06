@@ -157,34 +157,50 @@ public:
 
    /*!
     * @brief Returns a pointer into the message stream valid for
-    * num_bytes. WARNING: use at your own risk. This lets you edit
-    * read-only buffers.
+    * num_bytes.
+    *
+    * @param[in] num_bytes  Number of bytes requested for window.
+    *
+    * @pre readMode()
+    */
+   template<typename DATA_TYPE>
+   const DATA_TYPE *
+   getReadBuffer(
+      size_t num_entries)
+   {
+      TBOX_ASSERT(readMode());
+      const size_t num_bytes = getSizeof<DATA_TYPE>(num_entries);
+      TBOX_ASSERT(canCopyOut(num_bytes));
+      const DATA_TYPE *buffer =
+         reinterpret_cast<const DATA_TYPE *>(&d_read_buffer[getCurrentSize()]);
+      d_buffer_index += num_bytes;
+      return buffer;
+   }
+
+   /*!
+    * @brief Returns a pointer into the message stream valid for
+    * num_bytes.
     *
     * @param[in] num_bytes  Number of bytes requested for window.
     *
     * @pre writeMode()
     */
-   void *
-   getBufferForBytes(
-      size_t num_bytes)
+   template<typename DATA_TYPE>
+   DATA_TYPE *
+   getWriteBuffer(
+      size_t num_entries)
    {
-      void *buffer = NULL;
-      if (writeMode()) {
-         if (!growAsNeeded()) {
-            TBOX_ASSERT(canCopyIn(num_bytes));
-         }
-         else if (num_bytes > 0) {
-            d_write_buffer.resize(getCurrentSize() + num_bytes);
-            d_buffer_size = d_write_buffer.size();
-         }
-         buffer = static_cast<void *>(&d_write_buffer[getCurrentSize()]);
+      TBOX_ASSERT(writeMode());
+      const size_t num_bytes = getSizeof<DATA_TYPE>(num_entries);
+      if (!growAsNeeded()) {
+         TBOX_ASSERT(canCopyIn(num_bytes));
       }
-      else // readMode()
-      {
-         TBOX_ASSERT(canCopyOut(num_bytes));
-         buffer = const_cast<void *>(
-            static_cast<const void *>(&d_read_buffer[getCurrentSize()]));
+      else if (num_bytes > 0) {
+         d_write_buffer.resize(getCurrentSize() + num_bytes);
+         d_buffer_size = d_write_buffer.size();
       }
+      DATA_TYPE *buffer =
+         reinterpret_cast<DATA_TYPE *>(&d_write_buffer[getCurrentSize()]);
       d_buffer_index += num_bytes;
       return buffer;
    }
