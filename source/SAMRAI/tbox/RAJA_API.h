@@ -52,7 +52,7 @@ struct policy_traits<policy::parallel> {
       >
     > raja_3d_policy;
 
-  typedef RAJA::cuda_reduce<128> raja_reduction_policy;
+  typedef RAJA::cuda_reduce raja_reduction_policy;
 };
 
 template <>
