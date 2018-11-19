@@ -502,11 +502,12 @@ void
 NodeData<TYPE>::putBlueprintField(
    conduit::Node& mesh_node,
    const std::string& field_name,
-   const std::string& topology_name)
+   const std::string& topology_name,
+   int depth)
 {
-   size_t data_size = d_data->getBox().size()*d_depth;
+   size_t data_size = getGhostBox().size();
    mesh_node["fields"][field_name]["values"].set_external(
-      getPointer(), data_size);
+      getPointer(depth), data_size);
    mesh_node["fields"][field_name]["association"].set_string("element");
    mesh_node["fields"][field_name]["type"].set_string("vertex");
    mesh_node["fields"][field_name]["topology"].set_string(topology_name);

@@ -435,7 +435,8 @@ public:
    putBlueprintField(
       conduit::Node& mesh_node,
       const std::string& field_name,
-      const std::string& topology_name);
+      const std::string& topology_name,
+      int depth);
 #endif
 
    /*!
