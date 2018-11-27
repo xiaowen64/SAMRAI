@@ -283,6 +283,12 @@ int main(
 
          const bool viz_dump_data = (viz_dump_interval > 0);
 
+         bool write_blueprint = false;
+#ifdef HAVE_CONDUIT
+         write_blueprint =
+            main_db->getBoolWithDefault("write_blueprint", false);
+#endif
+
          int restart_interval = 0;
          if (main_db->keyExists("restart_interval")) {
             restart_interval = main_db->getInteger("restart_interval");
@@ -518,7 +524,11 @@ int main(
                      iteration_num,
                      loop_time);
 #endif
+               }
+            }
 
+            if (write_blueprint) {
+               if ((iteration_num % viz_dump_interval) == 0) {
 #ifdef HAVE_CONDUIT
                   std::shared_ptr<tbox::ConduitDatabase> conduit_db(
                      new tbox::ConduitDatabase("conduit_hierarchy"));
@@ -570,10 +580,10 @@ int main(
                      "LinAdvData",
                      "LinAdv.root",
                      "json");
-
+#endif
                }
             }
-#endif
+
 
 #if (TESTING == 1)
             /*
