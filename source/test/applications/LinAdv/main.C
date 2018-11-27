@@ -29,10 +29,12 @@
 
 // Headers for basic SAMRAI objects
 
+#include "SAMRAI/hier/BlueprintUtils.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
+#include "SAMRAI/tbox/ConduitDatabase.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -516,8 +518,62 @@ int main(
                      iteration_num,
                      loop_time);
 #endif
+
+#ifdef HAVE_CONDUIT
+                  std::shared_ptr<tbox::ConduitDatabase> conduit_db(
+                     new tbox::ConduitDatabase("conduit_hierarchy"));
+ 
+                  hier::BlueprintUtils bp_utils(linear_advection_model);
+                  patch_hierarchy->putBlueprint(conduit_db, bp_utils);
+
+                  conduit::Node bp_node;
+                  conduit_db->toConduitNode(bp_node);
+
+                  std::vector<int> first_patch_id;
+                  first_patch_id.push_back(0);
+
+                  int num_levels = patch_hierarchy->getNumberOfLevels();
+                  int patch_count = 0;
+                  for (int i = 1; i < num_levels; ++i) {
+                     patch_count +=
+                        patch_hierarchy->getPatchLevel(i-1)->
+                           getNumberOfPatches();
+                     first_patch_id.push_back(patch_count);
+                  }
+
+                  int num_hier_patches = 0;
+                  for (int i = 0; i < num_levels; ++i) {
+                     const std::shared_ptr<hier::PatchLevel>& level =
+                        patch_hierarchy->getPatchLevel(i);
+                     num_hier_patches +=
+                        level->getNumberOfPatches();
+
+                     for (hier::PatchLevel::Iterator p(level->begin());
+                          p != level->end(); ++p) {
+
+                        const std::shared_ptr<hier::Patch>& patch = *p;
+                        const hier::BoxId& box_id = patch->getBox().getBoxId();
+                        const hier::LocalId& local_id = box_id.getLocalId();
+
+                        int mesh_id = first_patch_id[i] + local_id.getValue();
+
+                        linear_advection_model->addFields(
+                           bp_node, mesh_id, patch); 
+                     }
+                  }
+
+                  bp_utils.writeBlueprintMesh(
+                     bp_node,
+                     tbox::SAMRAI_MPI::getSAMRAIWorld(),
+                     num_hier_patches,
+                     "amr_mesh",
+                     "LinAdvData",
+                     "LinAdv.root",
+                     "json");
+
                }
             }
+#endif
 
 #if (TESTING == 1)
             /*

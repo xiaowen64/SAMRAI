@@ -59,7 +59,8 @@ using namespace SAMRAI;
 class LinAdv:
    public tbox::Serializable,
    public algs::HyperbolicPatchStrategy,
-   public appu::BoundaryUtilityStrategy
+   public appu::BoundaryUtilityStrategy,
+   public hier::BlueprintUtilsStrategy
 {
 public:
    /**
@@ -357,6 +358,16 @@ public:
    registerVisItDataWriter(
       std::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
+
+   void
+   putCoordinatesToDatabase(
+      std::shared_ptr<tbox::Database>& coords_db,
+      const hier::Patch& patch);
+
+   void addFields(
+      conduit::Node& node,
+      int domain_id,
+      const std::shared_ptr<hier::Patch>& patch);
 
    /**
     * Reset physical boundary values in special cases, such as when
