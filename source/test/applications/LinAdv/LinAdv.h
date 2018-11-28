@@ -481,7 +481,15 @@ private:
     */
    double d_source;
    bool d_check_fluxes;
-   
+  
+   /**
+    * write coordinate values to Blueprint output.  If true, write full
+    * double arrays of coordinate values for every mesh node.  If false,
+    * write only the minimal needed data for uniform Cartesian patch
+    * geometries--dx, low point, and patch size.
+    */
+   bool d_write_coord_values;
+
    /*
     *  Parameters for numerical method:
     *

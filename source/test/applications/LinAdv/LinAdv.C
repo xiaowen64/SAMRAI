@@ -127,6 +127,7 @@ LinAdv::LinAdv(
    d_advection_velocity(dim.getValue()),
    d_source(0.0),
    d_check_fluxes(false),
+   d_write_coord_values(false),
    d_godunov_order(1),
    d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(dim, CELLG),
@@ -2570,6 +2571,11 @@ void LinAdv::getFromInput(
 
    } // refine db entry exists
 
+#ifdef HAVE_CONDUIT
+   d_write_coord_values =
+      input_db->getBoolWithDefault("write_coord_values", false);
+#endif
+
    if (!is_from_restart) {
 
       if (input_db->keyExists("data_problem")) {
@@ -3180,36 +3186,46 @@ LinAdv::putCoordinatesToDatabase(
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
+   TBOX_ASSERT(pgeom);
+
+   if (!d_write_coord_values) {
+
+      pgeom->putBlueprintCoords(coords_db, patch.getBox());
+
+   } else {
+
+      const tbox::Dimension& dim(patch.getDim());
+
+      pdat::NodeData<double> coords(patch.getBox(), dim.getValue(),
+                                    hier::IntVector::getZero(dim));
    
-   const tbox::Dimension& dim(patch.getDim());
+      const hier::Index& box_lo = patch.getBox().lower();
+      const double* x_lo = pgeom->getXLower();
+      const double* dx = pgeom->getDx();
 
-   pdat::NodeData<double> coords(patch.getBox(), dim.getValue(),
-                                 hier::IntVector::getZero(dim));
-
-   const hier::Index& box_lo = patch.getBox().lower();
-   const double* x_lo = pgeom->getXLower();
-   const double* dx = pgeom->getDx();
-
-   pdat::NodeIterator nend = pdat::NodeGeometry::end(patch.getBox());
-   for (pdat::NodeIterator itr(pdat::NodeGeometry::begin(patch.getBox())); itr != nend; ++itr) {
-      const pdat::NodeIndex& ni = *itr;
-      for (int d = 0; d < dim.getValue(); ++d) {
-         coords(ni, d) = x_lo[d] + (ni(d)-box_lo(d))*dx[d];
+      pdat::NodeIterator nend = pdat::NodeGeometry::end(patch.getBox());
+      for (pdat::NodeIterator itr(pdat::NodeGeometry::begin(patch.getBox()));
+           itr != nend; ++itr) {
+         const pdat::NodeIndex& ni = *itr;
+         for (int d = 0; d < dim.getValue(); ++d) {
+            coords(ni, d) = x_lo[d] + (ni(d)-box_lo(d))*dx[d];
+         }
       }
-   }
 
-   coords_db->putString("type", "explicit");
+      coords_db->putString("type", "explicit");
 
-   std::shared_ptr<tbox::Database> values_db = coords_db->putDatabase("values");
+      std::shared_ptr<tbox::Database> values_db =
+         coords_db->putDatabase("values");
 
-   int data_size = coords.getArrayData().getBox().size();
+      int data_size = coords.getArrayData().getBox().size();
 
-   values_db->putDoubleArray("x", coords.getPointer(0), data_size);
-   if (dim.getValue() > 1) {
-      values_db->putDoubleArray("y", coords.getPointer(1), data_size);
-   }
-   if (dim.getValue() > 2) {
-      values_db->putDoubleArray("z", coords.getPointer(2), data_size);
+      values_db->putDoubleArray("x", coords.getPointer(0), data_size);
+      if (dim.getValue() > 1) {
+         values_db->putDoubleArray("y", coords.getPointer(1), data_size);
+      }
+      if (dim.getValue() > 2) {
+         values_db->putDoubleArray("z", coords.getPointer(2), data_size);
+      }
    }
 }
 

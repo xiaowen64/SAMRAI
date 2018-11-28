@@ -54,6 +54,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef HAVE_CONDUIT
+#include "conduit_blueprint.hpp"
+#endif
+
 #include <sys/stat.h>
 #include <cstdio>
 #include <cstdlib>
@@ -572,14 +576,22 @@ int main(
                      }
                   }
 
-                  bp_utils.writeBlueprintMesh(
-                     bp_node,
-                     tbox::SAMRAI_MPI::getSAMRAIWorld(),
-                     num_hier_patches,
-                     "amr_mesh",
-                     "LinAdvData",
-                     "LinAdv.root",
-                     "json");
+                  conduit::Node verify_info;
+                  bool bp_verified =
+                     conduit::blueprint::verify("mesh", bp_node, verify_info);
+
+                  if (bp_verified) {
+                     bp_utils.writeBlueprintMesh(
+                        bp_node,
+                        tbox::SAMRAI_MPI::getSAMRAIWorld(),
+                        num_hier_patches,
+                        "amr_mesh",
+                        "LinAdvData",
+                        "LinAdv.root",
+                        "json");
+                  } else {
+                     num_failures += 1;
+                  } 
 #endif
                }
             }
