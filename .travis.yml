@@ -11,7 +11,7 @@ matrix:
     env:
     - COMPILER=g++
     - IMG=gcc
-    - VERSION=4
+    - VERSION=4.9.3
       #  - compiler: clang4
       #    env:
       #    - COMPILER=clang++
