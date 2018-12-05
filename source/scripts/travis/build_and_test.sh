@@ -14,7 +14,7 @@ cd travis-build
 if [[ "$DO_BUILD" == "yes" ]] ; then
     export F77=gfortran
     export CXX=`which $COMPILER`
-    or_die ../configure
+    or_die ../configure --with-extra-cxx-flags=-std=c++11
     or_die make -j 3 VERBOSE=1
 fi
 
