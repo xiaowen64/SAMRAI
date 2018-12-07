@@ -911,7 +911,7 @@ private:
     * data for any particular key.
     */
    struct KeyData {
-      std::string d_key;                                // key name
+      //std::string d_key;                                // key name
       enum Database::DataType d_type;                   // type of entry
       size_t d_array_size;                              // size of array data
       bool d_accessed;                                  // whether accessed
@@ -958,7 +958,7 @@ private:
     * Private data members - name and a list of (key,value) pairs
     */
    std::string d_database_name;
-   std::list<KeyData> d_keyvalues;
+   std::map<std::string, KeyData> d_keyvalues;
 
    static const int PRINT_DEFAULT;
    static const int PRINT_INPUT;

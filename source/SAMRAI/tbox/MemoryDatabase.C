@@ -147,9 +147,9 @@ MemoryDatabase::getAllKeys()
    std::vector<std::string> keys(d_keyvalues.size());
 
    std::vector<std::string>::size_type k = 0;
-   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
+   for (std::map<std::string,KeyData>::iterator i = d_keyvalues.begin();
         i != d_keyvalues.end(); ++i) {
-      keys[k++] = i->d_key;
+      keys[k++] = i->first;
    }
 
    return keys;
@@ -216,14 +216,12 @@ MemoryDatabase::putDatabase(
    const std::string& key)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_DATABASE;
    keydata.d_array_size = 1;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
    keydata.d_database.reset(new MemoryDatabase(key));
-   d_keyvalues.push_back(keydata);
    return keydata.d_database;
 }
 
@@ -270,19 +268,17 @@ MemoryDatabase::putBoolArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_BOOL;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_boolean = std::vector<bool>(nelements);
+   keydata.d_boolean.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_boolean[i] = data[i];
    }
 
-   d_keyvalues.push_back(keydata);
 }
 
 bool
@@ -307,7 +303,7 @@ MemoryDatabase::getBoolWithDefault(
    if (keydata) return getBool(key);
 
    putBool(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -383,19 +379,16 @@ MemoryDatabase::putDatabaseBoxArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_BOX;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_box = std::vector<DatabaseBox>(nelements);
+   keydata.d_box.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_box[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 DatabaseBox
@@ -420,7 +413,7 @@ MemoryDatabase::getDatabaseBoxWithDefault(
    if (keydata) return getDatabaseBox(key);
 
    putDatabaseBox(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -496,19 +489,16 @@ MemoryDatabase::putCharArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_CHAR;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_char = std::vector<char>(nelements);
+   keydata.d_char.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_char[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 char
@@ -533,7 +523,7 @@ MemoryDatabase::getCharWithDefault(
    if (keydata) return getChar(key);
 
    putChar(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -614,19 +604,16 @@ MemoryDatabase::putComplexArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_COMPLEX;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_complex = std::vector<dcomplex>(nelements);
+   keydata.d_complex.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_complex[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 dcomplex
@@ -670,7 +657,7 @@ MemoryDatabase::getComplexWithDefault(
    if (keydata) return getComplex(key);
 
    putComplex(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -682,7 +669,7 @@ MemoryDatabase::getComplexVector(
    std::vector<dcomplex> array;
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
-         array = std::vector<dcomplex>(keydata->d_integer.size());
+         array.resize(keydata->d_integer.size());
          for (std::vector<dcomplex>::size_type i = 0;
               i < keydata->d_integer.size(); ++i) {
             array[i] = dcomplex((double)keydata->d_integer[i], 0.0);
@@ -690,7 +677,7 @@ MemoryDatabase::getComplexVector(
          break;
       }
       case Database::SAMRAI_FLOAT: {
-         array = std::vector<dcomplex>(keydata->d_float.size());
+         array.resize(keydata->d_float.size());
          for (std::vector<dcomplex>::size_type i = 0;
               i < keydata->d_float.size(); ++i) {
             array[i] = dcomplex((double)keydata->d_float[i], 0.0);
@@ -698,7 +685,7 @@ MemoryDatabase::getComplexVector(
          break;
       }
       case Database::SAMRAI_DOUBLE: {
-         array = std::vector<dcomplex>(keydata->d_double.size());
+         array.resize(keydata->d_double.size());
          for (std::vector<dcomplex>::size_type i = 0;
               i < keydata->d_double.size(); ++i) {
             array[i] = dcomplex(keydata->d_double[i], 0.0);
@@ -778,19 +765,16 @@ MemoryDatabase::putDoubleArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_DOUBLE;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_double = std::vector<double>(nelements);
+   keydata.d_double.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_double[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 double
@@ -831,7 +815,7 @@ MemoryDatabase::getDoubleWithDefault(
    if (keydata) return getDouble(key);
 
    putDouble(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -843,14 +827,14 @@ MemoryDatabase::getDoubleVector(
    std::vector<double> array;
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
-         array = std::vector<double>(keydata->d_integer.size());
+         array.resize(keydata->d_integer.size());
          for (size_t i = 0; i < keydata->d_integer.size(); ++i) {
             array[i] = (double)keydata->d_integer[i];
          }
          break;
       }
       case Database::SAMRAI_FLOAT: {
-         array = std::vector<double>(keydata->d_float.size());
+         array.resize(keydata->d_float.size());
          for (size_t i = 0; i < keydata->d_float.size(); ++i) {
             array[i] = (double)keydata->d_float[i];
          }
@@ -931,19 +915,16 @@ MemoryDatabase::putFloatArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_FLOAT;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_float = std::vector<float>(nelements);
+   keydata.d_float.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_float[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 float
@@ -990,7 +971,7 @@ MemoryDatabase::getFloatWithDefault(
    if (keydata) return getFloat(key);
 
    putFloat(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -1002,7 +983,7 @@ MemoryDatabase::getFloatVector(
    std::vector<float> array;
    switch (keydata->d_type) {
       case Database::SAMRAI_INT: {
-         array = std::vector<float>(keydata->d_integer.size());
+         array.resize(keydata->d_integer.size());
          for (size_t i = 0; i < keydata->d_integer.size(); ++i) {
             array[i] = static_cast<float>(keydata->d_integer[i]);
          }
@@ -1012,7 +993,7 @@ MemoryDatabase::getFloatVector(
          array = keydata->d_float;
          break;
       case Database::SAMRAI_DOUBLE: {
-         array = std::vector<float>(keydata->d_double.size());
+         array.resize(keydata->d_double.size());
          for (size_t i = 0; i < keydata->d_double.size(); ++i) {
             array[i] = static_cast<float>(keydata->d_double[i]);
          }
@@ -1085,19 +1066,16 @@ MemoryDatabase::putIntegerArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_INT;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_integer = std::vector<int>(nelements);
+   keydata.d_integer.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_integer[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 int
@@ -1122,7 +1100,7 @@ MemoryDatabase::getIntegerWithDefault(
    if (keydata) return getInteger(key);
 
    putInteger(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -1198,19 +1176,16 @@ MemoryDatabase::putStringArray(
    const size_t nelements)
 {
    deleteKeyIfFound(key);
-   KeyData keydata;
-   keydata.d_key = key;
+   KeyData& keydata = d_keyvalues[key];
    keydata.d_type = Database::SAMRAI_STRING;
    keydata.d_array_size = nelements;
    keydata.d_accessed = false;
    keydata.d_from_default = false;
-   keydata.d_string = std::vector<std::string>(nelements);
+   keydata.d_string.resize(nelements);
 
    for (size_t i = 0; i < nelements; ++i) {
       keydata.d_string[i] = data[i];
    }
-
-   d_keyvalues.push_back(keydata);
 }
 
 std::string
@@ -1235,7 +1210,7 @@ MemoryDatabase::getStringWithDefault(
    if (keydata) return getString(key);
 
    putString(key, defaultvalue);
-   d_keyvalues.back().d_from_default = true;
+   d_keyvalues[key].d_from_default = true;
    return defaultvalue;
 }
 
@@ -1297,12 +1272,10 @@ MemoryDatabase::getName() const
 bool MemoryDatabase::deleteKeyIfFound(
    const std::string& key)
 {
-   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
-        i != d_keyvalues.end(); ++i) {
-      if (i->d_key == key) {
-         d_keyvalues.erase(i);
-         return true;
-      }
+   std::map<std::string,KeyData>::iterator itr = d_keyvalues.find(key);
+   if (itr != d_keyvalues.end()) {
+      d_keyvalues.erase(itr);
+      return true;
    }
    return false;
 }
@@ -1320,11 +1293,9 @@ MemoryDatabase::KeyData *
 MemoryDatabase::findKeyData(
    const std::string& key)
 {
-   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
-        i != d_keyvalues.end(); ++i) {
-      if (key == i->d_key) {
-         return &(*i);
-      }
+   std::map<std::string,KeyData>::iterator itr = d_keyvalues.find(key);
+   if (itr != d_keyvalues.end()) {
+      return &(itr->second);
    }
    return 0;
 }
@@ -1343,11 +1314,9 @@ MemoryDatabase::KeyData *
 MemoryDatabase::findKeyDataOrExit(
    const std::string& key)
 {
-   for (std::list<KeyData>::iterator i = d_keyvalues.begin();
-        i != d_keyvalues.end(); ++i) {
-      if (key == i->d_key) {
-         return &(*i);
-      }
+   std::map<std::string,KeyData>::iterator itr = d_keyvalues.find(key);
+   if (itr != d_keyvalues.end()) {
+      return &(itr->second);
    }
    MEMORY_DB_ERROR("Key ``" << key << "'' does not exist in the database...");
    return 0;
@@ -1387,13 +1356,14 @@ MemoryDatabase::printDatabase(
     */
 
    int width = 0;
-   for (std::list<KeyData>::const_iterator k = d_keyvalues.begin();
+   for (std::map<std::string,KeyData>::const_iterator k = d_keyvalues.begin();
         k != d_keyvalues.end(); ++k) {
-      if (((k->d_from_default) && (toprint & PRINT_DEFAULT))
-          || ((k->d_accessed) && (toprint & PRINT_INPUT))
-          || (!(k->d_accessed) && (toprint & PRINT_UNUSED))) {
-         if (k->d_type != Database::SAMRAI_DATABASE) {
-            const int keywidth = static_cast<int>(k->d_key.length());
+      const KeyData& keydata = k->second;
+      if (((keydata.d_from_default) && (toprint & PRINT_DEFAULT))
+          || ((keydata.d_accessed) && (toprint & PRINT_INPUT))
+          || (!(keydata.d_accessed) && (toprint & PRINT_UNUSED))) {
+         if (keydata.d_type != Database::SAMRAI_DATABASE) {
+            const int keywidth = static_cast<int>(k->first.length());
             if (keywidth > width) {
                width = keywidth;
             }
@@ -1407,12 +1377,12 @@ MemoryDatabase::printDatabase(
 
    indentStream(os, indent);
    os << d_database_name << " {\n";
-   for (std::list<KeyData>::const_iterator i = d_keyvalues.begin();
+   for (std::map<std::string,KeyData>::const_iterator i = d_keyvalues.begin();
         i != d_keyvalues.end(); ++i) {
-
-      if (((i->d_from_default) && (toprint & PRINT_DEFAULT))
-          || ((i->d_accessed) && (toprint & PRINT_INPUT))
-          || (!(i->d_accessed) && (toprint & PRINT_UNUSED))) {
+      const KeyData& keydata = i->second;
+      if (((keydata.d_from_default) && (toprint & PRINT_DEFAULT))
+          || ((keydata.d_accessed) && (toprint & PRINT_INPUT))
+          || (!(keydata.d_accessed) && (toprint & PRINT_UNUSED))) {
 
 #ifndef LACKS_SSTREAM
          std::ostringstream sstream;
@@ -1421,7 +1391,7 @@ MemoryDatabase::printDatabase(
          std::ostrstream sstream(sstream_buffer, SSTREAM_BUFFER);
 #endif
 
-         switch (i->d_type) {
+         switch (keydata.d_type) {
 
             case Database::SAMRAI_INVALID: {
                break;
@@ -1433,12 +1403,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_BOOL: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<bool>::size_type n = i->d_boolean.size();
+               const std::vector<bool>::size_type n = keydata.d_boolean.size();
                for (std::vector<bool>::size_type j = 0; j < n; ++j) {
-                  sstream << (i->d_boolean[j] ? "TRUE" : "FALSE");
+                  sstream << (keydata.d_boolean[j] ? "TRUE" : "FALSE");
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1448,22 +1418,22 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_BOX: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<DatabaseBox>::size_type n = i->d_box.size();
+               const std::vector<DatabaseBox>::size_type n = keydata.d_box.size();
                for (std::vector<DatabaseBox>::size_type j = 0; j < n; ++j) {
-                  const int m = i->d_box[j].getDimVal();
+                  const int m = keydata.d_box[j].getDimVal();
                   sstream << "[(";
                   for (int k = 0; k < m; ++k) {
-                     sstream << i->d_box[j].lower(k);
+                     sstream << keydata.d_box[j].lower(k);
                      if (k < m - 1) {
                         sstream << ",";
                      }
                   }
                   sstream << "),(";
                   for (int l = 0; l < m; ++l) {
-                     sstream << i->d_box[j].upper(l);
+                     sstream << keydata.d_box[j].upper(l);
                      if (l < m - 1) {
                         sstream << ",";
                      }
@@ -1478,12 +1448,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_CHAR: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<char>::size_type n = i->d_char.size();
+               const std::vector<char>::size_type n = keydata.d_char.size();
                for (std::vector<char>::size_type j = 0; j < n; ++j) {
-                  sstream << "'" << i->d_char[j] << "'";
+                  sstream << "'" << keydata.d_char[j] << "'";
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1493,12 +1463,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_COMPLEX: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<dcomplex>::size_type n = i->d_complex.size();
+               const std::vector<dcomplex>::size_type n = keydata.d_complex.size();
                for (std::vector<dcomplex>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_complex[j];
+                  sstream << keydata.d_complex[j];
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1508,12 +1478,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_DOUBLE: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<double>::size_type n = i->d_double.size();
+               const std::vector<double>::size_type n = keydata.d_double.size();
                for (std::vector<double>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_double[j];
+                  sstream << keydata.d_double[j];
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1523,12 +1493,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_FLOAT: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<float>::size_type n = i->d_float.size();
+               const std::vector<float>::size_type n = keydata.d_float.size();
                for (std::vector<float>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_float[j];
+                  sstream << keydata.d_float[j];
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1538,12 +1508,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_INT: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<int>::size_type n = i->d_integer.size();
+               const std::vector<int>::size_type n = keydata.d_integer.size();
                for (std::vector<int>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_integer[j];
+                  sstream << keydata.d_integer[j];
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1553,12 +1523,12 @@ MemoryDatabase::printDatabase(
 
             case Database::SAMRAI_STRING: {
                indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
+               sstream << i->first;
+               indentStream(sstream, width - static_cast<int>(i->first.length()));
                sstream << " = ";
-               const std::vector<std::string>::size_type n = i->d_string.size();
+               const std::vector<std::string>::size_type n = keydata.d_string.size();
                for (std::vector<std::string>::size_type j = 0; j < n; ++j) {
-                  sstream << "\"" << i->d_string[j] << "\"";
+                  sstream << "\"" << keydata.d_string[j] << "\"";
                   if (j < n - 1) {
                      sstream << ", ";
                   }
@@ -1571,7 +1541,7 @@ MemoryDatabase::printDatabase(
           * Output whether the key was used or default in column 60
           */
 
-         if (i->d_type != Database::SAMRAI_DATABASE) {
+         if (keydata.d_type != Database::SAMRAI_DATABASE) {
 #ifndef LACKS_SSTREAM
             const int tab = static_cast<int>(59 - sstream.str().length());
 #else
@@ -1580,9 +1550,9 @@ MemoryDatabase::printDatabase(
             if (tab > 0) {
                indentStream(sstream, tab);
             }
-            if (i->d_from_default) {
+            if (keydata.d_from_default) {
                sstream << " // from default";
-            } else if (i->d_accessed) {
+            } else if (keydata.d_accessed) {
                sstream << " // input used";
             } else {
                sstream << " // input not used";
@@ -1599,11 +1569,11 @@ MemoryDatabase::printDatabase(
     * Finally, output all databases in the current key list
     */
 
-   for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
+   for (std::map<std::string,KeyData>::const_iterator j = d_keyvalues.begin();
         j != d_keyvalues.end(); ++j) {
-      if (j->d_type == Database::SAMRAI_DATABASE) {
+      if (j->second.d_type == Database::SAMRAI_DATABASE) {
          std::shared_ptr<MemoryDatabase> db(
-            SAMRAI_SHARED_PTR_CAST<MemoryDatabase, Database>(j->d_database));
+            SAMRAI_SHARED_PTR_CAST<MemoryDatabase, Database>(j->second.d_database));
          db->printDatabase(os, indent + 3, toprint);
       }
    }
