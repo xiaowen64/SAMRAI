@@ -3229,7 +3229,10 @@ LinAdv::putCoordinatesToDatabase(
    }
 }
 
-void LinAdv::addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch)
+#ifdef HAVE_CONDUIT
+void LinAdv::addFields(
+   conduit::Node& node, int domain_id,
+   const std::shared_ptr<hier::Patch>& patch)
 {
    std::shared_ptr<hier::VariableContext> current =
       hier::VariableDatabase::getDatabase()->getContext("CURRENT");
@@ -3248,5 +3251,5 @@ void LinAdv::addFields(conduit::Node& node, int domain_id, const std::shared_ptr
       uval->putBlueprintField(node[mesh_name], data_name, "mesh", d);
    }
 }
-
+#endif
 

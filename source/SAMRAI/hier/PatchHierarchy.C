@@ -1121,6 +1121,7 @@ PatchHierarchy::putToRestart(
    }
 }
 
+#ifdef HAVE_CONDUIT
 void
 PatchHierarchy::putBlueprint(
    const std::shared_ptr<tbox::Database>& blueprint_db,
@@ -1189,90 +1190,7 @@ PatchHierarchy::putBlueprint(
             getRequiredConnectorWidth(i,i),
             CONNECTOR_CREATE,
             true);
-#if 0
-      int adjcount = 0;
-      for (PatchLevel::Iterator p(level->begin()); p != level->end();
-           ++p) {
 
-         std::shared_ptr<Patch> patch(*p);
-         const Box& pbox = patch->getBox();
-         const BoxId& box_id = pbox.getBoxId();
-         const LocalId& local_id = box_id.getLocalId();
-
-         int domain_id = first_patch_id[i] + local_id.getValue();
-
-         std::string domain_name =
-            "domain_" + tbox::Utilities::intToString(domain_id, 6);
-
-         std::shared_ptr<tbox::Database> domain_db(
-            blueprint_db->getDatabase(domain_name));
-
-         std::shared_ptr<tbox::Database> adjsets_db;
-         Connector::ConstNeighborhoodIterator nbh = 
-            self_to_self.findLocal(box_id);
-         if (nbh == self_to_self.end())  {
-            continue;
-         }
-
-         Box node_pbox(pbox);
-         node_pbox.setUpper(pbox.upper() + Index::getOneIndex(d_dim));
-         for (Connector::ConstNeighborIterator na = self_to_self.begin(nbh);
-              na != self_to_self.end(nbh); ++na) {
-
-            const Box& nbr_box = *na;
-            if (nbr_box.getBoxId() == box_id) {
-               continue;
-            }
-
-            Box node_nbr_box(nbr_box);
-            node_nbr_box.setUpper(nbr_box.upper() + Index::getOneIndex(d_dim));
-
-            Box overlap(node_pbox*node_nbr_box);
-
-            if (!overlap.empty()) {
-
-               if (domain_db->keyExists("adjsets")) {
-                  adjsets_db = domain_db->getDatabase("adjsets");
-               } else {
-                  adjsets_db = domain_db->putDatabase("adjsets");
-               }
-
-               std::string set_name =
-                  "adjset_" + tbox::Utilities::intToString(adjcount, 6);
-               std::shared_ptr<tbox::Database> set_db;
-               if (adjsets_db->keyExists(set_name)) {
-                  set_db = adjsets_db->getDatabase(set_name);
-               } else {
-                  set_db = adjsets_db->putDatabase(set_name);
-               }
-
-               if (!set_db->keyExists("association")) {
-                  set_db->putString("association", "vertex");
-               }
-               if (!set_db->keyExists("topology")) {
-                  set_db->putString("topology", "mesh");
-               }
-
-               std::shared_ptr<tbox::Database> groups_db(
-                  set_db->putDatabase("groups"));
-               std::shared_ptr<tbox::Database> group_db(
-                  groups_db->putDatabase("group"));
-
-               group_db->putInteger("neighbors", nbr_box.getLocalId().getValue());
-
-               std::vector<int> nbr_values;
-               Box::iterator oend(overlap.end());
-               for (Box::iterator oitr(overlap.begin()); oitr != oend; ++oitr) {
-                  nbr_values.push_back(node_pbox.offset(*oitr));
-               }
-
-               group_db->putIntegerVector("values", nbr_values);
-
-               ++adjcount;
-            }
-         }
-      }
-#endif
       if (i+1 < d_number_levels) {
 
          std::shared_ptr<hier::BoxLevel> coarse_level(
@@ -1518,6 +1436,7 @@ PatchHierarchy::putBlueprint(
 
    bp_utils.putTopologyAndCoordinatesToDatabase(blueprint_db, *this);
 }
+#endif
 
 /*
  *************************************************************************

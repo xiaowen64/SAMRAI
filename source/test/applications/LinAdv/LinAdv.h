@@ -57,10 +57,12 @@ using namespace std;
 using namespace SAMRAI;
 
 class LinAdv:
+#ifdef HAVE_CONDUIT
+   public hier::BlueprintUtilsStrategy,
+#endif
    public tbox::Serializable,
    public algs::HyperbolicPatchStrategy,
-   public appu::BoundaryUtilityStrategy,
-   public hier::BlueprintUtilsStrategy
+   public appu::BoundaryUtilityStrategy
 {
 public:
    /**
@@ -364,10 +366,12 @@ public:
       std::shared_ptr<tbox::Database>& coords_db,
       const hier::Patch& patch);
 
+#ifdef HAVE_CONDUIT
    void addFields(
       conduit::Node& node,
       int domain_id,
       const std::shared_ptr<hier::Patch>& patch);
+#endif
 
    /**
     * Reset physical boundary values in special cases, such as when

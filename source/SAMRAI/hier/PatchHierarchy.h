@@ -961,14 +961,12 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
+#ifdef HAVE_CONDUIT
    void
    putBlueprint(
       const std::shared_ptr<tbox::Database>& blueprint_db,
       const BlueprintUtils& bp_utils) const; 
-
-//   void
-//   putBlueprintCoords(
-//      const std::shared_ptr<tbox::Database>& blueprint_db) const;
+#endif
 
    /*!
     * @brief Read in the entire hierarchy from the restart database.

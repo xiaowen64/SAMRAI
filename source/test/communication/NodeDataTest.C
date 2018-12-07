@@ -538,7 +538,11 @@ bool NodeDataTest::verifyResults(
 
 }
 
-void NodeDataTest::addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch)
+#ifdef HAVE_CONDUIT
+void NodeDataTest::addFields(
+   conduit::Node& node,
+   int domain_id,
+   const std::shared_ptr<hier::Patch>& patch)
 {
 
    std::shared_ptr<hier::VariableContext> source =
@@ -559,7 +563,7 @@ void NodeDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
    }
 
 }
-
+#endif
 
 
 }

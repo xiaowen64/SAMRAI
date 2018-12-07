@@ -45,8 +45,10 @@ using namespace std;
 //#include "MultiVariableDataTest.h"
 
 
+#ifdef HAVE_CONDUIT
 #include "conduit_blueprint.hpp"
 #include "conduit_relay.hpp"
+#endif
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -515,6 +517,7 @@ int main(
          }
       }
 
+#ifdef HAVE_CONDUIT
       std::shared_ptr<tbox::MemoryDatabase> memory_db(
          new tbox::MemoryDatabase("mem_hierarchy"));
 
@@ -572,34 +575,10 @@ int main(
          "celldata",
          "bpindex.root",
          "json");
-#if 0 
-      conduit::Node index;
 
-      int my_rank = tbox::SAMRAI_MPI::getSAMRAIWorld().getRank();
-      conduit::Node &bpindex = index["blueprint_index"];
-      if (my_rank == 0) {
-         conduit::blueprint::mesh::generate_index(
-            n["domain_000000"],"",num_hier_patches,bpindex["amr_mesh"]);
-      }
-
-      std::string file_name = "celldata" + tbox::Utilities::intToString(my_rank, 6) + ".json";
-      if (my_rank == 0) {
-         index["protocol/name"].set("json");
-         index["protocol/version"].set(CONDUIT_VERSION);
-
-         index["number_of_files"].set(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize());
-         index["number_of_trees"].set(tbox::SAMRAI_MPI::getSAMRAIWorld().getSize());
-         index["file_pattern"].set("celldata%06d.json");
-         index["tree_pattern"].set("/domain_%06d");
-
-         index.save("bpindex.root","json");
-      }
-      n.save(file_name, "json");
-
-//     n.print();
-#endif
       conduit::Node info;
       TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
+#endif
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
 

@@ -10,6 +10,7 @@
 #ifndef included_hier_BlueprintUtils
 #define included_hier_BlueprintUtils
 
+#ifdef HAVE_CONDUIT
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BlueprintUtilsStrategy.h"
@@ -61,5 +62,7 @@ private:
 
 }
 }
+
+#endif // HAVE_CONDUIT
 
 #endif  // included_hier_BlueprintUtils

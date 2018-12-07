@@ -716,6 +716,7 @@ bool CellDataTest::verifyCompositeBoundaryData(
 
 }
 
+#ifdef HAVE_CONDUIT
 void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch)
 {
 
@@ -736,50 +737,6 @@ void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
       cell_data->putBlueprintField(node[mesh_name], data_name, "mesh", d);
    }
 }
-
-/*
-void CellDataTest::addFieldsToDatabase(std::shared_ptr<tbox::Database> database, int domain_id, const std::shared_ptr<hier::Patch>& patch)
-{
-
-   std::shared_ptr<hier::VariableContext> source =
-      hier::VariableDatabase::getDatabase()->getContext("SOURCE");
-
-   std::shared_ptr<pdat::CellData<double> > cell_data(
-      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
-         patch->getPatchData(d_variables[0], source)));
-
-   size_t data_size = cell_data->getGhostBox().size();
-
-   std::string mesh_name =
-      "domain_" + tbox::Utilities::intToString(domain_id);
-
-   std::shared_ptr<tbox::Database> mesh_db;
-   if (database->isDatabase(mesh_name)) {
-      mesh_db = database->getDatabase(mesh_name);
-   } else {
-      mesh_db = database->putDatabase(mesh_name);
-   }
-
-   std::shared_ptr<tbox::Database> fields_db;
-   if (mesh_db->isDatabase("fields")) {
-      fields_db = mesh_db->getDatabase("fields");
-   } else {
-      fields_db = mesh_db->putDatabase("fields");
-   }
-
-   std::shared_ptr<tbox::Database> cell_data_db;
-   if (mesh_db->isDatabase("cell_data")) {
-      cell_data_db = mesh_db->getDatabase("cell_data");
-   } else {
-      cell_data_db = mesh_db->putDatabase("cell_data");
-   }
-
-   cell_data_db->putDoubleArray("values", const_cast<double*>(cell_data->getPointer()), data_size);
-   cell_data_db->putString("association", "element");
-   cell_data_db->putString("type", "scalar");
-   cell_data_db->putString("topology", "mesh");
-}
-*/
-
+#endif
 
 }

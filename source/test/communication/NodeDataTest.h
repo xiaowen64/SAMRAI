@@ -122,8 +122,12 @@ public:
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
-   void addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch);
-
+#ifdef HAVE_CONDUIT
+   void addFields(
+      conduit::Node& node,
+      int domain_id,
+      const std::shared_ptr<hier::Patch>& patch);
+#endif
 
 private:
    /**
