@@ -10,9 +10,9 @@
 #ifndef included_hier_BlueprintUtils
 #define included_hier_BlueprintUtils
 
-#ifdef HAVE_CONDUIT
 #include "SAMRAI/SAMRAI_config.h"
 
+#ifdef HAVE_CONDUIT
 #include "SAMRAI/hier/BlueprintUtilsStrategy.h"
 #include "SAMRAI/tbox/Database.h"
 
