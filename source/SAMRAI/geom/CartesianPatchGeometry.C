@@ -47,6 +47,14 @@ CartesianPatchGeometry::CartesianPatchGeometry(
    }
 }
 
+/*
+ *************************************************************************
+ *
+ * Put a descripton of this geometry into the Blueprint format for
+ * coordinates.
+ *
+ *************************************************************************
+ */
 void
 CartesianPatchGeometry::putBlueprintCoords(
    const std::shared_ptr<tbox::Database>& coords_db,

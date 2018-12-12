@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
- * Description:   BlueprintUtilities
+ * Description:   BlueprintUtilsStrategy
  *
  ************************************************************************/
 #include "SAMRAI/hier/BlueprintUtilsStrategy.h"

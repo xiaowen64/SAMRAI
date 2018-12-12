@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
- * Description:   A memory database structure that stores (key,value) pairs in memory
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Description:   A database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
 
@@ -23,29 +23,16 @@
 namespace SAMRAI {
 namespace tbox {
 
-/**
+/*!
  * Class ConduitDatabase stores (key,value) pairs in a hierarchical
- * database.  Each value may be another database, boolean, box, character,
+ * database in memory using the Conduit Nodes for internal storage.
+ * Each value may be another database, boolean, box, character,
  * complex, double, float, integer, or string.  Note that boxes are stored
- * using the toolbox box class that can store boxes of any dimension in the
+ * using the DatabaseBox class that can store boxes of any dimension in the
  * same data structure.
  *
  * See the Database class documentation for a description of the
  * generic database interface.
- *
- * The memory database is used for storing input (a "deck") in memory; the
- * derived class InputDatabase use for this purpose; InputDatabase is
- * kept around for historical reasons and the name is a bit more clear
- * than "memory" database but this class is very generic.  The Parser
- * is really the class that process the input; it parses the input file
- * into a database.
- *
- * Note that the memory database will attempt to promote numerical types
- * where appropriate.  The promotion chain is int -> float -> double ->
- * complex.  For example, an integer key will be promoted to a complex
- * value if isComplex() or getComplex() is called.  Double values will also
- * be truncated to floats (with loss of information) if a float call is
- * made on a double value.
  *
  * It is assumed that all processors will access the database in the same
  * manner.  Thus, all error messages are output to pout instead of perr.
@@ -54,62 +41,53 @@ namespace tbox {
 class ConduitDatabase:public Database
 {
 public:
-   /**
-    * The memory database constructor creates an empty database with the
-    * specified name.
+   /*!
+    * @brief Constructor creates an empty database with the specified name
+    *
+    * @param name  Name of the database
     */
    explicit ConduitDatabase(
       const std::string& name);
 
-   explicit ConduitDatabase(
-      conduit::Node* node);
+   /*!
+    * @brief Constructor creates a database pointing to a Conduit Node
+    *
+    * @param name  Name of the database
+    * @param node  Pointer to a Conduit Node--must be of Conduit's object
+    *              data type.
+    */
+    ConduitDatabase(
+       const std::string& name,
+       conduit::Node* node);
 
-   ConduitDatabase(
-      const std::string& name,
-      conduit::Node* node);
-
-
-   /**
-    * The memory database destructor deallocates the data in the database.
+   /*!
+    * Destructor deallocates the data in the database.
     */
    virtual ~ConduitDatabase();
 
-   /**
-    * Create a new database file.
+   /*!
+    * @brief Fulfills abstract interface--not used in this implementation.
     *
-    * Returns true if successful.
-    *
-    * @param name name of database. Normally a filename.
+    * An error will occur if this is called
     */
    virtual bool
    create(
       const std::string& name);
 
-   /**
-    * Open an existing database file.
+   /*!
+    * @brief Fulfills abstract interface--not used in this implementation.
     *
-    * Returns true if successful.
-    *
-    * @param name name of database. Normally a filename.
-    *
-    * @param read_write_mode Open the database in read-write
-    * mode instead of read-only mode.  NOTE: This class currently
-    * does not support read-only mode, so this flag must be true.
-    *
-    * @pre read_write_mode == true
+    * An error will occur if this is called
     */
    virtual bool
    open(
       const std::string& name,
       const bool read_write_mode = false);
 
-   /**
-    * Close the database.
+   /*!
+    * @brief Fulfills abstract interface--not used in this implementation.
     *
-    * Returns true if successful.
-    *
-    * If the database is currently open then close it.  This should
-    * flush all data to the file (if the database is on disk).
+    * An error will occur if this is called
     */
    virtual bool
    close();
@@ -896,6 +874,7 @@ public:
    }
 
 private:
+
    ConduitDatabase();                            // not implemented
    ConduitDatabase(
       const ConduitDatabase&);                   // not implemented

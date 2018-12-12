@@ -54,18 +54,13 @@ ConduitDatabase::ConduitDatabase(
 }
 
 ConduitDatabase::ConduitDatabase(
-   conduit::Node* node):
-   d_node(node)
-{
-   d_database_name.clear();
-}
-
-ConduitDatabase::ConduitDatabase(
    const std::string& name,
    conduit::Node* node):
    d_database_name(name),
    d_node(node)
 {
+   TBOX_ASSERT(d_node);
+   TBOX_ASSERT(d_node->dtype().is_object());
 }
 
 /*
@@ -87,7 +82,7 @@ ConduitDatabase::~ConduitDatabase()
 /*
  *************************************************************************
  *
- * Create memory data file specified by name.
+ * create not implemented
  *
  *************************************************************************
  */
@@ -96,16 +91,16 @@ bool
 ConduitDatabase::create(
    const std::string& name)
 {
-   d_database_name = name;
-   d_node->reset();
-
-   return true;
+   NULL_USE(name);
+   TBOX_ERROR("ConduitDatabase::create: ConduitDatabase::create() not\n"
+      << "implemented.");
+   return false;
 }
 
 /*
  *************************************************************************
  *
- * Open memory data file specified by name
+ * open not implemented
  *
  *************************************************************************
  */
@@ -115,21 +110,17 @@ ConduitDatabase::open(
    const std::string& name,
    const bool read_write_mode)
 {
-   if (read_write_mode == false) {
-      TBOX_ERROR("ConduitDatabase::open: ConduitDatabase only supports\n"
-         << "read-write mode.  The read_write_mode flag must be true.");
-
-   }
-   d_database_name = name;
-   d_node->reset();
-
-   return true;
+   NULL_USE(name);
+   NULL_USE(read_write_mode);
+   TBOX_ERROR("ConduitDatabase::open: ConduitDatabase::open() not\n"
+      << "implemented.");
+   return false;
 }
 
 /*
  *************************************************************************
  *
- * Close the open data file.
+ * close not implemented
  *
  *************************************************************************
  */
@@ -137,10 +128,9 @@ ConduitDatabase::open(
 bool
 ConduitDatabase::close()
 {
-   d_database_name = "";
-   d_node->reset();
-
-   return true;
+   TBOX_ERROR("ConduitDatabase::close: ConduitDatabase::close() not\n"
+      << "implemented.");
+   return false;
 }
 
 /*
@@ -1437,238 +1427,10 @@ ConduitDatabase::printDatabase(
    const int indent,
    const int toprint) const
 {
-
+   NULL_USE(os);
+   NULL_USE(indent);
+   NULL_USE(toprint);
 // need to implement print
-#if 0
-   /*
-    * Get the maximum key width in the output (excluding databases)
-    */
-
-   int width = 0;
-   for (std::list<KeyData>::const_iterator k = d_keyvalues.begin();
-        k != d_keyvalues.end(); ++k) {
-      if (((k->d_from_default) && (toprint & PRINT_DEFAULT))
-          || ((k->d_accessed) && (toprint & PRINT_INPUT))
-          || (!(k->d_accessed) && (toprint & PRINT_UNUSED))) {
-         if (k->d_type != Database::SAMRAI_DATABASE) {
-            const int keywidth = static_cast<int>(k->d_key.length());
-            if (keywidth > width) {
-               width = keywidth;
-            }
-         }
-      }
-   }
-
-   /*
-    * Iterate over all non-database keys in the database and output key values
-    */
-
-   indentStream(os, indent);
-   os << d_database_name << " {\n";
-   for (std::list<KeyData>::const_iterator i = d_keyvalues.begin();
-        i != d_keyvalues.end(); ++i) {
-
-      if (((i->d_from_default) && (toprint & PRINT_DEFAULT))
-          || ((i->d_accessed) && (toprint & PRINT_INPUT))
-          || (!(i->d_accessed) && (toprint & PRINT_UNUSED))) {
-
-#ifndef LACKS_SSTREAM
-         std::ostringstream sstream;
-#else
-         char sstream_buffer[SSTREAM_BUFFER];
-         std::ostrstream sstream(sstream_buffer, SSTREAM_BUFFER);
-#endif
-
-         switch (i->d_type) {
-
-            case Database::SAMRAI_INVALID: {
-               break;
-            }
-
-            case Database::SAMRAI_DATABASE: {
-               break;
-            }
-
-            case Database::SAMRAI_BOOL: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<bool>::size_type n = i->d_boolean.size();
-               for (std::vector<bool>::size_type j = 0; j < n; ++j) {
-                  sstream << (i->d_boolean[j] ? "TRUE" : "FALSE");
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_BOX: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<DatabaseBox>::size_type n = i->d_box.size();
-               for (std::vector<DatabaseBox>::size_type j = 0; j < n; ++j) {
-                  const int m = i->d_box[j].getDimVal();
-                  sstream << "[(";
-                  for (int k = 0; k < m; ++k) {
-                     sstream << i->d_box[j].lower(k);
-                     if (k < m - 1) {
-                        sstream << ",";
-                     }
-                  }
-                  sstream << "),(";
-                  for (int l = 0; l < m; ++l) {
-                     sstream << i->d_box[j].upper(l);
-                     if (l < m - 1) {
-                        sstream << ",";
-                     }
-                  }
-                  sstream << ")]";
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_CHAR: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<char>::size_type n = i->d_char.size();
-               for (std::vector<char>::size_type j = 0; j < n; ++j) {
-                  sstream << "'" << i->d_char[j] << "'";
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_COMPLEX: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<dcomplex>::size_type n = i->d_complex.size();
-               for (std::vector<dcomplex>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_complex[j];
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_DOUBLE: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<double>::size_type n = i->d_double.size();
-               for (std::vector<double>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_double[j];
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_FLOAT: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<float>::size_type n = i->d_float.size();
-               for (std::vector<float>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_float[j];
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_INT: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<int>::size_type n = i->d_integer.size();
-               for (std::vector<int>::size_type j = 0; j < n; ++j) {
-                  sstream << i->d_integer[j];
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-
-            case Database::SAMRAI_STRING: {
-               indentStream(sstream, indent + 3);
-               sstream << i->d_key;
-               indentStream(sstream, width - static_cast<int>(i->d_key.length()));
-               sstream << " = ";
-               const std::vector<std::string>::size_type n = i->d_string.size();
-               for (std::vector<std::string>::size_type j = 0; j < n; ++j) {
-                  sstream << "\"" << i->d_string[j] << "\"";
-                  if (j < n - 1) {
-                     sstream << ", ";
-                  }
-               }
-               break;
-            }
-         }
-
-         /*
-          * Output whether the key was used or default in column 60
-          */
-
-         if (i->d_type != Database::SAMRAI_DATABASE) {
-#ifndef LACKS_SSTREAM
-            const int tab = static_cast<int>(59 - sstream.str().length());
-#else
-            const int tab = static_cast<int>(59 - sstream.pcount());
-#endif
-            if (tab > 0) {
-               indentStream(sstream, tab);
-            }
-            if (i->d_from_default) {
-               sstream << " // from default";
-            } else if (i->d_accessed) {
-               sstream << " // input used";
-            } else {
-               sstream << " // input not used";
-            }
-
-//            sstream << std::endl << ends;
-            sstream << std::endl;
-            os << sstream.str();
-         }
-      }
-   }
-
-   /*
-    * Finally, output all databases in the current key list
-    */
-
-   for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
-        j != d_keyvalues.end(); ++j) {
-      if (j->d_type == Database::SAMRAI_DATABASE) {
-         std::shared_ptr<ConduitDatabase> db(
-            SAMRAI_SHARED_PTR_CAST<ConduitDatabase, Database>(j->d_database));
-         db->printDatabase(os, indent + 3, toprint);
-      }
-   }
-
-   indentStream(os, indent);
-   os << "}\n";
-#endif
 }
 
 }

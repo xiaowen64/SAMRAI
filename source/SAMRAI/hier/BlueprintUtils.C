@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
- * Description:   BlueprintUtilities
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Description:   Blueprint utilities
  *
  ************************************************************************/
 #include "SAMRAI/hier/BlueprintUtils.h"
@@ -33,14 +33,16 @@ BlueprintUtils::~BlueprintUtils()
 
 /*
  ***************************************************************************
+ *
+ * Put topology/coordinate data into a database
+ *
  ***************************************************************************
  */
-
 void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
-   const std::shared_ptr<tbox::Database>& database,
+   const std::shared_ptr<tbox::Database>& blueprint_db,
    const PatchHierarchy& hierarchy) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(blueprint_db);
 
    std::vector<int> first_patch_id;
    first_patch_id.push_back(0);
@@ -67,10 +69,10 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
             "domain_" + tbox::Utilities::intToString(domain_id, 6);
 
          std::shared_ptr<tbox::Database> domain_db;
-         if (database->isDatabase(domain_name)) {
-            domain_db = database->getDatabase(domain_name);
+         if (blueprint_db->isDatabase(domain_name)) {
+            domain_db = blueprint_db->getDatabase(domain_name);
          } else {
-            domain_db = database->putDatabase(domain_name);
+            domain_db = blueprint_db->putDatabase(domain_name);
          }
 
          std::shared_ptr<tbox::Database> coordsets_db;
@@ -133,14 +135,21 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
 
             mesh_db->putString("type", "structured");
          } else {
-            mesh_db->putString("type", coords_db->getString("type"));
+            mesh_db->putString("type", coords_type);
          }
       }
    }
 }
 
+/*
+ ***************************************************************************
+ *
+ * Write a blueprint to files
+ *
+ ***************************************************************************
+ */
 void BlueprintUtils::writeBlueprintMesh(
-   const conduit::Node& reference,
+   const conduit::Node& blueprint,
    const tbox::SAMRAI_MPI& samrai_mpi,
    const int num_global_domains,
    const std::string& mesh_name,
@@ -154,7 +163,7 @@ void BlueprintUtils::writeBlueprintMesh(
    if (my_rank == 0) {
       conduit::Node &bpindex = index["blueprint_index"];
          conduit::blueprint::mesh::generate_index(
-            reference["domain_000000"], "",
+            blueprint["domain_000000"], "",
             num_global_domains, bpindex[mesh_name]);
 
       std::string file_pattern = data_name + "%06d." + io_protocol;
@@ -171,7 +180,7 @@ void BlueprintUtils::writeBlueprintMesh(
 
    std::string file_name = data_name + tbox::Utilities::intToString(my_rank, 6) + "." + io_protocol;
 
-   reference.save(file_name, io_protocol);
+   blueprint.save(file_name, io_protocol);
 }
 
 }

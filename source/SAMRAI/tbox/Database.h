@@ -1623,9 +1623,22 @@ public:
    virtual std::string
    getName() = 0;
 
+   /*!
+    * @brief Full copy of a database
+    *
+    * @param database  Database to be copied
+    */
    virtual void copyDatabase(const std::shared_ptr<Database>& database);
 
 #ifdef HAVE_CONDUIT
+   /*!
+    * @brief Write data held in this database to a Conduit Node
+    *
+    * The hierarchical structure of a SAMRAI database will be replicated in
+    * Conduit's hierarchical format.
+    *
+    * @param node  Output node
+    */
    virtual void toConduitNode(conduit::Node& node);
 #endif
 

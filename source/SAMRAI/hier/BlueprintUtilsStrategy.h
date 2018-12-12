@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
- * Description:   Blueprint utilities.
+ * Description:   BlueprintUtilsStrategy
  *
  ************************************************************************/
 #ifndef included_hier_BlueprintUtilsStrategy
@@ -21,23 +21,40 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief Utilities for performing simple common tasks on a container
- * of Boxes.
-
-Combined with a BlueprintUtilsStrategy, this loops over a hierarchy,
-fills Blueprint topology and coordinate entries, calls back to user code
-for specific coord choices:  uniform, rectilinear, explicit
-
+ * @brief Strategy class for use by BlueprintUtils
+ *
+ * This abstract base class can be used by BlueprintUtils for call-backs
+ * to application code.
+ *
+ * @see BlueprintUtils 
  */
 class BlueprintUtilsStrategy
 {
 
 public:
 
+   /*!
+    * @brief Constructor
+    */
    BlueprintUtilsStrategy();
 
+   /*!
+    * @brief Destructor
+    */
    virtual ~BlueprintUtilsStrategy();
 
+   /*!
+    * @brief Put blueprint coordinate information into a database
+    *
+    * This pure virtual function provides an interface to call into application
+    * code to put coordinate information into a database that is part of
+    * a blueprint description of the mesh.  The coordinates for a single patch
+    * should be put into the database, using one of blueprint's recognized
+    * coordinate types:  uniform, rectilinear, or explicit.
+    *
+    * @param coords_db   Database to hold coordinate information
+    * @param patch       Patch for which coordinates will be described
+    */
    virtual void putCoordinatesToDatabase(
       std::shared_ptr<tbox::Database>& coords_db,
       const Patch& patch) = 0;

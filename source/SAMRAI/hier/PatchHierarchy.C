@@ -1344,7 +1344,9 @@ PatchHierarchy::putBlueprint(
             int ncount = 0;
 
             if (domain_db->keyExists("nestsets")) {
-               windows_db = domain_db->getDatabase("nestsets")->getDatabase("nestset")->getDatabase("windows");
+               windows_db =
+                  domain_db->getDatabase("nestsets")->
+                     getDatabase("nestset")->getDatabase("windows");
                ncount = windows_db->getAllKeys().size();
             }
 
