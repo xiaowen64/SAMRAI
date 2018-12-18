@@ -29,7 +29,7 @@ To get in touch with all the SAMRAI developers, please email samrai@llnl.gov
 
 Contributing to SAMRAI should be easy! We are managing contributions through
 pull requents here on GitHub. When you create your pull request, please make
-`develop` the target branch.
+`master` the target branch.
 
 Your PR must pass all of SAMRAI's unit tests, which are enforced using Travis
 CI. For information on how to run these tests locally, please see our
