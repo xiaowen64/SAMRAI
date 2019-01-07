@@ -1370,6 +1370,9 @@ bool ConduitDatabase::deleteKeyIfFound(
    const std::string& key)
 {
    if (d_node->has_child(key)) {
+      if (isDatabase(key)) {
+         d_child_dbs.erase(key);
+      }
       d_node->remove(key);
       d_types.erase(key);
       return true;

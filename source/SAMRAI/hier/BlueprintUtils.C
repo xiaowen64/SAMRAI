@@ -61,7 +61,8 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
            ++p) {
 
          const std::shared_ptr<Patch>& patch = *p;
-         const BoxId& box_id = patch->getBox().getBoxId();
+         const Box& patch_box = patch->getBox();
+         const BoxId& box_id = patch_box.getBoxId();
          const LocalId& local_id = box_id.getLocalId();
 
          int domain_id = first_patch_id[i] + local_id.getValue();
@@ -89,32 +90,36 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
             coords_db = coordsets_db->putDatabase("coords");
          }
 
-         std::shared_ptr<tbox::Database> topologies_db;
-         if (domain_db->isDatabase("topologies")) {
-            topologies_db = domain_db->getDatabase("topologies");
-         } else {
-            topologies_db = domain_db->putDatabase("topologies");
-         }
+         std::shared_ptr<tbox::Database> topologies_db(
+            domain_db->putDatabase("topologies"));
 
-         std::shared_ptr<tbox::Database> mesh_db;
-         if (topologies_db->isDatabase("mesh")) {
-            mesh_db = topologies_db->getDatabase("mesh");
-         } else {
-            mesh_db = topologies_db->putDatabase("mesh");
+         std::shared_ptr<tbox::Database> topo_db(
+            topologies_db->putDatabase("mesh"));
+
+         std::shared_ptr<tbox::Database> elem_db(
+            topo_db->putDatabase("elements"));
+         std::shared_ptr<tbox::Database> origin_db(
+            elem_db->putDatabase("origin"));
+         origin_db->putInteger("i0", patch_box.lower(0));
+         if (patch_box.getDim().getValue() > 1) {
+            origin_db->putInteger("j0", patch_box.lower(1));
+         }
+         if (patch_box.getDim().getValue() > 2) {
+            origin_db->putInteger("k0", patch_box.lower(2));
          }
 
          d_strategy->putCoordinatesToDatabase(
             coords_db, *patch);
 
-         mesh_db->putString("coordset", "coords");
+         topo_db->putString("coordset", "coords");
 
          std::string coords_type = coords_db->getString("type");
          if (coords_type == "explicit") {
             std::shared_ptr<tbox::Database> elements_db;
-            if (mesh_db->isDatabase("elements")) {
-               elements_db = mesh_db->getDatabase("elements");
+            if (topo_db->isDatabase("elements")) {
+               elements_db = topo_db->getDatabase("elements");
             } else {
-               elements_db = mesh_db->putDatabase("elements");
+               elements_db = topo_db->putDatabase("elements");
             }
 
             std::shared_ptr<tbox::Database> dims_db;
@@ -133,9 +138,9 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
                dims_db->putInteger("k", patch->getBox().numberCells(2));
             }
 
-            mesh_db->putString("type", "structured");
+            topo_db->putString("type", "structured");
          } else {
-            mesh_db->putString("type", coords_type);
+            topo_db->putString("type", coords_type);
          }
       }
    }
