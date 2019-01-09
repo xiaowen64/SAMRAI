@@ -1547,7 +1547,7 @@ PatchHierarchy::putBlueprint(
                int neighbors[2] = {domain_id, nbr_id};
                group_db->putIntegerArray("neighbors", neighbors, 2);
 
-               if (d_number_blocks > 0) {
+               if (d_number_blocks > 1) {
 
                   IntVector dir_size(node_ovlp.numberCells());
                   IntVector pbdry_dirs(d_dim);
