@@ -190,10 +190,7 @@ public:
    {
       TBOX_ASSERT(writeMode());
       const size_t num_bytes = getSizeof<DATA_TYPE>(num_entries);
-      if (!growAsNeeded()) {
-         TBOX_ASSERT(canCopyIn(num_bytes));
-      }
-      else if (num_bytes > 0) {
+      if (num_bytes > 0) {
          d_write_buffer.resize(getCurrentSize() + num_bytes);
          d_buffer_size = d_write_buffer.size();
       }
