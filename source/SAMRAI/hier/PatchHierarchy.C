@@ -9,7 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
@@ -1522,12 +1521,10 @@ PatchHierarchy::putBlueprint(
                }
 
                std::shared_ptr<tbox::Database> set_db;
-               std::string set_name =
-                  "adjset_" + tbox::Utilities::intToString(nbr_id, 6);
-               if (adjsets_db->keyExists(set_name)) {
-                  set_db = adjsets_db->getDatabase(set_name);
+               if (adjsets_db->keyExists("adjset")) {
+                  set_db = adjsets_db->getDatabase("adjset");
                } else {
-                  set_db = adjsets_db->putDatabase(set_name);
+                  set_db = adjsets_db->putDatabase("adjset");
                }
 
                if (!set_db->keyExists("association")) {
@@ -1537,11 +1534,20 @@ PatchHierarchy::putBlueprint(
                   set_db->putString("topology", "mesh");
                }
 
-               std::shared_ptr<tbox::Database> group_db;
-               if (set_db->keyExists("group")) {
-                  group_db = set_db->getDatabase("group");
+               std::shared_ptr<tbox::Database> groups_db;
+               if (set_db->keyExists("groups")) {
+                  groups_db = set_db->getDatabase("groups");
                } else {
-                  group_db = set_db->putDatabase("group");
+                  groups_db = set_db->putDatabase("groups");
+               }
+
+               std::shared_ptr<tbox::Database> group_db;
+               std::string group_name =
+                  "group_" + tbox::Utilities::intToString(nbr_id, 6);
+               if (groups_db->keyExists(group_name)) {
+                  group_db = groups_db->getDatabase(group_name);
+               } else {
+                  group_db = groups_db->putDatabase(group_name);
                }
 
                int neighbors[2] = {domain_id, nbr_id};
@@ -1549,72 +1555,48 @@ PatchHierarchy::putBlueprint(
 
                if (d_number_blocks > 1) {
 
-                  IntVector dir_size(node_ovlp.numberCells());
-                  IntVector pbdry_dirs(d_dim);
-                  unsigned int num_flat_dirs = 0;
-                  for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
-                     pbdry_dirs[d] = 0;
-                     if (dir_size[d] == 1) {
-                        ++num_flat_dirs;
-                        if (node_ovlp.lower()(d) == node_pbox.lower()(d)) {
-                           pbdry_dirs[d] = -1;
-                        } else {
-                           pbdry_dirs[d] = 1;
-                        }
-                     }
+                  std::shared_ptr<tbox::Database> windows_db(
+                     group_db->putDatabase("windows"));
+
+                  std::string window_a_name =
+                     "window_" + tbox::Utilities::intToString(domain_id, 6);
+                  std::string window_b_name =
+                     "window_" + tbox::Utilities::intToString(nbr_id, 6);
+
+                  std::shared_ptr<tbox::Database> window_a_db(
+                     windows_db->putDatabase(window_a_name));
+                  std::shared_ptr<tbox::Database> window_b_db(
+                     windows_db->putDatabase(window_b_name));
+
+                  std::shared_ptr<tbox::Database> origin_a_db(
+                     window_a_db->putDatabase("origin"));
+                  std::shared_ptr<tbox::Database> origin_b_db(
+                     window_b_db->putDatabase("origin"));
+
+                  std::shared_ptr<tbox::Database> width_a_db(
+                     window_a_db->putDatabase("dims"));
+                  std::shared_ptr<tbox::Database> width_b_db(
+                     window_b_db->putDatabase("dims"));
+
+                  IntVector a_width(node_ovlp.numberCells());
+                  IntVector b_width(tnode_ovlp.numberCells());
+
+                  origin_a_db->putInteger("i", node_ovlp.lower(0));
+                  width_a_db->putInteger("i", a_width[0]);
+                  origin_b_db->putInteger("i", tnode_ovlp.lower(0));
+                  width_b_db->putInteger("i", b_width[0]);
+                  if (d_dim.getValue() > 1) {
+                     origin_a_db->putInteger("j", node_ovlp.lower(1));
+                     width_a_db->putInteger("j", a_width[1]);
+                     origin_b_db->putInteger("j", tnode_ovlp.lower(1));
+                     width_b_db->putInteger("j", b_width[1]);
                   }
-
-                  std::string bdry_type;
-                  if (num_flat_dirs == d_dim.getValue()) {
-                     bdry_type = "corner";
-                  } else if (num_flat_dirs == d_dim.getValue()-1) {
-                     bdry_type = "edge";
-                  } else {
-                     bdry_type = "face";
+                  if (d_dim.getValue() > 2) {
+                     origin_a_db->putInteger("j", node_ovlp.lower(2));
+                     width_a_db->putInteger("j", a_width[2]);
+                     origin_b_db->putInteger("k", tnode_ovlp.lower(2));
+                     width_b_db->putInteger("k", b_width[2]);
                   }
-                  group_db->putString("boundary", bdry_type);
-
-                  BoundaryLookupTable* blut =
-                     BoundaryLookupTable::getLookupTable(d_dim);
-
-                  const std::vector<IntVector>& bdry_dirs =
-                     blut->getBoundaryDirections(num_flat_dirs);
-
-                  int num_locs = bdry_dirs.size();
-
-                  std::vector<int> locations(2, -1);
-
-                  for (int li = 0; li < num_locs; ++li) {
-                     if (pbdry_dirs == bdry_dirs[li]) {
-                        locations[0] = li;
-                        break;
-                     }
-                  }
-
-                  TBOX_ASSERT(locations[0] != -1);
-
-                  IntVector tbdry_dirs(d_dim);
-                  for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
-                     tbdry_dirs[d] = 0;
-                     if (dir_size[d] == 1) {
-                        if (tnode_ovlp.lower()(d) == node_nbox.lower()(d)) {
-                           tbdry_dirs[d] = -1;
-                        } else {
-                           tbdry_dirs[d] = 1;
-                        }
-                     }
-                  }
-
-                  for (int li = 0; li < num_locs; ++li) {
-                     if (tbdry_dirs == bdry_dirs[li]) {
-                        locations[1] = li;
-                        break;
-                     }
-                  }
-
-                  TBOX_ASSERT(locations[1] != -1);
-
-                  group_db->putIntegerVector("location", locations);
 
                   if (pbox.getBlockId() != nbr_box.getBlockId()) {
                      Transformation::RotationIdentifier rotation =
