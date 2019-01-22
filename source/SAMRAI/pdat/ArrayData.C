@@ -626,14 +626,10 @@ ArrayData<TYPE>::packStream(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift) const
 {
-
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
 
+   TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
    packBuffer(&buffer[0], hier::Box::shift(dest_box, -src_shift));
-
-   stream.pack(&buffer[0], size);
-
 }
 
 template<class TYPE>
@@ -645,7 +641,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
+   TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -655,9 +651,6 @@ ArrayData<TYPE>::packStream(
    }
 
    TBOX_ASSERT(ptr == size);
-
-   stream.pack(&buffer[0], size);
-
 }
 
 template<class TYPE>
@@ -669,15 +662,12 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
 
    hier::Box pack_box(dest_box);
    transformation.inverseTransform(pack_box);
    packBuffer(&buffer[0], pack_box);
 //      hier::Box::shift(dest_box, -src_shift));
-
-   stream.pack(&buffer[0], size);
-
 }
 
 template<class TYPE>
@@ -689,7 +679,7 @@ ArrayData<TYPE>::packStream(
 {
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
+   TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -702,9 +692,6 @@ ArrayData<TYPE>::packStream(
    }
 
    TBOX_ASSERT(ptr == size);
-
-   stream.pack(&buffer[0], size);
-
 }
 
 /*
@@ -726,15 +713,12 @@ ArrayData<TYPE>::unpackStream(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift)
 {
-
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   const TYPE* buffer = stream.getReadBuffer<TYPE>(size);
 
-   stream.unpack(&buffer[0], size);
    unpackBuffer(&buffer[0], dest_box);
-
 }
 
 template<class TYPE>
@@ -744,13 +728,10 @@ ArrayData<TYPE>::unpackStream(
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift)
 {
-
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
-
-   stream.unpack(&buffer[0], size);
+   const TYPE* buffer = stream.getReadBuffer<TYPE>(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
@@ -781,15 +762,12 @@ ArrayData<TYPE>::unpackStreamAndSum(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift)
 {
-
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
-   std::vector<TYPE> buffer(size);
+   const TYPE* buffer = stream.getReadBuffer<TYPE>(size);
 
-   stream.unpack(&buffer[0], size);
    unpackBufferAndSum(&buffer[0], dest_box);
-
 }
 
 template<class TYPE>
@@ -803,9 +781,7 @@ ArrayData<TYPE>::unpackStreamAndSum(
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
-   std::vector<TYPE> buffer(size);
-
-   stream.unpack(&buffer[0], size);
+   const TYPE* buffer = stream.getReadBuffer<TYPE>(size);
 
    size_t ptr = 0;
    for (hier::BoxContainer::const_iterator b = dest_boxes.begin();
