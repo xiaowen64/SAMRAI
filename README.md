@@ -29,17 +29,15 @@ To get in touch with all the SAMRAI developers, please email samrai@llnl.gov
 
 Contributing to SAMRAI should be easy! We are managing contributions through
 pull requents here on GitHub. When you create your pull request, please make
-`develop` the target branch.
+`master` the target branch.
 
 Your PR must pass all of SAMRAI's unit tests, which are enforced using Travis
 CI. For information on how to run these tests locally, please see our
 [contribution guidelines](CONTRIBUTING.md)
 
-Our development process roughly follows the
-[gitflow](http://nvie.com/posts/a-successful-git-branching-model/) model. The
-`master` branch points to the last stable, tagged release. The `develop` branch
-contains the latest changes. New features should be created in `feature/<name>`
-branches and be based on `develop`.
+The `master` branch contains the latest development, and releases are tagged.
+New features should be created in `feature/<name>`branches and be based on
+`master`.
 
 ## Citing SAMRAI
 
