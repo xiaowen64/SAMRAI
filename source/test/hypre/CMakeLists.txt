@@ -27,3 +27,12 @@ blt_add_executable(
     ${hypre_depends_on})
 
 target_compile_definitions(hypre-test PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME hypre-test
+  EXECUTABLE hypre-test
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
+

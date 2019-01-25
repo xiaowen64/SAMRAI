@@ -12,3 +12,8 @@ blt_add_executable(
     SAMRAI_tbox)
 
 target_compile_definitions(fill_pattern PUBLIC TESTING=1)
+
+blt_add_test(
+  NAME fill_pattern
+  COMMAND fill_pattern)
+

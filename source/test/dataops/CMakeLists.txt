@@ -159,3 +159,55 @@ target_include_directories(edge_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/tes
 target_include_directories(node_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 target_include_directories(face_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 target_include_directories(side_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
+
+blt_add_test(
+  NAME indx_dataops
+  COMMAND indx_dataops)
+
+blt_add_test(
+  NAME cell_patchtest
+  COMMAND cell_patchtest)
+
+blt_add_test(
+  NAME cell_hiertest
+  COMMAND cell_hiertest)
+
+blt_add_test(
+  NAME cell_hiertest3d
+  COMMAND cell_hiertest3d)
+
+blt_add_test(
+  NAME edge_hiertest
+  COMMAND edge_hiertest)
+
+blt_add_test(
+  NAME face_hiertest
+  COMMAND face_hiertest)
+
+blt_add_test(
+  NAME side_hiertest
+  COMMAND side_hiertest)
+
+blt_add_test(
+  NAME node_hiertest
+  COMMAND node_hiertest)
+
+blt_add_test(
+  NAME cell_cplxtest
+  COMMAND cell_cplxtest)
+
+blt_add_test(
+  NAME edge_cplxtest
+  COMMAND edge_cplxtest)
+
+blt_add_test(
+  NAME node_cplxtest
+  COMMAND node_cplxtest)
+
+blt_add_test(
+  NAME face_cplxtest
+  COMMAND face_cplxtest)
+
+blt_add_test(
+  NAME side_cplxtest
+  COMMAND side_cplxtest)

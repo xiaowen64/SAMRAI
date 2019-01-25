@@ -34,4 +34,4 @@ samrai_add_tests(
   NAME communication
   EXECUTABLE communication
   INPUTS ${test_inputs}
-  PARALLEL True)
+  PARALLEL TRUE)

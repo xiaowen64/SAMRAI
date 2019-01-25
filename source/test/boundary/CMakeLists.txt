@@ -23,4 +23,4 @@ samrai_add_tests(
   NAME boundary
   EXECUTABLE boundary
   INPUTS ${test_inputs}
-  PARALLEL True)
+  PARALLEL TRUE)

@@ -14,3 +14,11 @@ blt_add_executable(
     ${mblktree_depends_on})
 
 target_compile_definitions(mblktree PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME mblktree
+  EXECUTABLE mblktree
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

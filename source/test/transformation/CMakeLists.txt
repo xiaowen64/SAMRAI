@@ -8,3 +8,7 @@ blt_add_executable(
 
 target_include_directories( transformation
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/transformation)
+
+blt_add_test(
+  NAME transformation
+  COMMAND transformation)

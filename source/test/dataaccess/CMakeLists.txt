@@ -13,3 +13,9 @@ target_include_directories( dataaccess
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataaccess)
 
 target_compile_definitions(dataaccess PUBLIC TESTING=1)
+
+samrai_add_tests(
+  NAME dataaccess
+  EXECUTABLE dataaccess
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
