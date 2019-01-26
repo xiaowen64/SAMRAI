@@ -12,9 +12,7 @@ function or_die () {
 or_die mkdir travis-build
 cd travis-build
 if [[ "$DO_BUILD" == "yes" ]] ; then
-    export F77=gfortran
-    export CXX=`which $COMPILER`
-    or_die ../configure --with-extra-cxx-flags=-std=c++11
+    cmake -DCMAKE_CXX_COMPILER=`which $COMPILER` -DCMAKE_Fortran_COMPILER=gfortran ../
     or_die make -j 3 VERBOSE=1
 fi
 
