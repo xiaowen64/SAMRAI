@@ -12,7 +12,7 @@ function or_die () {
 or_die mkdir travis-build
 cd travis-build
 if [[ "$DO_BUILD" == "yes" ]] ; then
-    cmake -DENABLE_MPI=Off -DCMAKE_CXX_COMPILER=`which $COMPILER` -DCMAKE_Fortran_COMPILER=gfortran ../
+    cmake -DENABLE_MPI=Off -DENABLE_HDF5=Off -DCMAKE_CXX_COMPILER=`which $COMPILER` -DCMAKE_Fortran_COMPILER=gfortran ../
     or_die make -j 3 VERBOSE=1
     ctest -j 6
 fi
