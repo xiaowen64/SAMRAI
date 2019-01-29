@@ -17,7 +17,8 @@ macro (samrai_add_tests)
     set(test_name "${arg_NAME}_test_${short_test_file}")
 
     add_test(NAME ${test_name}
-      COMMAND $<TARGET_FILE:${arg_EXECUTABLE}> ${test_file})
+      COMMAND $<TARGET_FILE:${arg_EXECUTABLE}> ${test_file}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
     set_tests_properties(${test_name} PROPERTIES PASS_REGULAR_EXPRESSION "PASSED")
 
