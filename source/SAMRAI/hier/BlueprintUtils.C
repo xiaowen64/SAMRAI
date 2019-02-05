@@ -108,8 +108,10 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
             origin_db->putInteger("k0", patch_box.lower(2));
          }
 
-         d_strategy->putCoordinatesToDatabase(
-            coords_db, *patch);
+         if (d_strategy) {
+            d_strategy->putCoordinatesToDatabase(
+               coords_db, *patch);
+         }
 
          topo_db->putString("coordset", "coords");
 
