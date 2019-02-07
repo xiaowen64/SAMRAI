@@ -531,14 +531,14 @@ int main(
                }
             }
 
-            if (write_blueprint) {
+            if (write_blueprint && viz_dump_interval) {
                if ((iteration_num % viz_dump_interval) == 0) {
 #ifdef HAVE_CONDUIT
                   std::shared_ptr<tbox::ConduitDatabase> conduit_db(
                      new tbox::ConduitDatabase("conduit_hierarchy"));
  
                   hier::BlueprintUtils bp_utils(linear_advection_model);
-                  patch_hierarchy->putBlueprint(conduit_db, bp_utils);
+                  patch_hierarchy->makeBlueprintDatabase(conduit_db, bp_utils);
 
                   conduit::Node bp_node;
                   conduit_db->toConduitNode(bp_node);

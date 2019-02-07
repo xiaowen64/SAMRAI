@@ -40,7 +40,8 @@ BlueprintUtils::~BlueprintUtils()
  */
 void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
    const std::shared_ptr<tbox::Database>& blueprint_db,
-   const PatchHierarchy& hierarchy) const
+   const PatchHierarchy& hierarchy,
+   const std::string& topology_name) const
 {
    TBOX_ASSERT(blueprint_db);
 
@@ -94,7 +95,7 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
             domain_db->putDatabase("topologies"));
 
          std::shared_ptr<tbox::Database> topo_db(
-            topologies_db->putDatabase("mesh"));
+            topologies_db->putDatabase(topology_name));
 
          std::shared_ptr<tbox::Database> elem_db(
             topo_db->putDatabase("elements"));

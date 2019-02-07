@@ -527,7 +527,7 @@ int main(
          new tbox::ConduitDatabase("conduit_hierarchy"));
 
       hier::BlueprintUtils bp_utils(comm_tester.get());
-      patch_hierarchy->putBlueprint(conduit_db, bp_utils);
+      patch_hierarchy->makeBlueprintDatabase(conduit_db, bp_utils);
 
       conduit::Node n;
       conduit_db->toConduitNode(n);

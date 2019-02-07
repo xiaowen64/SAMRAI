@@ -963,10 +963,20 @@ public:
 
 #ifdef HAVE_CONDUIT
    void
-   putBlueprint(
+   makeBlueprintDatabase(
       const std::shared_ptr<tbox::Database>& blueprint_db,
       const BlueprintUtils& bp_utils) const; 
 #endif
+
+   void
+   makeNestingSets(
+      const std::shared_ptr<tbox::Database>& blueprint_db,
+      const std::string& topology_name) const;
+
+   void
+   makeAdjacencySets(
+      const std::shared_ptr<tbox::Database>& blueprint_db,
+      const std::string& topology_name) const;
 
    /*!
     * @brief Read in the entire hierarchy from the restart database.

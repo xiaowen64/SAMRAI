@@ -64,10 +64,12 @@ public:
     * @param blueprint_db  Top-level blueprint database holding all local
     *                      domain information
     * @param hierarchy     The hierarchy being described
+    * @param topology_name Name of the topology
     */
    void putTopologyAndCoordinatesToDatabase(
       const std::shared_ptr<tbox::Database>& blueprint_db,
-      const PatchHierarchy& hierarchy) const;
+      const PatchHierarchy& hierarchy,
+      const std::string& topology_name) const;
 
    /*!
     * @brief Write blueprint to files.
