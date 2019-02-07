@@ -270,7 +270,7 @@ ParallelBuffer::xsputn(
    std::streamsize n)
 {
    sync();
-   if (n > 0) outputString(text, static_cast<int>(n));
+   if (n > 0) outputString(std::string(text, n), static_cast<int>(n));
    return n;
 }
 #endif
