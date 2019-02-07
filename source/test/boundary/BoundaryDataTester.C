@@ -292,11 +292,10 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
       }
    }
 
-   d_variable_name.resize(var_cnt);
-   d_variable_depth.resize(var_cnt);
    d_variable_num_ghosts.resize(var_cnt, hier::IntVector(d_dim, 1));
    d_variable_interior_values.resize(var_cnt);
 
+   int v_cntr = 0;
    for (int i = 0; i < nkeys; ++i) {
 
       std::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
@@ -304,7 +303,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
       if (var_keys[i] != "Boundary_data" && var_db->keyExists("name")) {
 
          if (var_db->keyExists("name")) {
-            d_variable_name[i] = var_db->getString("name");
+            d_variable_name.push_back(var_db->getString("name"));
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "Variable input error: No 'name' string found for "
@@ -312,18 +311,18 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
          }
 
          if (var_db->keyExists("depth")) {
-            d_variable_depth[i] = var_db->getInteger("depth");
+            d_variable_depth.push_back(var_db->getInteger("depth"));
          } else {
-            d_variable_depth[i] = 1;
+            d_variable_depth.push_back(1);
          }
 
          if (var_db->keyExists("num_ghosts")) {
-            int* tmpg = &d_variable_num_ghosts[i][0];
+            int* tmpg = &d_variable_num_ghosts[v_cntr][0];
             var_db->getIntegerArray("num_ghosts", tmpg, d_dim.getValue());
          }
 
          if (var_db->keyExists("interior_values")) {
-            d_variable_interior_values[i] =
+            d_variable_interior_values[v_cntr] =
                var_db->getDoubleVector("interior_values");
          } else {
             TBOX_ERROR(
@@ -332,6 +331,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
                              << "key = " << var_keys[i] << endl);
          }
 
+         ++v_cntr; 
       }
 
    }
