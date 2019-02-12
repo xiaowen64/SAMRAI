@@ -25,6 +25,8 @@ namespace hier {
  * @brief Utilities for performing common tasks for describing the mesh
  * in the Conduit blueprint format and writing to files.
  *
+ * See https://llnl-conduit.readthedocs.io for documentation of the Conduit library.
+ *
  * This class can use a BlueprintUtilsStrategy to allow a call-back to
  * application code to fill a blueprint with problem-specific coordinate
  * information.
