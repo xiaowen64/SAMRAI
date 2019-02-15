@@ -23,4 +23,4 @@ samrai_add_tests(
   NAME async_br
   EXECUTABLE async_br
   INPUTS ${test_inputs}
-  PARALLEL True)
+  PARALLEL TRUE)

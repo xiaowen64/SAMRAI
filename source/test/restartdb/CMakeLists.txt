@@ -69,3 +69,23 @@ target_include_directories( testSiloAppFileOpen
 
 target_include_directories( testMemory
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)
+
+blt_add_test(
+  NAME testHDF5
+  COMMAND testHDF5)
+
+blt_add_test(
+  NAME testHDF5AppFileOpen
+  COMMAND testHDF5AppFileOpen)
+
+blt_add_test(
+  NAME testSilo
+  COMMAND testSilo)
+
+blt_add_test(
+  NAME testSiloAppFileOpen
+  COMMAND testSiloAppFileOpen)
+
+blt_add_test(
+  NAME testMemory
+  COMMAND testMemory)

@@ -15,3 +15,11 @@ blt_add_executable(
         SOURCES ${userlogger_sources}
         DEPENDS_ON
         SAMRAI_tbox)
+
+blt_add_test(
+  NAME defaultlogger
+  COMMAND defaultlogger)
+
+blt_add_test(
+  NAME userlogger
+  COMMAND userlogger)

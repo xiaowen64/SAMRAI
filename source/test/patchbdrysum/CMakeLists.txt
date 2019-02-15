@@ -23,3 +23,11 @@ blt_add_executable(
     ${patchbdrysum_depends_on})
 
 target_compile_definitions(patchbdrysum-test PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME patchbdrysum-test
+  EXECUTABLE patchbdrysum-test
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

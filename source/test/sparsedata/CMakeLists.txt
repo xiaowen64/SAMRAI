@@ -26,3 +26,11 @@ blt_add_executable(
     SAMRAI_geom)
 
 target_compile_definitions(sparse PUBLIC TESTING=1)
+
+blt_add_test(
+  NAME main-sparsedata
+  COMMAND main-sparsedata)
+
+blt_add_test(
+  NAME sparse
+  COMMAND sparse)

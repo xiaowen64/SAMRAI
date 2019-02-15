@@ -11,3 +11,11 @@ blt_add_executable(
     SAMRAI_tbox)
 
 target_compile_definitions(mblcu PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME mblcu
+  EXECUTABLE mblcu
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

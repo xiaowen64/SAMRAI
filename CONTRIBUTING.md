@@ -15,11 +15,11 @@ changes up to GitHub and create pull requests.
 
 ## Developing a New Feature
 
-New features should be based on the `develop` branch. When you want to create a
-new feature, first ensure you have an up-to-date copy of the `develop` branch:
+New features should be based on the `master` branch. When you want to create a
+new feature, first ensure you have an up-to-date copy of the `master` branch:
 
-    $ git checkout develop
-    $ git pull origin develop
+    $ git checkout master
+    $ git pull origin master
 
 You can now create a new branch to develop your feature on:
 
@@ -34,15 +34,15 @@ branch to GitHub and create a PR.
 
 ## Developing a Bug Fix
 
-First, check if the change you want to make has been fixed in `develop`. If so,
-we suggest you either start using the `develop` branch, or temporarily apply the
+First, check if the change you want to make has been fixed in `master`. If so,
+we suggest you either start using the `master` branch, or temporarily apply the
 fix to whichever version of SAMRAI you are using.
 
 Assuming there is an unsolved bug, first make sure you have an up-to-date copy
 of the develop branch:
 
-    $ git checkout develop
-    $ git pull origin develop
+    $ git checkout master
+    $ git pull origin master
 
 Then create a new branch for your bugfix:
 

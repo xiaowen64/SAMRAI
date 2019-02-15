@@ -9,3 +9,7 @@ blt_add_executable(
     SAMRAI_pdat)
 
 target_compile_definitions(indexdata PUBLIC TESTING=1)
+
+blt_add_test(
+  NAME indexdata
+  COMMAND indexdata)

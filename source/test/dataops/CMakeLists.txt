@@ -159,3 +159,57 @@ target_include_directories(edge_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/tes
 target_include_directories(node_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 target_include_directories(face_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 target_include_directories(side_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
+
+foreach(dim RANGE 2 ${MAXDIM})
+  blt_add_test(
+    NAME indx_dataops${dim}
+    COMMAND indx_dataops ${dim})
+
+  blt_add_test(
+    NAME cell_patchtest${dim}
+    COMMAND cell_patchtest ${dim})
+
+  blt_add_test(
+    NAME cell_hiertest${dim}
+    COMMAND cell_hiertest ${dim})
+
+  blt_add_test(
+    NAME cell_hiertest3d${dim}
+    COMMAND cell_hiertest3d ${dim})
+
+  blt_add_test(
+    NAME edge_hiertest${dim}
+    COMMAND edge_hiertest ${dim})
+
+  blt_add_test(
+    NAME face_hiertest${dim}
+    COMMAND face_hiertest ${dim})
+
+  blt_add_test(
+    NAME side_hiertest${dim}
+    COMMAND side_hiertest ${dim})
+
+  blt_add_test(
+    NAME node_hiertest${dim}
+    COMMAND node_hiertest ${dim})
+
+  blt_add_test(
+    NAME cell_cplxtest${dim}
+    COMMAND cell_cplxtest ${dim})
+
+  blt_add_test(
+    NAME edge_cplxtest${dim}
+    COMMAND edge_cplxtest ${dim})
+
+  blt_add_test(
+    NAME node_cplxtest${dim}
+    COMMAND node_cplxtest ${dim})
+
+  blt_add_test(
+    NAME face_cplxtest${dim}
+    COMMAND face_cplxtest ${dim})
+
+  blt_add_test(
+    NAME side_cplxtest${dim}
+    COMMAND side_cplxtest ${dim})
+endforeach(dim)

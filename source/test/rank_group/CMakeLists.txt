@@ -13,3 +13,11 @@ blt_add_executable(
   SAMRAI_tbox)
 
 target_compile_definitions(rank_group PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME rank_group
+  EXECUTABLE rank_group
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

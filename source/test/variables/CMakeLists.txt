@@ -5,3 +5,9 @@ blt_add_executable(NAME variables
     SAMRAI_pdat
     SAMRAI_hier
   )
+
+target_compile_definitions(variables PUBLIC TESTING=1)
+
+blt_add_test(
+  NAME variables
+  COMMAND variables)

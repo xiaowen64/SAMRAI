@@ -22,3 +22,11 @@ blt_add_executable(
     ${mblkcomm_depends_on})
 
 target_compile_definitions(mblkcomm PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME mblkcomm
+  EXECUTABLE mblkcomm
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

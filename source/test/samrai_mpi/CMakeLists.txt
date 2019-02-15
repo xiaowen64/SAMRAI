@@ -31,3 +31,15 @@ blt_add_executable(
 target_compile_definitions(mpi_on PUBLIC TESTING=1)
 target_compile_definitions(mpi_off PUBLIC TESTING=1)
 target_compile_definitions(mpi_disabled PUBLIC TESTING=1)
+
+blt_add_test(
+  NAME mpi_on
+  COMMAND mpi_on)
+
+blt_add_test(
+  NAME mpi_off
+  COMMAND mpi_off)
+
+blt_add_test(
+  NAME mpi_disabled
+  COMMAND mpi_disabled)

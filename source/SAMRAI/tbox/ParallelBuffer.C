@@ -266,7 +266,7 @@ ParallelBuffer::sync()
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
 std::streamsize
 ParallelBuffer::xsputn(
-   const std::string& text,
+   const char* text,
    std::streamsize n)
 {
    sync();

@@ -113,7 +113,7 @@ public:
     * Synchronize the parallel buffer (called from streambuf).
     */
    int
-   sync();
+   sync() override;
 
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
    /**
@@ -122,8 +122,8 @@ public:
     */
    std::streamsize
    xsputn(
-      const std::string& text,
-      std::streamsize n);
+      const char* text,
+      std::streamsize n) override;
 #endif
 
    /**
@@ -132,7 +132,7 @@ public:
     */
    int
    overflow(
-      int ch);
+      int ch) override;
 
 #ifdef _MSC_VER
 
@@ -142,7 +142,7 @@ public:
     * MSVC++ stream implementation.
     */
    int
-   underflow()
+   underflow() override
    {
       return EOF;
    }

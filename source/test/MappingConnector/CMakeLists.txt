@@ -11,3 +11,11 @@ blt_add_executable(
     SAMRAI_tbox)
 
 target_compile_definitions(mapping-connector PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME mapping-connector
+  EXECUTABLE mapping-connector
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

@@ -592,8 +592,8 @@ PatchHierarchy::computeRequiredConnectorWidths() const
     */
 
    
-   std::vector<IntVector> self_connector_widths(0, d_self_connector_widths[0]);
-   std::vector<IntVector> fine_connector_widths(0, d_fine_connector_widths[0]);
+   std::vector<IntVector> self_connector_widths;
+   std::vector<IntVector> fine_connector_widths;
    for (size_t i = 0; i < d_individual_cwrs.size(); ++i) {
       d_individual_cwrs[i]->computeRequiredConnectorWidths(
          self_connector_widths,

@@ -16,3 +16,11 @@ blt_add_executable(
     SAMRAI_mesh)
 
 target_compile_definitions(dlbg PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME dlbg
+  EXECUTABLE dlbg
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
