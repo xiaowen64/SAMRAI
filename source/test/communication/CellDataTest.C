@@ -24,6 +24,7 @@
 #include "SAMRAI/tbox/Database.h"
 
 #include <vector>
+#include <iostream>
 
 namespace SAMRAI {
 
@@ -715,6 +716,27 @@ bool CellDataTest::verifyCompositeBoundaryData(
 
 }
 
+#ifdef HAVE_CONDUIT
+void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch)
+{
 
+   std::shared_ptr<hier::VariableContext> source =
+      hier::VariableDatabase::getDatabase()->getContext("SOURCE");
+
+   std::shared_ptr<pdat::CellData<double> > cell_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch->getPatchData(d_variables[0], source)));
+
+   size_t data_size = cell_data->getGhostBox().size();
+
+   std::string mesh_name =
+      "domain_" + tbox::Utilities::intToString(domain_id, 6);
+
+   for (int d = 0; d < cell_data->getDepth(); ++d) {
+      std::string data_name = "cell_data_" + tbox::Utilities::intToString(d); 
+      cell_data->putBlueprintField(node[mesh_name], data_name, "mesh", d);
+   }
+}
+#endif
 
 }

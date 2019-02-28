@@ -30,6 +30,7 @@ OBJS = 	\
 	CenteredRankTree.o \
 	Clock.o \
 	CommGraphWriter.o \
+	ConduitDatabase.o \
 	Database.o \
 	DatabaseBox.o \
 	DatabaseFactory.o \

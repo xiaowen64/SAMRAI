@@ -263,6 +263,7 @@ Main {
    // Default is base_name + ".visit"
    viz_dump_dirname     = "viz-test-2d"
 
+   write_blueprint      = TRUE
 
    // Restart dump parameters.
 

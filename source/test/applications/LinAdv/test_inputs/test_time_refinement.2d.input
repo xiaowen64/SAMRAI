@@ -66,6 +66,8 @@ LinAdv {
    // Order of Goduov slopes (1, 2, or 4).  Default is 1.
    godunov_order    = 2
 
+   write_coord_values = TRUE
+
    // Type of finite difference approximation for 3d transverse flux
    // correction.  Allowed values are CORNER_TRANSPORT_1 and
    // CORNER_TRANSPORT_2.
@@ -170,6 +172,7 @@ Main {
    // Default is base_name + ".visit"
    viz_dump_dirname     = "viz-test-2d"
 
+   write_blueprint      = TRUE
 
    // Restart dump parameters.
 

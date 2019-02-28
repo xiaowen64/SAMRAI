@@ -201,7 +201,7 @@ everything:
 
 checkclean:
 	$(CLEAN_COMMON_CHECK_FILES)
-	$(RM) test*restart* viz*
+	$(RM) test*restart* viz* *root *json
 
 clean: checkclean
 	$(CLEAN_COMMON_TEST_FILES)

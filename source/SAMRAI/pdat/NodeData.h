@@ -430,6 +430,23 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
+#ifdef HAVE_CONDUIT
+   /*!
+    * @brief Put data into a conduit node for the blueprint format
+    *
+    * @param domain_node   Node holding blueprint data for one patch
+    * @param field_name    Name of this field
+    * @param topology_name Identifier of the topology for this field
+    * @param depth         Use the data at this depth
+    */
+   void
+   putBlueprintField(
+      conduit::Node& domain_node,
+      const std::string& field_name,
+      const std::string& topology_name,
+      int depth = 0);
+#endif
+
    /*!
     * The node iterator iterates over the elements of a node
     * centered box geometry.  This typedef is a convenience for

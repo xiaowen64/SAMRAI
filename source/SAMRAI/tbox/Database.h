@@ -22,6 +22,9 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#ifdef HAVE_CONDUIT
+#include "conduit.hpp"
+#endif
 
 #define INPUT_RANGE_ERROR(param_name)                                     \
    TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
@@ -1619,6 +1622,25 @@ public:
     */
    virtual std::string
    getName() = 0;
+
+   /*!
+    * @brief Full copy of a database
+    *
+    * @param database  Database to be copied
+    */
+   virtual void copyDatabase(const std::shared_ptr<Database>& database);
+
+#ifdef HAVE_CONDUIT
+   /*!
+    * @brief Write data held in this database to a Conduit Node
+    *
+    * The hierarchical structure of a SAMRAI database will be replicated in
+    * Conduit's hierarchical format.
+    *
+    * @param node  Output node
+    */
+   virtual void toConduitNode(conduit::Node& node);
+#endif
 
    /**
     * Print the current database to the specified output stream.  If

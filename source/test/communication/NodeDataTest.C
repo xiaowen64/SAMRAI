@@ -538,4 +538,32 @@ bool NodeDataTest::verifyResults(
 
 }
 
+#ifdef HAVE_CONDUIT
+void NodeDataTest::addFields(
+   conduit::Node& node,
+   int domain_id,
+   const std::shared_ptr<hier::Patch>& patch)
+{
+
+   std::shared_ptr<hier::VariableContext> source =
+      hier::VariableDatabase::getDatabase()->getContext("SOURCE");
+
+   std::shared_ptr<pdat::NodeData<double> > node_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+         patch->getPatchData(d_variables[0], source)));
+
+   size_t data_size = node_data->getGhostBox().size();
+
+   std::string mesh_name =
+      "domain_" + tbox::Utilities::intToString(domain_id, 6);
+
+   for (int d = 0; d < node_data->getDepth(); ++d) {
+      std::string data_name = "node_data_" + tbox::Utilities::intToString(d);
+      node_data->putBlueprintField(node[mesh_name], data_name, "mesh", d);
+   }
+
+}
+#endif
+
+
 }

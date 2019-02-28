@@ -200,7 +200,7 @@ Main {
 
    // visualization dump parameters
    // frequency at which to dump viz output--zero to turn off
-   viz_dump_interval    = 0
+   viz_dump_interval    = 10
    // directory in which to place viz output
    viz_dump_dirname     = "viz-test-3d-sync"
 
@@ -210,6 +210,8 @@ Main {
 
    // timestepping method--if not SYNCHRONIZED uses refined time stepping
    timestepping = "SYNCHRONIZED"
+
+   write_blueprint = TRUE
 }
 
 // Refer to geom::CartesianGridGeometry and its base classes for input

@@ -554,6 +554,8 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -684,6 +686,8 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -768,6 +772,8 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -887,6 +893,8 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -996,6 +1004,8 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1130,6 +1140,8 @@ DEPENDS_11:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1201,6 +1213,8 @@ DEPENDS_12:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1273,6 +1287,8 @@ DEPENDS_13:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1507,6 +1523,8 @@ DEPENDS_17:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1579,6 +1597,8 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1676,6 +1696,8 @@ DEPENDS_19:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1748,6 +1770,8 @@ DEPENDS_20:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -1980,6 +2004,8 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
