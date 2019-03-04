@@ -1,5 +1,5 @@
-#ifndef DEQN_AMR_RAJA_API_H
-#define DEQN_AMR_RAJA_API_H
+#ifndef included_tbox_Raja_api
+#define included_tbox_Raja_api
 
 // #include "SAMRAI/pdat/ArrayData.h"
 
@@ -28,29 +28,50 @@ template <>
 struct policy_traits<policy::parallel> {
   typedef RAJA::cuda_exec_async<128> policy;
 
-  typedef
+  using raja_1d_policy =
     RAJA::KernelPolicy<
-      RAJA::statement::CudaKernelAsync<
-        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<128>, RAJA::statement::Lambda<0> >
-      >
-    > raja_1d_policy;
+          RAJA::statement::CudaKernelAsync<
+            RAJA::statement::Tile<0, RAJA::statement::tile_fixed<128>, RAJA::cuda_block_x_loop,
+              RAJA::statement::For<0, RAJA::cuda_thread_x_loop,
+                RAJA::statement::Lambda<0>
+              >
+            >
+          >
+    >;
 
-  typedef
+  using raja_2d_policy =
     RAJA::KernelPolicy<
-      RAJA::statement::CudaKernelAsync<
-        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<32>,
-        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<32>, RAJA::statement::Lambda<0> > >
-      >
-    > raja_2d_policy;
+          RAJA::statement::CudaKernelAsync<
+            RAJA::statement::Tile<1, RAJA::statement::tile_fixed<32>, RAJA::cuda_block_y_loop,
+              RAJA::statement::Tile<0, RAJA::statement::tile_fixed<32>, RAJA::cuda_block_x_loop,
+                RAJA::statement::For<1, RAJA::cuda_thread_y_loop,
+                  RAJA::statement::For<0, RAJA::cuda_thread_x_loop,
+                    RAJA::statement::Lambda<0>
+                  >
+                >
+              >
+            >
+          >
+    >;
 
-  typedef
+  using raja_3d_policy =
     RAJA::KernelPolicy<
-      RAJA::statement::CudaKernelAsync<
-        RAJA::statement::For<2, RAJA::cuda_threadblock_exec<8>,
-        RAJA::statement::For<1, RAJA::cuda_threadblock_exec<8>,
-        RAJA::statement::For<0, RAJA::cuda_threadblock_exec<8>, RAJA::statement::Lambda<0> > > >
-      >
-    > raja_3d_policy;
+          RAJA::statement::CudaKernelAsync<
+            RAJA::statement::Tile<2, RAJA::statement::tile_fixed<16>, RAJA::cuda_block_z_loop,
+              RAJA::statement::Tile<1, RAJA::statement::tile_fixed<16>, RAJA::cuda_block_y_loop,
+                RAJA::statement::Tile<0, RAJA::statement::tile_fixed<16>, RAJA::cuda_block_x_loop,
+                  RAJA::statement::For<2, RAJA::cuda_thread_z_loop,
+                    RAJA::statement::For<1, RAJA::cuda_thread_y_loop,
+                      RAJA::statement::For<0, RAJA::cuda_thread_x_loop,
+                        RAJA::statement::Lambda<0>
+                      >
+                    >
+                  >
+                >
+              >
+            >
+          >
+    >;
 
   typedef RAJA::cuda_reduce raja_reduction_policy;
 };
@@ -96,7 +117,7 @@ synchronize<tbox::policy::parallel>()
  */
 template <typename policy, typename loop_body>
 inline void for_all(int begin, int end, loop_body&& body) {
-  RAJA::forall<typename detail::policy_traits<policy>::policy>(begin, end, body);
+  RAJA::forall<typename detail::policy_traits<policy>::policy>(RAJA::RangeSegment(begin, end), body);
 }
 
 
@@ -266,4 +287,4 @@ struct ArrayView<3, const T> :
 }
 }
 
-#endif //DEQN_AMR_RAJA_API_H
+#endif

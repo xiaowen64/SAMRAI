@@ -15,7 +15,7 @@ Main {
 
    // visualization dump parameters
    // frequency at which to dump viz output--zero to turn off
-   viz_dump_interval    = 1
+   viz_dump_interval    = 0
    // directory in which to place viz output
    viz_dump_dirname     = "viz_box2ddebug"
    // number of processors which write to each viz file
@@ -37,7 +37,7 @@ TimerManager{
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry {
-   domain_boxes = [ (0,0) , (4,4) ]
+   domain_boxes = [ (0,0) , (100,100) ]
    x_lo         = 0.e0, 0.e0 // lower end of computational domain.
    x_up         = 1e0, 1e0   // upper end of computational domain.
 }
@@ -92,7 +92,7 @@ TimeRefinementIntegrator {
    start_time            = 0.e0    // initial simulation time
    end_time              = 1.5e0    // final simulation time
    grow_dt               = 2e0     // growth factor for timesteps
-   max_integrator_steps  = 25     // max number of simulation timesteps
+   max_integrator_steps  = 10     // max number of simulation timesteps
 }
 
 // Refer to mesh::TreeLoadBalancer for input

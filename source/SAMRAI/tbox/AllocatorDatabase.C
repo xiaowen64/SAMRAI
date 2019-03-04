@@ -64,7 +64,7 @@ AllocatorDatabase::initialize()
    */
   auto um_alloc = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
       "SAMRAI_UM",
-      rm.getAllocator(umpire::resource::UnifiedMemory),
+      rm.getAllocator(umpire::resource::Unified),
       // Set preferred location to GPU
       "PREFERRED_LOCATION");
 
@@ -78,7 +78,7 @@ AllocatorDatabase::initialize()
 
   rm.makeAllocator<umpire::strategy::DynamicPool>(
       "SAMRAI_stream_pool",
-      rm.getAllocator(umpire::resource::PinnedMemory));
+      rm.getAllocator(umpire::resource::Pinned));
 }
 
 umpire::Allocator
