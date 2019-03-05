@@ -807,5 +807,131 @@ Transformation::rotateAboutAxis(
    }
 }
 
+void
+Transformation::setOrientationVector(
+   std::vector<int>& orientation,
+   RotationIdentifier rotation)
+{
+    orientation.resize(3);
+    if (rotation == NO_ROTATE) {
+        orientation[0] = 1;
+        orientation[1] = 2;
+        orientation[2] = 3;
+    } else if (rotation == IUP_JUP) {
+        orientation[0] = 1;
+        orientation[1] = 2;
+        orientation[2] = 3;
+    } else if (rotation == JUP_IDOWN) {
+        orientation[0] = 2;
+        orientation[1] = -1;
+        orientation[2] = 3;
+    } else if (rotation == IDOWN_JDOWN) {
+        orientation[0] = -1;
+        orientation[1] = -2;
+        orientation[2] = 3;
+    } else if (rotation == JDOWN_IUP) {
+        orientation[0] = -2;
+        orientation[1] = 1;
+        orientation[2] = 3;
+    } else if (rotation == IUP_JUP_KUP) {
+        orientation[0] = 1;
+        orientation[1] = 2;
+        orientation[2] = 3;
+    } else if (rotation == KUP_IUP_JUP) {
+        orientation[0] = 3;
+        orientation[1] = 1;
+        orientation[2] = 2;
+    } else if (rotation == JUP_KUP_IUP) {
+        orientation[0] = 2;
+        orientation[1] = 3;
+        orientation[2] = 1;
+    } else if (rotation == IDOWN_KUP_JUP) {
+        orientation[0] = -1;
+        orientation[1] = 3;
+        orientation[2] = 2;
+    } else if (rotation == KUP_JUP_IDOWN) {
+        orientation[0] = 3;
+        orientation[1] = 2;
+        orientation[2] = -1;
+    } else if (rotation == JUP_IDOWN_KUP) {
+        orientation[0] = 2;
+        orientation[1] = -1;
+        orientation[2] = 3;
+    } else if (rotation == KDOWN_JUP_IUP) {
+        orientation[0] = -3;
+        orientation[1] = 2;
+        orientation[2] = 1;
+    } else if (rotation == IUP_KDOWN_JUP) {
+        orientation[0] = 1;
+        orientation[1] = -3;
+        orientation[2] = 2;
+    } else if (rotation == JUP_IUP_KDOWN) {
+        orientation[0] = 2;
+        orientation[1] = 1;
+        orientation[2] = -3;
+    } else if (rotation == KDOWN_IDOWN_JUP) {
+        orientation[0] = -3;
+        orientation[1] = -1;
+        orientation[2] = 2;
+    } else if (rotation == IDOWN_JUP_KDOWN) {
+        orientation[0] = -1;
+        orientation[1] = 2;
+        orientation[2] = -3;
+    } else if (rotation == JUP_KDOWN_IDOWN) {
+        orientation[0] = 2;
+        orientation[1] = -3;
+        orientation[2] = -1;
+    } else if (rotation == JDOWN_IUP_KUP) {
+        orientation[0] = -2;
+        orientation[1] = 1;
+        orientation[2] = 3;
+    } else if (rotation == IUP_KUP_JDOWN) {
+        orientation[0] = 1;
+        orientation[1] = 3;
+        orientation[2] = -2;
+    } else if (rotation == KUP_JDOWN_IUP) {
+        orientation[0] = 3;
+        orientation[1] = -2;
+        orientation[2] = 1;
+    } else if (rotation == JDOWN_KUP_IDOWN) {
+        orientation[0] = -2;
+        orientation[1] = 3;
+        orientation[2] = -1;
+    } else if (rotation == IDOWN_JDOWN_KUP) {
+        orientation[0] = -1;
+        orientation[1] = -2;
+        orientation[2] = 3;
+    } else if (rotation == KUP_IDOWN_JDOWN) {
+        orientation[0] = 3;
+        orientation[1] = -1;
+        orientation[2] = -2;
+    } else if (rotation == JDOWN_KDOWN_IUP) {
+        orientation[0] = -2;
+        orientation[1] = -3;
+        orientation[2] = 1;
+    } else if (rotation == KDOWN_IUP_JDOWN) {
+        orientation[0] = -3;
+        orientation[1] = 1;
+        orientation[2] = -2;
+    } else if (rotation == IUP_JDOWN_KDOWN) {
+        orientation[0] = 1;
+        orientation[1] = -2;
+        orientation[2] = -3;
+    } else if (rotation == JDOWN_IDOWN_KDOWN) {
+        orientation[0] = -2;
+        orientation[1] = -1;
+        orientation[2] = -3;
+    } else if (rotation == KDOWN_JDOWN_IDOWN) {
+        orientation[0] = -3;
+        orientation[1] = -2;
+        orientation[2] = -1;
+    } else if (rotation == IDOWN_KDOWN_JDOWN) {
+        orientation[0] = -1;
+        orientation[1] = -3;
+        orientation[2] = -2;
+    }
+}
+
+
 }
 }

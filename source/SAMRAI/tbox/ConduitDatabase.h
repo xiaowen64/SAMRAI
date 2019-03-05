@@ -4,101 +4,90 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
- * Description:   A memory database structure that stores (key,value) pairs in memory
+ * Description:   A database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
 
-#ifndef included_tbox_MemoryDatabase
-#define included_tbox_MemoryDatabase
+#ifndef included_tbox_ConduitDatabase
+#define included_tbox_ConduitDatabase
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#ifdef HAVE_CONDUIT
+
 #include "SAMRAI/tbox/Database.h"
 
-#include <map>
+#include <list>
+#include "conduit.hpp"
 
 namespace SAMRAI {
 namespace tbox {
 
-/**
- * Class MemoryDatabase stores (key,value) pairs in a hierarchical
- * database.  Each value may be another database, boolean, box, character,
+/*!
+ * Class ConduitDatabase stores (key,value) pairs in a hierarchical
+ * database in memory using the Conduit Nodes for internal storage.
+ * Each value may be another database, boolean, box, character,
  * complex, double, float, integer, or string.  Note that boxes are stored
- * using the toolbox box class that can store boxes of any dimension in the
+ * using the DatabaseBox class that can store boxes of any dimension in the
  * same data structure.
  *
  * See the Database class documentation for a description of the
  * generic database interface.
  *
- * The memory database is used for storing input (a "deck") in memory; the
- * derived class InputDatabase use for this purpose; InputDatabase is
- * kept around for historical reasons and the name is a bit more clear
- * than "memory" database but this class is very generic.  The Parser
- * is really the class that process the input; it parses the input file
- * into a database.
- *
- * Note that the memory database will attempt to promote numerical types
- * where appropriate.  The promotion chain is int -> float -> double ->
- * complex.  For example, an integer key will be promoted to a complex
- * value if isComplex() or getComplex() is called.  Double values will also
- * be truncated to floats (with loss of information) if a float call is
- * made on a double value.
- *
  * It is assumed that all processors will access the database in the same
  * manner.  Thus, all error messages are output to pout instead of perr.
  */
 
-class MemoryDatabase:public Database
+class ConduitDatabase:public Database
 {
 public:
-   /**
-    * The memory database constructor creates an empty database with the
-    * specified name.
+   /*!
+    * @brief Constructor creates an empty database with the specified name
+    *
+    * @param name  Name of the database
     */
-   explicit MemoryDatabase(
+   explicit ConduitDatabase(
       const std::string& name);
 
-   /**
-    * The memory database destructor deallocates the data in the database.
+   /*!
+    * @brief Constructor creates a database pointing to a Conduit Node
+    *
+    * @param name  Name of the database
+    * @param node  Pointer to a Conduit Node--must be of Conduit's object
+    *              data type.
     */
-   virtual ~MemoryDatabase();
+    ConduitDatabase(
+       const std::string& name,
+       conduit::Node* node);
 
-   /**
-    * Create a new database file.
+   /*!
+    * Destructor deallocates the data in the database.
+    */
+   virtual ~ConduitDatabase();
+
+   /*!
+    * @brief Fulfills abstract interface--not used in this implementation.
     *
-    * Returns true if successful.
-    *
-    * @param name name of database. Normally a filename.
+    * An error will occur if this is called
     */
    virtual bool
    create(
       const std::string& name);
 
-   /**
-    * Open an existing database file.
+   /*!
+    * @brief Fulfills abstract interface--not used in this implementation.
     *
-    * Returns true if successful.
-    *
-    * @param name name of database. Normally a filename.
-    *
-    * @param read_write_mode Open the database in read-write
-    * mode instead of read-only mode.  NOTE: This class currently
-    * does not support read-only mode, so this flag must be true.
-    *
-    * @pre read_write_mode == true
+    * An error will occur if this is called
     */
    virtual bool
    open(
       const std::string& name,
       const bool read_write_mode = false);
 
-   /**
-    * Close the database.
+   /*!
+    * @brief Fulfills abstract interface--not used in this implementation.
     *
-    * Returns true if successful.
-    *
-    * If the database is currently open then close it.  This should
-    * flush all data to the file (if the database is on disk).
+    * An error will occur if this is called
     */
    virtual bool
    close();
@@ -849,19 +838,6 @@ public:
    getName();
 
    /**
-    * Return whether the specified key has been accessed by one of the
-    * lookup member functions.  If the key does not exist in the database,
-    * then false is returned.
-    */
-   bool
-   keyAccessed(
-      const std::string& key)
-   {
-      KeyData* keydata = findKeyData(key);
-      return keydata ? keydata->d_accessed : false;
-   }
-
-   /**
     * Print the current database to the specified output stream.  After
     * each key, print whether that key came from the a file and was
     * used, came from the file but was not used (unused),
@@ -898,34 +874,13 @@ public:
    }
 
 private:
-   MemoryDatabase();                            // not implemented
-   MemoryDatabase(
-      const MemoryDatabase&);                   // not implemented
-   MemoryDatabase&
-   operator = (
-      const MemoryDatabase&);                   // not implemented
 
-   /*
-    * The following structure holds the list of (key,value) pairs stored
-    * in the database.  Note that only one of the arrays contains valid
-    * data for any particular key.
-    */
-   struct KeyData {
-      //std::string d_key;                                // key name
-      enum Database::DataType d_type;                   // type of entry
-      size_t d_array_size;                              // size of array data
-      bool d_accessed;                                  // whether accessed
-      bool d_from_default;                              // from default key
-      std::shared_ptr<Database> d_database;           // sub-database
-      std::vector<bool> d_boolean;              // boolean vector value
-      std::vector<DatabaseBox> d_box;           // box vector value
-      std::vector<char> d_char;                 // char vector value
-      std::vector<dcomplex> d_complex;          // complex vector value
-      std::vector<double> d_double;             // double vector value
-      std::vector<float> d_float;               // float vector value
-      std::vector<int> d_integer;               // integer vector value
-      std::vector<std::string> d_string;        // string vector value
-   };
+   ConduitDatabase();                            // not implemented
+   ConduitDatabase(
+      const ConduitDatabase&);                   // not implemented
+   ConduitDatabase&
+   operator = (
+      const ConduitDatabase&);                   // not implemented
 
    /*
     * Private utility routines for managing the database
@@ -933,12 +888,15 @@ private:
    bool
    deleteKeyIfFound(
       const std::string& key);
-   KeyData *
-   findKeyData(
+
+   conduit::Node&
+   getChildNodeOrExit(
       const std::string& key);
-   KeyData *
-   findKeyDataOrExit(
-      const std::string& key);
+
+
+   void
+   setConduitDataTypes();
+
    static void
    indentStream(
       std::ostream& os,
@@ -948,6 +906,7 @@ private:
          os << " ";
       }
    }
+
    void
    printDatabase(
       std::ostream& os,
@@ -958,7 +917,11 @@ private:
     * Private data members - name and a list of (key,value) pairs
     */
    std::string d_database_name;
-   std::map<std::string, KeyData> d_keyvalues;
+
+   conduit::Node* d_node;
+
+   std::map<std::string, std::shared_ptr<ConduitDatabase> > d_child_dbs;
+   std::map<std::string, enum Database::DataType> d_types;
 
    static const int PRINT_DEFAULT;
    static const int PRINT_INPUT;
@@ -968,5 +931,7 @@ private:
 
 }
 }
+
+#endif
 
 #endif

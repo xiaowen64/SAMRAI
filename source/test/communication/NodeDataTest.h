@@ -122,6 +122,13 @@ public:
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
+#ifdef HAVE_CONDUIT
+   void addFields(
+      conduit::Node& node,
+      int domain_id,
+      const std::shared_ptr<hier::Patch>& patch);
+#endif
+
 private:
    /**
     * Function for reading test data from input file.

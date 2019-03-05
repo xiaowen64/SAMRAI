@@ -10,15 +10,11 @@
 
 #include "CommTester.h"
 
+#include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
-#include "SAMRAI/hier/CoarsenOperator.h"
-#include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
-#include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/tbox/BalancedDepthFirstTree.h"
-#include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/xfer/CompositeBoundaryAlgorithm.h"
 
 namespace SAMRAI {
@@ -738,5 +734,52 @@ void CommTester::setupHierarchy(
    }
 
 }
+
+void
+CommTester::putCoordinatesToDatabase(
+   std::shared_ptr<tbox::Database>& coords_db,
+   const hier::Patch& patch)
+{
+
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         patch.getPatchGeometry()));
+/*
+   if (pgeom) {
+      pgeom->putBlueprintCoords(coords_db, patch.getBox());
+   }
+*/
+   const tbox::Dimension& dim(patch.getDim());
+
+   pdat::NodeData<double> coords(patch.getBox(), dim.getValue(),
+                                 hier::IntVector::getZero(dim));
+
+   const hier::Index& box_lo = patch.getBox().lower();
+   const double* x_lo = pgeom->getXLower();
+   const double* dx = pgeom->getDx();
+   
+   pdat::NodeIterator nend = pdat::NodeGeometry::end(patch.getBox());
+   for (pdat::NodeIterator itr(pdat::NodeGeometry::begin(patch.getBox())); itr != nend; ++itr) {
+      const pdat::NodeIndex& ni = *itr;
+      for (int d = 0; d < dim.getValue(); ++d) {
+         coords(ni, d) = x_lo[d] + (ni(d)-box_lo(d))*dx[d];
+      }
+   }
+
+   coords_db->putString("type", "explicit");
+
+   std::shared_ptr<tbox::Database> values_db = coords_db->putDatabase("values");
+
+   int data_size = coords.getArrayData().getBox().size();
+
+   values_db->putDoubleArray("x", coords.getPointer(0), data_size);
+   if (dim.getValue() > 1) {
+      values_db->putDoubleArray("y", coords.getPointer(1), data_size);
+   }
+   if (dim.getValue() > 2) {
+      values_db->putDoubleArray("z", coords.getPointer(2), data_size);
+   }
+}
+
 
 }

@@ -89,6 +89,21 @@ public:
       return d_x_up;
    }
 
+   /*!
+    * @brief Put coordinates in a database in the Conduit blueprint format.
+    *
+    * This stores a description of this geometry as uniform coordinates
+    * in the blueprint format.
+    *
+    * @param coords_db   Database to hold the coordinate information
+    * @param box         Box corresponding to the patch that holds this
+    *                    geometry.
+    */ 
+   void
+   putBlueprintCoords(
+      const std::shared_ptr<tbox::Database>& coords_db,
+      const hier::Box& box) const;
+
    /**
     * Print CartesianPatchGeometry class data.
     */

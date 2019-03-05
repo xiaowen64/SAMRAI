@@ -20,6 +20,7 @@
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
+#include "SAMRAI/hier/BlueprintUtilsStrategy.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "PatchDataTestStrategy.h"
@@ -62,7 +63,8 @@ namespace SAMRAI {
 class CommTester:
    public mesh::StandardTagAndInitStrategy,
    public xfer::RefinePatchStrategy,
-   public xfer::CoarsenPatchStrategy
+   public xfer::CoarsenPatchStrategy,
+   public hier::BlueprintUtilsStrategy 
 {
 public:
    /**
@@ -271,6 +273,11 @@ public:
    setupHierarchy(
       std::shared_ptr<tbox::Database> main_input_db,
       std::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger);
+
+   void
+   putCoordinatesToDatabase(
+      std::shared_ptr<tbox::Database>& coords_db,
+      const hier::Patch& patch);
 
    /*!
     * @brief Return the dimension of this object.
