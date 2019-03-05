@@ -65,49 +65,6 @@
 using namespace std;
 using namespace SAMRAI;
 
-class DeviceManager
-{
-private:
-   static void initializeCallback()
-   {
-#if 0
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-      if (mpi.getSize() < 2) return;
-
-      MPI_Comm node_comm;
-      int local_size, local_rank, rank;
-
-      MPI_Comm_split(MPI_COMM_WORLD, MPI_COMM_TYPE_SHARED, 0, &node_comm);
-      MPI_Comm_size(node_comm, &local_size);
-      MPI_Comm_rank(node_comm, &local_rank);
-      MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-
-      // Assign device to MPI process
-      int num_devices;
-      cudaGetDeviceCount(&num_devices);
-
-      const int my_device = local_rank % num_devices;
-      cudaSetDevice(my_device);
-      std::cout << "My device = " << my_device << std::endl;
-#endif
-   }
-
-   static void finalizeCallback()
-   {
-      cudaDeviceReset();
-   }
-
-   static SAMRAI::tbox::StartupShutdownManager::Handler s_initialize_handler;
-};
-
-SAMRAI::tbox::StartupShutdownManager::Handler
-DeviceManager::s_initialize_handler(
-   DeviceManager::initializeCallback,
-   0,
-   0,
-   DeviceManager::finalizeCallback,
-   tbox::StartupShutdownManager::priorityLogger);
-
 int main(
     int argc,
     char* argv[])
@@ -392,10 +349,10 @@ int main(
       char buf[50];
       sprintf(buf, "Timestep %d", iteration_num);
       RANGE_PUSH(buf, 2);
-      if (iteration_num == 11) 
+      if (iteration_num == 11)
         cudaProfilerStart();
       double dt_new = time_integrator->advanceHierarchy(dt_now);
-      if (iteration_num == 13) 
+      if (iteration_num == 13)
         cudaProfilerStop();
       RANGE_POP;
       loop_time += dt_now;
