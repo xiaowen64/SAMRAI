@@ -9,6 +9,7 @@ set ( tbox_headers
   BreadthFirstRankTree.h
   CenteredRankTree.h
   Clock.h
+  ConduitDatabase.h
   CommGraphWriter.h
   Complex.h
   Database.h
@@ -68,6 +69,7 @@ set (tbox_sources
   BreadthFirstRankTree.C
   CenteredRankTree.C
   Clock.C
+  ConduitDatabase.C
   CommGraphWriter.C
   Database.C
   DatabaseBox.C

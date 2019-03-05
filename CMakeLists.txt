@@ -21,6 +21,7 @@ set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 
 # Third party libraries
+option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
 option(ENABLE_PETSC "Enable PETSc" Off)

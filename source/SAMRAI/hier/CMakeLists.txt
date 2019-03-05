@@ -4,6 +4,8 @@ set (hier_headers
   BaseConnectorAlgorithm.h
   BaseGridGeometry.h
   BlockId.h
+  BlueprintUtils.h
+  BlueprintUtilsStrategy.h
   BoundaryBox.h
   BoundaryBoxUtils.h
   BoundaryLookupTable.h
@@ -70,6 +72,8 @@ set (hier_sources
   BaseConnectorAlgorithm.C
   BaseGridGeometry.C
   BlockId.C
+  BlueprintUtils.C
+  BlueprintUtilsStrategy.C
   BoundaryBox.C
   BoundaryBoxUtils.C
   BoundaryLookupTable.C

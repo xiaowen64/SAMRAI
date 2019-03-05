@@ -100,3 +100,11 @@ if (ENABLE_SUNDIALS)
       LIBRARIES ${SUNDIALS_LIBRARIES})
   endif ()
 endif ()
+
+#HAVE_CONDUIT
+if (ENABLE_SUNDIALS)
+  find_package(CONDUIT REQUIRED)
+  if (CONDUIT_FOUND)
+    set (HAVE_CONDUIT True)
+  endif ()
+endif ()
