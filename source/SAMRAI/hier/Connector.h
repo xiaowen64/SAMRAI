@@ -1388,7 +1388,7 @@ public:
     */
    void
    putToRestart(
-      const std::shared_ptr<tbox::Database>& restart_db)
+      const std::shared_ptr<tbox::Database>& restart_db) const
    {
       d_relationships.putToRestart(restart_db);
    }

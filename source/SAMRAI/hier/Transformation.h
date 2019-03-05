@@ -337,6 +337,11 @@ public:
       rotateIndex(&index[0], index.getDim(), rotation);
    }
 
+   static void
+   setOrientationVector(
+      std::vector<int>& orientation,
+      RotationIdentifier rotation);
+
 private:
    /*!
     * @brief private routine to rotate a cell centered index around an axis

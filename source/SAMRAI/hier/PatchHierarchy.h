@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/BaseGridGeometry.h"
+#include "SAMRAI/hier/BlueprintUtils.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
@@ -959,6 +960,55 @@ public:
    void
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
+
+#ifdef HAVE_CONDUIT
+   /*!
+    * @brief Make a database holding a description of the hierarchy in the Conduit blueprint
+    * format.
+    *
+    * The blueprint is a portable format for description of a mesh and its data. See
+    * https://llnl-conduit.readthedocs.io for the Conduit library.
+    *
+    * Some parts of the blueprint can be constructed directly from evaluating the PatchHierarchy,
+    * and others require application-specific information.  This method fills the database with as much
+    * as it can from the PatchHierarchy and then uses the BlueprintUtils class to add the remainder.
+    *
+    * @param[out]  Database to hold the blueprint 
+    * @param[in]   Utility class that adds data to the blueprint
+    */
+   void
+   makeBlueprintDatabase(
+      const std::shared_ptr<tbox::Database>& blueprint_db,
+      const BlueprintUtils& bp_utils) const; 
+#endif
+
+   /*!
+    * @brief Add Conduit blueprint's "nestsets" data to a database.
+    *
+    * The "nestsets" data is a description of the nesting or overlaps between
+    * patches on adjacent levels.
+    *
+    * @param[in,out] blueprint_db  Database holding the blueprint
+    * @param[in]     topology_name Name of the blueprint topology
+    */
+   void
+   makeNestingSets(
+      const std::shared_ptr<tbox::Database>& blueprint_db,
+      const std::string& topology_name) const;
+
+   /*!
+    * @brief Add Conduit blueprint's "adjsets" data to a database.
+    *
+    * The "adjsets" data is a description of the relationship between adjacent patches within
+    * a level.
+    *
+    * @param[in,out] blueprint_db  Database holding the blueprint
+    * @param[in]     topology_name Name of the blueprint topology
+    */
+   void
+   makeAdjacencySets(
+      const std::shared_ptr<tbox::Database>& blueprint_db,
+      const std::string& topology_name) const;
 
    /*!
     * @brief Read in the entire hierarchy from the restart database.

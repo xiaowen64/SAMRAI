@@ -30,6 +30,8 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -106,6 +108,11 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeGeometry.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIndex.h				\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeIterator.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeOverlap.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceGeometry.h			\
@@ -165,6 +172,7 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceVariable.C			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
@@ -193,6 +201,8 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BaseGridGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtils.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/BlueprintUtilsStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoundaryBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/Box.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/BoxContainer.h			\
@@ -280,6 +290,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/BalancedDepthFirstTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/ConduitDatabase.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Database.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseBox.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/DatabaseFactory.h			\
