@@ -21,4 +21,4 @@ samrai_add_tests(
   NAME mblktree
   EXECUTABLE mblktree
   INPUTS ${test_inputs}
-  PARALLEL TRUE)
+  PARALLEL FALSE)
