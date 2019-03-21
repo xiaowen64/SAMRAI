@@ -2,16 +2,12 @@ macro (samrai_add_tests)
 
   set(singleValueArgs NAME EXECUTABLE PARALLEL)
   set(multiValueArgs INPUTS)
-  set(counter 0)
   set(base_name ${arg_NAME})
 
   cmake_parse_arguments(arg
       "${options}" "${singleValueArgs}" "${multiValueArgs}" ${ARGN} )
 
   foreach (test_file ${arg_INPUTS})
-
-    math(EXPR counter "${counter}+1")
-
 
     message(STATUS "Test: ${arg_NAME} with input ${test_file}")
 
