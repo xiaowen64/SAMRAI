@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 
+// TODO This should be in pdat instead, since it involves hier::Box.
 #ifndef included_tbox_for_all
 #define included_tbox_for_all
 
@@ -237,13 +238,14 @@ struct for_all<3> {
 
 } // namespace detail
 
-
+// does NOT include end
 template <typename Policy, typename LoopBody>
 inline void for_all(int begin, int end, LoopBody body)
 {
    RAJA::forall<typename detail::policy_traits<Policy>::Policy>(RAJA::RangeSegment(begin, end), body);
 }
 
+// does NOT include end
 template <typename LoopBody>
 inline void parallel_for_all(int begin, int end, LoopBody&& body)
 {
@@ -254,15 +256,13 @@ inline void parallel_for_all(int begin, int end, LoopBody&& body)
 template<typename Policy, typename LoopBody>
 inline void for_all(const hier::Box& box, const int dim, LoopBody body)
 {
-   RAJA::forall<typename detail::policy_traits<Policy>::Policy>(
-      RAJA::RangeSegment(box.lower()(dim), box.upper()(dim)),
-      body);
+   for_all<Policy>(box.lower()(dim), box.upper()(dim)+1, body);
 }
 
 template<typename LoopBody>
 inline void parallel_for_all(const hier::Box& box, const int dim, LoopBody body)
 {
-   for_all<policy::parallel>(box, dim, body);
+   for_all<policy::parallel>(box.lower()(dim), box.upper()(dim)+1, body);
 }
 
 
@@ -287,11 +287,6 @@ enum class Reduction {
    MinLoc,
    MaxLoc
 };
-
-// auto norm = tbox::parallel_reduction_variable<tbox::Reduction::Sum, double>::type
-// or _t using trick
-// auto norm = tbox::reduction_variable<Policy, tbox::Reduction::Sum, double>::type
-// or _t using trick
 
 template<typename Policy, Reduction R, typename TYPE = double>
 struct reduction_variable;
@@ -336,12 +331,16 @@ template <typename policy>
 inline void
 synchronize() {}
 
+#if defined(HAVE_CUDA)
+
 template<>
 inline void
 synchronize<tbox::policy::parallel>()
 {
    RAJA::synchronize<RAJA::cuda_synchronize>();
 }
+
+#endif
 
 }
 }

@@ -11,6 +11,8 @@
 #ifndef included_tbox_AllocatorDatabase
 #define included_tbox_AllocatorDatabase
 
+#include "SAMRAI/SAMRAI_config.h"
+
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include "umpire/Allocator.hpp"
@@ -41,7 +43,7 @@ private:
   static void startupCallback();
   static void shutdownCallback();
 
-  static AllocatorDatabase* s_allocator_database_instance;  
+  static AllocatorDatabase* s_allocator_database_instance;
 
   static StartupShutdownManager::Handler
       s_startup_handler;

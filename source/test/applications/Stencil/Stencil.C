@@ -54,7 +54,7 @@ Stencil::registerModelVariables(
       d_grid_geometry);
 
    int i = 0;
-   for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+   for ( const auto& rho_var : d_rho_variables ) {
 
       integrator->registerVariable(
          rho_var,
@@ -89,8 +89,8 @@ Stencil::initializeDataOnPatch(
       // initialize
       if (initial_time) {
          for ( const auto& rho_var : d_rho_variables ) {
-            // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
             auto rho = pdat::get_view<2, pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext()));
+            // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
             tbox::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
                rho(j,k) = 0.0;
@@ -140,7 +140,6 @@ Stencil::conservativeDifferenceOnPatch(
    RANGE_PUSH("Stencil::conservativeDifference", 1);
 
    auto rho_new = pdat::get_view<2, pdat::CellData<double>>(patch.getPatchData(d_rho_update, getDataContext()));
-
    // CellView<double, 2> rhoNew(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_update, getDataContext())));
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
@@ -149,7 +148,7 @@ Stencil::conservativeDifferenceOnPatch(
    const double dx = pgeom->getDx()[0];
    const double dy = pgeom->getDx()[1];
 
-   for ( const std::shared_ptr<pdat::CellVariable<double> > rho_var : d_rho_variables ) {
+   for ( const auto& rho_var : d_rho_variables ) {
       auto rho = pdat::get_view<2, pdat::CellData<double>>(patch.getPatchData(rho_var, getDataContext()));
       // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
@@ -253,12 +252,12 @@ Stencil::setPhysicalBoundaryConditions(
 
       for(int i = 0; i < edge_bdry.size(); i++) {
 
-         auto edge = edge_bdry[i].getLocationIndex();
+         const auto edge = edge_bdry[i].getLocationIndex();
 
-         hier::Box boundary_box(pgeom->getBoundaryFillBox(
-                                   edge_bdry[i],
-                                   patch.getBox(),
-                                   ghost_width_to_fill));
+         const hier::Box boundary_box(pgeom->getBoundaryFillBox(
+                                         edge_bdry[i],
+                                         patch.getBox(),
+                                         ghost_width_to_fill));
 
          switch(edge) {
          case (BdryLoc::YLO) :

@@ -8,8 +8,6 @@
  *
  ************************************************************************/
 
-#include "SAMRAI/SAMRAI_config.h"
-
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
 #include "umpire/strategy/DynamicPool.hpp"
@@ -23,6 +21,8 @@
 
 namespace SAMRAI {
 namespace tbox {
+
+#if defined(HAVE_UMPIRE)
 
 AllocatorDatabase * AllocatorDatabase::s_allocator_database_instance(0);
 
@@ -107,6 +107,8 @@ AllocatorDatabase::getStreamAllocator()
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
   return umpire::TypedAllocator<char>(rm.getAllocator("SAMRAI_stream_pool"));
 }
+
+#endif
 
 }
 }

@@ -135,7 +135,8 @@ SideData<TYPE>::getView(
         int side_normal,
         int depth)
 {
-   return SideData<TYPE>::View<DIM>(getPointer(side_normal, depth), depth);
+   const hier::Box side_box = SideGeometry::toSideBox(getGhostBox(), side_normal);
+   return SideData<TYPE>::View<DIM>(getPointer(side_normal, depth), side_box);
 }
 
 template<class TYPE>
@@ -145,9 +146,9 @@ SideData<TYPE>::getConstView(
         int side_normal,
         int depth) const
 {
-   return SideData<TYPE>::ConstView<DIM>(getPointer(side_normal, depth), depth);
+   const hier::Box side_box = SideGeometry::toSideBox(getGhostBox(), side_normal);
+   return SideData<TYPE>::ConstView<DIM>(getPointer(side_normal, depth), side_box);
 }
-
 #endif
 
 template<class TYPE>

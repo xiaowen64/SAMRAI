@@ -103,7 +103,8 @@ template<int DIM>
 NodeData<TYPE>::View<DIM>
 NodeData<TYPE>::getView(int depth)
 {
-   return NodeData<TYPE>::View<DIM>(getPointer(depth), getBox());
+   const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
+   return NodeData<TYPE>::View<DIM>(getPointer(depth), node_box);
 }
 
 template<class TYPE>
@@ -111,7 +112,8 @@ template<int DIM>
 NodeData<TYPE>::ConstView<DIM>
 NodeData<TYPE>::getConstView(int depth) const
 {
-   return NodeData<TYPE>::ConstView<DIM>(getPointer(depth), getBox());
+   const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
+   return NodeData<TYPE>::ConstView<DIM>(getPointer(depth), node_box);
 }
 #endif
 

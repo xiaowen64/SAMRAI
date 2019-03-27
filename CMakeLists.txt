@@ -63,6 +63,20 @@ if (ENABLE_OPENMP)
   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler ${OpenMP_CXX_FLAGS}")
 endif ()
 
+if (NOT ENABLE_UMPIRE)
+  message(FATAL_ERROR "The branch requires UMPIRE, for now...")
+endif ()
+
+if (ENABLE_CUDA)
+  if (NOT ENABLE_RAJA)
+    message(FATAL_ERROR "CUDA support requires RAJA")
+  endif ()
+
+  if (NOT ENABLE_UMPIRE)
+    message(FATAL_ERROR "CUDA support requires UMPIRE")
+  endif ()
+endif ()
+
 include_directories(${CMAKE_BINARY_DIR}/include)
 
 include(cmake/CMakeBasics.cmake)

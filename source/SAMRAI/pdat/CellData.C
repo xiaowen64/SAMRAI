@@ -145,7 +145,7 @@ template<int DIM>
 CellData<TYPE>::View<DIM>
 CellData<TYPE>::getView(int depth)
 {
-   return CellData<TYPE>::View<DIM>(getPointer(depth), getBox());
+   return CellData<TYPE>::View<DIM>(getPointer(depth), getGhostBox());
 }
 
 template<class TYPE>
@@ -153,7 +153,7 @@ template<int DIM>
 CellData<TYPE>::ConstView<DIM>
 CellData<TYPE>::getConstView(int depth) const
 {
-   return CellData<TYPE>::ConstView<DIM>(getPointer(depth), getBox());
+   return CellData<TYPE>::ConstView<DIM>(getPointer(depth), getGhostBox());
 }
 
 #endif
