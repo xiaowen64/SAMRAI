@@ -19,18 +19,12 @@
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
-#include "SAMRAI/tbox/ForAll.h"
 
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
-#if defined(HAVE_CUDA)
-#include <cuda_runtime_api.h>
-#if defined(HAVE_CNMEM)
-#include "SAMRAI/appu/MemoryPool.h"
-#endif
-#endif
-
 #include "umpire/ResourceManager.hpp"
+
+#include <utility>
 
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -89,7 +83,7 @@ ArrayData<TYPE>::ArrayData(
    d_depth(depth),
    d_offset(box.size()),
    d_box(box)
-#if defined(HAVE_CUDA)
+#if defined(HAVE_UMPIRE)
    , d_allocator(umpire::ResourceManager::getInstance().getAllocator("SAMRAI_pool"))
    , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
 #else
@@ -111,7 +105,7 @@ ArrayData<TYPE>::ArrayData(
    d_depth(depth),
    d_offset(box.size()),
    d_box(box)
-#if defined(HAVE_CUDA)
+#if defined(HAVE_UMPIRE)
    , d_allocator(allocator)
    , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
 #else
@@ -128,7 +122,7 @@ ArrayData<TYPE>::ArrayData(
 template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
-#if defined(HAVE_CUDA)
+#if defined(HAVE_UMPIRE)
    d_allocator.deallocate(d_array, d_depth * d_offset * sizeof(TYPE));
 #endif
 }
@@ -197,6 +191,26 @@ ArrayData<TYPE>::getPointer(
    return &d_array[d * d_offset];
 }
 
+#if defined(HAVE_RAJA)
+template<class TYPE>
+template<int DIM>
+ArrayData<TYPE>::View<DIM>
+ArrayData<TYPE>::getView(
+        int depth)
+{
+   return ArrayData<TYPE>::View<DIM>(getPointer(depth), getBox());
+}
+
+template<class TYPE>
+template<int DIM>
+ArrayData<TYPE>::ConstView<DIM>
+ArrayData<TYPE>::getConstView(
+        int depth) const
+{
+   return ArrayData<TYPE>::ConstView<DIM>(getPointer(depth), getBox());
+}
+#endif
+
 template<class TYPE>
 TYPE&
 ArrayData<TYPE>::operator () (
@@ -256,8 +270,8 @@ ArrayData<TYPE>::copy(
       TYPE * const dst_ptr = &d_array[0];
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
-#if defined(HAVE_CUDA)
-      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+#if defined(HAVE_RAJA)
+      tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -458,8 +472,8 @@ ArrayData<TYPE>::copyDepth(
       TYPE * const dst_ptr_d = dst_ptr + dst_depth * d_offset;
       const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
 
-#if defined(HAVE_CUDA)
-      tbox::for_all<tbox::policy::parallel>(0, d_offset, [=] SAMRAI_HOST_DEVICE (int i) {
+#if defined(HAVE_RAJA)
+      tbox::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       });
 #else
@@ -528,8 +542,8 @@ ArrayData<TYPE>::sum(
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 
-#if defined(HAVE_CUDA)
-      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+#if defined(HAVE_RAJA)
+      tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          sumop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -688,7 +702,7 @@ ArrayData<TYPE>::packStream(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift) const
 {
-  RANGE_PUSH("ArrayData::pack", 2);
+   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
 
@@ -698,7 +712,7 @@ ArrayData<TYPE>::packStream(
    // std::vector< TYPE, umpire::TypedAllocator<TYPE> > buffer(size);
    // stream.pack(&buffer[0], size);
 
-  RANGE_POP
+   RANGE_POP
 }
 
 template<class TYPE>
@@ -708,7 +722,7 @@ ArrayData<TYPE>::packStream(
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift) const
 {
-  RANGE_PUSH("ArrayData::pack", 2);
+   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
    TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
@@ -734,7 +748,7 @@ ArrayData<TYPE>::packStream(
    const hier::Box& dest_box,
    const hier::Transformation& transformation) const
 {
-  RANGE_PUSH("ArrayData::pack", 2);
+   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
    TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
@@ -756,7 +770,7 @@ ArrayData<TYPE>::packStream(
    const hier::BoxContainer& dest_boxes,
    const hier::Transformation& transformation) const
 {
-  RANGE_PUSH("ArrayData::pack", 2);
+   RANGE_PUSH("ArrayData::pack", 2);
 
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
@@ -776,7 +790,7 @@ ArrayData<TYPE>::packStream(
 
    // stream.pack(&buffer[0], size);
 
-    RANGE_POP
+   RANGE_POP
 }
 
 /*
@@ -798,7 +812,7 @@ ArrayData<TYPE>::unpackStream(
    const hier::Box& dest_box,
    const hier::IntVector& src_shift)
 {
-  RANGE_PUSH("ArrayData::unpack", 2)
+   RANGE_PUSH("ArrayData::unpack", 2);
 
    NULL_USE(src_shift);
 
@@ -806,6 +820,8 @@ ArrayData<TYPE>::unpackStream(
    const TYPE* buffer = stream.getReadBuffer<TYPE>(size);
 
    unpackBuffer(&buffer[0], dest_box);
+
+   RANGE_POP;
 }
 
 template<class TYPE>
@@ -815,7 +831,7 @@ ArrayData<TYPE>::unpackStream(
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift)
 {
-  RANGE_PUSH("ArrayData::unpack", 2)
+   RANGE_PUSH("ArrayData::unpack", 2);
 
    NULL_USE(src_shift);
 
@@ -831,7 +847,7 @@ ArrayData<TYPE>::unpackStream(
 
    TBOX_ASSERT(ptr == size);
 
-   RANGE_POP
+   RANGE_POP;
 }
 
 /*
@@ -868,7 +884,6 @@ ArrayData<TYPE>::unpackStreamAndSum(
    const hier::BoxContainer& dest_boxes,
    const hier::IntVector& src_shift)
 {
-
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
@@ -901,8 +916,8 @@ ArrayData<TYPE>::fillAll(
    if (!d_box.empty()) {
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
-#if defined(HAVE_CUDA)
-     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+#if defined(HAVE_RAJA)
+     tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
      });
 #else
@@ -935,8 +950,8 @@ ArrayData<TYPE>::fill(
    TYPE* ptr = &d_array[d * d_offset];
    const size_t n = d_offset;
    if (!d_box.empty()) {
-#if defined(HAVE_CUDA)
-      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+#if defined(HAVE_RAJA)
+      tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
       });
 #else
@@ -959,37 +974,34 @@ ArrayData<TYPE>::fill(
    const hier::Box ispace = d_box * box;
 
    if (!ispace.empty()) {
-#if defined(HAVE_CUDA)
+#if defined(HAVE_RAJA)
       switch (ispace.getDim().getValue()) {
       case 1:
       {
-         tbox::ArrayView<1, TYPE> data(*this, d);
-         tbox::for_all1<tbox::policy::parallel>(
-            ispace, [=] SAMRAI_HOST_DEVICE (int k) {
-               data(k) = t;
-            });
+         auto data = getView<1>(d);
+         tbox::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k) {
+            data(k) = t;
+         });
          break;
       }
       case 2:
       {
-         tbox::ArrayView<2, TYPE> data(*this, d);
-         tbox::for_all2<tbox::policy::parallel>(
-            ispace, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-               data(j,k) = t;
-            });
+         auto data = getView<2>(d);
+         tbox::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+            data(j,k) = t;
+         });
          break;
       }
       case 3:
       {
-         tbox::ArrayView<3, TYPE> data(*this, d);
-         tbox::for_all3<tbox::policy::parallel>(
-            ispace, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
-               data(i,j,k) = t;
-            });
+         auto data = getView<3>(d);
+         tbox::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+            data(i,j,k) = t;
+         });
          break;
       }
       default:
-         TBOX_ERROR("tbox::for_all undefined for dim > 3" << std::endl);
+         TBOX_ERROR("tbox::parallel_for_all undefined for dim > 3" << std::endl);
       }
 #else
       const tbox::Dimension& dim = box.getDim();
@@ -1074,7 +1086,7 @@ ArrayData<TYPE>::getFromRestart(
    d_offset = restart_db->getInteger("d_offset");
    d_box = restart_db->getDatabaseBox("d_box");
 
-#if defined(HAVE_CUDA)
+#if defined(HAVE_UMPIRE)
    std::vector<TYPE> temp;
    restart_db->getVector("d_array", temp);
    std::copy(temp.begin(), temp.end(), d_array);
@@ -1105,7 +1117,7 @@ ArrayData<TYPE>::putToRestart(
    restart_db->putInteger("d_offset", static_cast<int>(d_offset));
    restart_db->putDatabaseBox("d_box", d_box);
 
-#if defined(HAVE_CUDA)
+#if defined(HAVE_UMPIRE)
    restart_db->putVector("d_array", std::vector<TYPE>(d_array, d_array+d_depth * d_offset));
 #else
    restart_db->putVector("d_array", d_array);
@@ -1219,6 +1231,35 @@ ArrayData<TYPE>::unpackBufferAndSum(
       src_is_buffer,
       sumop);
 }
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename DATA, typename... Args>
+typename DATA::View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args)
+{
+   auto ptr = SAMRAI_SHARED_PTR_CAST<DATA, hier::PatchData>(src);
+   return ptr->template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename DATA, typename... Args>
+typename DATA::ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args)
+{
+   auto ptr = SAMRAI_SHARED_PTR_CAST<const DATA, const hier::PatchData>(src);
+   return ptr->template getConstView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
 
 }
 }

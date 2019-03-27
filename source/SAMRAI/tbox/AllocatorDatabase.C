@@ -1,3 +1,15 @@
+/*************************************************************************
+ *
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and LICENSE.
+ *
+ * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Description:   Class to record statistics during program execution.
+ *
+ ************************************************************************/
+
+#include "SAMRAI/SAMRAI_config.h"
+
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
 #include "umpire/strategy/DynamicPool.hpp"
@@ -68,17 +80,18 @@ AllocatorDatabase::initialize()
       // Set preferred location to GPU
       "PREFERRED_LOCATION");
 
-  rm.makeAllocator<umpire::strategy::DynamicPool>(
-      "SAMRAI_pool",
-      um_alloc);
+  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_pool", um_alloc);
 
-  rm.makeAllocator<umpire::strategy::DynamicPool>(
-      "SAMRAI_device_pool",
-      rm.getAllocator(umpire::resource::Device));
+#if defined(HAVE_CUDA)
+  auto device_allocator = rm.getAllocator(umpire::resource::Device);
+  auto stream_allocator = rm.getAllocator(umpire::resource::Pinned);
+#else
+  auto device_allocator = rm.getAllocator(umpire::resource::Host);
+  auto stream_allocator = rm.getAllocator(umpire::resource::Host);
+#endif
 
-  rm.makeAllocator<umpire::strategy::DynamicPool>(
-      "SAMRAI_stream_pool",
-      rm.getAllocator(umpire::resource::Pinned));
+  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_device_pool", device_allocator);
+  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_stream_pool", stream_allocator);
 }
 
 umpire::Allocator

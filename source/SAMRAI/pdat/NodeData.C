@@ -97,13 +97,23 @@ NodeData<TYPE>::getPointer(
    return d_data->getPointer(depth);
 }
 
+#if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
 NodeData<TYPE>::View<DIM>
 NodeData<TYPE>::getView(int depth)
 {
-   return NodeData<TYPE>::View<DIM>(*d_data, depth);
+   return NodeData<TYPE>::View<DIM>(getPointer(depth), getBox());
 }
+
+template<class TYPE>
+template<int DIM>
+NodeData<TYPE>::ConstView<DIM>
+NodeData<TYPE>::getConstView(int depth) const
+{
+   return NodeData<TYPE>::ConstView<DIM>(getPointer(depth), getBox());
+}
+#endif
 
 template<class TYPE>
 TYPE&

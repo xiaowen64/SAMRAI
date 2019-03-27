@@ -7,8 +7,9 @@ blt_add_executable(
   NAME stencil
   SOURCES ${stencil_sources}
   DEPENDS_ON
-    raja
     cuda
+    raja
+    openmp
     SAMRAI_algs
     SAMRAI_appu
     SAMRAI_geom

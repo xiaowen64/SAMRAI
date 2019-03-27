@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BlockId.h"
-#include "SAMRAI/tbox/CudaSupport.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/MathUtilities.h"
@@ -123,7 +122,7 @@ public:
     * @param dim
     * @param array  Array of ints that should be allocated and initialized
     *               at a length equal to dim.getValue()
-    * @param num_blocks 
+    * @param num_blocks
     */
    SAMRAI_HOST_DEVICE
    IntVector(
@@ -147,7 +146,7 @@ public:
     * one block to construct an IntVector sized for a larger number of blocks.
     * When used in this way, the constructed IntVector will duplicate the
     * contents of the argument for every block.
-    * 
+    *
     * If num_blocks is equal to the rhs argument's number of blocks, then this
     * constructor is equivalent to the copy constructor.
     *
@@ -168,7 +167,7 @@ public:
     * The constructed IntVector will have the same dimension value as the
     * Index.  If num_blocks is greater than 1, the values held by the Index
     * argument will be duplicated for every block.
-    * 
+    *
     * @param rhs
     * @param num_blocks
     *
@@ -245,7 +244,7 @@ public:
       IntVector block_vec(d_dim,
                           &(d_vector[block_id.getBlockValue()*d_dim.getValue()]));
 
-      return block_vec; 
+      return block_vec;
    }
 
    /*!
@@ -327,7 +326,7 @@ public:
     */
    int&
    operator () (
-      const BlockId::block_t b, 
+      const BlockId::block_t b,
       const unsigned int i)
    {
       TBOX_ASSERT(b < d_num_blocks);
@@ -337,7 +336,7 @@ public:
 
    /*!
     * @brief Return the specified component of the vector as a const integer
-    * reference 
+    * reference
     *
     * @pre (b >= 0) && (b < getNumBlocks())
     * @pre (i >= 0) && (i < getDim().getValue())
@@ -347,7 +346,7 @@ public:
     */
    const int&
    operator () (
-      const BlockId::block_t b, 
+      const BlockId::block_t b,
       const unsigned int i) const
    {
       TBOX_ASSERT(b < d_num_blocks);
@@ -726,7 +725,7 @@ public:
    operator - () const
    {
       IntVector tmp(*this);
-      tmp *= -1; 
+      tmp *= -1;
       return tmp;
    }
 
@@ -1159,7 +1158,7 @@ public:
    }
 
    /*!
-    * @brief Set this IntVector to a sorted version of the given IntVector 
+    * @brief Set this IntVector to a sorted version of the given IntVector
     *
     * For an single-block IntVector, set the ith entry of this to the
     * position of the ith smallest value in the argument IntVector.

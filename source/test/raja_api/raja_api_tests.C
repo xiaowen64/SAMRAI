@@ -1,7 +1,7 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/Box.h"
 
-#include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/for_all.h"
 
 using namespace SAMRAI;
 

@@ -8,9 +8,6 @@
 #define SAMRAI_VERSION_MINOR @SAMRAI_VERSION_MINOR@
 #define SAMRAI_VERSION_PATCHLEVEL @SAMRAI_VERSION_PATCHLEVEL@
 
-#cmakedefine HAVE_CUDA
-#cmakedefine HAVE_RAJA
-
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
 
@@ -131,7 +128,19 @@
 #undef HAVE_NEW_PLACEMENT_OPERATOR
 
 /* OPENMP is available */
-#undef HAVE_OPENMP
+#cmakedefine HAVE_OPENMP
+
+/* Compiling with NVCC for CUDA */
+#cmakedefine HAVE_CUDA
+
+/* Add NVTX regions */
+#cmakedefine ENABLE_NVTX_REGIONS
+
+/* Use RAJA for loop abstractions */
+#cmakedefine HAVE_RAJA
+
+/* Use Umpire for memory management */
+#cmakedefine HAVE_UMPIRE
 
 /* PETSC library is available so use it */
 #undef HAVE_PETSC
@@ -412,10 +421,6 @@ namespace SAMRAI {
  */
 #define isnan _isnan
 
-#endif
-
-#if defined(HAVE_CUDA)
-#include "SAMRAI/tbox/CudaSupport.h"
 #endif
 
 #endif

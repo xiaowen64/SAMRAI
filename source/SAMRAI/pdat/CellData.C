@@ -138,14 +138,25 @@ CellData<TYPE>::getPointer(
    return d_data->getPointer(depth);
 }
 
+#if defined(HAVE_RAJA)
+
 template<class TYPE>
 template<int DIM>
 CellData<TYPE>::View<DIM>
 CellData<TYPE>::getView(int depth)
 {
-        return CellData<TYPE>::View<DIM>(*d_data, depth);
+   return CellData<TYPE>::View<DIM>(getPointer(depth), getBox());
 }
 
+template<class TYPE>
+template<int DIM>
+CellData<TYPE>::ConstView<DIM>
+CellData<TYPE>::getConstView(int depth) const
+{
+   return CellData<TYPE>::ConstView<DIM>(getPointer(depth), getBox());
+}
+
+#endif
 
 template<class TYPE>
 TYPE&
@@ -642,7 +653,7 @@ CellData<TYPE>::putBlueprintField(
    domain_node["fields"][field_name]["type"].set_string("scalar");
    domain_node["fields"][field_name]["topology"].set_string(topology_name);
 }
-#endif 
+#endif
 
 /*
  *************************************************************************

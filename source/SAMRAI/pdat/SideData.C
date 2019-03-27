@@ -127,6 +127,7 @@ SideData<TYPE>::getPointer(
    return d_data[side_normal]->getPointer(depth);
 }
 
+#if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
 SideData<TYPE>::View<DIM>
@@ -134,8 +135,20 @@ SideData<TYPE>::getView(
         int side_normal,
         int depth)
 {
-   return SideData<TYPE>::View<DIM>(*d_data[side_normal], depth);
+   return SideData<TYPE>::View<DIM>(getPointer(side_normal, depth), depth);
 }
+
+template<class TYPE>
+template<int DIM>
+SideData<TYPE>::ConstView<DIM>
+SideData<TYPE>::getConstView(
+        int side_normal,
+        int depth) const
+{
+   return SideData<TYPE>::ConstView<DIM>(getPointer(side_normal, depth), depth);
+}
+
+#endif
 
 template<class TYPE>
 TYPE&

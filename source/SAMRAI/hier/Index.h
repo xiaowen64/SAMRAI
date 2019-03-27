@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/CudaSupport.h"
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -375,7 +374,7 @@ public:
     *
     * @pre getDim() == rhs.getDim()
     * @pre rhs.getNumBlocks() == 1
-    */ 
+    */
    Index
    operator * (
       const IntVector& rhs) const
@@ -737,7 +736,7 @@ public:
    }
 
    /**
-    * @brief Read an input stream into an Index. 
+    * @brief Read an input stream into an Index.
     */
    friend std::istream&
    operator >> (

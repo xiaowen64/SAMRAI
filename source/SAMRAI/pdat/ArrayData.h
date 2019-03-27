@@ -14,6 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/pdat/ArrayDataIterator.h"
+#include "SAMRAI/pdat/ArrayView.h"
+#include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
@@ -106,8 +108,9 @@ public:
       const hier::Box& box,
       unsigned int depth);
 
+#if defined(HAVE_UMPIRE)
    /*!
-    * Construct an array data object.
+    * Construct an array data object using an Umpire allocator.
     *
     * @param box   Const reference to box object describing the spatial extents
     *              of the index space associated with the array data object.
@@ -120,6 +123,7 @@ public:
       const hier::Box& box,
       unsigned int depth,
       umpire::Allocator allocator);
+#endif
 
    /*!
     * The destructor for an array data object releases all memory allocated
@@ -184,6 +188,24 @@ public:
    const TYPE *
    getPointer(
       const unsigned int d = 0) const;
+
+#if defined(HAVE_RAJA)
+   template<int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template<int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   template <int DIM>
+   View<DIM>
+   getView(
+      int depth = 0);
+
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int depth = 0) const;
+#endif
 
    /*!
     * Return reference to value in this array associated with the given
@@ -687,13 +709,27 @@ private:
    unsigned int d_depth;
    size_t d_offset;
    hier::Box d_box;
-#if defined(HAVE_CUDA)
+#if defined(HAVE_UMPIRE)
    umpire::TypedAllocator<TYPE> d_allocator;
    TYPE* d_array;
 #else
    std::vector<TYPE> d_array;
 #endif
 };
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename DATA, typename... Args>
+typename DATA::View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args);
+
+template<int DIM, typename DATA, typename... Args>
+typename DATA::ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args);
+#endif
 
 }
 }

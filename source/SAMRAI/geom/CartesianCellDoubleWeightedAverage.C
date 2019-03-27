@@ -14,7 +14,7 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/for_all.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <float.h>
@@ -149,36 +149,36 @@ CartesianCellDoubleWeightedAverage::coarsen(
             cdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
-      pdat::CellData<double>::View<2> fine_array = fdata->getView<2>(d);
-      pdat::CellData<double>::View<2> coarse_array = cdata->getView<2>(d);
+         pdat::CellData<double>::View<2> fine_array = fdata->getView<2>(d);
+         pdat::CellData<double>::View<2> coarse_array = cdata->getView<2>(d);
 
-      const double* fdx = fgeom->getDx();
-      const double* cdx = cgeom->getDx();
+         const double* fdx = fgeom->getDx();
+         const double* cdx = cgeom->getDx();
 
-      const double fdx0 = fdx[0];
-      const double fdx1 = fdx[1];
-      const double cdx0 = cdx[0];
-      const double cdx1 = cdx[1];
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
 
-      const int r0 = ratio[0];
-      const int r1 = ratio[1];
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
 
-      const double dVf = fdx0*fdx1;
-      const double dVc = cdx0*cdx1;
+         const double dVf = fdx0*fdx1;
+         const double dVc = cdx0*cdx1;
 
-      tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-          double spv = 0.0;
+         tbox::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+            double spv = 0.0;
 
-          for (int rx = 0; rx < r0; rx++) {
-            for (int ry = 0; ry < r1; ry++) {
-              const int jf = j*r0+rx;
-              const int kf = k*r1+ry;
-              spv += fine_array(jf,kf)*dVf;
+            for (int rx = 0; rx < r0; rx++) {
+               for (int ry = 0; ry < r1; ry++) {
+                  const int jf = j*r0+rx;
+                  const int kf = k*r1+ry;
+                  spv += fine_array(jf,kf)*dVf;
+               }
             }
-          }
 
-          coarse_array(j,k) = spv/dVc;
-        });
+            coarse_array(j,k) = spv/dVc;
+         });
 #else
          SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),

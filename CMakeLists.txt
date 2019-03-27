@@ -24,6 +24,8 @@ set(ENABLE_CUDA On CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 
 # Third party libraries
+option(ENABLE_UMPIRE "Enable UMPIRE memory management" ON)
+option(ENABLE_RAJA "Enable RAJA" ON)
 option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
@@ -41,10 +43,25 @@ option(ENABLE_DEPRECATED "Build with deprecated features." On)
 option(ENABLE_TIMERS "Enable SAMRAI timers." On)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
+option(ENABLE_NVTX_REGIONS "Enable NVTX regions with push/pop for NVVP." Off)
+set(CUDA_ARCH "sm_35" CACHE STRING "Compute architecture to pass to CUDA builds")
+set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
 
 include(GNUInstallDirs)
 
 include(blt/SetupBLT.cmake)
+
+# Set specific options for CUDA if enabled
+if (ENABLE_RAJA)
+  # RAJA requires some experimental features
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-extended-lambda --expt-relaxed-constexpr")
+endif ()
+
+# TODO Ensure openmp flags are not enabled twice!
+if (ENABLE_OPENMP)
+  # CMAKE_CUDA_FLAGS does not pass OpenMP_CXX_FLAGS to the host compiler by default
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler ${OpenMP_CXX_FLAGS}")
+endif ()
 
 include_directories(${CMAKE_BINARY_DIR}/include)
 

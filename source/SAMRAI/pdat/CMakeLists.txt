@@ -6,6 +6,7 @@ set (pdat_headers
   ArrayDataIterator.h
   ArrayDataOperationUtilities.C
   ArrayDataOperationUtilities.h
+  ArrayView.h
   CellComplexConstantRefine.h
   CellComplexLinearTimeInterpolateOp.h
   CellData.C
@@ -302,17 +303,17 @@ set (pdat_depends_on
   SAMRAI_xfer)
 
 if (ENABLE_MPI)
-  set (pdat_depends_on
-    ${pdat_depends_on}
-    mpi)
+  list(APPEND pdat_depends_on mpi)
+endif ()
+
+if (ENABLE_RAJA)
+  list(APPEND pdat_depends_on raja)
 endif ()
 
 if (ENABLE_CUDA)
-  set (pdat_depends_on
-    ${pdat_depends_on}
-    raja
-    cuda)
+  list(APPEND pdat_depends_on cuda)
 endif ()
+
 
 process_m4(NAME fortran/pdat_concoarsen1d)
 process_m4(NAME fortran/pdat_concoarsen2d)

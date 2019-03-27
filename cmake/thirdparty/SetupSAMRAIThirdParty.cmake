@@ -7,34 +7,61 @@ else ()
   set(LACKS_MPI True)
 endif ()
 
-if (CUDA_FOUND)
-  set (HAVE_CUDA True)
-endif ()
-
-find_package(RAJA REQUIRED)
-
-set (raja_depends_on)
-
+# OpenMP is set up by BLT
 if (ENABLE_OPENMP)
-  set (raja_depends_on
-    ${raja_depends_on}
-    openmp)
+  if (OPENMP_FOUND)
+    set(HAVE_OPENMP True)
+  endif ()
 endif ()
 
+# CUDA is setup by BLT
 if (ENABLE_CUDA)
-  set (raja_depends_on
-    ${raja_depends_on}
-    cuda)
+  if (CUDA_FOUND)
+    set (HAVE_CUDA True)
+  endif ()
 endif ()
 
-blt_register_library(
-  NAME RAJA
-  INCLUDES ${RAJA_INCLUDE_DIR}
-  LIBRARIES RAJA
-  DEPENDS_ON ${raja_depends_on})
+# UMPIRE
+if (ENABLE_UMPIRE)
+  find_package(umpire REQUIRED)
 
-set(HAVE_RAJA True)
+  set (HAVE_UMPIRE True)
 
+  blt_register_library(
+    NAME umpire
+    INCLUDES ${UMPIRE_INCLUDE_DIRS}
+    LIBRARIES umpire)
+endif ()
+
+# RAJA
+if (ENABLE_RAJA)
+  if (NOT ENABLE_UMPIRE)
+    message(FATAL_ERROR "RAJA support requires UMPIRE.")
+  endif ()
+
+  find_package(RAJA REQUIRED)
+
+  set (raja_depends_on)
+  if (ENABLE_CUDA)
+    list (APPEND raja_depends cuda)
+  endif ()
+
+  if (ENABLE_OPENMP)
+    list (APPEND raja_depends openmp)
+  endif ()
+
+  if (RAJA_FOUND)
+    set (HAVE_RAJA True)
+
+    blt_register_library(
+      NAME RAJA
+      INCLUDES ${RAJA_INCLUDE_DIR}
+      LIBRARIES RAJA
+      DEPENDS_ON ${raja_depends})
+  endif ()
+endif ()
+
+# HDF5
 if (ENABLE_HDF5)
   if (NOT ENABLE_MPI)
     message(FATAL_ERROR "HDF5 requires MPI.")
@@ -52,10 +79,10 @@ if (ENABLE_HDF5)
   endif ()
 endif ()
 
-
 # HYPRE
 if (ENABLE_HYPRE)
   find_package(HYPRE REQUIRED)
+  # TODO: Ensure this is set in SAMRAI_config.h...
 
   if(HYPRE_FOUND)
     set (HAVE_HPYRE True)
@@ -67,14 +94,7 @@ if (ENABLE_HYPRE)
   endif ()
 endif ()
 
-# OpenMP
-if (ENABLE_OPENMP)
-  if (OPENMP_FOUND)
-    set(HAVE_OPENMP True)
-  endif ()
-endif ()
-
-#HAVE_PETSC
+# PETSC
 if (ENABLE_PETSC)
   find_package(PETSc REQUIRED)
 
@@ -88,7 +108,7 @@ if (ENABLE_PETSC)
   endif ()
 endif()
 
-#HAVE_PTSCOTCH
+# PTSCOTCH
 if (ENABLE_PTSCOTCH)
   find_package(Scotch REQUIRED)
 
@@ -102,7 +122,7 @@ if (ENABLE_PTSCOTCH)
   endif ()
 endif ()
 
-#HAVE_SILO
+# SILO
 if (ENABLE_SILO)
   find_package(SILO REQUIRED)
 
@@ -116,7 +136,7 @@ if (ENABLE_SILO)
   endif ()
 endif ()
 
-#HAVE_SUNDIALS
+# SUNDIALS
 if (ENABLE_SUNDIALS)
   find_package(SUNDIALS REQUIRED)
   if (SUNDIALS_FOUND)
@@ -129,14 +149,7 @@ if (ENABLE_SUNDIALS)
   endif ()
 endif ()
 
-find_package(umpire)
-
-blt_register_library(
-  NAME umpire
-  INCLUDES ${UMPIRE_INCLUDE_DIRS}
-  LIBRARIES umpire)
-
-#HAVE_CONDUIT
+# CONDUIT
 if (ENABLE_CONDUIT)
   find_package(CONDUIT REQUIRED)
   if (CONDUIT_FOUND)

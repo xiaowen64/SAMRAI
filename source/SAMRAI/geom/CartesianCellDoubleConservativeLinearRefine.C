@@ -16,7 +16,7 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/for_all.h"
 
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
@@ -232,42 +232,42 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       const int r0 = ratio[0];
       const int r1 = ratio[1];
 
-      tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-            diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
-            diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
+      tbox::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
+         diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
       });
 
-    tbox::for_all2<tbox::policy::parallel>(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-          const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
-          const double boundj = 2.0*MIN(ABS(diff0(j+1,k)),ABS(diff0(j,k)));
+      tbox::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
+         const double boundj = 2.0*MIN(ABS(diff0(j+1,k)),ABS(diff0(j,k)));
 
-          if (diff0(j,k)*diff0(j+1,k) > 0.0) {
+         if (diff0(j,k)*diff0(j+1,k) > 0.0) {
             slope0(j,k) = COPYSIGN(MIN(ABS(coef2j),boundj),coef2j)/cdx0;
-          } else {
+         } else {
             slope0(j,k) = 0.0;
-          }
+         }
 
-          const double coef2k = 0.5*(diff1(j,k+1)+diff1(j,k));
-          const double boundk = 2.0*MIN(ABS(diff1(j,k+1)),ABS(diff1(j,k)));
+         const double coef2k = 0.5*(diff1(j,k+1)+diff1(j,k));
+         const double boundk = 2.0*MIN(ABS(diff1(j,k+1)),ABS(diff1(j,k)));
 
-          if (diff1(j,k)*diff1(j,k+1) > 0.0) {
+         if (diff1(j,k)*diff1(j,k+1) > 0.0) {
             slope1(j,k) = COPYSIGN(MIN(ABS(coef2k),boundk),coef2k)/cdx1;
-          } else {
+         } else {
             slope1(j,k) = 0.0;
-          }
+         }
       });
 
-    tbox::for_all2<tbox::policy::parallel>(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-          const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
-          const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
+      tbox::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
+         const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
 
-          const int ir0 = j - ic0*r0;
-          const int ir1 = k - ic1*r1;
+         const int ir0 = j - ic0*r0;
+         const int ir1 = k - ic1*r1;
 
-          const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
-          const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+         const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+         const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
 
-          fine_array(j,k) = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
+         fine_array(j,k) = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
       });
 #else
          std::vector<double> diff1(cgbox.numberCells(1) + 1);

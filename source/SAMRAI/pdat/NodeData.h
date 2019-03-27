@@ -14,13 +14,14 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/ArrayView.h"
 #include "SAMRAI/pdat/NodeIndex.h"
 #include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/for_all.h"
 
 #include <iostream>
 #include <memory>
@@ -148,16 +149,23 @@ public:
    getPointer(
       int depth = 0) const;
 
-   template <int DIM>
-   struct View :
-     public tbox::ArrayView<DIM, TYPE>
-   {
-     using tbox::ArrayView<DIM, TYPE>::ArrayView;
-   };
+#if defined(HAVE_RAJA)
+   template<int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template<int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
 
    template <int DIM>
    View<DIM>
-   getView(int depth = 0);
+   getView(
+      int depth = 0);
+
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding

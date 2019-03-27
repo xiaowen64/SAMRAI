@@ -20,7 +20,7 @@
 #include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/RAJA_API.h"
+#include "SAMRAI/tbox/for_all.h"
 
 #include <iostream>
 #include <memory>
@@ -215,18 +215,25 @@ public:
       int side_normal,
       int depth = 0) const;
 
+#if defined(HAVE_RAJA)
    template <int DIM>
-   struct View :
-     public tbox::ArrayView<DIM, TYPE>
-   {
-     using tbox::ArrayView<DIM, TYPE>::ArrayView;
-   };
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template <int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
 
    template <int DIM>
    View<DIM>
    getView(
       int side_normal,
       int depth = 0);
+
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int side_normal,
+      int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding

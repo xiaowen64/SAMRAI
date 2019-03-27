@@ -372,9 +372,6 @@
 
 
 
-#if defined(HAVE_CUDA)
-#include "SAMRAI/tbox/CudaSupport.h"
-#endif
 
 namespace SAMRAI {
    static const unsigned short MAX_DIM_VAL = SAMRAI_MAXIMUM_DIMENSION;
