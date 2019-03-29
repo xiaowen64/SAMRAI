@@ -13,10 +13,10 @@
 #include <math.h>
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/for_all.h"
 
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
@@ -145,7 +145,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-  RANGE_PUSH("ConservativeLinearRefine::refine", 3);
+   RANGE_PUSH("ConservativeLinearRefine::refine", 3);
 
    const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
@@ -212,14 +212,14 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       } else if ((dim == tbox::Dimension(2))) {
 
 #if defined(HAVE_RAJA)
-      pdat::CellData<double>::View<2> fine_array = fdata->getView<2>(d);
-      pdat::CellData<double>::View<2> coarse_array = cdata->getView<2>(d);
+      auto fine_array = fdata->getView<2>(d);
+      auto coarse_array = cdata->getView<2>(d);
 
-      pdat::CellData<double>::View<2> diff0 = diff.getView<2>(0);
-      pdat::CellData<double>::View<2> diff1 = diff.getView<2>(1);
+      auto diff0 = diff.getView<2>(0);
+      auto diff1 = diff.getView<2>(1);
 
-      pdat::CellData<double>::View<2> slope0 = slope.getView<2>(0);
-      pdat::CellData<double>::View<2> slope1 = slope.getView<2>(1);
+      auto slope0 = slope.getView<2>(0);
+      auto slope1 = slope.getView<2>(1);
 
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();
@@ -232,12 +232,12 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       const int r0 = ratio[0];
       const int r1 = ratio[1];
 
-      tbox::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
          diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
          diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
       });
 
-      tbox::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
          const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
          const double boundj = 2.0*MIN(ABS(diff0(j+1,k)),ABS(diff0(j,k)));
 
@@ -257,7 +257,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          }
       });
 
-      tbox::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
          const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
          const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
 
@@ -319,7 +319,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       }
    }
 
-   RANGE_POP
+   RANGE_POP;
 }
 
 }

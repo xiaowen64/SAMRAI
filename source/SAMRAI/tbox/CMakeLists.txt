@@ -10,6 +10,7 @@ set ( tbox_headers
   BreadthFirstRankTree.h
   CenteredRankTree.h
   Clock.h
+  Collectives.h
   ConduitDatabase.h
   CommGraphWriter.h
   Complex.h
@@ -17,6 +18,7 @@ set ( tbox_headers
   DatabaseBox.h
   DatabaseFactory.h
   Dimension.h
+  ExecutionPolicy.h
   Grammar.h
   HDFDatabase.h
   HDFDatabaseFactory.h
@@ -37,7 +39,6 @@ set ( tbox_headers
   ParallelBuffer.h
   Parser.h
   PIO.h
-  for_all.h
   RankGroup.h
   RankTreeStrategy.h
   ReferenceCounter.h
@@ -115,23 +116,42 @@ set (tbox_sources
   Transaction.C
   Utilities.C)
 
-set (tbox_depends_on umpire)
-
-if (HAVE_HDF5)
-    list(APPEND tbox_depends_on hdf5)
+if (ENABLE_HDF5)
+  set(tbox_depends ${tbox_depends} hdf5)
 endif ()
 
 if (ENABLE_MPI)
-  list(APPEND tbox_depends_on mpi)
+  set(tbox_depends ${tbox_depends} mpi)
 endif ()
 
-# TODO This is temporary
-list (APPEND tbox_depends_on /usr/tce/packages/cuda/cuda-9.1.76/lib64/libnvToolsExt.so)
+if (ENABLE_UMPIRE)
+  set(tbox_depends ${tbox_depends} umpire)
+endif ()
+
+if (ENABLE_OPENMP)
+  set(tbox_depends ${tbox_depends} openmp)
+endif ()
+
+if (ENABLE_RAJA)
+  set(tbox_depends ${tbox_depends} raja)
+endif ()
+
+if (ENABLE_CUDA)
+  set(cuda_sources Schedule.C)
+  set_source_files_properties(${cuda_sources} PROPERTIES LANGUAGE CUDA)
+
+  if (ENABLE_NVTX_REGIONS)
+    blt_register_library(
+      NAME nvToolsExt
+      LIBRARIES nvToolsExt)
+    set(tbox_depends ${tbox_depends} nvToolsExt)
+  endif ()
+endif ()
 
 blt_add_library( NAME SAMRAI_tbox
   SOURCES ${tbox_sources}
   HEADERS ${tbox_headers}
-  DEPENDS_ON ${tbox_depends_on})
+  DEPENDS_ON ${tbox_depends})
 
 target_include_directories( SAMRAI_tbox
   PUBLIC

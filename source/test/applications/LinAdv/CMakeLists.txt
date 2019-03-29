@@ -29,19 +29,21 @@ process_m4(NAME fortran/trace1d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
+set(linadv_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(linadv_depends ${linadv_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(linadv_depends ${linadv_depends} cuda)
+endif ()
+
 blt_add_executable(
   NAME linadv
   SOURCES ${linadv_sources}
-  DEPENDS_ON
-    SAMRAI_algs
-    SAMRAI_appu
-    SAMRAI_geom
-    SAMRAI_hier
-    SAMRAI_math
-    SAMRAI_mesh
-    SAMRAI_pdat
-    SAMRAI_tbox
-    SAMRAI_xfer)
+  DEPENDS_ON ${linadv_depends})
 
 target_include_directories( linadv
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/applications/LinAdv)

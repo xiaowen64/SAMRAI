@@ -26,21 +26,17 @@ set_source_files_properties(
   LANGUAGE
   Fortran)
 
-set (appu_depends_on
+set (appu_depends
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_tbox)
 
 if (ENABLE_HDF5)
-  set (appu_depends_on
-    hdf5
-    ${appu_depends_on})
+  set (appu_depends ${appu_depends} hdf5)
 endif ()
 
 if (ENABLE_CUDA)
-  set (appu_depends_on
-    ${appu_depends_on}
-    cuda)
+  set (appu_depends ${appu_depends} cuda)
 endif ()
 
 process_m4(NAME fortran/appu_cartbdry2d)
@@ -50,7 +46,7 @@ blt_add_library(
   NAME SAMRAI_appu
   SOURCES ${appu_sources}
   HEADERS ${appu_headers}
-  DEPENDS_ON ${appu_depends_on})
+  DEPENDS_ON ${appu_depends})
 
 set_target_properties(SAMRAI_appu PROPERTIES LINKER_LANGUAGE CXX)
 

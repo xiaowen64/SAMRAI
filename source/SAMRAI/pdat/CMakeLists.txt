@@ -66,6 +66,7 @@ set (pdat_headers
   FirstLayerEdgeVariableFillPattern.h
   FirstLayerNodeVariableFillPattern.h
   FirstLayerSideVariableFillPattern.h
+  ForAll.h
   IndexData.C
   IndexData.h
   IndexDataFactory.C
@@ -297,23 +298,18 @@ set (pdat_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/pdat_lintimint2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/pdat_lintimint3d.f)
 
-set (pdat_depends_on
+set (pdat_depends
   SAMRAI_hier
   SAMRAI_tbox
   SAMRAI_xfer)
 
-if (ENABLE_MPI)
-  list(APPEND pdat_depends_on mpi)
-endif ()
-
 if (ENABLE_RAJA)
-  list(APPEND pdat_depends_on raja)
+  set(pdat_depends ${pdat_depends} raja)
 endif ()
 
 if (ENABLE_CUDA)
-  list(APPEND pdat_depends_on cuda)
+  set(pdat_depends ${pdat_depends} cuda)
 endif ()
-
 
 process_m4(NAME fortran/pdat_concoarsen1d)
 process_m4(NAME fortran/pdat_concoarsen2d)
@@ -332,7 +328,7 @@ blt_add_library(
   NAME SAMRAI_pdat
   SOURCES ${pdat_sources}
   HEADERS ${pdat_headers}
-  DEPENDS_ON ${pdat_depends_on})
+  DEPENDS_ON ${pdat_depends})
 
 set_target_properties(SAMRAI_pdat PROPERTIES LINKER_LANGUAGE CXX)
 

@@ -11,13 +11,12 @@
 #ifndef included_tbox_NVTXUtilities
 #define included_tbox_NVTXUtilities
 
-#if defined(HAVE_CUDA)
+#if defined(ENABLE_NVTX_REGIONS) && defined(ENABLE_CUDA)
 
 #include "cuda_runtime.h"
 #include "nvToolsExt.h"
 #include "cuda_profiler_api.h"
 
-#if defined(ENABLE_NVTX_REGIONS)
 const uint32_t colors[] = { 0x0000ff00, 0x000000ff, 0x00ffff00, 0x00ff00ff, 0x0000ffff, 0x00ff0000, 0x00ffffff };
 const int num_colors = sizeof(colors)/sizeof(uint32_t);
 
@@ -47,7 +46,5 @@ const int num_colors = sizeof(colors)/sizeof(uint32_t);
 #define RANGE_POP
 
 #endif // ENABLE_NVTX_REGIONS
-
-#endif // HAVE_CUDA
 
 #endif // included_tbox_NVTXUtilities

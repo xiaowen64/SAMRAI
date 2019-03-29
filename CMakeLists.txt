@@ -81,16 +81,16 @@ include_directories(${CMAKE_BINARY_DIR}/include)
 
 include(cmake/CMakeBasics.cmake)
 
+set(SAMRAI_LIBRARIES SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
+    SAMRAI_math SAMRAI_mesh SAMRAI_pdat SAMRAI_solv SAMRAI_tbox
+    SAMRAI_xfer)
+
 add_subdirectory(source)
 add_subdirectory(tools)
 add_subdirectory(docs)
 
-export(TARGETS SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
-  SAMRAI_math SAMRAI_mesh SAMRAI_pdat SAMRAI_solv SAMRAI_tbox
-  SAMRAI_xfer
-  FILE ${CMAKE_CURRENT_BINARY_DIR}/SAMRAITargets.cmake
-  )
-
+export(TARGETS ${SAMRAI_LIBRARIES}
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/SAMRAITargets.cmake)
 
 set(SAMRAI_MODULE "share/SAMRAI/cmake")
 file(RELATIVE_PATH REL_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}" "${CMAKE_INSTALL_PREFIX}/include")

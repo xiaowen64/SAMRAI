@@ -76,23 +76,21 @@ set_source_files_properties(
   LANGUAGE
   Fortran)
 
-set (solv_depends_on
+set (solv_depends
   SAMRAI_hier
   SAMRAI_math
   SAMRAI_tbox
   SAMRAI_xfer)
 
 if (ENABLE_CUDA)
-  set (solv_depends_on
-    ${solv_depends_on}
-    cuda)
+  set (solv_depends ${solv_depends} cuda)
 endif ()
 
 blt_add_library(
   NAME SAMRAI_solv
   SOURCES ${solv_sources}
   HEADERS ${solv_headers}
-  DEPENDS_ON ${solv_depends_on})
+  DEPENDS_ON ${solv_depends})
 
 set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
 

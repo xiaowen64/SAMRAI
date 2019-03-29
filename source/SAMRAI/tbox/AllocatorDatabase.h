@@ -24,29 +24,29 @@ namespace tbox {
 class AllocatorDatabase
 {
 public:
-  static AllocatorDatabase* getDatabase();
+   static AllocatorDatabase* getDatabase();
 
-  void initialize();
+   void initialize();
 
-  umpire::Allocator
-  getDevicePool();
+   umpire::Allocator
+   getDevicePool();
 
-  umpire::TypedAllocator<char>
-    getStreamAllocator();
+   umpire::TypedAllocator<char>
+   getStreamAllocator();
 
 protected:
-  AllocatorDatabase();
+   AllocatorDatabase() = default;
 
-  virtual ~AllocatorDatabase();
+   virtual ~AllocatorDatabase();
 
 private:
-  static void startupCallback();
-  static void shutdownCallback();
+   static void startupCallback();
+   static void shutdownCallback();
 
-  static AllocatorDatabase* s_allocator_database_instance;
+   static AllocatorDatabase* s_allocator_database_instance;
 
-  static StartupShutdownManager::Handler
-      s_startup_handler;
+   static StartupShutdownManager::Handler
+   s_startup_handler;
 };
 
 }

@@ -13,8 +13,8 @@
 
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/for_all.h"
 
 namespace SAMRAI {
 namespace pdat {
@@ -49,10 +49,10 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    TYPE * const dst_ptr = dst.getPointer();
    const TYPE * const src_ptr = src.getPointer();
 
+#if !defined(HAVE_RAJA)
    const hier::Box& dst_box(dst.getBox());
    const hier::Box& src_box(src.getBox());
 
-#if !defined(HAVE_RAJA)
    int box_w[SAMRAI::MAX_DIM_VAL];
    int dst_w[SAMRAI::MAX_DIM_VAL];
    int src_w[SAMRAI::MAX_DIM_VAL];
@@ -83,6 +83,12 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
       + dst_start_depth * dst_offset;
    size_t src_begin = src_box.offset(opbox.lower() - src_shift)
       + src_start_depth * src_offset;
+#else
+   NULL_USE(src_ptr);
+   NULL_USE(dst_ptr);
+   NULL_USE(src_shift);
+   NULL_USE(dst_start_depth);
+   NULL_USE(src_start_depth);
 #endif
 
    /*
@@ -97,7 +103,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
          auto dest = get_view<1>(dst, d);
          auto source = get_const_view<1>(src, d);
 
-         tbox::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int i) {
+         pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int i) {
             op(dest(i), source(i));
          });
       } break;
@@ -106,7 +112,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
          auto dest = get_view<2>(dst, d);
          auto source = get_const_view<2>(src, d);
 
-         tbox::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int j, int i) {
+         pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int j, int i) {
             op(dest(i, j), source(i, j));
          });
       } break;
@@ -115,7 +121,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
          auto dest = get_view<3>(dst, d);
          auto source = get_const_view<3>(src, d);
 
-         tbox::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+         pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
             op(dest(i,j,k), source(i,j,k));
          });
       } break;
@@ -226,10 +232,11 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    const TYPE * const src_ptr =
       (src_is_buffer ? buffer : arraydata.getPointer());
 
-   const hier::Box& array_d_box(arraydata.getBox());
    const unsigned int array_d_depth = arraydata.getDepth();
 
 #if !defined(HAVE_RAJA)
+   const hier::Box& array_d_box(arraydata.getBox());
+
    int box_w[SAMRAI::MAX_DIM_VAL];
    int dat_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
@@ -272,8 +279,8 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 
      switch (dim.getValue()) {
        case 1: {
-          typename pdat::ArrayData<TYPE>::View<1> dest(dst_ptr + dst_offset, box);
-          typename pdat::ArrayData<TYPE>::ConstView<1> source(src_ptr + src_offset, box);
+          typename pdat::ArrayData<TYPE>::template View<1> dest(dst_ptr + dst_offset, box);
+          typename pdat::ArrayData<TYPE>::template ConstView<1> source(src_ptr + src_offset, box);
           // pdat::ArrayView<1, TYPE> dest(src_is_buffer ?
           //                               pdat::ArrayView<1, TYPE>(const_cast<TYPE*>(arraydata.getPointer(d)), arraydata.getBox()) :
           //                               pdat::ArrayView<1, TYPE>(const_cast<TYPE *>(buffer), arraydata.getBox()));
@@ -283,14 +290,14 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
           //                                       pdat::ArrayView<1, const TYPE>(buffer + arraydata.getBox().size() * d, arraydata.getBox()) :
           //                                       pdat::ArrayView<1, const TYPE>(arraydata.getPointer(d), arraydata.getBox()));
 
-          tbox::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int i) {
+          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int i) {
              op(dest(i), source(i));
           });
          } break;
 
        case 2: {
-          typename pdat::ArrayData<TYPE>::View<2> dest(dst_ptr + dst_offset, box);
-          typename pdat::ArrayData<TYPE>::ConstView<2> source(src_ptr + src_offset, box);
+          typename pdat::ArrayData<TYPE>::template View<2> dest(dst_ptr + dst_offset, box);
+          typename pdat::ArrayData<TYPE>::template ConstView<2> source(src_ptr + src_offset, box);
          // pdat::ArrayView<2, TYPE> dest(src_is_buffer ?
          //                               pdat::ArrayView<2, TYPE>(const_cast<TYPE*>(arraydata.getPointer(d)), arraydata.getBox()) :
          //                               pdat::ArrayView<2, TYPE>(const_cast<TYPE *>(buffer + opbox.size() * d), opbox));
@@ -300,14 +307,14 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
          //                                       pdat::ArrayView<2, const TYPE>(buffer + opbox.size() * d, opbox) :
          //                                       pdat::ArrayView<2, const TYPE>(arraydata.getPointer(d), arraydata.getBox()));
 
-         tbox::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int j, int i) {
+         pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int j, int i) {
              op(dest(i, j), source(i, j));
          });
          } break;
 
        case 3: {
-          typename pdat::ArrayData<TYPE>::View<3> dest(dst_ptr + dst_offset, box);
-          typename pdat::ArrayData<TYPE>::ConstView<3> source(src_ptr + src_offset, box);
+          typename pdat::ArrayData<TYPE>::template View<3> dest(dst_ptr + dst_offset, box);
+          typename pdat::ArrayData<TYPE>::template ConstView<3> source(src_ptr + src_offset, box);
          // tbox::ArrayView<3, TYPE> dest(src_is_buffer ?
          //     tbox::ArrayView<3, TYPE>(const_cast<ArrayData<TYPE>&>(arraydata), d) :
          //     tbox::ArrayView<3, TYPE>(const_cast<TYPE *>(buffer), arraydata.getBox(), d));
@@ -317,7 +324,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
          //     tbox::ArrayView<3, const TYPE>(buffer, arraydata.getBox(), d) :
          //     tbox::ArrayView<3, const TYPE>(arraydata, d));
 
-         tbox::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+         pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
              op(dest(i, j, k), source(i, j, k));
          });
          } break;

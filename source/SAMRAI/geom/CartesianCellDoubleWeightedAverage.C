@@ -11,10 +11,10 @@
 #include "SAMRAI/geom/CartesianCellDoubleWeightedAverage.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/for_all.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <float.h>
@@ -149,8 +149,8 @@ CartesianCellDoubleWeightedAverage::coarsen(
             cdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
-         pdat::CellData<double>::View<2> fine_array = fdata->getView<2>(d);
-         pdat::CellData<double>::View<2> coarse_array = cdata->getView<2>(d);
+         auto fine_array = fdata->getView<2>(d);
+         auto coarse_array = cdata->getView<2>(d);
 
          const double* fdx = fgeom->getDx();
          const double* cdx = cgeom->getDx();
@@ -166,7 +166,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
          const double dVf = fdx0*fdx1;
          const double dVc = cdx0*cdx1;
 
-         tbox::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
             double spv = 0.0;
 
             for (int rx = 0; rx < r0; rx++) {

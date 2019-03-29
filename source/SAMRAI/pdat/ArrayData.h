@@ -26,8 +26,6 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
-#include "umpire/Allocator.hpp"
-
 #include <typeinfo>
 #include <vector>
 
@@ -719,16 +717,16 @@ private:
 
 #if defined(HAVE_RAJA)
 template<int DIM, typename DATA, typename... Args>
-typename DATA::View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args);
+typename DATA::template View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args);
 
 template<int DIM, typename DATA, typename... Args>
-typename DATA::ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args);
+typename DATA::template ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args);
 
 template<int DIM, typename TYPE, typename... Args>
-typename ArrayData<TYPE>::View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args);
+typename ArrayData<TYPE>::template View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args);
 
 template<int DIM, typename TYPE, typename... Args>
-typename ArrayData<TYPE>::ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args);
+typename ArrayData<TYPE>::template ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args);
 #endif
 
 }

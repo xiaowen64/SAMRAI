@@ -39,19 +39,21 @@ process_m4(NAME fortran/trace1d3d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
+set(euler_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(euler_depends ${euler_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(euler_depends ${euler_depends} cuda)
+endif ()
+
 blt_add_executable(
   NAME euler
   SOURCES ${euler_sources}
-  DEPENDS_ON
-    SAMRAI_algs
-    SAMRAI_appu
-    SAMRAI_geom
-    SAMRAI_hier
-    SAMRAI_math
-    SAMRAI_mesh
-    SAMRAI_pdat
-    SAMRAI_tbox
-    SAMRAI_xfer)
+  DEPENDS_ON ${euler_depends})
 
 target_include_directories( euler
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/applications/Euler)

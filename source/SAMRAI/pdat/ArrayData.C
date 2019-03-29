@@ -14,15 +14,17 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
 
-#include "SAMRAI/tbox/NVTXUtilities.h"
-
+#if defined(HAVE_UMPIRE)
 #include "umpire/ResourceManager.hpp"
+#endif
 
 #include <utility>
 
@@ -271,7 +273,7 @@ ArrayData<TYPE>::copy(
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 #if defined(HAVE_RAJA)
-      tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -473,7 +475,7 @@ ArrayData<TYPE>::copyDepth(
       const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
 
 #if defined(HAVE_RAJA)
-      tbox::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE (int i) {
+      pdat::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE (int i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       });
 #else
@@ -543,7 +545,7 @@ ArrayData<TYPE>::sum(
       const size_t n = d_offset * d_depth;
 
 #if defined(HAVE_RAJA)
-      tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          sumop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -917,7 +919,7 @@ ArrayData<TYPE>::fillAll(
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
 #if defined(HAVE_RAJA)
-     tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+     pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
      });
 #else
@@ -951,7 +953,7 @@ ArrayData<TYPE>::fill(
    const size_t n = d_offset;
    if (!d_box.empty()) {
 #if defined(HAVE_RAJA)
-      tbox::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
+      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE (int i) {
          ptr[i] = t;
       });
 #else
@@ -979,7 +981,7 @@ ArrayData<TYPE>::fill(
       case 1:
       {
          auto data = getView<1>(d);
-         tbox::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k) {
+         pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k) {
             data(k) = t;
          });
          break;
@@ -987,7 +989,7 @@ ArrayData<TYPE>::fill(
       case 2:
       {
          auto data = getView<2>(d);
-         tbox::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k, int j) {
             data(j,k) = t;
          });
          break;
@@ -995,13 +997,13 @@ ArrayData<TYPE>::fill(
       case 3:
       {
          auto data = getView<3>(d);
-         tbox::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+         pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
             data(i,j,k) = t;
          });
          break;
       }
       default:
-         TBOX_ERROR("tbox::parallel_for_all undefined for dim > 3" << std::endl);
+         TBOX_ERROR("pdat::parallel_for_all undefined for dim > 3" << std::endl);
       }
 #else
       const tbox::Dimension& dim = box.getDim();
@@ -1234,27 +1236,27 @@ ArrayData<TYPE>::unpackBufferAndSum(
 
 #if defined(HAVE_RAJA)
 template<int DIM, typename DATA, typename... Args>
-typename DATA::View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args)
+typename DATA::template View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args)
 {
    auto ptr = SAMRAI_SHARED_PTR_CAST<DATA, hier::PatchData>(src);
    return ptr->template getView<DIM>(std::forward<Args>(args)...);
 }
 
 template<int DIM, typename DATA, typename... Args>
-typename DATA::ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args)
+typename DATA::template ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args)
 {
    auto ptr = SAMRAI_SHARED_PTR_CAST<const DATA, const hier::PatchData>(src);
    return ptr->template getConstView<DIM>(std::forward<Args>(args)...);
 }
 
 template<int DIM, typename TYPE, typename... Args>
-typename ArrayData<TYPE>::View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args)
+typename ArrayData<TYPE>::template View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args)
 {
    return data.template getView<DIM>(std::forward<Args>(args)...);
 }
 
 template<int DIM, typename TYPE, typename... Args>
-typename ArrayData<TYPE>::ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args)
+typename ArrayData<TYPE>::template ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args)
 {
    return data.template getConstView<DIM>(std::forward<Args>(args)...);
 }

@@ -77,15 +77,13 @@ set (geom_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/geom_cartrefine2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/geom_cartrefine3d.f)
 
-set (geom_depends_on
+set (geom_depends
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_tbox)
 
 if (ENABLE_CUDA)
-  set (geom_depends_on
-    ${geom_depends_on}
-    cuda)
+  set(geom_depends ${geom_depends} cuda)
 endif ()
 
 process_m4(NAME fortran/geom_cartcoarsen1d)
@@ -100,7 +98,7 @@ blt_add_library(
   NAME SAMRAI_geom
   SOURCES ${geom_sources}
   HEADERS ${geom_headers}
-  DEPENDS_ON ${geom_depends_on})
+  DEPENDS_ON ${geom_depends})
 
 set_target_properties(SAMRAI_geom PROPERTIES LINKER_LANGUAGE CXX)
 

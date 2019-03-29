@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
+#include "SAMRAI/tbox/Collectives.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -1219,7 +1220,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
 
             pdat::CellData<int>& tag_data = *tag_data_;
 
-            tbox::synchronize<tbox::policy::parallel>();
+            tbox::parallel_synchronize();
 
             pdat::CellIterator ciend(pdat::CellGeometry::end(intersection));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(intersection));

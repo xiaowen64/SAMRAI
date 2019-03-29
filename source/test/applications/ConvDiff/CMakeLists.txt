@@ -20,21 +20,21 @@ process_m4(NAME fortran/rkstep3d)
 process_m4(NAME fortran/tag_cells2d)
 process_m4(NAME fortran/tag_cells3d)
 
+set(convdiff_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(convdiff_depends ${convdiff_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(convdiff_depends ${convdiff_depends} cuda)
+endif ()
+
 blt_add_executable(
   NAME convdiff
   SOURCES ${convdiff_sources}
-  DEPENDS_ON
-  hdf5
-  SAMRAI_algs
-  SAMRAI_geom
-  SAMRAI_hier
-  SAMRAI_math
-  SAMRAI_mesh
-  SAMRAI_pdat
-  SAMRAI_xfer
-  SAMRAI_appu
-  SAMRAI_tbox
-  )
+  DEPENDS_ON ${convdiff_depends})
 
 target_include_directories(
   convdiff

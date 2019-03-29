@@ -60,7 +60,11 @@
 #include <iomanip>
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
+
+#if defined(HAVE_CUDA)
 #include <cuda_runtime.h>
+#include <cuda_profiler_api.h>
+#endif
 
 using namespace std;
 using namespace SAMRAI;
@@ -349,11 +353,15 @@ int main(
       char buf[50];
       sprintf(buf, "Timestep %d", iteration_num);
       RANGE_PUSH(buf, 2);
+#if defined(HAVE_CUDA)
       if (iteration_num == 11)
         cudaProfilerStart();
+#endif
       double dt_new = time_integrator->advanceHierarchy(dt_now);
+#if defined(HAVE_CUDA)
       if (iteration_num == 13)
         cudaProfilerStop();
+#endif
       RANGE_POP;
       loop_time += dt_now;
       dt_now = dt_new;

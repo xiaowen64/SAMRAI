@@ -58,10 +58,6 @@ AllocatorDatabase::getDatabase()
    return s_allocator_database_instance;
 }
 
-AllocatorDatabase::AllocatorDatabase()
-{
-}
-
 AllocatorDatabase::~AllocatorDatabase()
 {
 }
@@ -71,25 +67,26 @@ AllocatorDatabase::initialize()
 {
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
 
-  /*
-   * Register internal SAMRAI pool
-   */
-  auto um_alloc = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
+#if defined(HAVE_CUDA)
+  // Internal pool for allocations
+  auto main_allocator = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
       "SAMRAI_UM",
       rm.getAllocator(umpire::resource::Unified),
       // Set preferred location to GPU
       "PREFERRED_LOCATION");
 
-  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_pool", um_alloc);
-
-#if defined(HAVE_CUDA)
+  // Pool for memory used only in the for_all loops
   auto device_allocator = rm.getAllocator(umpire::resource::Device);
+
+  // Pool for message streams
   auto stream_allocator = rm.getAllocator(umpire::resource::Pinned);
 #else
+  auto main_allocator = rm.getAllocator(umpire::resource::Host);
   auto device_allocator = rm.getAllocator(umpire::resource::Host);
   auto stream_allocator = rm.getAllocator(umpire::resource::Host);
 #endif
 
+  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_pool", main_allocator);
   rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_device_pool", device_allocator);
   rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_stream_pool", stream_allocator);
 }

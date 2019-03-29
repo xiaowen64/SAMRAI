@@ -13,10 +13,9 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 #include <cstring>
-
-#include <cuda_runtime.h>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -378,7 +377,8 @@ Schedule::postSends()
          (*pack)->packStream(outgoing_stream);
       }
       d_object_timers->t_pack_stream->stop();
-      cudaDeviceSynchronize();
+
+      parallel_synchronize();
 
       if (can_estimate_incoming_message_size) {
          // Receiver knows message size so set it exactly.
@@ -454,7 +454,7 @@ Schedule::processCompletedCommunications()
             (*recv)->unpackStream(incoming_stream);
          }
 
-         cudaDeviceSynchronize();
+         parallel_synchronize();
 
          d_object_timers->t_unpack_stream->stop();
          completed_comm.clearRecvData();
@@ -495,7 +495,7 @@ Schedule::processCompletedCommunications()
                (*recv)->unpackStream(incoming_stream);
             }
 
-            cudaDeviceSynchronize();
+            parallel_synchronize();
 
             d_object_timers->t_unpack_stream->stop();
             completed_comm->clearRecvData();

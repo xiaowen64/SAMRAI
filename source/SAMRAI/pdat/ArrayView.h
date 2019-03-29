@@ -38,7 +38,7 @@ struct ArrayView<1, TYPE> : public RAJA::View<TYPE, detail::layout_traits::Layou
 {
    using Layout = detail::layout_traits::Layout1d;
 
-   ArrayView<1, TYPE>(TYPE* data, const hier::Box& box, int depth = 0) :
+   ArrayView<1, TYPE>(TYPE* data, const hier::Box& box) :
       RAJA::View<TYPE, Layout>(
          data,
          RAJA::make_permuted_offset_layout(
@@ -52,7 +52,7 @@ struct ArrayView<2, TYPE> : public RAJA::View<TYPE, detail::layout_traits::Layou
 {
    using Layout = detail::layout_traits::Layout2d;
 
-   SAMRAI_INLINE ArrayView<2, TYPE>(TYPE* data, const hier::Box& box, int depth = 0) :
+   SAMRAI_INLINE ArrayView<2, TYPE>(TYPE* data, const hier::Box& box) :
       RAJA::View<TYPE, Layout>(
          data,
          RAJA::make_permuted_offset_layout(

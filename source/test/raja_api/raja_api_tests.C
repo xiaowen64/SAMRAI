@@ -1,7 +1,6 @@
+#include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/Box.h"
-
-#include "SAMRAI/tbox/for_all.h"
 
 using namespace SAMRAI;
 
@@ -24,7 +23,7 @@ int main(int argc, char* argv[]) {
     std::cout << "bi = " << *bi << std::endl;
   }
 
-  tbox::for_all2<tbox::policy::parallel>(box, [=] __host__ __device__ (int k, int j) {
+  pdat::parallel_for_all(box, [=] __host__ __device__ (int k, int j) {
       std::cout << "(" << j << "," << k << ")" << std::endl;
   });
 
