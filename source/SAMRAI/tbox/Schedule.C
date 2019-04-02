@@ -376,9 +376,9 @@ Schedule::postSends()
            pack != transactions.end(); ++pack) {
          (*pack)->packStream(outgoing_stream);
       }
-      d_object_timers->t_pack_stream->stop();
-
       parallel_synchronize();
+
+      d_object_timers->t_pack_stream->stop();
 
       if (can_estimate_incoming_message_size) {
          // Receiver knows message size so set it exactly.

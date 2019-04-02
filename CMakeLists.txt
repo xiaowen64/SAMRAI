@@ -64,7 +64,7 @@ if (ENABLE_OPENMP)
 endif ()
 
 if (NOT ENABLE_UMPIRE)
-  message(FATAL_ERROR "The branch requires UMPIRE, for now...")
+  message(FATAL_ERROR "This code branch requires UMPIRE, for now...")
 endif ()
 
 if (ENABLE_CUDA)

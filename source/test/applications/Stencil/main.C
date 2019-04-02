@@ -336,6 +336,9 @@ int main(
      * time are maintained by algs::TimeRefinementIntegrator.
      */
 
+    MPI_Barrier(MPI_COMM_WORLD);
+    double start = MPI_Wtime();
+
     double loop_time = time_integrator->getIntegratorTime();
     double loop_time_end = time_integrator->getEndTime();
 
@@ -380,27 +383,31 @@ int main(
 #endif
     }
 
+    MPI_Barrier(MPI_COMM_WORLD);
+    double end = MPI_Wtime();
 
-    /*
-     * Compute a solution norm as a check.
-     */
-    double norm = 0.0;
-    int nlevels = patch_hierarchy->getNumberOfLevels();
-    for (int ln = 0; ln < nlevels; ++ln) {
-      const std::shared_ptr<hier::PatchLevel>& level(patch_hierarchy->getPatchLevel(ln));
-      for (hier::PatchLevel::Iterator p(level->begin()); p != level->end(); ++p) {
-        const std::shared_ptr<hier::Patch>& patch = *p;
-        norm += stencil_model->computeNorm(hyp_level_integrator->getCurrentContext(), *patch);
-      }
+    tbox::pout << "Time elapsed = " << (end - start) << endl;
 
-    }
+    // /*
+    //  * Compute a solution norm as a check.
+    //  */
+    // double norm = 0.0;
+    // int nlevels = patch_hierarchy->getNumberOfLevels();
+    // for (int ln = 0; ln < nlevels; ++ln) {
+    //   const std::shared_ptr<hier::PatchLevel>& level(patch_hierarchy->getPatchLevel(ln));
+    //   for (hier::PatchLevel::Iterator p(level->begin()); p != level->end(); ++p) {
+    //     const std::shared_ptr<hier::Patch>& patch = *p;
+    //     norm += stencil_model->computeNorm(hyp_level_integrator->getCurrentContext(), *patch);
+    //   }
+
+    // }
 
     /*
      * Output timer results.
      */
     tbox::TimerManager::getManager()->print(tbox::pout);
 
-    std::cout << "Solution norm: " << std::scientific << std::setprecision(12) << norm << std::endl;
+    // std::cout << "Solution norm: " << std::scientific << std::setprecision(12) << norm << std::endl;
     /*
      * At conclusion of simulation, deallocate objects.
      */
