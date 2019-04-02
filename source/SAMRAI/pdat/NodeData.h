@@ -504,6 +504,14 @@ private:
 
 };
 
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template View<DIM> get_view(NodeData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template ConstView<DIM> get_const_view(const NodeData<TYPE>& data, Args&&... args);
+#endif
+
 }
 }
 

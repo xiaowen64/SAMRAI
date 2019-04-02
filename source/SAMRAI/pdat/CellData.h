@@ -530,6 +530,16 @@ private:
 
 };
 
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template View<DIM> get_view(CellData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template ConstView<DIM> get_const_view(const CellData<TYPE>& data, Args&&... args);
+#endif
+
+
 }
 }
 

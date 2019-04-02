@@ -656,6 +656,20 @@ NodeData<TYPE>::putToRestart(
    d_data->putToRestart(restart_db->putDatabase("d_data"));
 }
 
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template View<DIM> get_view(NodeData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template ConstView<DIM> get_const_view(const NodeData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
 }
 }
 

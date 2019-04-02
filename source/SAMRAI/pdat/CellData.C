@@ -756,6 +756,20 @@ CellData<TYPE>::putToRestart(
    d_data->putToRestart(restart_db->putDatabase("d_data"));
 }
 
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template View<DIM> get_view(CellData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template ConstView<DIM> get_const_view(const CellData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
 }
 }
 

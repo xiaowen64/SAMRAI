@@ -867,6 +867,20 @@ SideData<TYPE>::putToRestart(
    }
 }
 
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename SideData<TYPE>::template View<DIM> get_view(SideData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename SideData<TYPE>::template ConstView<DIM> get_const_view(const SideData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
 }
 }
 
