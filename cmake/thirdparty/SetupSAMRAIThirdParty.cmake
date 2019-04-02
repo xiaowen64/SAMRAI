@@ -90,7 +90,7 @@ if (ENABLE_HYPRE)
     blt_register_library(
       NAME hypre
       INCLUDES ${HYPRE_INCLUDE_DIRS}
-      LIBRARIES ${HPYRE_LIBRARIES})
+      LIBRARIES ${HYPRE_LIBRARIES})
   endif ()
 endif ()
 

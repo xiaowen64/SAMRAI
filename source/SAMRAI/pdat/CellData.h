@@ -115,11 +115,13 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
    CellData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
       umpire::Allocator allocator);
+#endif
 
    /*!
     * @brief The virtual destructor for a cell data object.
