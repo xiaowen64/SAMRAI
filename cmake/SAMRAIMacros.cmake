@@ -16,19 +16,19 @@ macro (samrai_add_tests)
 
     blt_add_test(NAME ${test_name}
       COMMAND ${arg_EXECUTABLE} ${test_file}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 
     if(${arg_PARALLEL})
       set(test_name "${base_name}_test_${short_test_file}_2")
       blt_add_test(NAME ${test_name}
         COMMAND ${arg_EXECUTABLE} ${test_file}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         NUM_MPI_TASKS 2)
 
       set(test_name "${base_name}_test_${short_test_file}_4")
       blt_add_test(NAME ${test_name}
         COMMAND ${arg_EXECUTABLE} ${test_file}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         NUM_MPI_TASKS 4)
     endif()
 
