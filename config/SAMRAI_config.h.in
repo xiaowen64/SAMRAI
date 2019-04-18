@@ -10,7 +10,6 @@
 #define SAMRAI_VERSION_PATCHLEVEL 0
 
 
-
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
 
@@ -70,17 +69,8 @@
 /* HAVE_CMATH_ISNAN */
 #undef HAVE_CMATH_ISNAN
 
-/* HAVE_CNMEM */
-#undef HAVE_CNMEM
-
-/* conduit library is available so use it */
-#undef HAVE_CONDUIT
-
 /* HAVE_CTIME */
 #undef HAVE_CTIME
-
-/* HAVE_CUDA */
-#undef HAVE_CUDA
 
 /* HAVE_EXCEPTION_HANDLING */
 #undef HAVE_EXCEPTION_HANDLING
@@ -150,9 +140,6 @@
 
 /* PTSCOTCH headers are available to use */
 #undef HAVE_PTSCOTCH
-
-/* HAVE_RAJA */
-#undef HAVE_RAJA
 
 /* SILO library is available so use it */
 #undef HAVE_SILO
@@ -241,14 +228,8 @@
 /* LACKS_CMATH_ISNAN */
 #undef LACKS_CMATH_ISNAN
 
-/* LACKS_CNMEM */
-#undef LACKS_CNMEM
-
 /* LACKS_CTIME */
 #undef LACKS_CTIME
-
-/* LACKS_CUDA */
-#undef LACKS_CUDA
 
 /* LACKS_EXCEPTION_HANDLING */
 #undef LACKS_EXCEPTION_HANDLING
@@ -288,9 +269,6 @@
 
 /* LACKS_PROPER_XDR_HEADER */
 #undef LACKS_PROPER_XDR_HEADER
-
-/* LACKS_RAJA */
-#undef LACKS_RAJA
 
 /* LACKS_SSTREAM */
 #undef LACKS_SSTREAM
@@ -343,6 +321,9 @@
 /* Define to the one symbol short name of this package. */
 // Removed due to name conflict #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+// Removed due to name conflict #undef PACKAGE_URL
+
 /* Define to the version of this package. */
 // Removed due to name conflict #undef PACKAGE_VERSION
 
@@ -369,7 +350,6 @@
 
 /* Configure for compiling on BGL family of machines */
 #undef __BGL_FAMILY__
-
 
 
 
@@ -434,3 +414,4 @@ namespace SAMRAI {
 #endif
 
 #endif
+

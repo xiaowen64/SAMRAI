@@ -1,5 +1,5 @@
 dnl
-dnl File:        $HeadURL$
+dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
 dnl Copyright:   (c) 1997-2018 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
@@ -179,15 +179,6 @@ AC_ARG_WITH([vampir],
 AC_ARG_WITH([tau],
    [AS_HELP_STRING([--with-tau[=dir]],[compile with TAU performance tracing])]
    )
-AC_ARG_WITH([cuda],
-   [AS_HELP_STRING([--with-cuda[=dir]],[compile with CUDA support])]
-   )
-AC_ARG_WITH([cnmem],
-   [AS_HELP_STRING([--with-cnmem[=dir]],[compile with cnmem memory pools])]
-   )
-AC_ARG_WITH([RAJA],
-   [AS_HELP_STRING([--with-RAJA[=dir]],[enable RAJA for kernels])]
-   )
 AC_ARG_ENABLE([deprecated],
    [AS_HELP_STRING([--enable-deprecated],
       [build with deprecated features (default is enabled)])],
@@ -203,10 +194,10 @@ AC_ARG_WITH([maxdim],
 
 dnl
 dnl Set the maximum dimension for this complitation
-dnl
+dnl 
 [validint()
 {
-  # validate first field. Optionally test against min value $2 and/or
+  # validate first field. Optionally test against min value $2 and/or 
   # max value $3: if you'd rather skip these tests, send "" as values.
   # returns 1 for error, 0 for success.
 
@@ -215,19 +206,19 @@ dnl
   if [ -z $number ] ; then
     return 1
   fi
-
+  
   if [ "${number%${number#?}}" = "-" ] ; then	# first char '-' ?
     testvalue="${number#?}" 	# all but first character
   else
     testvalue="$number"
   fi
-
+  
   nodigits="$(echo $testvalue | sed 's/[[:digit:]]//g')"
-
+  
   if [ ! -z $nodigits ] ; then
     return 1
   fi
-
+  
   if [ ! -z $min ] ; then
     if [ "$number" -lt "$min" ] ; then
        return 1
@@ -242,11 +233,11 @@ dnl
 }]
 
 if validint "$with_maxdim" "1" ""; then
-   AC_DEFINE_UNQUOTED([SAMRAI_MAXIMUM_DIMENSION],
-                      [$with_maxdim],
+   AC_DEFINE_UNQUOTED([SAMRAI_MAXIMUM_DIMENSION], 
+                      [$with_maxdim], 
                       [Maximum dimension allowed])
 else
-   AC_MSG_ERROR([dimension must be an integer greater than 0, not \"$with_maxdim\"])
+   AC_MSG_ERROR([dimension must be an integer greater than 0, not \"$with_maxdim\"])   
 fi
 
 SAMRAI_ALL_LIBRARIES="appu algs solv geom mesh math pdat xfer hier tbox"
@@ -265,7 +256,7 @@ else
       invalid_library=1
       for i in $SAMRAI_ALL_LIBRARIES
       do
-         if test "$i" = "$j"
+         if test "$i" = "$j" 
          then
 	   invalid_library=0
 	   break
@@ -282,7 +273,7 @@ else
    do
       for j in $with_libraries
       do
-         if test "$i" = "$j"
+         if test "$i" = "$j" 
          then
 	   SAMRAI_LIBRARIES="$SAMRAI_LIBRARIES $i"
 	   break
@@ -342,7 +333,7 @@ CASC_GUESS_ARCH
 CASC_AC_LOG_VAR(ARCH)
 
 dnl
-dnl Set up the C++ compiler.
+dnl Set up the C++ compiler.  
 dnl
 
 if test -n "$with_CXX"; then
@@ -470,7 +461,7 @@ fi
 
 
 dnl
-dnl Find install for installing
+dnl Find install for installing 
 dnl
 
 AC_PROG_INSTALL
@@ -541,7 +532,7 @@ AC_CHECK_HEADERS([unistd.h])
 
 
 # For insure add -Zsl option for linking
-case $CXX in
+case $CXX in 
    *insure*)
             CXX_FLAGS="$CXX_FLAGS -Zsl"
             LIB_NAME="$LIB_NAME -Zsl"
@@ -576,7 +567,7 @@ case $CXX_ID in
       CXX_FLAGS="-qrtti -g $CXX_FLAGS"
       ;;
    intel)
-      # Ignore some Intel warnings that seem harmless and very hard to get rid of
+      # Ignore some Intel warnings that seem harmless and very hard to get rid of 	
       CXX_FLAGS="$CXX_FLAGS -Wall -w1 -wd981 -wd383 -wd1418 -wd522"
       ;;
     insure)
@@ -713,7 +704,7 @@ debug_switches=-g)
 
 case "$enable_debug" in
    no) ;;
-   *)
+   *)   
    # Enable assertion checking and disable inlining when debugging is enabled if user
    # does not override.
    if test "$user_specified_check_assertions" != "yes"; then
@@ -912,7 +903,7 @@ fi
 
 dnl
 dnl Valgrind
-dnl
+dnl 
 CASC_SUPPORT_VALGRIND
 AC_SUBST(valgrind_EXE)
 
@@ -1316,22 +1307,6 @@ CASC_AC_LOG_VAR(
 [silo_INCLUDES INC_PATH silo_LIB_PATH silo_LIB_NAME LIB_PATH LIB_NAME])
 
 dnl
-dnl conduit support
-dnl
-AC_LANG_PUSH([C++])
-CASC_SUPPORT_CONDUIT
-if test "${conduit_PREFIX+set}" = set; then
-  SAMRAI_SPLIT_LIBS_STRING(conduit_LIBS,conduit_LIB_PATH,conduit_LIB_NAME)
-  LIB_PATH="$conduit_LIB_PATH $LIB_PATH"
-  LIB_NAME="$conduit_LIB_NAME $LIB_NAME"
-  INC_PATH="$conduit_INCLUDES $INC_PATH"
-  AC_DEFINE([HAVE_CONDUIT],[1],[conduit library is available so use it])
-fi
-CASC_AC_LOG_VAR(
-[conduit_INCLUDES INC_PATH conduit_LIB_PATH conduit_LIB_NAME LIB_PATH LIB_NAME])
-AC_LANG_POP([C++])
-
-dnl
 dnl Set variables for hypre support.
 dnl
 CASC_SUPPORT_HYPRE
@@ -1459,7 +1434,7 @@ if test "$enable_xdr" = "yes"; then
 fi
 
 dnl
-dnl Test if compiling with deprecated
+dnl Test if compiling with deprecated 
 dnl
 if test "$enable_deprecated" = "yes"; then
    AC_DEFINE(INCLUDE_DEPRECATED,2,"Compiling with deprecated features")
@@ -1559,42 +1534,6 @@ else
    LIB_NAME="\$(TAU_MPI_LIBS) \$(TAU_LIBS) $LIB_NAME"
    AC_MSG_RESULT(including TAU makefile $TAU_INCLUDE)
    TAU_INCLUDE="include $TAU_INCLUDE"
-fi
-
-if test -z "$with_cuda"; then
-  AC_DEFINE([LACKS_CUDA],[1],[LACKS_CUDA])
-else
-  AC_DEFINE([HAVE_CUDA],[1],[HAVE_CUDA])
-  AC_MSG_CHECKING(for CUDA)
-  AC_MSG_RESULT($with_cuda)
-  INC_PATH="-I$with_cuda/include $INC_PATH"
-fi
-
-if test -z "$with_cnmem"; then
-  AC_DEFINE([LACKS_CNMEM], [1], [LACKS_CNMEM])
-else
-  if test -z "$with_cuda"; then
-   AC_MSG_ERROR([cnmem needs cuda])
- else
-   AC_DEFINE([HAVE_CNMEM],[1],[HAVE_CNMEM])
-   AC_MSG_CHECKING(for cnmem)
-   AC_MSG_RESULT($with_cnmem)
-   INC_PATH="-I$with_cnmem/include $INC_PATH"
-   LIB_PATH="-L$with_cnmem/lib $LIB_PATH"
-   LIB_NAME="-lcnmem $LIB_NAME"
- fi
-fi
-
-if test -z "$with_RAJA"; then
-  AC_DEFINE([LACKS_RAJA], [1], [LACKS_RAJA])
-else
-   AC_DEFINE([HAVE_RAJA],[1],[HAVE_RAJA])
-   AC_MSG_CHECKING(for RAJA)
-   AC_MSG_RESULT($with_RAJA)
-   INC_PATH="-I$with_RAJA/include $INC_PATH"
-   #LIB_PATH="-L$with_RAJA/lib $LIB_PATH"
-   LIB_NAME="$with_RAJA/lib/libRAJA.a $LIB_NAME"
-   CXX_FLAGS="$CXX_FLAGS -std=c++11"
 fi
 
 
@@ -1716,10 +1655,10 @@ AC_SUBST(ac_pwd)
 AC_SUBST(btng_rpath_beginning)
 
 dnl Define a macro that links files from the compile tree to the source tree.
-dnl The links have the same name as the the target.  Nothing is done if
+dnl The links have the same name as the the target.  Nothing is done if 
 dnl compiling in the source directory.
-dnl
-dnl Note: It would be "nicer" to have the some of the processing done below
+dnl 
+dnl Note: It would be "nicer" to have the some of the processing done below 
 dnl moved into this function but it didn't seem to work.
 AC_DEFUN([SAMRAI_LINK_FILES],[
 dnl This macro links files the way SAMRAI wants them linked.
@@ -1757,7 +1696,7 @@ dnl
 dnl Don't do links if compiling in the source directory
 dnl
 if test `pwd` != `cd "$srcdir" && pwd`
-then
+then 
 
      dnl
      dnl Links for input files in test directory for input files.
@@ -1802,11 +1741,11 @@ dnl
 dnl Don't do installs if compiling in the source directory
 dnl
 if test `pwd` != `cd "$srcdir" && pwd`
-then
+then 
      $INSTALL  $srcdir/COPYRIGHT COPYRIGHT
      $INSTALL  $srcdir/LICENSE LICENSE
-     $INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES
-     $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES
+     $INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES 
+     $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
      $MKDIR_P source/test/testtools
      $INSTALL  $srcdir/source/test/testtools/* source/test/testtools
 

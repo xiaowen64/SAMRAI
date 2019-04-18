@@ -1242,7 +1242,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
          }
 
       }
-      
+
       d_gridding_algorithm->
       regridAllFinerLevels(
          coarse_level_number,

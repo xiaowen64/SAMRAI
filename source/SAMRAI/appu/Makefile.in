@@ -27,8 +27,7 @@ OBJS = 	\
 	VisDerivedDataStrategy.o \
 	VisMaterialsDataStrategy.o \
 	CartesianBoundaryUtilities2.o \
-	CartesianBoundaryUtilities3.o \
-	MemoryPool.o
+	CartesianBoundaryUtilities3.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
