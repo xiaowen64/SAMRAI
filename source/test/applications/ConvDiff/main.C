@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <string>
 #include <fstream>
-using namespace std;
 
 #ifndef _MSC_VER
 #include <unistd.h>
