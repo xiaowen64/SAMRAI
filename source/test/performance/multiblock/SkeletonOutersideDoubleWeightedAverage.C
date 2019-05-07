@@ -221,7 +221,7 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
                cdata->getPointer(2, i, d));
          } else {
             TBOX_ERROR("SkeletonOutersideDoubleWeightedAverage error...\n"
-               << "d_dim > 3 not supported." << endl);
+               << "d_dim > 3 not supported." << std::endl);
          }
       }
    }

@@ -67,8 +67,6 @@ void SAMRAI_F77_FUNC(coarsentags3d, COARSENTAGS3D) (const int&, const int&,
 namespace SAMRAI {
 namespace mesh {
 
-// using namespace std;
-
 /*
  *************************************************************************
  *

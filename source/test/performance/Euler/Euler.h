@@ -35,7 +35,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-using namespace std;
 
 /**
  * The Euler class provides routines for a sample application code that

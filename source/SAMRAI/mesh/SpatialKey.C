@@ -26,8 +26,6 @@ namespace mesh {
 const int SpatialKey::BITS_PER_BYTE = 8;
 const int SpatialKey::BITS_PER_HEX_CHAR = 4;
 
-// using namespace std;
-
 /*
  ****************************************************************************
  *

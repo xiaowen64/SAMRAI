@@ -44,7 +44,6 @@
 
 #include <memory>
 
-using namespace std;
 
 namespace SAMRAI {
 
@@ -90,7 +89,7 @@ public:
     * @param database
     */
    HyprePoisson(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<solv::CellPoissonHypreSolver>& hypre_solver,
       std::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);

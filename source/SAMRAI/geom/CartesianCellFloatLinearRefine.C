@@ -64,7 +64,6 @@ void SAMRAI_F77_FUNC(cartlinrefcellflot3d, CARTLINREFCELLFLOT3D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianCellFloatLinearRefine::CartesianCellFloatLinearRefine():
    hier::RefineOperator("LINEAR_REFINE")

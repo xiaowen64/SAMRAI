@@ -64,7 +64,6 @@ void SAMRAI_F77_FUNC(cartlinrefnodedoub3d, CARTLINREFNODEDOUB3D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianNodeDoubleLinearRefine::CartesianNodeDoubleLinearRefine():
    hier::RefineOperator("LINEAR_REFINE")

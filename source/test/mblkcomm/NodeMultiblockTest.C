@@ -21,10 +21,10 @@
 using namespace SAMRAI;
 
 NodeMultiblockTest::NodeMultiblockTest(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> main_input_db,
-   const string& refine_option):
+   const std::string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
 {
@@ -486,9 +486,9 @@ bool NodeMultiblockTest::verifyResults(
    const hier::BlockId& block_id)
 {
 
-   tbox::plog << "\nEntering NodeMultiblockTest::verifyResults..." << endl;
-   tbox::plog << "level_number = " << level_number << endl;
-   tbox::plog << "Patch box = " << patch.getBox() << endl;
+   tbox::plog << "\nEntering NodeMultiblockTest::verifyResults..." << std::endl;
+   tbox::plog << "level_number = " << level_number << std::endl;
+   tbox::plog << "Patch box = " << patch.getBox() << std::endl;
 
    hier::IntVector tgcw(d_dim, 0);
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
@@ -537,11 +537,11 @@ bool NodeMultiblockTest::verifyResults(
 
             if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                tbox::perr << "Test FAILED: ...."
-                          << " : node index = " << *ci << endl;
+                          << " : node index = " << *ci << std::endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
-                          << " : depth index = " << d << endl;
+                          << " : depth index = " << d << std::endl;
                tbox::perr << "    result = " << result
-                          << " : correct = " << correct << endl;
+                          << " : correct = " << correct << std::endl;
                test_failed = true;
             }
          }
@@ -601,11 +601,11 @@ bool NodeMultiblockTest::verifyResults(
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
-                                   << " : node index = " << ni << endl;
+                                   << " : node index = " << ni << std::endl;
                         tbox::perr << "  Variable = " << d_variable_src_name[i]
-                                   << " : depth index = " << d << endl;
+                                   << " : depth index = " << d << std::endl;
                         tbox::perr << "    result = " << result
-                                   << " : correct = " << correct << endl;
+                                   << " : correct = " << correct << std::endl;
                         test_failed = true;
                      }
                   }
@@ -683,12 +683,12 @@ bool NodeMultiblockTest::verifyResults(
                         if (!tbox::MathUtilities<double>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
-                                      << " : node index = " << *ci << endl;
+                                      << " : node index = " << *ci << std::endl;
                            tbox::perr << "  Variable = "
                                       << d_variable_src_name[i]
-                                      << " : depth index = " << d << endl;
+                                      << " : depth index = " << d << std::endl;
                            tbox::perr << "    result = " << result
-                                      << " : correct = " << correct << endl;
+                                      << " : correct = " << correct << std::endl;
                            test_failed = true;
                         }
                      }
@@ -700,16 +700,16 @@ bool NodeMultiblockTest::verifyResults(
    }
 
    if (!test_failed) {
-      tbox::plog << "NodeMultiblockTest Successful!" << endl;
+      tbox::plog << "NodeMultiblockTest Successful!" << std::endl;
    } else {
-      tbox::perr << "Multiblock NodeMultiblockTest FAILED: .\n" << endl;
+      tbox::perr << "Multiblock NodeMultiblockTest FAILED: .\n" << std::endl;
    }
 
    solution.reset();   // just to be anal...
 
-   tbox::plog << "\nExiting NodeMultiblockTest::verifyResults..." << endl;
-   tbox::plog << "level_number = " << level_number << endl;
-   tbox::plog << "Patch box = " << patch.getBox() << endl << endl;
+   tbox::plog << "\nExiting NodeMultiblockTest::verifyResults..." << std::endl;
+   tbox::plog << "level_number = " << level_number << std::endl;
+   tbox::plog << "Patch box = " << patch.getBox() << std::endl << std::endl;
 
    return !test_failed;
 }

@@ -13,7 +13,6 @@
 #include <string>
 #include <sys/stat.h>
 #include <string>
-using namespace std;
 
 /*
  * Headers for basic SAMRAI objects used in this sample code.
@@ -162,7 +161,7 @@ int main(
       tbox::pout << "This example requires the packages PETSC, SUNDIALS, "
                  << "\nand HYPRE to work properly.  SAMRAI was not configured"
                  << "\nwith one or more of these packages."
-                 << endl;
+                 << std::endl;
 #else
 
       /*
@@ -171,12 +170,12 @@ int main(
        *
        *     executable <input file name>
        */
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 3) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> -skip_petscrc \n"
                                << "  options:\n"
-                               << "  none at this time" << endl);
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -198,24 +197,24 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string base_name = "default";
+      std::string base_name = "default";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
-      string log_file_name = base_name + ".log";
+      std::string log_file_name = base_name + ".log";
       tbox::PIO::logOnlyNodeZero(log_file_name);
-      tbox::plog << "input_filename = " << input_filename << endl;
+      tbox::plog << "input_filename = " << input_filename << std::endl;
 
       int viz_dump_interval = 0;
       if (main_db->keyExists("viz_dump_interval")) {
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      string visit_dump_dirname;
+      std::string visit_dump_dirname;
       bool uses_visit = false;
       int visit_number_procs_per_file = 1;
       if (viz_dump_interval > 0) {
          uses_visit = true;
-         string viz_dump_dirname;
+         std::string viz_dump_dirname;
          if (main_db->keyExists("viz_dump_dirname")) {
             viz_dump_dirname = main_db->getString("viz_dump_dirname");
          }
@@ -224,7 +223,7 @@ int main(
             TBOX_ERROR("main(): "
                << "\nviz_dump_dirname is null ... "
                << "\nThis must be specified for use with VisIt"
-               << endl);
+               << std::endl);
          }
          if (main_db->keyExists("visit_number_procs_per_file")) {
             visit_number_procs_per_file =
@@ -237,7 +236,7 @@ int main(
          regrid_interval = main_db->getInteger("regrid_interval");
       }
 
-      string nonlinear_solver_package = "KINSOL";
+      std::string nonlinear_solver_package = "KINSOL";
       if (main_db->keyExists("nonlinear_solver_package")) {
          nonlinear_solver_package =
             main_db->getString("nonlinear_solver_package");
@@ -440,10 +439,10 @@ int main(
        */
 
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
       /*
@@ -521,11 +520,11 @@ int main(
              imp_integrator->stepsRemaining()) {
 
          int iteration_num = imp_integrator->getIntegratorStep() + 1;
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
          tbox::pout << "At begining of timestep # " << iteration_num - 1
-                    << endl;
-         tbox::pout << "Simulation time is " << sim_time << endl;
-         tbox::pout << "Time increment is " << dt << endl;
+                    << std::endl;
+         tbox::pout << "Simulation time is " << sim_time << std::endl;
+         tbox::pout << "Time increment is " << dt << std::endl;
 
          solve_timer->start();
          int solver_retcode = imp_integrator->advanceSolution(dt, first_step);
@@ -537,7 +536,7 @@ int main(
             int nonlinear_itns = snes_solver->getNumberOfNonlinearIterations();
             int linear_itns = snes_solver->getTotalNumberOfLinearIterations();
             tbox::plog << " Nonlinear iterations:  " << nonlinear_itns
-                       << " Linear iterations:     " << linear_itns << endl;
+                       << " Linear iterations:     " << linear_itns << std::endl;
          }
 
          bool good_solution = imp_integrator->checkNewSolution(solver_retcode);
@@ -545,10 +544,10 @@ int main(
          if (good_solution) {
             sim_time = imp_integrator->updateSolution();
 
-            tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-            tbox::pout << "Simulation time is " << sim_time << endl;
+            tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+            tbox::pout << "Simulation time is " << sim_time << std::endl;
             tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++"
-                       << endl;
+                       << std::endl;
 
             /*
              * If desired, write plot file.
@@ -582,10 +581,10 @@ int main(
             }
          } else {
 
-            tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-            tbox::pout << "Failed to advance solution to " << sim_time << endl;
+            tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+            tbox::pout << "Failed to advance solution to " << sim_time << std::endl;
             tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++"
-                       << endl;
+                       << std::endl;
             break;
 
          }
@@ -624,7 +623,7 @@ int main(
       t_all->stop();
       int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
       if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
-         string timing_file =
+         std::string timing_file =
             base_name + ".timing" + tbox::Utilities::intToString(size);
          FILE* fp = fopen(timing_file.c_str(), "w");
          fprintf(fp, "%f\n", t_all->getTotalWallclockTime());
@@ -639,7 +638,7 @@ int main(
        * makes it here, it passes.  We need to find a way to check
        * the solution accuracy.
        */
-      tbox::pout << "\nPASSED:  nonlinear" << endl;
+      tbox::pout << "\nPASSED:  nonlinear" << std::endl;
 #endif
    }
 

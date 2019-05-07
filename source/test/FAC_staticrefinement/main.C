@@ -11,7 +11,6 @@
 
 #include <string>
 #include <memory>
-using namespace std;
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
@@ -82,12 +81,12 @@ int main(
        *    executable <input file name>
        *
        */
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
                                << "  options:\n"
-                               << "  none at this time" << endl);
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -118,13 +117,13 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string base_name = "unnamed";
+      std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
       /*
        * Start logging.
        */
-      const string log_file_name = base_name + ".log";
+      const std::string log_file_name = base_name + ".log";
       bool log_all_nodes = false;
       log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
             log_all_nodes);
@@ -147,7 +146,7 @@ int main(
             dim,
             base_name + "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
-      tbox::plog << "Cartesian Geometry:" << endl;
+      tbox::plog << "Cartesian Geometry:" << std::endl;
       grid_geometry->printClassData(tbox::plog);
 
       std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
@@ -258,7 +257,7 @@ int main(
             tag_and_initializer,
             box_generator,
             load_balancer));
-      tbox::plog << "Gridding algorithm:" << endl;
+      tbox::plog << "Gridding algorithm:" << std::endl;
       gridding_algorithm->printClassData(tbox::plog);
 
       /*
@@ -268,13 +267,13 @@ int main(
       bool done = false;
       for (int lnum = 0;
            patch_hierarchy->levelCanBeRefined(lnum) && !done; lnum++) {
-         tbox::plog << "Adding finner levels with lnum = " << lnum << endl;
+         tbox::plog << "Adding finner levels with lnum = " << lnum << std::endl;
          gridding_algorithm->makeFinerLevel(
             0,
             true,
             0,
             0.0);
-         tbox::plog << "Just added finer levels with lnum = " << lnum << endl;
+         tbox::plog << "Just added finer levels with lnum = " << lnum << std::endl;
          done = !(patch_hierarchy->finerLevelExists(lnum));
       }
 
@@ -285,7 +284,7 @@ int main(
        * with the plotter.
        */
 #ifdef HAVE_HDF5
-      string vis_filename =
+      std::string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
       std::shared_ptr<appu::VisItDataWriter> visit_writer(
          std::make_shared<appu::VisItDataWriter>(dim,
@@ -300,8 +299,8 @@ int main(
        * to the log file.
        */
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
 
       /*
@@ -328,7 +327,7 @@ int main(
     * means application ran.  A better test would actually test the
     * results.
     */
-   tbox::pout << "\nPASSED:  FAC" << endl;
+   tbox::pout << "\nPASSED:  FAC" << std::endl;
 
    tbox::SAMRAIManager::shutdown();
    tbox::SAMRAIManager::finalize();

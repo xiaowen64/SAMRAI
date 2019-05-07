@@ -23,7 +23,6 @@
 #include "SAMRAI/hier/RefineOperator.h"
 
 
-using namespace std;
 using namespace SAMRAI;
 
 /**

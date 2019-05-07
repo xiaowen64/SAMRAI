@@ -25,7 +25,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <string>
-using namespace std;
 
 // Simple code to check timer overhead
 // Not part of test, but kept here in
@@ -110,8 +109,8 @@ int main(
 
       tbox::PIO::logAllNodes("Timer.log");
 
-      string input_filename;
-      string restart_dirname;
+      std::string input_filename;
+      std::string restart_dirname;
       int restore_num = 0;
 
       bool is_from_restart = false;
@@ -121,7 +120,7 @@ int main(
                     << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -323,18 +322,18 @@ int main(
          for (int i = 0; i < tcnt; ++i) {
             mfactor *= 10;
          }
-         string suffix(tbox::Utilities::intToString(mfactor, testit));
+         std::string suffix(tbox::Utilities::intToString(mfactor, testit));
 
-         string t1name("ttest1-" + suffix);
+         std::string t1name("ttest1-" + suffix);
          tarray1[tcnt] = tbox::TimerManager::getManager()->getTimer(t1name,
                true);
 
-         string t2name("ttest2-" + suffix);
+         std::string t2name("ttest2-" + suffix);
          tarray2[tcnt] = tbox::TimerManager::getManager()->getTimer(t2name,
                true);
       }
 
-      tbox::pout << "\n\nEstimate SAMRAI Timer overhead..." << endl;
+      tbox::pout << "\n\nEstimate SAMRAI Timer overhead..." << std::endl;
 
       for (int tcnt = 0; tcnt < testit; ++tcnt) {
 
@@ -356,16 +355,16 @@ int main(
          tbox::pout.precision(16);
          tbox::pout << "\ntcnt, ntest, accesses = "
                     << tcnt << " , " << ntest << " , "
-                    << tarray1[tcnt]->getNumberAccesses() << endl;
-         tbox::pout << "access_time1 = " << access_time1 << endl;
-         tbox::pout << "access_time2 = " << access_time2 << endl;
+                    << tarray1[tcnt]->getNumberAccesses() << std::endl;
+         tbox::pout << "access_time1 = " << access_time1 << std::endl;
+         tbox::pout << "access_time2 = " << access_time2 << std::endl;
          double access_time12 = access_time1 - access_time2;
          double cost12 = access_time12 / static_cast<double>(ntest);
          tbox::pout << "Access time 12 overhead for each Timer: " << cost12
-                    << " sec" << endl;
+                    << " sec" << std::endl;
       }
 
-      tbox::pout << "\n\nEstimate PTimer overhead..." << endl;
+      tbox::pout << "\n\nEstimate PTimer overhead..." << std::endl;
 
       PTimer Ptarray1[testit];
       PTimer Ptarray2[testit];
@@ -390,13 +389,13 @@ int main(
          tbox::pout.precision(16);
          tbox::pout << "\ntcnt, ntest, accesses = "
                     << tcnt << " , " << ntest << " , "
-                    << Ptarray1[tcnt].getNumAccesses() << endl;
-         tbox::pout << "access_time1 = " << access_time1 << endl;
-         tbox::pout << "access_time2 = " << access_time2 << endl;
+                    << Ptarray1[tcnt].getNumAccesses() << std::endl;
+         tbox::pout << "access_time1 = " << access_time1 << std::endl;
+         tbox::pout << "access_time2 = " << access_time2 << std::endl;
          double access_time12 = access_time1 - access_time2;
          double cost12 = access_time12 / static_cast<double>(ntest);
          tbox::pout << "Access time 12 overhead for each Timer: " << cost12
-                    << " sec" << endl;
+                    << " sec" << std::endl;
       }
 
 #endif
@@ -417,7 +416,7 @@ int main(
       delete foo;
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  timertest" << endl;
+         tbox::pout << "\nPASSED:  timertest" << std::endl;
       }
    }
 

@@ -23,7 +23,6 @@
 #include "SAMRAI/geom/GridGeometry.h"
 
 
-using namespace std;
 
 using namespace SAMRAI;
 using namespace hier;

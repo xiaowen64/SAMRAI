@@ -56,7 +56,6 @@
 #include <string>
 #include <fstream>
 #include <memory>
-using namespace std;
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -189,7 +188,7 @@ int main(
                     << argv[0] << " <input filename> <case name>"
                     << "or\n"
                     << argv[0] << " <input filename> <case name> <scale size> "
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -202,7 +201,7 @@ int main(
          }
       }
 
-      tbox::pout << "input_filename = " << input_filename << endl;
+      tbox::pout << "input_filename = " << input_filename << std::endl;
       tbox::pout << "case_name = " << case_name << std::endl;
       tbox::pout << "scale_size = " << scale_size << std::endl;
 
@@ -289,7 +288,7 @@ int main(
             TBOX_ERROR("main(): "
                << "\nviz_dump_dirname is null ... "
                << "\nThis must be specified for use with VisIt"
-               << endl);
+               << std::endl);
          }
          if (main_db->keyExists("visit_number_procs_per_file")) {
             visit_number_procs_per_file =
@@ -539,13 +538,13 @@ int main(
 
          int iteration_num = time_integrator->getIntegratorStep() + 1;
 
-         tbox::plog << endl << endl;
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
-         tbox::pout << "At begining of timestep # " << iteration_num - 1 << endl;
-         tbox::pout << "Simulation time is " << loop_time << endl;
-         tbox::pout << "Current dt is " << dt_now << endl;
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << endl;
-         tbox::plog << endl << endl;
+         tbox::plog << std::endl << std::endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+         tbox::pout << "At begining of timestep # " << iteration_num - 1 << std::endl;
+         tbox::pout << "Simulation time is " << loop_time << std::endl;
+         tbox::pout << "Current dt is " << dt_now << std::endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << std::endl;
+         tbox::plog << std::endl << std::endl;
 
          double dt_new = time_integrator->advanceHierarchy(dt_now);
 
@@ -563,12 +562,12 @@ int main(
             patch_hierarchy->recursivePrint(tbox::plog, "L->", 1);
          }
 
-         tbox::plog << endl << endl;
-         tbox::pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << endl;
-         tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-         tbox::pout << "Simulation time is " << loop_time << endl;
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << endl;
-         tbox::plog << endl << endl;
+         tbox::plog << std::endl << std::endl;
+         tbox::pout << "\n\n++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+         tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+         tbox::pout << "Simulation time is " << loop_time << std::endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++\n\n" << std::endl;
+         tbox::plog << std::endl << std::endl;
 
          /*
           * At specified intervals, write restart files.
@@ -604,9 +603,9 @@ int main(
          /*
           * Output statistics.
           */
-         tbox::plog << "HyperbolicLevelIntegrator statistics:" << endl;
+         tbox::plog << "HyperbolicLevelIntegrator statistics:" << std::endl;
          hyp_level_integrator->printStatistics(tbox::plog);
-         tbox::plog << "\nGriddingAlgorithm statistics:" << endl;
+         tbox::plog << "\nGriddingAlgorithm statistics:" << std::endl;
          gridding_algorithm->printStatistics(tbox::plog);
 
       } // End time-stepping loop.
@@ -681,7 +680,7 @@ int main(
    }
 
    if (num_failures == 0) {
-      tbox::pout << "\nPASSED:  Euler" << endl;
+      tbox::pout << "\nPASSED:  Euler" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();

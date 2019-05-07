@@ -120,8 +120,8 @@ typedef union YYSTYPE
   double        u_double;
   int           u_integer;
   KeyData* u_keydata;
-  string*       u_keyword;
-  string*       u_string;
+  std::string*       u_keyword;
+  std::string*       u_string;
 }
 /* Line 1529 of yacc.c.  */
 

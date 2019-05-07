@@ -18,8 +18,6 @@
 namespace SAMRAI {
 namespace solv {
 
-// using namespace std;
-
 /*
  *************************************************************************
  *

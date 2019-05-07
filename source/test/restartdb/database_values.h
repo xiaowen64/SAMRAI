@@ -21,7 +21,6 @@
 
 #include <string>
 
-using namespace std;
 using namespace SAMRAI;
 
 // Number of (non-abortive) failures.
@@ -41,9 +40,9 @@ int arraydb_intArray1 = 1;
 int arraydb_intArray2 = 2;
 int arraydb_intArray3 = 3;
 int arraydb_intArray4 = 4;
-string arraydb_stringArray0 = "This is 1 test.";
-string arraydb_stringArray1 = "This is 2nd test.";
-string arraydb_stringArray2 = "This is a long 3rd test.";
+std::string arraydb_stringArray0 = "This is 1 test.";
+std::string arraydb_stringArray1 = "This is 2nd test.";
+std::string arraydb_stringArray2 = "This is a long 3rd test.";
 float arraydb_floatArray0 = 0 * 1.2;
 float arraydb_floatArray1 = (float)(1 * 1.2);
 float arraydb_floatArray2 = (float)(2 * 1.2);
@@ -69,7 +68,7 @@ dcomplex scalardb_full_thisComplex = dcomplex(2.3, 4.5);
 int scalardb_full_thisInt = 89;
 float scalardb_full_thisFloat = (float)9.9;
 bool scalardb_full_thisBool = true;
-string scalardb_full_thisString = "This is a test.";
+std::string scalardb_full_thisString = "This is a test.";
 char scalardb_full_thisChar = 'q';
 int ilo[3] = { 0, 0, 0 };
 int ihi[3] = { 1, 1, 1 };

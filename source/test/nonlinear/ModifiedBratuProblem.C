@@ -110,7 +110,7 @@ std::shared_ptr<tbox::Timer> ModifiedBratuProblem::s_pc_timer;
  */
 
 ModifiedBratuProblem::ModifiedBratuProblem(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    const std::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
    std::shared_ptr<tbox::Database> input_db,
@@ -769,10 +769,10 @@ bool ModifiedBratuProblem::checkNewSolution(
                  << " on level " << amr_level
                  << " max err is " << levelerror
                  << " wtd l2 err is " << levell2error
-                 << endl;
+                 << std::endl;
    }
 
-   tbox::plog << " At " << new_time << " err is " << maxerror << endl;
+   tbox::plog << " At " << new_time << " err is " << maxerror << std::endl;
 
    return true;
 }
@@ -2742,32 +2742,32 @@ void ModifiedBratuProblem::putToRestart(
  */
 
 void ModifiedBratuProblem::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
-   os << "\nModifiedBratuProblem::printClassData..." << endl;
+   os << "\nModifiedBratuProblem::printClassData..." << std::endl;
    os << "ModifiedBratuProblem: this = " << (ModifiedBratuProblem *)this
-      << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_grid_geometry = "
-      << d_grid_geometry.get() << endl;
+      << d_grid_geometry.get() << std::endl;
 
-   os << "d_soln_scratch_id =   " << d_soln_scratch_id << endl;
-   os << "d_flux_id =   " << d_flux_id << endl;
-   os << "d_coarse_fine_flux_id =   " << d_coarse_fine_flux_id << endl;
-   os << "d_jacobian_a_id =   " << d_jacobian_a_id << endl;
-   os << "d_jacobian_b_id =   " << d_jacobian_b_id << endl;
-   os << "d_weight_id =   " << d_weight_id << endl;
-   os << "d_nghosts =   " << d_nghosts << endl;
+   os << "d_soln_scratch_id =   " << d_soln_scratch_id << std::endl;
+   os << "d_flux_id =   " << d_flux_id << std::endl;
+   os << "d_coarse_fine_flux_id =   " << d_coarse_fine_flux_id << std::endl;
+   os << "d_jacobian_a_id =   " << d_jacobian_a_id << std::endl;
+   os << "d_jacobian_b_id =   " << d_jacobian_b_id << std::endl;
+   os << "d_weight_id =   " << d_weight_id << std::endl;
+   os << "d_nghosts =   " << d_nghosts << std::endl;
 
-   os << "d_lambda =   " << d_lambda << endl;
-   os << "d_input_dt = " << d_input_dt << endl;
+   os << "d_lambda =   " << d_lambda << std::endl;
+   os << "d_input_dt = " << d_input_dt << std::endl;
 
-   os << "d_current_time =   " << d_current_time << endl;
-   os << "d_new_time = " << d_new_time << endl;
-   os << "d_current_dt =   " << d_current_dt << endl;
+   os << "d_current_time =   " << d_current_time << std::endl;
+   os << "d_new_time = " << d_new_time << std::endl;
+   os << "d_current_dt =   " << d_current_dt << std::endl;
 
-   os << "d_max_precond_its =   " << d_max_precond_its << endl;
-   os << "d_precond_tol = " << d_precond_tol << endl;
+   os << "d_max_precond_its =   " << d_max_precond_its << std::endl;
+   os << "d_precond_tol = " << d_precond_tol << std::endl;
 
 }
 

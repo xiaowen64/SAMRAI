@@ -70,9 +70,9 @@ int main(
     */
    tbox::SAMRAI_MPI::init(&argc, &argv);
    if (get_input_filename(&argc, argv, input_filename) == 1) {
-      cout << "Usage: " << argv[0]
+      std::cout << "Usage: " << argv[0]
            << " <input file>."
-           << endl;
+           << std::endl;
       tbox::SAMRAI_MPI::finalize();
       return 0;
    }
@@ -86,9 +86,9 @@ int main(
     */
    {
 
-      tbox::plog << "Input file is " << input_filename << endl;
+      tbox::plog << "Input file is " << input_filename << std::endl;
 
-      string case_name;
+      std::string case_name;
       if (argc >= 2) {
          case_name = argv[1];
       }
@@ -123,7 +123,7 @@ int main(
 
       std::shared_ptr<tbox::Database> main_db(
          input_db->getDatabase("Main"));
-      tbox::plog << "Main database:" << endl;
+      tbox::plog << "Main database:" << std::endl;
       main_db->printClassData(tbox::plog);
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
@@ -136,7 +136,7 @@ int main(
        * Base filename info.
        */
 
-      string base_name = main_db->getStringWithDefault("base_name", "fp");
+      std::string base_name = main_db->getStringWithDefault("base_name", "fp");
 
       /*
        * Modify basename for this particular run.
@@ -156,14 +156,14 @@ int main(
       /*
        * Set the vis filename, defaults to base_name.
        */
-      string vis_filename =
+      std::string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
 
       /*
        * Log file info.
        */
 
-      string log_filename =
+      std::string log_filename =
          main_db->getStringWithDefault("log_filename", base_name + ".log");
       bool log_all = false;
       log_all = main_db->getBoolWithDefault("log_all", log_all);
@@ -196,7 +196,7 @@ int main(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
-      tbox::plog << "Grid Geometry:" << endl;
+      tbox::plog << "Grid Geometry:" << std::endl;
       grid_geometry->printClassData(tbox::plog);
       std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
@@ -265,15 +265,15 @@ int main(
        * we print the input database and variable database contents
        * to the log file.
        */
-      tbox::plog << "\nCheck input data:" << endl;
-      tbox::plog << "Input database..." << endl;
+      tbox::plog << "\nCheck input data:" << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
       tbox::plog
       << "**********************************************************\n";
-      tbox::plog << "Memory used before mesh generation:" << endl;
+      tbox::plog << "Memory used before mesh generation:" << std::endl;
       tbox::MemoryUtilities::printMemoryInfo(tbox::plog);
       tbox::plog
       << "**********************************************************\n";
@@ -287,12 +287,12 @@ int main(
          getTimer("apps::main::generate_mesh"));
       t_generate_mesh->start();
       gridding_algorithm->makeCoarsestLevel(0.0);
-      tbox::plog << "Memory used after creating level 0:" << endl;
+      tbox::plog << "Memory used after creating level 0:" << std::endl;
       tbox::MemoryUtilities::printMemoryInfo(tbox::plog);
       bool done = false;
       for (int ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done;
            ++ln) {
-         tbox::plog << "Adding finer levels with ln = " << ln << endl;
+         tbox::plog << "Adding finer levels with ln = " << ln << std::endl;
          std::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
@@ -302,7 +302,7 @@ int main(
             /* simulation time */ 0.0);
          tbox::plog << "Just added finer level " << ln << " -> " << ln + 1;
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
-            tbox::plog << " (no new level!)" << endl;
+            tbox::plog << " (no new level!)" << std::endl;
          } else {
             std::shared_ptr<hier::PatchLevel> finer_level_(
                patch_hierarchy->getPatchLevel(ln + 1));
@@ -310,24 +310,24 @@ int main(
             << " (" << level_->getNumberOfPatches()
             << " -> " << finer_level_->getNumberOfPatches()
             << " patches)"
-            << endl;
+            << std::endl;
          }
          done = !(patch_hierarchy->finerLevelExists(ln));
 
          tbox::plog << "Memory used after creating level " << ln + 1 << ":"
-                    << endl;
+                    << std::endl;
          tbox::MemoryUtilities::printMemoryInfo(tbox::plog);
 
       }
       t_generate_mesh->stop();
 
       if (mpi.getRank() == 0) {
-         tbox::plog << "Hierarchy generated:" << endl;
-         patch_hierarchy->recursivePrint(tbox::plog, string("    "), 1);
+         tbox::plog << "Hierarchy generated:" << std::endl;
+         patch_hierarchy->recursivePrint(tbox::plog, std::string("    "), 1);
       }
       if (log_hierarchy) {
-         tbox::plog << "Hierarchy generated:" << endl;
-         patch_hierarchy->recursivePrint(tbox::plog, string("H-> "), 3);
+         tbox::plog << "Hierarchy generated:" << std::endl;
+         patch_hierarchy->recursivePrint(tbox::plog, std::string("H-> "), 3);
       }
 
 #ifdef HAVE_HDF5
@@ -336,7 +336,7 @@ int main(
        */
       /* Get the output filename. */
       if (plot_step > 0) {
-         const string visit_filename = vis_filename + ".visit";
+         const std::string visit_filename = vis_filename + ".visit";
          /* Create the VisIt data writer. */
          std::shared_ptr<appu::VisItDataWriter> visit_data_writer(
             new appu::VisItDataWriter(
@@ -360,7 +360,7 @@ int main(
 
       for (int istep = 0; istep < num_steps; ++istep) {
 
-         tbox::plog << "Adaption number " << istep << endl;
+         tbox::plog << "Adaption number " << istep << std::endl;
 
          // Recompute the front-dependent data at next time step.
          abrtest.computeHierarchyData(*patch_hierarchy,
@@ -379,19 +379,19 @@ int main(
             regrid_start_time);
 
          if (mpi.getRank() == 0) {
-            patch_hierarchy->recursivePrint(tbox::plog, string("    "), 1);
+            patch_hierarchy->recursivePrint(tbox::plog, std::string("    "), 1);
          }
          if (log_hierarchy) {
-            tbox::plog << "Hierarchy adapted:" << endl;
-            patch_hierarchy->recursivePrint(tbox::plog, string("H-> "), 3);
+            tbox::plog << "Hierarchy adapted:" << std::endl;
+            patch_hierarchy->recursivePrint(tbox::plog, std::string("H-> "), 3);
          }
 
-         tbox::plog << "Memory used after adaption number " << istep << endl;
+         tbox::plog << "Memory used after adaption number " << istep << std::endl;
          tbox::MemoryUtilities::printMemoryInfo(tbox::plog);
 
 #ifdef HAVE_HDF5
          if (plot_step > 0 && (istep + 1) % plot_step == 0) {
-            const string visit_filename = vis_filename + ".visit";
+            const std::string visit_filename = vis_filename + ".visit";
             /* Create the VisIt data writer. */
             std::shared_ptr<appu::VisItDataWriter> visit_data_writer(
                new appu::VisItDataWriter(
@@ -408,14 +408,14 @@ int main(
 
       tbox::TimerManager::getManager()->print(tbox::plog);
 
-      tbox::pout << "\nPASSED:  async_br" << endl;
+      tbox::pout << "\nPASSED:  async_br" << std::endl;
 
    }
 
    /*
     * Exit properly by shutting down services in correct order.
     */
-   tbox::plog << "\nShutting down..." << endl;
+   tbox::plog << "\nShutting down..." << std::endl;
    tbox::SAMRAIManager::shutdown();
    tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();

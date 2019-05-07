@@ -19,7 +19,6 @@
 #include <string>
 #include <cassert>
 
-using namespace std;
 
 using namespace SAMRAI;
 

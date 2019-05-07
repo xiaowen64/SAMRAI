@@ -122,7 +122,6 @@ void SAMRAI_F77_FUNC(cartwgtavgfacedoub4d3, CARTWGTAVGFACEDOUB4D3) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianFaceDoubleWeightedAverage::CartesianFaceDoubleWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")

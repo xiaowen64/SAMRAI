@@ -28,7 +28,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-using namespace std;
 #define included_String
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
@@ -76,7 +75,7 @@ public:
     * database (potentially overriding those found in the restart file).
     */
    LinAdv(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database> input_db,
       std::shared_ptr<geom::CartesianGridGeometry> grid_geom,
@@ -332,7 +331,7 @@ public:
     */
    void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
    //@{ @name SAMRAI::appu::VisDerivedDataStrategy virtuals
 
@@ -341,7 +340,7 @@ public:
       double* buffer,
       const hier::Patch& patch,
       const hier::Box& region,
-      const string& variable_name,
+      const std::string& variable_name,
       int depth_id,
       double simulation_time) const;
 
@@ -366,7 +365,7 @@ private:
    void
    readStateDataEntry(
       std::shared_ptr<tbox::Database> db,
-      const string& db_name,
+      const std::string& db_name,
       int array_indx,
       std::vector<double>& uval);
 
@@ -388,7 +387,7 @@ private:
     * The object name is used for error/warning reporting and also as a
     * string label for restart database entries.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -438,7 +437,7 @@ private:
     *
     */
    int d_godunov_order;
-   string d_corner_transport;
+   std::string d_corner_transport;
    hier::IntVector d_nghosts;
    hier::IntVector d_fluxghosts;
 
@@ -452,7 +451,7 @@ private:
     * Refinement criteria parameters for gradient detector and
     * Richardson extrapolation.
     */
-   std::vector<string> d_refinement_criteria;
+   std::vector<std::string> d_refinement_criteria;
    std::vector<double> d_dev_tol;
    std::vector<double> d_dev;
    std::vector<double> d_dev_time_max;

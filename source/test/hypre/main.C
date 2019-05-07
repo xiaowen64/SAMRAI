@@ -11,7 +11,6 @@
 
 #include <string>
 #include <memory>
-using namespace std;
 
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
@@ -81,7 +80,7 @@ int main(
       tbox::pout << "This example requires the package HYPRE"
                  << "\nto work properly.  SAMRAI was not configured"
                  << "\nwith this package."
-                 << endl;
+                 << std::endl;
 #else
 
       /*
@@ -91,12 +90,12 @@ int main(
        *    executable <input file name>
        *
        */
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
                                << "  options:\n"
-                               << "  none at this time" << endl);
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -121,13 +120,13 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string base_name = "unnamed";
+      std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
       /*
        * Start logging.
        */
-      const string log_file_name = base_name + ".log";
+      const std::string log_file_name = base_name + ".log";
       bool log_all_nodes = false;
       log_all_nodes = main_db->getBoolWithDefault("log_all_nodes",
             log_all_nodes);
@@ -150,7 +149,7 @@ int main(
             dim,
             base_name + "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
-      tbox::plog << "Cartesian Geometry:" << endl;
+      tbox::plog << "Cartesian Geometry:" << std::endl;
       grid_geometry->printClassData(tbox::plog);
 
       std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
@@ -225,7 +224,7 @@ int main(
             tag_and_initializer,
             box_generator,
             load_balancer));
-      tbox::plog << "Gridding algorithm:" << endl;
+      tbox::plog << "Gridding algorithm:" << std::endl;
       gridding_algorithm->printClassData(tbox::plog);
 
       /*
@@ -240,7 +239,7 @@ int main(
        * with the plotter.
        */
 #ifdef HAVE_HDF5
-      string vis_filename =
+      std::string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
       std::shared_ptr<appu::VisItDataWriter> visit_writer(
          std::make_shared<appu::VisItDataWriter>(dim,
@@ -255,8 +254,8 @@ int main(
        * to the log file.
        */
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
 
       /*
@@ -281,7 +280,7 @@ int main(
 
 #ifdef TESTING
       if (converged) {
-         tbox::pout << "\nPASSED:  hypre" << endl;
+         tbox::pout << "\nPASSED:  hypre" << std::endl;
       } else {
          TBOX_WARNING("Hypre test did not converge.");
       }

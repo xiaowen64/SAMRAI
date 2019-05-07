@@ -26,7 +26,6 @@
 #include "PatchDataTestStrategy.h"
 #ifndef included_String
 #include <string>
-using namespace std;
 #define included_String
 #endif
 #include "SAMRAI/hier/Variable.h"

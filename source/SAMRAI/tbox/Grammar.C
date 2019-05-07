@@ -187,10 +187,9 @@
 
 #include STL_SSTREAM_HEADER_FILE
 
-using namespace std;
 
 #if !defined(OSTRINGSTREAM_TYPE_IS_BROKEN) && defined(OSTRSTREAM_TYPE_IS_BROKEN)
-typedef ostringstream ostrstream;
+typedef std::ostringstream ostrstream;
 #endif
 
 #include "SAMRAI/tbox/Dimension.h"
@@ -206,8 +205,6 @@ typedef ostringstream ostrstream;
 #pragma report(disable, CPPC5334)
 #pragma report(disable, CPPC5328)
 #endif
-
-using namespace std;
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -229,7 +226,7 @@ void yyerror(const char *const error)
 #define KEY_CHAR    (5)
 #define KEY_STRING  (6)
 
-static string type_names[] = {
+static std::string type_names[] = {
    "complex", "double", "int", "bool", "box", "char", "string"
 };
 
@@ -248,7 +245,7 @@ struct KeyData
    dcomplex        d_complex;	// complex if node is KEY_COMPLEX
    double          d_double;	// double if node is KEY_DOUBLE
    int             d_integer;	// integer if node is KEY_INTEGER
-   string          d_string;	// string if node is KEY_STRING
+   std::string     d_string;	// string if node is KEY_STRING
 };
 
 static void delete_list(KeyData*);
@@ -258,8 +255,8 @@ static void to_double(KeyData*);
 static void to_complex(KeyData*);
 static KeyData* binary_op(KeyData*, KeyData*, const int);
 static KeyData* compare_op(KeyData*, KeyData*, const int);
-static KeyData* eval_function(KeyData*, const string&);
-static KeyData* lookup_variable(const string&, const size_t, const bool);
+static KeyData* eval_function(KeyData*, const std::string&);
+static KeyData* lookup_variable(const std::string&, const size_t, const bool);
 
 
 
@@ -289,8 +286,8 @@ typedef union YYSTYPE
   double        u_double;
   int           u_integer;
   KeyData* u_keydata;
-  string*       u_keyword;
-  string*       u_string;
+  std::string*  u_keyword;
+  std::string*  u_string;
 }
 /* Line 193 of yacc.c.  */
 
@@ -1613,7 +1610,7 @@ yyreduce:
    }
 
       if (Parser::getParser()->getScope()->keyExists(*(yyvsp[(1) - (2)].u_keyword))) {
-	 string tmp("Redefinition of key ``");
+	 std::string tmp("Redefinition of key ``");
          tmp += *(yyvsp[(1) - (2)].u_keyword);
          tmp += "''";
          Parser::getParser()->warning(tmp);
@@ -1634,7 +1631,7 @@ yyreduce:
 
     {
       if (Parser::getParser()->getScope()->keyExists(*(yyvsp[(1) - (2)].u_keyword))) {
-	 string tmp("Redefinition of key ``");
+	 std::string tmp("Redefinition of key ``");
          tmp += *(yyvsp[(1) - (2)].u_keyword);
          tmp += "''";
          Parser::getParser()->warning(tmp);
@@ -1706,7 +1703,7 @@ yyreduce:
             break;
          }
          case KEY_STRING: {
-            std::vector<string> data(n);
+            std::vector<std::string> data(n);
             for (int i = n-1; i >= 0; i--) {
                data[i] = list->d_string;
                list = list->d_next;
@@ -1932,7 +1929,7 @@ yyreduce:
 
     {
       if (((yyvsp[(1) - (3)].u_keydata)->d_node_type == KEY_STRING) && ((yyvsp[(3) - (3)].u_keydata)->d_node_type == KEY_STRING)) {
-	 string tmp((yyvsp[(1) - (3)].u_keydata)->d_string);
+	 std::string tmp((yyvsp[(1) - (3)].u_keydata)->d_string);
 	 tmp += (yyvsp[(3) - (3)].u_keydata)->d_string;
          (yyvsp[(1) - (3)].u_keydata)->d_string = tmp;
          delete (yyvsp[(3) - (3)].u_keydata);
@@ -2649,7 +2646,7 @@ static KeyData* compare_op(KeyData* a, KeyData* b, const int op)
  */
 
 struct arith_functions {
-   string     d_name;
+   std::string     d_name;
    double   (*d_r2r_func)(double);
    dcomplex (*d_c2c_func)(const dcomplex&);
    double   (*d_c2r_func)(const dcomplex&);
@@ -2729,7 +2726,7 @@ void parser_static_table_initialize()
 
    af[5].d_name =    "conj";
    af[5].d_r2r_func = 0;
-   af[5].d_c2c_func = conj;
+   af[5].d_c2c_func = std::conj;
    af[5].d_c2r_func = 0;
 
 
@@ -2804,10 +2801,10 @@ void parser_static_table_initialize()
    af[19].d_c2r_func = 0;
 }
 
-static KeyData* eval_function(KeyData* arg, const string& func)
+static KeyData* eval_function(KeyData* arg, const std::string& func)
 {
    if (!IS_NUMBER(arg->d_node_type)) {
-      string tmp("Unknown function ");
+      std::string tmp("Unknown function ");
       tmp += func;
       tmp += "(";
       tmp += type_names[arg->d_node_type];
@@ -2850,7 +2847,7 @@ static KeyData* eval_function(KeyData* arg, const string& func)
          }
       }
 
-      string tmp("Unknown function ");
+      std::string tmp("Unknown function ");
       tmp += func;
       tmp += "(";
       tmp += type_names[arg->d_node_type];
@@ -2866,7 +2863,7 @@ static KeyData* eval_function(KeyData* arg, const string& func)
  */
 
 static KeyData* lookup_variable(
-   const string& key, const size_t index, const bool is_array)
+   const std::string& key, const size_t index, const bool is_array)
 {
    KeyData* result = new KeyData;
    result->d_node_type  = KEY_INTEGER;
@@ -2879,19 +2876,19 @@ static KeyData* lookup_variable(
    std::shared_ptr<Database> db(parser->getDatabaseWithKey(key));
 
    if (!db) {
-      string tmp("Variable ``");
+      std::string tmp("Variable ``");
       tmp += key;
       tmp += "'' not found in database";
       parser->error(tmp);
    } else if (!is_array && (db->getArraySize(key) > 1)) {
-      string tmp("Variable ``");
+      std::string tmp("Variable ``");
       tmp += key;
       tmp += "'' is not a scalar value";
       parser->error(tmp);
    } else if (index >= db->getArraySize(key)) {
       ostrstream oss;
       oss << index;
-      string tmp("Variable ``");
+      std::string tmp("Variable ``");
       tmp += key;
       tmp += "[";
       tmp += oss.str();

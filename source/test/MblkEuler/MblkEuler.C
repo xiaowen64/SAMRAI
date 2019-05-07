@@ -25,7 +25,6 @@
 #endif
 #endif
 
-using namespace std;
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -94,7 +93,7 @@ using namespace std;
  */
 
 MblkEuler::MblkEuler(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> input_db,
    std::shared_ptr<hier::BaseGridGeometry>& grid_geom):
@@ -150,22 +149,22 @@ MblkEuler::MblkEuler(
    //
    // drop the region layout as a table
    //
-   tbox::plog << "region layout follows:" << endl;
+   tbox::plog << "region layout follows:" << std::endl;
 
    tbox::plog << "field";
    for (int ir = 0; ir < d_number_of_regions; ++ir)
       tbox::plog << "\t" << ir;
-   tbox::plog << endl;
+   tbox::plog << std::endl;
 
    for (int ii = 0; ii < d_number_of_regions * 10; ++ii)
       tbox::plog << "-";
-   tbox::plog << endl;
+   tbox::plog << std::endl;
 
    for (int istate = 0; istate < d_nState; ++istate) {
       tbox::plog << d_state_names[istate];
       for (int ir = 0; ir < d_number_of_regions; ++ir)
          tbox::plog << "\t" << d_state_ic[ir][istate];
-      tbox::plog << endl;
+      tbox::plog << std::endl;
    }
 }
 
@@ -238,11 +237,11 @@ void MblkEuler::registerModelVariables(
          d_object_name << ": registerModelVariables()"
                        << "\nVisIt data writer was"
                        << "\nregistered.  Consequently, no plot data will"
-                       << "\nbe written." << endl);
+                       << "\nbe written." << std::endl);
    }
 
    for (int n = 0; n < d_nState; ++n) {
-      string vname = d_state_names[n];
+      std::string vname = d_state_names[n];
       d_visit_writer->registerPlotQuantity(vname, "SCALAR",
          vardb->mapVariableAndContextToIndex(d_state,
             integrator->getPlotContext()),
@@ -655,9 +654,9 @@ double MblkEuler::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    tbox::plog << "--------------------- start stableDtOnPatch on patch ("
-              << level_number << ")" << endl;
-   tbox::plog << "level = " << level_number << endl;
-   tbox::plog << "box   = " << patch.getBox() << endl;
+              << level_number << ")" << std::endl;
+   tbox::plog << "level = " << level_number << std::endl;
+   tbox::plog << "box   = " << patch.getBox() << std::endl;
 
    //
    // get the cell data and their bounds
@@ -874,11 +873,11 @@ double MblkEuler::computeStableDtOnPatch(
    if (dt_fixed > 0.0)
       returned_dt = dt_fixed;
 
-   tbox::plog << "stabdt      = " << stabdt << endl;
-   tbox::plog << "dt_fixed    = " << dt_fixed << endl;
-   tbox::plog << "returned_dt = " << returned_dt << endl;
+   tbox::plog << "stabdt      = " << stabdt << std::endl;
+   tbox::plog << "dt_fixed    = " << dt_fixed << std::endl;
+   tbox::plog << "returned_dt = " << returned_dt << std::endl;
 
-   tbox::plog << "--------------------- end stableDtOnPatch on patch" << endl;
+   tbox::plog << "--------------------- end stableDtOnPatch on patch" << std::endl;
 
    return returned_dt;
 }
@@ -939,11 +938,11 @@ void MblkEuler::testPatchExtrema(
       }
    }
 
-   tbox::plog << endl << "extrema for the state follow " << pos
-              << " (min,max) = " << endl;
+   tbox::plog << std::endl << "extrema for the state follow " << pos
+              << " (min,max) = " << std::endl;
    for (int ii = 0; ii < d_nState; ++ii) {
       tbox::plog << d_state_names[ii] << " (min,max) = ";
-      tbox::plog << psi_min[ii] << " " << psi_max[ii] << endl;
+      tbox::plog << psi_min[ii] << " " << psi_max[ii] << std::endl;
    }
 
    delete[] psi_min;
@@ -998,11 +997,11 @@ void MblkEuler::computeFluxesOnPatch(
    TBOX_ASSERT(xyz->getGhostCellWidth() == d_nodeghosts);
 
    tbox::plog << "--------------------- start computeFluxesOnPatch on patch (";
-   tbox::plog << level_number << ")" << endl;
+   tbox::plog << level_number << ")" << std::endl;
    tbox::plog << "TIMESTEP for level = " << level_number << ", ";
    tbox::plog << "dt    = " << dt << ", stime  = " << time << ", ftime = "
-              << time + dt << endl;
-   tbox::plog << "box   = " << pbox << endl;
+              << time + dt << std::endl;
+   tbox::plog << "box   = " << pbox << std::endl;
 
    //
    // ------------------------------- the upwind bounds ----------------------------
@@ -1443,7 +1442,7 @@ void MblkEuler::computeFluxesOnPatch(
    } // end of field loop
 
    tbox::plog << "--------------------- end computeFluxesOnPatch on patch"
-              << endl;
+              << std::endl;
 }
 
 /*
@@ -1721,14 +1720,14 @@ void MblkEuler::preprocessRefine(
       fln = cln + 1;
       if (!fine.checkAllocated(xyz_id)) {
          TBOX_ERROR(d_object_name << ":preprocessRefine()"
-                                  << "\nfine xyz data not allocated" << endl);
+                                  << "\nfine xyz data not allocated" << std::endl);
       }
    }
    if (cln < 0) {
       cln = fln - 1;
       if (!coarse.checkAllocated(xyz_id)) {
          TBOX_ERROR(d_object_name << ":preprocessRefine()"
-                                  << "\ncoarse xyz data not allocated" << endl);
+                                  << "\ncoarse xyz data not allocated" << std::endl);
       }
    }
    setMappedGridOnPatch(coarse);
@@ -1794,16 +1793,16 @@ void MblkEuler::postprocessRefine(
    int clev = coarse.getPatchLevelNumber();
 
    tbox::plog << "--------------------- start postprocessRefineData ("
-              << flev << "," << clev << ")" << endl;
-   tbox::plog << "flevel     = " << flev << endl;
-   tbox::plog << "clevel     = " << clev << endl << endl;
-   tbox::plog << "fine_box         = " << fine_box << endl;
-   tbox::plog << "fine_patch_box   = " << fine.getBox() << endl;
-   tbox::plog << "fine_ghost_box   = " << fgbox << endl << endl;
+              << flev << "," << clev << ")" << std::endl;
+   tbox::plog << "flevel     = " << flev << std::endl;
+   tbox::plog << "clevel     = " << clev << std::endl << std::endl;
+   tbox::plog << "fine_box         = " << fine_box << std::endl;
+   tbox::plog << "fine_patch_box   = " << fine.getBox() << std::endl;
+   tbox::plog << "fine_ghost_box   = " << fgbox << std::endl << std::endl;
 
-   tbox::plog << "coarse_box       = " << coarse_box << endl;
-   tbox::plog << "coarse_patch_box = " << coarse.getBox() << endl;
-   tbox::plog << "coarse_ghost_box = " << coarse_box << endl;
+   tbox::plog << "coarse_box       = " << coarse_box << std::endl;
+   tbox::plog << "coarse_patch_box = " << coarse.getBox() << std::endl;
+   tbox::plog << "coarse_ghost_box = " << coarse_box << std::endl;
 
    //
    // setup work variables
@@ -1957,7 +1956,7 @@ void MblkEuler::postprocessRefine(
 
    } // end of state loop
 
-   tbox::plog << "--------------------- end postprocessRefine" << endl;
+   tbox::plog << "--------------------- end postprocessRefine" << std::endl;
 }
 
 /*
@@ -1985,14 +1984,14 @@ void MblkEuler::preprocessCoarsen(
       fln = cln + 1;
       if (!fine.checkAllocated(xyz_id)) {
          TBOX_ERROR(d_object_name << ":preprocessCoarsen()"
-                                  << "\nfine xyz data not allocated" << endl);
+                                  << "\nfine xyz data not allocated" << std::endl);
       }
    }
    if (cln < 0) {
       cln = fln - 1;
       if (!coarse.checkAllocated(xyz_id)) {
          TBOX_ERROR(d_object_name << ":preprocessCoarsen()"
-                                  << "\ncoarse xyz data not allocated" << endl);
+                                  << "\ncoarse xyz data not allocated" << std::endl);
       }
    }
    setMappedGridOnPatch(coarse);
@@ -2052,16 +2051,16 @@ void MblkEuler::postprocessCoarsen(
    int clev = coarse.getPatchLevelNumber();
 
    tbox::plog << "--------------------- start postprocessCoarsenData ("
-              << flev << "," << clev << ")" << endl;
-   tbox::plog << "flevel     = " << flev << endl;
-   tbox::plog << "clevel     = " << clev << endl;
-   tbox::plog << "fine       = " << fine.getBox() << endl;
-   tbox::plog << "coarse     = " << coarse.getBox() << endl;
-   tbox::plog << "fine_box   = " << fine_box << endl;
-   tbox::plog << "coarse_box = " << coarse_box << endl;
+              << flev << "," << clev << ")" << std::endl;
+   tbox::plog << "flevel     = " << flev << std::endl;
+   tbox::plog << "clevel     = " << clev << std::endl;
+   tbox::plog << "fine       = " << fine.getBox() << std::endl;
+   tbox::plog << "coarse     = " << coarse.getBox() << std::endl;
+   tbox::plog << "fine_box   = " << fine_box << std::endl;
+   tbox::plog << "coarse_box = " << coarse_box << std::endl;
 
-   tbox::plog << "filo = " << filo << ", fihi = " << fihi << endl;
-   tbox::plog << "cilo = " << cilo << ", cihi = " << cihi << endl;
+   tbox::plog << "filo = " << filo << ", fihi = " << fihi << std::endl;
+   tbox::plog << "cilo = " << cilo << ", cihi = " << cihi << std::endl;
 
    //
    // work variables
@@ -2171,7 +2170,7 @@ void MblkEuler::postprocessCoarsen(
       }
 
    }
-   tbox::plog << "--------------------- end postprocessCoarsen" << endl;
+   tbox::plog << "--------------------- end postprocessCoarsen" << std::endl;
 }
 
 // -------------------------------------------------------------------
@@ -2222,9 +2221,9 @@ void MblkEuler::tagGradientDetectorCells(
    int level = patch.getPatchLevelNumber();
 
    tbox::plog << "--------------------- start tagGradientCells (" << level
-              << ")" << endl;
-   tbox::plog << "level  = " << level << endl;
-   tbox::plog << "box    = " << patch.getBox() << endl;
+              << ")" << std::endl;
+   tbox::plog << "level  = " << level << std::endl;
+   tbox::plog << "box    = " << patch.getBox() << std::endl;
 
    std::shared_ptr<pdat::CellData<int> > tags(
       SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
@@ -2297,7 +2296,7 @@ void MblkEuler::tagGradientDetectorCells(
 
       TBOX_ASSERT(var);
 
-      string ref = d_refinement_criteria[ncrit];
+      std::string ref = d_refinement_criteria[ncrit];
 
       if (ref == "GRADIENT") {
          int nStateLocal = static_cast<int>(d_state_grad_names.size());
@@ -2494,7 +2493,7 @@ void MblkEuler::tagGradientDetectorCells(
       (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
-   tbox::plog << "--------------------- end tagGradientCells" << endl;
+   tbox::plog << "--------------------- end tagGradientCells" << std::endl;
 
 }
 
@@ -2691,28 +2690,28 @@ void MblkEuler::registerVisItDataWriter(
  */
 
 void MblkEuler::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
-   os << "\nMblkEuler::printClassData..." << endl;
-   os << "MblkEuler: this = " << (MblkEuler *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
-   os << "d_grid_geometry = " << endl;
+   os << "\nMblkEuler::printClassData..." << std::endl;
+   os << "MblkEuler: this = " << (MblkEuler *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
+   os << "d_grid_geometry = " << std::endl;
    for (hier::BlockId::block_t j = 0; j < d_grid_geometry->getNumberBlocks(); ++j) {
-//      os << (geom::GridGeometry*)d_grid_geometry[j] << endl;
+//      os << (geom::GridGeometry*)d_grid_geometry[j] << std::endl;
    }
 
    // ----------------------------------------------
 
-   os << "Parameters for numerical method ..." << endl;
+   os << "Parameters for numerical method ..." << std::endl;
    os << "   d_advection_velocity = ";
    for (tbox::Dimension::dir_t j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
-   os << endl;
+   os << std::endl;
 
-   os << "   d_nghosts    = " << d_nghosts << endl;
-   os << "   d_fluxghosts = " << d_fluxghosts << endl;
+   os << "   d_nghosts    = " << d_nghosts << std::endl;
+   os << "   d_fluxghosts = " << d_fluxghosts << std::endl;
 
-   os << "Problem description and initial data..." << endl;
-   os << "   d_data_problem = " << d_data_problem << endl;
+   os << "Problem description and initial data..." << std::endl;
+   os << "   d_data_problem = " << d_data_problem << std::endl;
 }
 
 /*
@@ -2783,7 +2782,7 @@ void MblkEuler::getFromInput(
          d_state_names = db->getStringVector("state_names");
          d_nState = static_cast<int>(d_state_names.size());
       } else {
-         TBOX_ERROR("missing 'state_names' input for sizing the state" << endl);
+         TBOX_ERROR("missing 'state_names' input for sizing the state" << std::endl);
       }
    } else {
       TBOX_ASSERT(d_advection_test);
@@ -2800,7 +2799,7 @@ void MblkEuler::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`data_problem' value not found in input."
-                          << endl);
+                          << std::endl);
       }
 
       int problem_1d = 1;
@@ -2814,13 +2813,13 @@ void MblkEuler::getFromInput(
             db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
-               "`center' input required for REVOLUTION problem." << endl);
+               "`center' input required for REVOLUTION problem." << std::endl);
          }
 
          if (db->keyExists("axis")) {
             db->getDoubleArray("axis", d_axis, d_dim.getValue());
          } else {
-            TBOX_ERROR("`axis' input required for REVOLUTION problem." << endl);
+            TBOX_ERROR("`axis' input required for REVOLUTION problem." << std::endl);
          }
 
          // normalize the axis to a unit vector
@@ -2838,7 +2837,7 @@ void MblkEuler::getFromInput(
 
             char tmp[20];
             sprintf(tmp, "region_%d", i + 1);  //
-            string lkey = tmp;
+            std::string lkey = tmp;
             std::shared_ptr<tbox::Database> region_db(
                db->getDatabase(lkey));
 
@@ -2858,7 +2857,7 @@ void MblkEuler::getFromInput(
          if (db->keyExists("center")) {
             db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
-            TBOX_ERROR("`center' input required for SPHERE problem." << endl);
+            TBOX_ERROR("`center' input required for SPHERE problem." << std::endl);
          }
       }
 
@@ -2875,7 +2874,7 @@ void MblkEuler::getFromInput(
             d_phiy = db->getDoubleVector("phiy");
             d_phiz = db->getDoubleVector("phiz");
          } else {
-            TBOX_ERROR("missing input for RT_SHOCK_TUBE problem." << endl);
+            TBOX_ERROR("missing input for RT_SHOCK_TUBE problem." << std::endl);
          }
       }
 
@@ -2888,7 +2887,7 @@ void MblkEuler::getFromInput(
             d_number_of_regions = static_cast<int>(d_front_position.size()) - 1;
             TBOX_ASSERT(d_number_of_regions > 0);
          } else {
-            TBOX_ERROR("Missing`front_position' input required" << endl);
+            TBOX_ERROR("Missing`front_position' input required" << std::endl);
          }
       }
 
@@ -2925,7 +2924,7 @@ void MblkEuler::getFromInput(
             }
          } else {
             TBOX_ERROR(
-               "missing 'state_data' input for initial conditions" << endl);
+               "missing 'state_data' input for initial conditions" << std::endl);
          }
       } else {
          TBOX_ASSERT(d_advection_test);
@@ -2939,7 +2938,7 @@ void MblkEuler::getFromInput(
    if (db->keyExists("Refinement_data")) {
       std::shared_ptr<tbox::Database> refine_db = db->getDatabase(
             "Refinement_data");
-      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      std::vector<std::string> refinement_keys = refine_db->getAllKeys();
       int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
@@ -2948,15 +2947,15 @@ void MblkEuler::getFromInput(
          TBOX_WARNING(
             d_object_name << ": "
                           << "No key `refine_criteria' found in data for"
-                          << " RefinementData. No refinement will occur." << endl);
+                          << " RefinementData. No refinement will occur." << std::endl);
       }
 
-      std::vector<string> ref_keys_defined(num_keys);
+      std::vector<std::string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       std::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; ++i) {
 
-         string error_key = refinement_keys[i];
+         std::string error_key = refinement_keys[i];
          error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
@@ -2969,7 +2968,7 @@ void MblkEuler::getFromInput(
                TBOX_ERROR(
                   "Unknown refinement criteria: " << error_key
                                                   << " in input."
-                                                  << endl);
+                                                  << std::endl);
 
             } else {
                error_db = refine_db->getDatabase(error_key);
@@ -2989,7 +2988,7 @@ void MblkEuler::getFromInput(
                d_state_grad_id.resize(nStateLocal);
 
                for (int id = 0; id < nStateLocal; ++id) {
-                  string grad_name = d_state_grad_names[id];
+                  std::string grad_name = d_state_grad_names[id];
 
                   // ... the index needed
                   d_state_grad_id[id] = -1;
@@ -3008,7 +3007,7 @@ void MblkEuler::getFromInput(
                   } else {
                      TBOX_ERROR(
                         "No tolerance array " << grad_name
-                                              << "found for gradient detector" << endl);
+                                              << "found for gradient detector" << std::endl);
                   }
 
                }
@@ -3035,7 +3034,7 @@ void MblkEuler::getFromInput(
     */
    if ((d_grid_geometry->getNumberBlocks() > 1) && (num_per_dirs > 0)) {
       TBOX_ERROR(d_object_name << ": cannot have periodic BCs when there"
-                               << "\nare multiple blocks." << endl);
+                               << "\nare multiple blocks." << std::endl);
    }
 }
 

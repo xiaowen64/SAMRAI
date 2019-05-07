@@ -29,7 +29,6 @@
 #include <string>
 #include <vector>
 #include <memory>
-using namespace std;
 #define included_String
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/hier/VariableContext.h"

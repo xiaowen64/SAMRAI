@@ -41,7 +41,7 @@
  */
 
 BoundaryDataTester::BoundaryDataTester(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> input_db,
    std::shared_ptr<geom::CartesianGridGeometry> grid_geom):
@@ -84,8 +84,8 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
    tbox::plog << "\n\nFilling boundary data on patch = " << patch.getBox()
-              << endl;
-   tbox::plog << "ghost_width_to_fill = " << ghost_width_to_fill << endl;
+              << std::endl;
+   tbox::plog << "ghost_width_to_fill = " << ghost_width_to_fill << std::endl;
 
    for (int iv = 0; iv < static_cast<int>(d_variables.size()); ++iv) {
 
@@ -94,8 +94,8 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
             patch.getPatchData(d_variables[iv], d_variable_context)));
       TBOX_ASSERT(cvdata);
 
-      tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << endl;
-      tbox::plog << "   depth = " << cvdata->getDepth() << endl;
+      tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << std::endl;
+      tbox::plog << "   depth = " << cvdata->getDepth() << std::endl;
 
       hier::IntVector fill_gcw(hier::IntVector::min(cvdata->getGhostCellWidth(),
                                   ghost_width_to_fill));
@@ -282,7 +282,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
 {
    TBOX_ASSERT(db);
 
-   std::vector<string> var_keys = db->getAllKeys();
+   std::vector<std::string> var_keys = db->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
    int var_cnt = 0;
@@ -307,7 +307,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "Variable input error: No 'name' string found for "
-                                     << "key = " << var_keys[i] << endl);
+                                     << "key = " << var_keys[i] << std::endl);
          }
 
          if (var_db->keyExists("depth")) {
@@ -328,7 +328,7 @@ void BoundaryDataTester::readVariableInputAndMakeVariables(
             TBOX_ERROR(
                d_object_name << ": "
                              << "Variable input error: No 'interior_values' entry found for "
-                             << "key = " << var_keys[i] << endl);
+                             << "key = " << var_keys[i] << std::endl);
          }
 
          ++v_cntr; 
@@ -451,7 +451,7 @@ void BoundaryDataTester::setBoundaryDataDefaults()
 
 void BoundaryDataTester::readDirichletBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    readBoundaryDataStateEntry(db, db_name, bdry_location_index);
@@ -459,7 +459,7 @@ void BoundaryDataTester::readDirichletBoundaryDataEntry(
 
 void BoundaryDataTester::readNeumannBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    readBoundaryDataStateEntry(db, db_name, bdry_location_index);
@@ -467,7 +467,7 @@ void BoundaryDataTester::readNeumannBoundaryDataEntry(
 
 void BoundaryDataTester::readBoundaryDataStateEntry(
    std::shared_ptr<tbox::Database> db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -495,7 +495,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
             TBOX_ERROR(d_object_name << ": "
                                      << "Insufficient number of "
                                      << d_variable_name[iv] << " values given in "
-                                     << db_name << " input database." << endl);
+                                     << db_name << " input database." << std::endl);
          }
          for (int id = 0; id < depth; ++id) {
             d_variable_bc_values[iv][bdry_location_index * depth + id] =
@@ -505,7 +505,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
          TBOX_ERROR(d_object_name << ": "
                                   << d_variable_name[iv]
                                   << " entry missing from " << db_name
-                                  << " input database. " << endl);
+                                  << " input database. " << std::endl);
       }
 
    }
@@ -553,7 +553,7 @@ void BoundaryDataTester::readBoundaryDataInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "Key data 'Boundary_data' not found in input. " << endl);
+                          << "Key data 'Boundary_data' not found in input. " << std::endl);
       }
 
    }
@@ -767,7 +767,7 @@ void BoundaryDataTester::checkBoundaryData(
                           << d_variable_name[iv] << " values found for"
                           << "     boundary type " << btype
                           << " at location "
-                          << bloc << endl;
+                          << bloc << std::endl;
             }
 #endif
 
@@ -840,7 +840,7 @@ void BoundaryDataTester::checkBoundaryData(
                              << d_variable_name[iv] << " values found for"
                              << "     boundary type " << btype
                              << " at location "
-                             << bloc << endl;
+                             << bloc << std::endl;
                }
 #endif
 
@@ -863,45 +863,45 @@ void BoundaryDataTester::checkBoundaryData(
  */
 
 void BoundaryDataTester::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
    int i, j;
-   os << "\nBoundaryDataTester::printClassData..." << endl;
-   os << "BoundaryDataTester: this = " << (BoundaryDataTester *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+   os << "\nBoundaryDataTester::printClassData..." << std::endl;
+   os << "BoundaryDataTester: this = " << (BoundaryDataTester *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_grid_geometry = "
-      << d_grid_geometry.get() << endl;
+      << d_grid_geometry.get() << std::endl;
 
    if (d_variable_context) {
       os << "d_variable_context = "
-         << d_variable_context->getName() << endl;
+         << d_variable_context->getName() << std::endl;
    } else {
-      os << "d_variable_context = 0" << endl;
+      os << "d_variable_context = 0" << std::endl;
    }
 
-   os << "\nVariables ...\n" << endl;
+   os << "\nVariables ...\n" << std::endl;
    for (i = 0; i < static_cast<int>(d_variable_name.size()); ++i) {
-      os << "Variable " << i << endl;
-      os << "   name       = " << d_variable_name[i] << endl;
-      os << "   depth      = " << d_variable_depth[i] << endl;
-      os << "   num_ghosts = " << d_variable_num_ghosts[i] << endl;
+      os << "Variable " << i << std::endl;
+      os << "   name       = " << d_variable_name[i] << std::endl;
+      os << "   depth      = " << d_variable_depth[i] << std::endl;
+      os << "   num_ghosts = " << d_variable_num_ghosts[i] << std::endl;
       os << "   interior_values = " << d_variable_interior_values[i][0];
       for (j = 1; j < d_variable_depth[i]; ++j) {
          os << " ,  " << d_variable_interior_values[i][j];
       }
-      os << endl;
+      os << std::endl;
    }
 
-   os << "\n   Boundary condition data... " << endl;
+   os << "\n   Boundary condition data... " << std::endl;
 
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); ++j) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
-            << d_master_bdry_edge_conds[j] << endl;
+            << d_master_bdry_edge_conds[j] << std::endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_vector_bdry_edge_conds[" << j << "] = "
-            << d_vector_bdry_edge_conds[j] << endl;
+            << d_vector_bdry_edge_conds[j] << std::endl;
          if (d_master_bdry_edge_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_edge_conds[j] == BdryCond::NEUMANN) {
             for (i = 0; i < static_cast<int>(d_variable_name.size()); ++i) {
@@ -911,30 +911,30 @@ void BoundaryDataTester::printClassData(
                   os << " , "
                      << d_variable_bc_values[i][j * d_variable_depth[i] + id];
                }
-               os << endl;
+               os << std::endl;
             }
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); ++j) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
-            << d_master_bdry_node_conds[j] << endl;
+            << d_master_bdry_node_conds[j] << std::endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_vector_bdry_node_conds[" << j << "] = "
-            << d_vector_bdry_node_conds[j] << endl;
+            << d_vector_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << std::endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_master_bdry_face_conds.size()); ++j) {
          os << "\n       d_master_bdry_face_conds[" << j << "] = "
-            << d_master_bdry_face_conds[j] << endl;
+            << d_master_bdry_face_conds[j] << std::endl;
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << std::endl;
          os << "       d_vector_bdry_face_conds[" << j << "] = "
-            << d_vector_bdry_face_conds[j] << endl;
+            << d_vector_bdry_face_conds[j] << std::endl;
          if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET ||
              d_master_bdry_face_conds[j] == BdryCond::NEUMANN) {
             for (i = 0; i < static_cast<int>(d_variable_name.size()); ++i) {
@@ -944,31 +944,31 @@ void BoundaryDataTester::printClassData(
                   os << " , "
                      << d_variable_bc_values[i][j * d_variable_depth[i] + id];
                }
-               os << endl;
+               os << std::endl;
             }
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); ++j) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
-            << d_master_bdry_edge_conds[j] << endl;
+            << d_master_bdry_edge_conds[j] << std::endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_vector_bdry_edge_conds[" << j << "] = "
-            << d_vector_bdry_edge_conds[j] << endl;
+            << d_vector_bdry_edge_conds[j] << std::endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << std::endl;
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); ++j) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
-            << d_master_bdry_node_conds[j] << endl;
+            << d_master_bdry_node_conds[j] << std::endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_vector_bdry_node_conds[" << j << "] = "
-            << d_vector_bdry_node_conds[j] << endl;
+            << d_vector_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << std::endl;
       }
    }
 

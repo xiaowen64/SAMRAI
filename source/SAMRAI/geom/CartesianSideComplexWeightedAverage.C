@@ -86,7 +86,6 @@ void SAMRAI_F77_FUNC(cartwgtavgsidecplx3d2, CARTWGTAVGSIDECPLX3D2) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianSideComplexWeightedAverage::CartesianSideComplexWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")

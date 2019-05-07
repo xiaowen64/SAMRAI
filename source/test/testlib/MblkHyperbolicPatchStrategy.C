@@ -12,7 +12,6 @@
 
 #include "SAMRAI/tbox/Utilities.h"
 
-using namespace std;
 using namespace SAMRAI;
 
 MblkHyperbolicPatchStrategy::MblkHyperbolicPatchStrategy(
@@ -50,7 +49,7 @@ void MblkHyperbolicPatchStrategy::tagGradientDetectorCells(
    TBOX_WARNING("MblkHyperbolicPatchStrategy::tagGradientDetectorCells()"
       << "\nNo class supplies a concrete implementation for "
       << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << endl);
+      << "\ndoes no cell tagging) is executed" << std::endl);
 }
 
 void MblkHyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
@@ -79,5 +78,5 @@ void MblkHyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
       "MblkHyperbolicPatchStrategy::tagRichardsonExtrapolationCells()"
       << "\nNo class supplies a concrete implementation for "
       << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << endl);
+      << "\ndoes no cell tagging) is executed" << std::endl);
 }

@@ -28,15 +28,14 @@
 
 namespace SAMRAI {
 
-using namespace std;
 
 CellDataTest::CellDataTest(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
-   const string& refine_option):
+   const std::string& refine_option):
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
@@ -89,25 +88,25 @@ void CellDataTest::readTestInput(
    if (db->keyExists("Acoef")) {
       d_Acoef = db->getDouble("Acoef");
    } else {
-      TBOX_ERROR(d_object_name << " input error: No `Acoeff' found." << endl);
+      TBOX_ERROR(d_object_name << " input error: No `Acoeff' found." << std::endl);
    }
    if (db->keyExists("Dcoef")) {
       d_Dcoef = db->getDouble("Dcoef");
    } else {
-      TBOX_ERROR(d_object_name << " input error: No `Dcoef' found." << endl);
+      TBOX_ERROR(d_object_name << " input error: No `Dcoef' found." << std::endl);
    }
    if (d_dim > tbox::Dimension(1)) {
       if (db->keyExists("Bcoef")) {
          d_Bcoef = db->getDouble("Bcoef");
       } else {
-         TBOX_ERROR(d_object_name << " input error: No `Bcoef' found." << endl);
+         TBOX_ERROR(d_object_name << " input error: No `Bcoef' found." << std::endl);
       }
    }
    if (d_dim > tbox::Dimension(2)) {
       if (db->keyExists("Ccoef")) {
          d_Ccoef = db->getDouble("Ccoef");
       } else {
-         TBOX_ERROR(d_object_name << " input error: No `Ccoef' found." << endl);
+         TBOX_ERROR(d_object_name << " input error: No `Ccoef' found." << std::endl);
       }
    }
 
@@ -436,7 +435,7 @@ void CellDataTest::checkPatchInteriorData(
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci, d),
                   (*correct_data)(*ci, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
-                       << endl;
+                       << std::endl;
          }
       }
    }
@@ -562,9 +561,9 @@ bool CellDataTest::verifyResults(
 
    if (d_do_refine || d_do_coarsen) {
 
-      tbox::plog << "\nEntering CellDataTest::verifyResults..." << endl;
-      tbox::plog << "level_number = " << level_number << endl;
-      tbox::plog << "Patch box = " << patch.getBox() << endl;
+      tbox::plog << "\nEntering CellDataTest::verifyResults..." << std::endl;
+      tbox::plog << "level_number = " << level_number << std::endl;
+      tbox::plog << "Patch box = " << patch.getBox() << std::endl;
 
       hier::IntVector tgcw(periodic_shift.getDim(), 0);
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
@@ -613,12 +612,12 @@ bool CellDataTest::verifyResults(
                              << " : cell index = " << *ci
                              << " of L" << level_number
                              << " P" << patch.getLocalId()
-                             << " " << patch.getBox() << endl;
+                             << " " << patch.getBox() << std::endl;
                   tbox::perr << "    hier::Variable = "
                              << d_variable_src_name[i]
-                             << " : depth index = " << d << endl;
+                             << " : depth index = " << d << std::endl;
                   tbox::perr << "    result = " << result
-                             << " : correct = " << correct << endl;
+                             << " : correct = " << correct << std::endl;
                   test_failed = true;
                }
             }
@@ -626,14 +625,14 @@ bool CellDataTest::verifyResults(
 
       }
       if (!test_failed) {
-         tbox::plog << "CellDataTest Successful!" << endl;
+         tbox::plog << "CellDataTest Successful!" << std::endl;
       }
 
       solution.reset();   // just to be anal...
 
-      tbox::plog << "\nExiting CellDataTest::verifyResults..." << endl;
-      tbox::plog << "level_number = " << level_number << endl;
-      tbox::plog << "Patch box = " << patch.getBox() << endl << endl;
+      tbox::plog << "\nExiting CellDataTest::verifyResults..." << std::endl;
+      tbox::plog << "level_number = " << level_number << std::endl;
+      tbox::plog << "Patch box = " << patch.getBox() << std::endl << std::endl;
 
    }
 
@@ -700,11 +699,11 @@ bool CellDataTest::verifyCompositeBoundaryData(
                   tbox::perr << "Test FAILED: ...."
                              << " : cell index = " << *ci
                              << " on composite boundary stencil"
-                             << " " << solution->getBox() << endl;
+                             << " " << solution->getBox() << std::endl;
                   tbox::perr << "    patch data id " << data_id
-                             << " : depth index = " << d << endl;
+                             << " : depth index = " << d << std::endl;
                   tbox::perr << "    result = " << result
-                             << " : correct = " << correct << endl;
+                             << " : correct = " << correct << std::endl;
                   test_failed = true;
                }
             }

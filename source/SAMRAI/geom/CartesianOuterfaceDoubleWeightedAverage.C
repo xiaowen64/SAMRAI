@@ -91,7 +91,6 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d2, CARTWGTAVGOUTFACEDOUB3D2) (const 
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianOuterfaceDoubleWeightedAverage::
 CartesianOuterfaceDoubleWeightedAverage():
