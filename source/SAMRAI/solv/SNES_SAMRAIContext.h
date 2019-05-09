@@ -28,9 +28,7 @@
 #ifdef OMPI_SKIP_MPICXX
 #undef OMPI_SKIP_MPICXX
 #endif
-extern "C" {
 #include "petscsnes.h"
-}
 #endif
 
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"

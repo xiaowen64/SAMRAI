@@ -44,7 +44,7 @@
 #ifdef OMPI_SKIP_MPICXX
 #undef OMPI_SKIP_MPICXX
 #endif
-#include "petsc-private/vecimpl.h"
+#include "petsc/private/vecimpl.h"
 #endif
 
 namespace SAMRAI {
@@ -754,6 +754,7 @@ private:
 
    static PetscErrorCode
    vecSetFromOptions(
+      PetscOptions* options,
       Vec vec);
 
    static PetscErrorCode
