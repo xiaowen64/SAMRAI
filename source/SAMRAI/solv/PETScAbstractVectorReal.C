@@ -977,7 +977,7 @@ PETScAbstractVectorReal<TYPE>::vecResetArray(
 template<class TYPE>
 PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecSetFromOptions(
-   PetscOptions* options,
+   PetscOptionItems* options,
    Vec vec)
 {
    NULL_USE(options);

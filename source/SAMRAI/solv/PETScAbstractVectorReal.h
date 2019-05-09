@@ -754,7 +754,7 @@ private:
 
    static PetscErrorCode
    vecSetFromOptions(
-      PetscOptions* options,
+      PetscOptionItems* options,
       Vec vec);
 
    static PetscErrorCode
