@@ -33,23 +33,21 @@ int
 SNES_SAMRAIContext::SNESJacobianSet(
    SNES snes,
    Vec x,
-   Mat* A,
-   Mat* B,
-   MatStructure* mstruct,
+   Mat A,
+   Mat B,
    void* ctx)
 {
    NULL_USE(snes);
    NULL_USE(B);
-   NULL_USE(mstruct);
    int retval = 0;
    if (((SNES_SAMRAIContext *)ctx)->getUsesExplicitJacobian()) {
       retval =
          ((SNES_SAMRAIContext *)ctx)->getSNESFunctions()->
          evaluateJacobian(x);
    } else {
-      int ierr = MatAssemblyBegin(*A, MAT_FINAL_ASSEMBLY);
+      int ierr = MatAssemblyBegin(A, MAT_FINAL_ASSEMBLY);
       PETSC_SAMRAI_ERROR(ierr);
-      ierr = MatAssemblyEnd(*A, MAT_FINAL_ASSEMBLY);
+      ierr = MatAssemblyEnd(A, MAT_FINAL_ASSEMBLY);
       PETSC_SAMRAI_ERROR(ierr);
    }
    return retval;
