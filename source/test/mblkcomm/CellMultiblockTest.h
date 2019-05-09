@@ -32,10 +32,10 @@ public:
     * The constructor initializes variable data arrays to zero length.
     */
    CellMultiblockTest(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database> main_input_db,
-      const string& refine_option);
+      const std::string& refine_option);
 
    /**
     * Virtual destructor for CellMultiblockTest.
@@ -117,7 +117,7 @@ private:
    /*
     * Object string identifier for error reporting
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -126,7 +126,7 @@ private:
     */
 //   std::vector<std::shared_ptr<hier::BaseGridGeometry> > d_skel_grid_geometry;
 
-   string d_refine_option;
+   std::string d_refine_option;
    int d_finest_level_number;
 
    std::vector<std::shared_ptr<hier::Variable> > d_variables;

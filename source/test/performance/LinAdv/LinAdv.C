@@ -25,7 +25,6 @@
 #endif
 #endif
 
-using namespace std;
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -116,7 +115,7 @@ using namespace std;
  */
 
 LinAdv::LinAdv(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> input_db,
    std::shared_ptr<geom::CartesianGridGeometry> grid_geom,
@@ -258,7 +257,7 @@ void LinAdv::setupLoadBalancer(
          TBOX_WARNING(
             d_object_name << ": "
                           << "  Unknown load balancer used in gridding algorithm."
-                          << "  Ignoring request for nonuniform load balancing." << endl);
+                          << "  Ignoring request for nonuniform load balancing." << std::endl);
          d_use_nonuniform_workload = false;
       }
    } else {
@@ -568,7 +567,7 @@ void LinAdv::computeFluxesOnPatch(
 
       }
 
-//     tbox::plog << "flux values: option1...." << endl;
+//     tbox::plog << "flux values: option1...." << std::endl;
 //     flux->print(pbox, tbox::plog);
    }
 }
@@ -862,7 +861,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       traced_right.getPointer(1),
       traced_right.getPointer(2));
 
-//     tbox::plog << "flux values: option1...." << endl;
+//     tbox::plog << "flux values: option1...." << std::endl;
 //     flux->print(pbox, tbox::plog);
 
 }
@@ -1090,7 +1089,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       traced_right.getPointer(1),
       traced_right.getPointer(2));
 
-//     tbox::plog << "flux values: option2...." << endl;
+//     tbox::plog << "flux values: option2...." << std::endl;
 //     flux->print(pbox, tbox::plog);
 }
 
@@ -1245,7 +1244,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
    for (int ncrit = 0;
         ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
-      string ref = d_refinement_criteria[ncrit];
+      std::string ref = d_refinement_criteria[ncrit];
       std::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
       std::shared_ptr<pdat::CellData<double> > advanced_coarse_var;
       int size;
@@ -1453,7 +1452,7 @@ void LinAdv::tagGradientDetectorCells(
       for (int ncrit = 0;
            ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
-         string ref = d_refinement_criteria[ncrit];
+         std::string ref = d_refinement_criteria[ncrit];
          std::shared_ptr<pdat::CellData<double> > var(
             SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_uval, getDataContext())));
@@ -1673,7 +1672,7 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
    double* buffer,
    const hier::Patch& patch,
    const hier::Box& region,
-   const string& variable_name,
+   const std::string& variable_name,
    int depth_id,
    double simulation_time) const
 {
@@ -1696,102 +1695,102 @@ bool LinAdv::packDerivedDataIntoDoubleBuffer(
  */
 
 void LinAdv::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
    int j;
 
-   os << "\nLinAdv::printClassData..." << endl;
-   os << "LinAdv: this = " << (LinAdv *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+   os << "\nLinAdv::printClassData..." << std::endl;
+   os << "LinAdv: this = " << (LinAdv *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_grid_geometry = "
-      << d_grid_geometry.get() << endl;
+      << d_grid_geometry.get() << std::endl;
 
-   os << "Parameters for numerical method ..." << endl;
+   os << "Parameters for numerical method ..." << std::endl;
    os << "   d_advection_velocity = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
-   os << endl;
-   os << "   d_godunov_order = " << d_godunov_order << endl;
-   os << "   d_corner_transport = " << d_corner_transport << endl;
-   os << "   d_nghosts = " << d_nghosts << endl;
-   os << "   d_fluxghosts = " << d_fluxghosts << endl;
-   os << "   Boundary condition data " << endl;
+   os << std::endl;
+   os << "   d_godunov_order = " << d_godunov_order << std::endl;
+   os << "   d_corner_transport = " << d_corner_transport << std::endl;
+   os << "   d_nghosts = " << d_nghosts << std::endl;
+   os << "   d_fluxghosts = " << d_fluxghosts << std::endl;
+   os << "   Boundary condition data " << std::endl;
 
-   os << "   Refinement criteria parameters " << endl;
+   os << "   Refinement criteria parameters " << std::endl;
 
    for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
-         << d_refinement_criteria[j] << endl;
+         << d_refinement_criteria[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_tol.size()); ++j) {
       os << "       d_dev_tol[" << j << "] = "
-         << d_dev_tol[j] << endl;
+         << d_dev_tol[j] << std::endl;
    }
    for (j = 0; j < static_cast<int>(d_dev.size()); ++j) {
       os << "       d_dev[" << j << "] = "
-         << d_dev[j] << endl;
+         << d_dev[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_time_max.size()); ++j) {
       os << "       d_dev_time_max[" << j << "] = "
-         << d_dev_time_max[j] << endl;
+         << d_dev_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_time_min.size()); ++j) {
       os << "       d_dev_time_min[" << j << "] = "
-         << d_dev_time_min[j] << endl;
+         << d_dev_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_tol.size()); ++j) {
       os << "       d_grad_tol[" << j << "] = "
-         << d_grad_tol[j] << endl;
+         << d_grad_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_time_max.size()); ++j) {
       os << "       d_grad_time_max[" << j << "] = "
-         << d_grad_time_max[j] << endl;
+         << d_grad_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_time_min.size()); ++j) {
       os << "       d_grad_time_min[" << j << "] = "
-         << d_grad_time_min[j] << endl;
+         << d_grad_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_onset.size()); ++j) {
       os << "       d_shock_onset[" << j << "] = "
-         << d_shock_onset[j] << endl;
+         << d_shock_onset[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_tol.size()); ++j) {
       os << "       d_shock_tol[" << j << "] = "
-         << d_shock_tol[j] << endl;
+         << d_shock_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_time_max.size()); ++j) {
       os << "       d_shock_time_max[" << j << "] = "
-         << d_shock_time_max[j] << endl;
+         << d_shock_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_time_min.size()); ++j) {
       os << "       d_shock_time_min[" << j << "] = "
-         << d_shock_time_min[j] << endl;
+         << d_shock_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_tol.size()); ++j) {
       os << "       d_rich_tol[" << j << "] = "
-         << d_rich_tol[j] << endl;
+         << d_rich_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_time_max.size()); ++j) {
       os << "       d_rich_time_max[" << j << "] = "
-         << d_rich_time_max[j] << endl;
+         << d_rich_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_time_min.size()); ++j) {
       os << "       d_rich_time_min[" << j << "] = "
-         << d_rich_time_min[j] << endl;
+         << d_rich_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
 
 }
 
@@ -1840,7 +1839,7 @@ void LinAdv::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "`godunov_order' in input must be 1, 2, or 4." << endl);
+                          << "`godunov_order' in input must be 1, 2, or 4." << std::endl);
       }
    } else {
       d_godunov_order = input_db->getIntegerWithDefault("d_godunov_order",
@@ -1854,7 +1853,7 @@ void LinAdv::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`corner_transport' in input must be either string"
-                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
+                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << std::endl);
       }
    } else {
       d_corner_transport = input_db->getStringWithDefault("corner_transport",
@@ -1864,7 +1863,7 @@ void LinAdv::getFromInput(
    if (input_db->keyExists("Refinement_data")) {
       std::shared_ptr<tbox::Database> refine_db(
          input_db->getDatabase("Refinement_data"));
-      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      std::vector<std::string> refinement_keys = refine_db->getAllKeys();
       int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
@@ -1874,15 +1873,15 @@ void LinAdv::getFromInput(
          TBOX_WARNING(
             d_object_name << ": "
                           << "No key `refine_criteria' found in data for"
-                          << " RefinementData. No refinement will occur." << endl);
+                          << " RefinementData. No refinement will occur." << std::endl);
       }
 
-      std::vector<string> ref_keys_defined(num_keys);
+      std::vector<std::string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       std::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; ++i) {
 
-         string error_key = refinement_keys[i];
+         std::string error_key = refinement_keys[i];
          error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
@@ -1895,7 +1894,7 @@ void LinAdv::getFromInput(
                   d_object_name << ": "
                                 << "Unknown refinement criteria: "
                                 << error_key
-                                << "\nin input." << endl);
+                                << "\nin input." << std::endl);
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
@@ -1910,7 +1909,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `dev_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("uval_dev")) {
@@ -1919,7 +1918,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `uval_dev' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -1946,7 +1945,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `grad_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -1973,7 +1972,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_onset' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("shock_tol")) {
@@ -1982,7 +1981,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2009,7 +2008,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `rich_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2037,17 +2036,17 @@ void LinAdv::getFromInput(
        */
       for (int k0 = 0;
            k0 < static_cast<int>(d_refinement_criteria.size()); ++k0) {
-         string use_key = d_refinement_criteria[k0];
+         std::string use_key = d_refinement_criteria[k0];
          bool key_found = false;
          for (int k1 = 0; k1 < def_key_cnt; ++k1) {
-            string def_key = ref_keys_defined[k1];
+            std::string def_key = ref_keys_defined[k1];
             if (def_key == use_key) key_found = true;
          }
 
          if (!key_found) {
             TBOX_ERROR(d_object_name << ": "
                                      << "No input found for specified refine criteria: "
-                                     << d_refinement_criteria[k0] << endl);
+                                     << d_refinement_criteria[k0] << std::endl);
          }
       }
 
@@ -2153,14 +2152,14 @@ void LinAdv::getFromRestart()
    if (!(d_nghosts == CELLG)) {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Key data `d_nghosts' in restart file != CELLG." << endl);
+                       << "Key data `d_nghosts' in restart file != CELLG." << std::endl);
    }
    int* tmp_fluxghosts = &d_fluxghosts[0];
    db->getIntegerArray("d_fluxghosts", tmp_fluxghosts, d_dim.getValue());
    if (!(d_fluxghosts == FLUXG)) {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
+                       << "Key data `d_fluxghosts' in restart file != FLUXG." << std::endl);
    }
 
    if (db->keyExists("d_refinement_criteria")) {
@@ -2193,7 +2192,7 @@ void LinAdv::getFromRestart()
 
 void LinAdv::readStateDataEntry(
    std::shared_ptr<tbox::Database> db,
-   const string& db_name,
+   const std::string& db_name,
    int array_indx,
    std::vector<double>& uval)
 {
@@ -2207,7 +2206,7 @@ void LinAdv::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`uval' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
 
 }

@@ -26,7 +26,6 @@
 #endif
 #endif
 
-using namespace std;
 
 #include <cstdlib>
 #include <cstdio>
@@ -283,7 +282,7 @@ Euler::Euler(
          d_object_name << ": "
                        << "Unknown d_riemann_solve string = "
                        << d_riemann_solve
-                       << " encountered in constructor" << endl);
+                       << " encountered in constructor" << std::endl);
    }
 
    if (d_data_problem == "PIECEWISE_CONSTANT_X") {
@@ -301,7 +300,7 @@ Euler::Euler(
          d_object_name << ": "
                        << "Unknown d_data_problem string = "
                        << d_data_problem
-                       << " encountered in constructor" << endl);
+                       << " encountered in constructor" << std::endl);
    }
 
    /*
@@ -493,7 +492,7 @@ void Euler::registerModelVariables(
       TBOX_WARNING(d_object_name << ": registerModelVariables()\n"
                                  << "VisIt data writer was not registered\n"
                                  << "Consequently, no plot data will\n"
-                                 << "be written." << endl);
+                                 << "be written." << std::endl);
    }
 #endif
 
@@ -540,7 +539,7 @@ void Euler::setupLoadBalancer(
          TBOX_WARNING(
             d_object_name << ": "
                           << "  Unknown load balancer used in gridding algorithm."
-                          << "  Ignoring request for nonuniform load balancing." << endl);
+                          << "  Ignoring request for nonuniform load balancing." << std::endl);
          d_use_nonuniform_workload = false;
       }
    } else {
@@ -3139,7 +3138,7 @@ void Euler::writeData1dPencil(
          file << vel << " ";
          file << eint << " ";
 
-         file << endl;
+         file << std::endl;
       }
 
    }
@@ -3159,288 +3158,288 @@ void Euler::printClassData(
 {
    int j, k;
 
-   os << "\nEuler::printClassData..." << endl;
-   os << "Euler: this = " << (Euler *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+   os << "\nEuler::printClassData..." << std::endl;
+   os << "Euler: this = " << (Euler *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_grid_geometry = "
-      << d_grid_geometry.get() << endl;
+      << d_grid_geometry.get() << std::endl;
 
-   os << "Parameters for physical problem ..." << endl;
-   os << "   d_gamma = " << d_gamma << endl;
+   os << "Parameters for physical problem ..." << std::endl;
+   os << "   d_gamma = " << d_gamma << std::endl;
 
-   os << "Numerical method description and ghost sizes..." << endl;
-   os << "   d_riemann_solve = " << d_riemann_solve << endl;
-   os << "   d_riemann_solve_int = " << d_riemann_solve_int << endl;
-   os << "   d_godunov_order = " << d_godunov_order << endl;
-   os << "   d_corner_transport = " << d_corner_transport << endl;
-   os << "   d_nghosts = " << d_nghosts << endl;
-   os << "   d_fluxghosts = " << d_fluxghosts << endl;
+   os << "Numerical method description and ghost sizes..." << std::endl;
+   os << "   d_riemann_solve = " << d_riemann_solve << std::endl;
+   os << "   d_riemann_solve_int = " << d_riemann_solve_int << std::endl;
+   os << "   d_godunov_order = " << d_godunov_order << std::endl;
+   os << "   d_corner_transport = " << d_corner_transport << std::endl;
+   os << "   d_nghosts = " << d_nghosts << std::endl;
+   os << "   d_fluxghosts = " << d_fluxghosts << std::endl;
 
-   os << "Problem description and initial data..." << endl;
-   os << "   d_data_problem = " << d_data_problem << endl;
-   os << "   d_data_problem_int = " << d_data_problem_int << endl;
+   os << "Problem description and initial data..." << std::endl;
+   os << "   d_data_problem = " << d_data_problem << std::endl;
+   os << "   d_data_problem_int = " << d_data_problem_int << std::endl;
 
-   os << "       d_radius = " << d_radius << endl;
+   os << "       d_radius = " << d_radius << std::endl;
    os << "       d_center = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
-   os << endl;
-   os << "       d_density_inside = " << d_density_inside << endl;
+   os << std::endl;
+   os << "       d_density_inside = " << d_density_inside << std::endl;
    os << "       d_velocity_inside = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_velocity_inside[j] << " ";
-   os << endl;
-   os << "       d_pressure_inside = " << d_pressure_inside << endl;
-   os << "       d_density_outside = " << d_density_outside << endl;
+   os << std::endl;
+   os << "       d_pressure_inside = " << d_pressure_inside << std::endl;
+   os << "       d_density_outside = " << d_density_outside << std::endl;
    os << "       d_velocity_outside = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_velocity_outside[j] << " ";
-   os << endl;
-   os << "       d_pressure_outside = " << d_pressure_outside << endl;
+   os << std::endl;
+   os << "       d_pressure_outside = " << d_pressure_outside << std::endl;
 
-   os << "       d_number_of_intervals = " << d_number_of_intervals << endl;
+   os << "       d_number_of_intervals = " << d_number_of_intervals << std::endl;
    os << "       d_front_position = ";
    for (k = 0; k < d_number_of_intervals - 1; ++k) {
       os << d_front_position[k] << "  ";
    }
-   os << endl;
-   os << "       d_interval_density = " << endl;
+   os << std::endl;
+   os << "       d_interval_density = " << std::endl;
    for (k = 0; k < d_number_of_intervals; ++k) {
-      os << "            " << d_interval_density[k] << endl;
+      os << "            " << d_interval_density[k] << std::endl;
    }
-   os << "       d_interval_velocity = " << endl;
+   os << "       d_interval_velocity = " << std::endl;
    for (k = 0; k < d_number_of_intervals; ++k) {
       os << "            ";
       for (j = 0; j < d_dim.getValue(); ++j) {
          os << d_interval_velocity[k * d_dim.getValue() + j] << "  ";
       }
-      os << endl;
+      os << std::endl;
    }
-   os << "       d_interval_pressure = " << endl;
+   os << "       d_interval_pressure = " << std::endl;
    for (k = 0; k < d_number_of_intervals; ++k) {
-      os << "            " << d_interval_pressure[k] << endl;
+      os << "            " << d_interval_pressure[k] << std::endl;
    }
 
-   os << "   Boundary condition data " << endl;
+   os << "   Boundary condition data " << std::endl;
 
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); ++j) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
-            << d_master_bdry_edge_conds[j] << endl;
+            << d_master_bdry_edge_conds[j] << std::endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_vector_bdry_edge_conds[" << j << "] = "
-            << d_vector_bdry_edge_conds[j] << endl;
+            << d_vector_bdry_edge_conds[j] << std::endl;
          if (d_master_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_density[" << j << "] = "
-               << d_bdry_edge_density[j] << endl;
+               << d_bdry_edge_density[j] << std::endl;
             os << "         d_bdry_edge_velocity[" << j << "] = "
                << d_bdry_edge_velocity[j * d_dim.getValue() + 0] << " , "
-               << d_bdry_edge_velocity[j * d_dim.getValue() + 1] << endl;
+               << d_bdry_edge_velocity[j * d_dim.getValue() + 1] << std::endl;
             os << "         d_bdry_edge_pressure[" << j << "] = "
-               << d_bdry_edge_pressure[j] << endl;
+               << d_bdry_edge_pressure[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); ++j) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
-            << d_master_bdry_node_conds[j] << endl;
+            << d_master_bdry_node_conds[j] << std::endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_vector_bdry_node_conds[" << j << "] = "
-            << d_vector_bdry_node_conds[j] << endl;
+            << d_vector_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << std::endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_master_bdry_face_conds.size()); ++j) {
          os << "\n       d_master_bdry_face_conds[" << j << "] = "
-            << d_master_bdry_face_conds[j] << endl;
+            << d_master_bdry_face_conds[j] << std::endl;
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << std::endl;
          os << "       d_vector_bdry_face_conds[" << j << "] = "
-            << d_vector_bdry_face_conds[j] << endl;
+            << d_vector_bdry_face_conds[j] << std::endl;
          if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_density[" << j << "] = "
-               << d_bdry_face_density[j] << endl;
+               << d_bdry_face_density[j] << std::endl;
             os << "         d_bdry_face_velocity[" << j << "] = "
                << d_bdry_face_velocity[j * d_dim.getValue() + 0] << " , "
                << d_bdry_face_velocity[j * d_dim.getValue() + 1] << " , "
-               << d_bdry_face_velocity[j * d_dim.getValue() + 2] << endl;
+               << d_bdry_face_velocity[j * d_dim.getValue() + 2] << std::endl;
             os << "         d_bdry_face_pressure[" << j << "] = "
-               << d_bdry_face_pressure[j] << endl;
+               << d_bdry_face_pressure[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_master_bdry_edge_conds.size()); ++j) {
          os << "\n       d_master_bdry_edge_conds[" << j << "] = "
-            << d_master_bdry_edge_conds[j] << endl;
+            << d_master_bdry_edge_conds[j] << std::endl;
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_vector_bdry_edge_conds[" << j << "] = "
-            << d_vector_bdry_edge_conds[j] << endl;
+            << d_vector_bdry_edge_conds[j] << std::endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << std::endl;
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_master_bdry_node_conds.size()); ++j) {
          os << "\n       d_master_bdry_node_conds[" << j << "] = "
-            << d_master_bdry_node_conds[j] << endl;
+            << d_master_bdry_node_conds[j] << std::endl;
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_vector_bdry_node_conds[" << j << "] = "
-            << d_vector_bdry_node_conds[j] << endl;
+            << d_vector_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << std::endl;
       }
    }
 
-   os << "   Refinement criteria parameters " << endl;
+   os << "   Refinement criteria parameters " << std::endl;
 
    for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
-         << d_refinement_criteria[j] << endl;
+         << d_refinement_criteria[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_dev_tol.size()); ++j) {
       os << "       d_density_dev_tol[" << j << "] = "
-         << d_density_dev_tol[j] << endl;
+         << d_density_dev_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_dev.size()); ++j) {
       os << "       d_density_dev[" << j << "] = "
-         << d_density_dev[j] << endl;
+         << d_density_dev[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_dev_time_max.size()); ++j) {
       os << "       d_density_dev_time_max[" << j << "] = "
-         << d_density_dev_time_max[j] << endl;
+         << d_density_dev_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_dev_time_min.size()); ++j) {
       os << "       d_density_dev_time_min[" << j << "] = "
-         << d_density_dev_time_min[j] << endl;
+         << d_density_dev_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_grad_tol.size()); ++j) {
       os << "       d_density_grad_tol[" << j << "] = "
-         << d_density_grad_tol[j] << endl;
+         << d_density_grad_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_grad_time_max.size()); ++j) {
       os << "       d_density_grad_time_max[" << j << "] = "
-         << d_density_grad_time_max[j] << endl;
+         << d_density_grad_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_grad_time_min.size()); ++j) {
       os << "       d_density_grad_time_min[" << j << "] = "
-         << d_density_grad_time_min[j] << endl;
+         << d_density_grad_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_shock_onset.size()); ++j) {
       os << "       d_density_shock_onset[" << j << "] = "
-         << d_density_shock_onset[j] << endl;
+         << d_density_shock_onset[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_shock_tol.size()); ++j) {
       os << "       d_density_shock_tol[" << j << "] = "
-         << d_density_shock_tol[j] << endl;
+         << d_density_shock_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_shock_time_max.size()); ++j) {
       os << "       d_density_shock_time_max[" << j << "] = "
-         << d_density_shock_time_max[j] << endl;
+         << d_density_shock_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_shock_time_min.size()); ++j) {
       os << "       d_density_shock_time_min[" << j << "] = "
-         << d_density_shock_time_min[j] << endl;
+         << d_density_shock_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_rich_tol.size()); ++j) {
       os << "       d_density_rich_tol[" << j << "] = "
-         << d_density_rich_tol[j] << endl;
+         << d_density_rich_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_rich_time_max.size()); ++j) {
       os << "       d_density_rich_time_max[" << j << "] = "
-         << d_density_rich_time_max[j] << endl;
+         << d_density_rich_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_density_rich_time_min.size()); ++j) {
       os << "       d_density_rich_time_min[" << j << "] = "
-         << d_density_rich_time_min[j] << endl;
+         << d_density_rich_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
 
    for (j = 0; j < static_cast<int>(d_pressure_dev_tol.size()); ++j) {
       os << "       d_pressure_dev_tol[" << j << "] = "
-         << d_pressure_dev_tol[j] << endl;
+         << d_pressure_dev_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_dev.size()); ++j) {
       os << "       d_pressure_dev[" << j << "] = "
-         << d_pressure_dev[j] << endl;
+         << d_pressure_dev[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_dev_time_max.size()); ++j) {
       os << "       d_pressure_dev_time_max[" << j << "] = "
-         << d_pressure_dev_time_max[j] << endl;
+         << d_pressure_dev_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_dev_time_min.size()); ++j) {
       os << "       d_pressure_dev_time_min[" << j << "] = "
-         << d_pressure_dev_time_min[j] << endl;
+         << d_pressure_dev_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_grad_tol.size()); ++j) {
       os << "       d_pressure_grad_tol[" << j << "] = "
-         << d_pressure_grad_tol[j] << endl;
+         << d_pressure_grad_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_grad_time_max.size()); ++j) {
       os << "       d_pressure_grad_time_max[" << j << "] = "
-         << d_pressure_grad_time_max[j] << endl;
+         << d_pressure_grad_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_grad_time_min.size()); ++j) {
       os << "       d_pressure_grad_time_min[" << j << "] = "
-         << d_pressure_grad_time_min[j] << endl;
+         << d_pressure_grad_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_shock_onset.size()); ++j) {
       os << "       d_pressure_shock_onset[" << j << "] = "
-         << d_pressure_shock_onset[j] << endl;
+         << d_pressure_shock_onset[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_shock_tol.size()); ++j) {
       os << "       d_pressure_shock_tol[" << j << "] = "
-         << d_pressure_shock_tol[j] << endl;
+         << d_pressure_shock_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_shock_time_max.size()); ++j) {
       os << "       d_pressure_shock_time_max[" << j << "] = "
-         << d_pressure_shock_time_max[j] << endl;
+         << d_pressure_shock_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_shock_time_min.size()); ++j) {
       os << "       d_pressure_shock_time_min[" << j << "] = "
-         << d_pressure_shock_time_min[j] << endl;
+         << d_pressure_shock_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_rich_tol.size()); ++j) {
       os << "       d_pressure_rich_tol[" << j << "] = "
-         << d_pressure_rich_tol[j] << endl;
+         << d_pressure_rich_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_rich_time_max.size()); ++j) {
       os << "       d_pressure_rich_time_max[" << j << "] = "
-         << d_pressure_rich_time_max[j] << endl;
+         << d_pressure_rich_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_pressure_rich_time_min.size()); ++j) {
       os << "       d_pressure_rich_time_min[" << j << "] = "
-         << d_pressure_rich_time_min[j] << endl;
+         << d_pressure_rich_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
 
 }
 
@@ -3487,7 +3486,7 @@ void Euler::getFromInput(
             d_object_name << ": "
                           << "`riemann_solve' in input must be either string "
                           << "'APPROX_RIEM_SOLVE', 'EXACT_RIEM_SOLVE', "
-                          << "'HLLC_RIEM_SOLVE'." << endl);
+                          << "'HLLC_RIEM_SOLVE'." << std::endl);
 
       }
    } else {
@@ -3502,7 +3501,7 @@ void Euler::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "`godunov_order' in input must be 1, 2, or 4." << endl);
+                          << "`godunov_order' in input must be 1, 2, or 4." << std::endl);
 
       }
    } else {
@@ -3517,7 +3516,7 @@ void Euler::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`corner_transport' in input must be either string"
-                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
+                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << std::endl);
       }
    } else {
       d_corner_transport = input_db->getStringWithDefault("corner_transport",
@@ -3536,7 +3535,7 @@ void Euler::getFromInput(
          TBOX_WARNING(
             d_object_name << ": "
                           << "No key `refine_criteria' found in data for"
-                          << " RefinementData. No refinement will occur." << endl);
+                          << " RefinementData. No refinement will occur." << std::endl);
       }
 
       std::vector<string> ref_keys_defined(num_keys);
@@ -3561,7 +3560,7 @@ void Euler::getFromInput(
                   d_object_name << ": "
                                 << "Unknown refinement criteria: "
                                 << error_key
-                                << "\nin input." << endl);
+                                << "\nin input." << std::endl);
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
@@ -3576,7 +3575,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `dev_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("density_dev")) {
@@ -3585,7 +3584,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `density_dev' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3615,7 +3614,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `grad_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3646,7 +3645,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_onset' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("shock_tol")) {
@@ -3655,7 +3654,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3685,7 +3684,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `rich_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3715,7 +3714,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `dev_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("pressure_dev")) {
@@ -3724,7 +3723,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `pressure_dev' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3754,7 +3753,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `grad_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3785,7 +3784,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_onset' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("shock_tol")) {
@@ -3795,7 +3794,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3825,7 +3824,7 @@ void Euler::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `rich_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -3866,7 +3865,7 @@ void Euler::getFromInput(
          if (!key_found) {
             TBOX_ERROR(d_object_name << ": "
                                      << "No input found for specified refine criteria: "
-                                     << d_refinement_criteria[k0] << endl);
+                                     << d_refinement_criteria[k0] << std::endl);
          }
       }
 
@@ -3880,13 +3879,13 @@ void Euler::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`data_problem' value not found in input."
-                          << endl);
+                          << std::endl);
       }
 
       if (!input_db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << std::endl);
       }
       std::shared_ptr<tbox::Database> init_data_db(
          input_db->getDatabase("Initial_data"));
@@ -3900,21 +3899,21 @@ void Euler::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("center")) {
             init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("density_inside")) {
             d_density_inside = init_data_db->getDouble("density_inside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`density_inside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("velocity_inside")) {
             init_data_db->getDoubleArray("velocity_inside",
@@ -3922,21 +3921,21 @@ void Euler::getFromInput(
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`velocity_inside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("pressure_inside")) {
             d_pressure_inside = init_data_db->getDouble("pressure_inside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`pressure_inside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("density_outside")) {
             d_density_outside = init_data_db->getDouble("density_outside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`density_outside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("velocity_outside")) {
             init_data_db->getDoubleArray("velocity_outside",
@@ -3945,7 +3944,7 @@ void Euler::getFromInput(
             TBOX_ERROR(
                d_object_name << ": "
                              << "`velocity_outside' input required for "
-                             << "SPHERE problem." << endl);
+                             << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("pressure_outside")) {
             d_pressure_outside = init_data_db->getDouble("pressure_outside");
@@ -3953,7 +3952,7 @@ void Euler::getFromInput(
             TBOX_ERROR(
                d_object_name << ": "
                              << "`pressure_outside' input required for "
-                             << "SPHERE problem." << endl);
+                             << "SPHERE problem." << std::endl);
          }
 
          found_problem_data = true;
@@ -3976,7 +3975,7 @@ void Euler::getFromInput(
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
                                 << "problem invalid in 2 dimensions."
-                                << endl);
+                                << std::endl);
             }
             idir = 2;
          }
@@ -3988,7 +3987,7 @@ void Euler::getFromInput(
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`front_position' input required for "
-                                     << "PIECEWISE_CONSTANT_* problem." << endl);
+                                     << "PIECEWISE_CONSTANT_* problem." << std::endl);
          }
 
          d_number_of_intervals =
@@ -4037,7 +4036,7 @@ void Euler::getFromInput(
             TBOX_ERROR(
                d_object_name << ": "
                              << "Insufficient interval data given in input"
-                             << " for PIECEWISE_CONSTANT_* or STEP problem." << endl);
+                             << " for PIECEWISE_CONSTANT_* or STEP problem." << std::endl);
          }
 
          found_problem_data = true;
@@ -4047,7 +4046,7 @@ void Euler::getFromInput(
       if (!found_problem_data) {
          TBOX_ERROR(d_object_name << ": "
                                   << "`Initial_data' database found in input."
-                                  << " But bad data supplied." << endl);
+                                  << " But bad data supplied." << std::endl);
       }
 
    } // if !is_from_restart read in problem data
@@ -4085,7 +4084,7 @@ void Euler::getFromInput(
       } else {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "Key data `Boundary_data' not found in input. " << endl);
+                          << "Key data `Boundary_data' not found in input. " << std::endl);
       }
 
    }
@@ -4265,7 +4264,7 @@ void Euler::getFromRestart()
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file." << endl);
+         << d_object_name << " not found in restart file." << std::endl);
    }
    std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
@@ -4273,7 +4272,7 @@ void Euler::getFromRestart()
    if (ver != EULER_VERSION) {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Restart file version different than class version." << endl);
+                       << "Restart file version different than class version." << std::endl);
    }
 
    d_gamma = db->getDouble("d_gamma");
@@ -4288,7 +4287,7 @@ void Euler::getFromRestart()
       if (d_nghosts(i) != CELLG) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "Key data `d_nghosts' in restart file != CELLG." << endl);
+                          << "Key data `d_nghosts' in restart file != CELLG." << std::endl);
       }
    }
    int* tmp_fluxghosts = &d_fluxghosts[0];
@@ -4297,7 +4296,7 @@ void Euler::getFromRestart()
       if (d_fluxghosts(i) != FLUXG) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
+                          << "Key data `d_fluxghosts' in restart file != FLUXG." << std::endl);
       }
    }
 
@@ -4499,7 +4498,7 @@ void Euler::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`density' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
    if (db->keyExists("velocity")) {
       std::vector<double> tmp_vel = db->getDoubleVector("velocity");
@@ -4507,7 +4506,7 @@ void Euler::readStateDataEntry(
          TBOX_ERROR(d_object_name << ": "
                                   << "Insufficient number `velocity' values"
                                   << " given in " << db_name
-                                  << " input database." << endl);
+                                  << " input database." << std::endl);
       }
       for (int iv = 0; iv < d_dim.getValue(); ++iv) {
          velocity[array_indx * d_dim.getValue() + iv] = tmp_vel[iv];
@@ -4515,14 +4514,14 @@ void Euler::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`velocity' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
    if (db->keyExists("pressure")) {
       pressure[array_indx] = db->getDouble("pressure");
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`pressure' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
 
 }

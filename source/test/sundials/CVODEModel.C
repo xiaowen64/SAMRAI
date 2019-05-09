@@ -101,7 +101,7 @@ void SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
  ************************************************************************/
 
 CVODEModel::CVODEModel(
-   const string& object_name,
+   const std::string& object_name,
    const Dimension& dim,
    std::shared_ptr<CellPoissonFACSolver> fac_solver,
    std::shared_ptr<Database> input_db,
@@ -503,7 +503,7 @@ CVODEModel::setPhysicalBoundaryConditions(
 
    }
 
-//    plog << "----Boundary Conditions "  << endl;
+//    plog << "----Boundary Conditions "  << std::endl;
 //    soln_data->print(soln_data->getGhostBox());
 
 }
@@ -600,7 +600,7 @@ CVODEModel::evaluateRHSFunction(
       pout << "\t\tEval RHS: "
            << "\n   \t\t\ttime = " << time
            << "\n   \t\t\ty_maxnorm = " << y_samvect->maxNorm()
-           << endl;
+           << std::endl;
    }
 
    /*
@@ -1079,7 +1079,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
            << "\n   \t\t\tz_maxnorm = " << z_samvect->maxNorm()
            << "\n   \t\t\tr_l2norm = " << r_samvect->L2Norm()
            << "\n   \t\t\tr_maxnorm = " << r_samvect->maxNorm()
-           << endl;
+           << std::endl;
    }
    /*
     * Set paramemters in the FAC solver.  It solves the system Az=r.
@@ -1105,11 +1105,11 @@ int CVODEModel::CVSpgmrPrecondSolve(
       double avg_convergence, final_convergence;
       d_FAC_solver->getConvergenceFactors(avg_convergence, final_convergence);
       pout << "   \t\t\tFinal Residual Norm: "
-           << d_FAC_solver->getResidualNorm() << endl;
+           << d_FAC_solver->getResidualNorm() << std::endl;
       pout << "   \t\t\tFinal Convergence Error: "
-           << final_convergence << endl;
+           << final_convergence << std::endl;
       pout << "   \t\t\tFinal Convergence Rate: "
-           << avg_convergence << endl;
+           << avg_convergence << std::endl;
    }
 
    /******************************************************************
@@ -1147,7 +1147,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
            << "\n   \t\t\tz_maxnorm = " << z_samvect->maxNorm()
            << "\n   \t\t\tResidual Norm: " << d_FAC_solver->getResidualNorm()
            << "\n   \t\t\tConvergence Error: " << final_convergence
-           << endl;
+           << std::endl;
    }
 
    if (converge != true) {
@@ -1340,7 +1340,7 @@ CVODEModel::getFromInput(
    } else {
       TBOX_WARNING(
          d_object_name << ": "
-                       << "Key data `Boundary_data' not found in input. " << endl);
+                       << "Key data `Boundary_data' not found in input. " << std::endl);
    }
 
 #ifdef USE_FAC_PRECONDITIONER
@@ -1435,7 +1435,7 @@ void CVODEModel::getFromRestart()
 
 void CVODEModel::readDirichletBoundaryDataEntry(
    const std::shared_ptr<Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -1456,7 +1456,7 @@ void CVODEModel::readDirichletBoundaryDataEntry(
 
 void CVODEModel::readNeumannBoundaryDataEntry(
    const std::shared_ptr<Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -1477,7 +1477,7 @@ void CVODEModel::readNeumannBoundaryDataEntry(
 
 void CVODEModel::readStateDataEntry(
    std::shared_ptr<Database> db,
-   const string& db_name,
+   const std::string& db_name,
    int array_indx,
    std::vector<double>& val)
 {
@@ -1491,7 +1491,7 @@ void CVODEModel::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`val' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
 
 }
@@ -1504,59 +1504,59 @@ void CVODEModel::readStateDataEntry(
  */
 
 void CVODEModel::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
    fflush(stdout);
    int j;
 
-   os << "ptr CVODEModel = " << (CVODEModel *)this << endl;
+   os << "ptr CVODEModel = " << (CVODEModel *)this << std::endl;
 
-   os << "d_object_name = " << d_object_name << endl;
+   os << "d_object_name = " << d_object_name << std::endl;
 
-   os << "d_soln_cur_id = " << d_soln_cur_id << endl;
-   os << "d_soln_scr_id = " << d_soln_scr_id << endl;
+   os << "d_soln_cur_id = " << d_soln_cur_id << std::endl;
+   os << "d_soln_scr_id = " << d_soln_scr_id << std::endl;
 
-   os << "d_initial_value = " << d_initial_value << endl;
+   os << "d_initial_value = " << d_initial_value << std::endl;
 
-   os << "Boundary Condition data..." << endl;
+   os << "Boundary Condition data..." << std::endl;
    if (d_dim == Dimension(2)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_val[" << j << "] = "
-               << d_bdry_edge_val[j] << endl;
+               << d_bdry_edge_val[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << std::endl;
       }
    } else if (d_dim == Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << std::endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_val[" << j << "] = "
-               << d_bdry_face_val[j] << endl;
+               << d_bdry_face_val[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << std::endl;
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << std::endl;
       }
    }
 

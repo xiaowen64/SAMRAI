@@ -102,7 +102,6 @@ void SAMRAI_F77_FUNC(cartclinreffacedoub3d2, CARTCLINREFFACEDOUB3D2) (const int&
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianFaceDoubleConservativeLinearRefine::
 CartesianFaceDoubleConservativeLinearRefine():

@@ -501,7 +501,6 @@ char *yytext;
 
 #include <stdlib.h>
 #include <string>
-using namespace std;
 
 #define YY_NEVER_INTERACTIVE 1
 #define YY_NO_UNPUT 1
@@ -920,7 +919,7 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   SAMRAI_yylval.u_keyword = new string(yytext);
+   SAMRAI_yylval.u_keyword = new std::string(yytext);
    return(T_KEYWORD);
 }
 	YY_BREAK
@@ -938,8 +937,8 @@ YY_RULE_SETUP
 
 {
    Parser::getParser()->advanceCursor(yytext);
-   string s(yytext);
-   SAMRAI_yylval.u_string = new string(s.substr(1,s.length()-2));
+   std::string s(yytext);
+   SAMRAI_yylval.u_string = new std::string(s.substr(1,s.length()-2));
    return(T_STRING);
 }
 	YY_BREAK
@@ -963,11 +962,11 @@ case 35:
 YY_RULE_SETUP
 
 {
-   string s(yytext);
-   string::size_type start = s.find("\"")+1;
-   string::size_type end   = s.rfind("\"")-1;
+   std::string s(yytext);
+   std::string::size_type start = s.find("\"")+1;
+   std::string::size_type end   = s.rfind("\"")-1;
 
-   string filename(s, start, end-start+1);
+   std::string filename(s, start, end-start+1);
 
    if (s_include_stack_top >= MAXIMUM_INCLUDE_DEPTH) {
       Parser::getParser()->error("Too many nested #include statements");

@@ -22,7 +22,7 @@
  */
 
 MainRestartData::MainRestartData(
-   const string& object_name,
+   const std::string& object_name,
    std::shared_ptr<tbox::Database> input_db):
    d_object_name(object_name)
 {
@@ -143,7 +143,7 @@ void MainRestartData::getFromInput(
       d_max_timesteps = input_db->getInteger("max_timesteps");
    } else {
       if (!is_from_restart) {
-         TBOX_ERROR("max_timesteps not entered in input file" << endl);
+         TBOX_ERROR("max_timesteps not entered in input file" << std::endl);
       }
    }
 

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <fstream>
 #include <string>
-using namespace std;
 
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/PatchDataRestartManager.h"
@@ -130,7 +129,7 @@ using namespace algs;
  */
 
 MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    const std::shared_ptr<tbox::Database> input_db,
    MblkHyperbolicPatchStrategy* patch_strategy,
@@ -651,7 +650,7 @@ MblkHyperbolicLevelIntegrator::initializeLevelIntegrator(
        (gridding_alg->getTagAndInitializeStrategy()->getErrorCoarsenRatio() > 3)) {
       TBOX_ERROR("MblkHyperbolicLevelIntegrator::initializeLevelIntegrator "
          << "error...\n" << "   object name = " << d_object_name
-         << "   gridding algorithm has bad error coarsen ratio" << endl);
+         << "   gridding algorithm has bad error coarsen ratio" << std::endl);
    }
 
    if ((gridding_alg->getTagAndInitializeStrategy()->everUsesTimeIntegration()) &&
@@ -1134,7 +1133,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
                TBOX_ERROR(
                   d_object_name << ":  "
                                 << "Attempt to fill new ghost data for timestep"
-                                << "computation, but schedule not defined." << endl);
+                                << "computation, but schedule not defined." << std::endl);
             }
 
             d_patch_strategy->setDataContext(d_scratch);
@@ -1891,7 +1890,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
                   d_object_name << ":  "
                                 << "Attempt to register FaceVariable when "
                                 << "SideVariable already registered."
-                                << endl);
+                                << std::endl);
             }
 
             d_flux_is_face = true;
@@ -1902,7 +1901,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
                   d_object_name << ":  "
                                 << "Attempt to register SideVariable when "
                                 << "FaceVariable already registered."
-                                << endl);
+                                << std::endl);
             }
 
             d_flux_is_face = false;
@@ -1910,7 +1909,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          } else {
             TBOX_ERROR(
                d_object_name << ":  "
-                             << "Flux is neither face- or side-centered." << endl);
+                             << "Flux is neither face- or side-centered." << std::endl);
          }
 
          d_flux_variables.push_back(var);
@@ -1921,9 +1920,9 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
          d_flux_var_data.setFlag(scr_id);
 
-         string var_name = var->getName();
-         string fs_suffix = "_fluxsum";
-         string fsum_name = var_name;
+         std::string var_name = var->getName();
+         std::string fs_suffix = "_fluxsum";
+         std::string fsum_name = var_name;
          fsum_name += fs_suffix;
 
          std::shared_ptr<hier::Variable> fluxsum;
@@ -1979,7 +1978,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          TBOX_ERROR(
             d_object_name << ":  "
                           << "unknown HYP_VAR_TYPE = " << h_v_type
-                          << endl);
+                          << std::endl);
 
       }
 
@@ -2325,22 +2324,22 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
  */
 
 void MblkHyperbolicLevelIntegrator::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
-   os << "\nMblkHyperbolicLevelIntegrator::printClassData..." << endl;
+   os << "\nMblkHyperbolicLevelIntegrator::printClassData..." << std::endl;
    os << "MblkHyperbolicLevelIntegrator: this = "
-      << (MblkHyperbolicLevelIntegrator *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+      << (MblkHyperbolicLevelIntegrator *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_cfl = " << d_cfl << "\n"
-      << "d_cfl_init = " << d_cfl_init << endl;
+      << "d_cfl_init = " << d_cfl_init << std::endl;
    os << "d_lag_dt_computation = " << d_lag_dt_computation << "\n"
       << "d_use_ghosts_for_dt = "
-      << d_use_ghosts_for_dt << endl;
+      << d_use_ghosts_for_dt << std::endl;
    os << "d_patch_strategy = "
-      << (MblkHyperbolicPatchStrategy *)d_patch_strategy << endl;
+      << (MblkHyperbolicPatchStrategy *)d_patch_strategy << std::endl;
    os
    << "NOTE: Not printing variable arrays, ComponentSelectors, communication schedules, etc."
-   << endl;
+   << std::endl;
 }
 
 /*
@@ -2421,7 +2420,7 @@ void MblkHyperbolicLevelIntegrator::getFromInput(
             d_object_name << ":  "
                           << "Key data `use_ghosts_to_compute_dt' not found in input."
                           << "  Using default value "
-                          << d_use_ghosts_for_dt << endl);
+                          << d_use_ghosts_for_dt << std::endl);
       }
    }
 
@@ -2455,7 +2454,7 @@ void MblkHyperbolicLevelIntegrator::getFromRestart()
 
    if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
-         << d_object_name << " not found in restart file" << endl);
+         << d_object_name << " not found in restart file" << std::endl);
    }
    std::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
@@ -2463,7 +2462,7 @@ void MblkHyperbolicLevelIntegrator::getFromRestart()
    if (ver != ALGS_HYPERBOLIC_LEVEL_INTEGRATOR_VERSION) {
       TBOX_ERROR(d_object_name << ":  "
                                << "Restart file version different "
-                               << "than class version." << endl);
+                               << "than class version." << std::endl);
    }
 
    d_cfl = db->getDouble("d_cfl");

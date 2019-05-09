@@ -25,7 +25,6 @@
 #endif
 #endif
 
-using namespace std;
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -539,7 +538,7 @@ MblkLinAdv::MblkLinAdv(
          d_object_name << ": "
                        << "Unknown d_data_problem string = "
                        << d_data_problem
-                       << " encountered in constructor" << endl);
+                       << " encountered in constructor" << std::endl);
    }
 
    /*
@@ -703,7 +702,7 @@ void MblkLinAdv::registerModelVariables(
          d_object_name << ": registerModelVariables()"
                        << "\nVisIt data writer was"
                        << "\nregistered.  Consequently, no plot data will"
-                       << "\nbe written." << endl);
+                       << "\nbe written." << std::endl);
    }
 #endif
 
@@ -1150,7 +1149,7 @@ void MblkLinAdv::computeFluxesOnPatch(
 
       }
 
-//     tbox::plog << "flux values: option1...." << endl;
+//     tbox::plog << "flux values: option1...." << std::endl;
 //     flux->print(pbox, tbox::plog);
    }
 
@@ -1453,7 +1452,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport1(
       traced_right.getPointer(1),
       traced_right.getPointer(2));
 
-//     tbox::plog << "flux values: option1...." << endl;
+//     tbox::plog << "flux values: option1...." << std::endl;
 //     flux->print(pbox, tbox::plog);
 
 }
@@ -1688,7 +1687,7 @@ void MblkLinAdv::compute3DFluxesWithCornerTransport2(
       traced_right.getPointer(1),
       traced_right.getPointer(2));
 
-//     tbox::plog << "flux values: option2...." << endl;
+//     tbox::plog << "flux values: option2...." << std::endl;
 //     flux->print(pbox, tbox::plog);
 }
 
@@ -2202,7 +2201,7 @@ void MblkLinAdv::tagGradientDetectorCells(
       (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
-//   tbox::plog << "--------------------- end tagGradientCells" << endl;
+//   tbox::plog << "--------------------- end tagGradientCells" << std::endl;
 
 }
 
@@ -2255,7 +2254,7 @@ void MblkLinAdv::setMappedGridOnPatch(
    int num_domain_boxes = domain_boxes.size();
 
    if (num_domain_boxes > 1) {
-      TBOX_ERROR("Sorry, cannot handle non-rectangular domains..." << endl);
+      TBOX_ERROR("Sorry, cannot handle non-rectangular domains..." << std::endl);
    }
 
    int xyz_id = hier::VariableDatabase::getDatabase()->
@@ -2299,164 +2298,164 @@ void MblkLinAdv::printClassData(
 {
    int j, k;
 
-   os << "\nMblkLinAdv::printClassData..." << endl;
-   os << "MblkLinAdv: this = " << (MblkLinAdv *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
-   os << "d_grid_geometry = " << endl;
+   os << "\nMblkLinAdv::printClassData..." << std::endl;
+   os << "MblkLinAdv: this = " << (MblkLinAdv *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
+   os << "d_grid_geometry = " << std::endl;
 //   for (j=0; j < d_grid_geometry.getSize(); ++j) {
-//      os << (*((std::shared_ptr<geom::GridGeometry >)(d_grid_geometry[j]))) << endl;
+//      os << (*((std::shared_ptr<geom::GridGeometry >)(d_grid_geometry[j]))) << std::endl;
 //   }
 
-   os << "Parameters for numerical method ..." << endl;
+   os << "Parameters for numerical method ..." << std::endl;
    os << "   d_advection_velocity = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
-   os << endl;
-   os << "   d_godunov_order = " << d_godunov_order << endl;
-   os << "   d_corner_transport = " << d_corner_transport << endl;
-   os << "   d_nghosts = " << d_nghosts << endl;
-   os << "   d_fluxghosts = " << d_fluxghosts << endl;
+   os << std::endl;
+   os << "   d_godunov_order = " << d_godunov_order << std::endl;
+   os << "   d_corner_transport = " << d_corner_transport << std::endl;
+   os << "   d_nghosts = " << d_nghosts << std::endl;
+   os << "   d_fluxghosts = " << d_fluxghosts << std::endl;
 
-   os << "Problem description and initial data..." << endl;
-   os << "   d_data_problem = " << d_data_problem << endl;
-   os << "   d_data_problem_int = " << d_data_problem << endl;
+   os << "Problem description and initial data..." << std::endl;
+   os << "   d_data_problem = " << d_data_problem << std::endl;
+   os << "   d_data_problem_int = " << d_data_problem << std::endl;
 
-   os << "       d_radius = " << d_radius << endl;
+   os << "       d_radius = " << d_radius << std::endl;
    os << "       d_center = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
-   os << endl;
-   os << "       d_uval_inside = " << d_uval_inside << endl;
-   os << "       d_uval_outside = " << d_uval_outside << endl;
+   os << std::endl;
+   os << "       d_uval_inside = " << d_uval_inside << std::endl;
+   os << "       d_uval_outside = " << d_uval_outside << std::endl;
 
-   os << "       d_number_of_intervals = " << d_number_of_intervals << endl;
+   os << "       d_number_of_intervals = " << d_number_of_intervals << std::endl;
    os << "       d_front_position = ";
    for (k = 0; k < d_number_of_intervals - 1; ++k) {
       os << d_front_position[k] << "  ";
    }
-   os << endl;
-   os << "       d_interval_uval = " << endl;
+   os << std::endl;
+   os << "       d_interval_uval = " << std::endl;
    for (k = 0; k < d_number_of_intervals; ++k) {
-      os << "            " << d_interval_uval[k] << endl;
+      os << "            " << d_interval_uval[k] << std::endl;
    }
-   os << "   Boundary condition data " << endl;
+   os << "   Boundary condition data " << std::endl;
 
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_uval[" << j << "] = "
-               << d_bdry_edge_uval[j] << endl;
+               << d_bdry_edge_uval[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << std::endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << std::endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_uval[" << j << "] = "
-               << d_bdry_face_uval[j] << endl;
+               << d_bdry_face_uval[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << std::endl;
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << std::endl;
       }
    }
 
-   os << "   Refinement criteria parameters " << endl;
+   os << "   Refinement criteria parameters " << std::endl;
 
    for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
-         << d_refinement_criteria[j] << endl;
+         << d_refinement_criteria[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_tol.size()); ++j) {
       os << "       d_dev_tol[" << j << "] = "
-         << d_dev_tol[j] << endl;
+         << d_dev_tol[j] << std::endl;
    }
    for (j = 0; j < static_cast<int>(d_dev.size()); ++j) {
       os << "       d_dev[" << j << "] = "
-         << d_dev[j] << endl;
+         << d_dev[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_time_max.size()); ++j) {
       os << "       d_dev_time_max[" << j << "] = "
-         << d_dev_time_max[j] << endl;
+         << d_dev_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_time_min.size()); ++j) {
       os << "       d_dev_time_min[" << j << "] = "
-         << d_dev_time_min[j] << endl;
+         << d_dev_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_tol.size()); ++j) {
       os << "       d_grad_tol[" << j << "] = "
-         << d_grad_tol[j] << endl;
+         << d_grad_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_time_max.size()); ++j) {
       os << "       d_grad_time_max[" << j << "] = "
-         << d_grad_time_max[j] << endl;
+         << d_grad_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_time_min.size()); ++j) {
       os << "       d_grad_time_min[" << j << "] = "
-         << d_grad_time_min[j] << endl;
+         << d_grad_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_onset.size()); ++j) {
       os << "       d_shock_onset[" << j << "] = "
-         << d_shock_onset[j] << endl;
+         << d_shock_onset[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_tol.size()); ++j) {
       os << "       d_shock_tol[" << j << "] = "
-         << d_shock_tol[j] << endl;
+         << d_shock_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_time_max.size()); ++j) {
       os << "       d_shock_time_max[" << j << "] = "
-         << d_shock_time_max[j] << endl;
+         << d_shock_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_time_min.size()); ++j) {
       os << "       d_shock_time_min[" << j << "] = "
-         << d_shock_time_min[j] << endl;
+         << d_shock_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_tol.size()); ++j) {
       os << "       d_rich_tol[" << j << "] = "
-         << d_rich_tol[j] << endl;
+         << d_rich_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_time_max.size()); ++j) {
       os << "       d_rich_time_max[" << j << "] = "
-         << d_rich_time_max[j] << endl;
+         << d_rich_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_time_min.size()); ++j) {
       os << "       d_rich_time_min[" << j << "] = "
-         << d_rich_time_min[j] << endl;
+         << d_rich_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
 
 }
 
@@ -2507,7 +2506,7 @@ void MblkLinAdv::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "`godunov_order' in input must be 1, 2, or 4." << endl);
+                          << "`godunov_order' in input must be 1, 2, or 4." << std::endl);
       }
    } else {
       d_godunov_order = db->getIntegerWithDefault("d_godunov_order",
@@ -2521,7 +2520,7 @@ void MblkLinAdv::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`corner_transport' in input must be either string"
-                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
+                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << std::endl);
       }
    } else {
       d_corner_transport = db->getStringWithDefault("corner_transport",
@@ -2540,7 +2539,7 @@ void MblkLinAdv::getFromInput(
          TBOX_WARNING(
             d_object_name << ": "
                           << "No key `refine_criteria' found in data for"
-                          << " RefinementData. No refinement will occur." << endl);
+                          << " RefinementData. No refinement will occur." << std::endl);
       }
 
       std::vector<string> ref_keys_defined(num_keys);
@@ -2561,7 +2560,7 @@ void MblkLinAdv::getFromInput(
                   d_object_name << ": "
                                 << "Unknown refinement criteria: "
                                 << error_key
-                                << "\nin input." << endl);
+                                << "\nin input." << std::endl);
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
@@ -2576,7 +2575,7 @@ void MblkLinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `dev_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("uval_dev")) {
@@ -2585,7 +2584,7 @@ void MblkLinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `uval_dev' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2612,7 +2611,7 @@ void MblkLinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `grad_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2639,7 +2638,7 @@ void MblkLinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_onset' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("shock_tol")) {
@@ -2648,7 +2647,7 @@ void MblkLinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2675,7 +2674,7 @@ void MblkLinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `rich_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2708,13 +2707,13 @@ void MblkLinAdv::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`data_problem' value not found in input."
-                          << endl);
+                          << std::endl);
       }
 
       if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << std::endl);
       }
       std::shared_ptr<tbox::Database> init_data_db(
          db->getDatabase("Initial_data"));
@@ -2728,28 +2727,28 @@ void MblkLinAdv::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("center")) {
             init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("uval_inside")) {
             d_uval_inside = init_data_db->getDouble("uval_inside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`uval_inside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("uval_outside")) {
             d_uval_outside = init_data_db->getDouble("uval_outside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`uval_outside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
 
          found_problem_data = true;
@@ -2769,7 +2768,7 @@ void MblkLinAdv::getFromInput(
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Y' "
                                 << "problem invalid in 1 dimension."
-                                << endl);
+                                << std::endl);
             }
          }
 
@@ -2777,7 +2776,7 @@ void MblkLinAdv::getFromInput(
             if (d_dim < tbox::Dimension(3)) {
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
-                                << "problem invalid in 1 or 2 dimensions." << endl);
+                                << "problem invalid in 1 or 2 dimensions." << std::endl);
             }
          }
 
@@ -2788,7 +2787,7 @@ void MblkLinAdv::getFromInput(
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`front_position' input required for "
-                                     << d_data_problem << " problem." << endl);
+                                     << d_data_problem << " problem." << std::endl);
          }
 
          d_number_of_intervals =
@@ -2815,7 +2814,7 @@ void MblkLinAdv::getFromInput(
                } else {
                   TBOX_ERROR(d_object_name << ": "
                                            << "`uval' data missing in input for key = "
-                                           << init_data_keys[nkey] << endl);
+                                           << init_data_keys[nkey] << std::endl);
                }
                ++i;
 
@@ -2838,7 +2837,7 @@ void MblkLinAdv::getFromInput(
             } else {
                TBOX_ERROR(
                   d_object_name << ": "
-                                << "`frequency' input required for SINE problem." << endl);
+                                << "`frequency' input required for SINE problem." << std::endl);
             }
          }
 
@@ -2847,7 +2846,7 @@ void MblkLinAdv::getFromInput(
                d_object_name << ": "
                              << "Insufficient interval data given in input"
                              << " for PIECEWISE_CONSTANT_*problem."
-                             << endl);
+                             << std::endl);
          }
 
          found_problem_data = true;
@@ -2856,7 +2855,7 @@ void MblkLinAdv::getFromInput(
       if (!found_problem_data) {
          TBOX_ERROR(d_object_name << ": "
                                   << "`Initial_data' database found in input."
-                                  << " But bad data supplied." << endl);
+                                  << " But bad data supplied." << std::endl);
       }
 
    } // if !is_from_restart read in problem data
@@ -2873,7 +2872,7 @@ void MblkLinAdv::getFromInput(
     */
    if ((d_grid_geometry->getNumberBlocks() > 1) && (num_per_dirs > 0)) {
       TBOX_ERROR(d_object_name << ": cannot have periodic BCs when there"
-                               << "\nare multiple blocks." << endl);
+                               << "\nare multiple blocks." << std::endl);
    }
 
    if (db->keyExists("Boundary_data")) {
@@ -2900,7 +2899,7 @@ void MblkLinAdv::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Key data `Boundary_data' not found in input. " << endl);
+                       << "Key data `Boundary_data' not found in input. " << std::endl);
    }
 
 }
@@ -3137,7 +3136,7 @@ void MblkLinAdv::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`uval' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
 
 }

@@ -181,7 +181,7 @@ void SkeletonBoundaryUtilities3::getFromInput(
  */
 
 void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
-   const string& varname,
+   const std::string& varname,
    std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
@@ -258,7 +258,7 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
  */
 
 void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
-   const string& varname,
+   const std::string& varname,
    std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
@@ -337,7 +337,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
  */
 
 void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
-   const string& varname,
+   const std::string& varname,
    std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
@@ -471,7 +471,7 @@ int SkeletonBoundaryUtilities3::getFaceLocationForEdgeBdry(
          TBOX_ERROR("Unknown edge boundary condition type = "
             << edge_btype << " passed to \n"
             << "SkeletonBoundaryUtilities3::getFaceLocationForEdgeBdry"
-            << endl);
+            << std::endl);
       }
    }
 
@@ -480,7 +480,7 @@ int SkeletonBoundaryUtilities3::getFaceLocationForEdgeBdry(
          << edge_btype << " and edge location = " << edge_loc
          << "\n passed to "
          << "SkeletonBoundaryUtilities3::getFaceLocationForEdgeBdry"
-         << " are inconsistant." << endl);
+         << " are inconsistant." << std::endl);
    }
 
    return ret_face;
@@ -554,7 +554,7 @@ int SkeletonBoundaryUtilities3::getFaceLocationForNodeBdry(
          TBOX_ERROR("Unknown node boundary condition type = "
             << node_btype << " passed to \n"
             << "SkeletonBoundaryUtilities3::getFaceLocationForNodeBdry"
-            << endl);
+            << std::endl);
       }
    }
 
@@ -563,7 +563,7 @@ int SkeletonBoundaryUtilities3::getFaceLocationForNodeBdry(
          << node_btype << " and node location = " << node_loc
          << "\n passed to "
          << "SkeletonBoundaryUtilities3::getFaceLocationForNodeBdry"
-         << " are inconsistant." << endl);
+         << " are inconsistant." << std::endl);
    }
 
    return ret_face;
@@ -585,7 +585,7 @@ int SkeletonBoundaryUtilities3::getFaceLocationForNodeBdry(
  */
 
 int SkeletonBoundaryUtilities3::checkBdryData(
-   const string& varname,
+   const std::string& varname,
    const hier::Patch& patch,
    int data_id,
    int depth,
@@ -611,7 +611,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 
-   string bdry_type_str;
+   std::string bdry_type_str;
    if (btype == Bdry::FACE3D) {
       bdry_type_str = "FACE";
    } else if (btype == Bdry::EDGE3D) {
@@ -622,14 +622,14 @@ int SkeletonBoundaryUtilities3::checkBdryData(
       TBOX_ERROR(
          "Unknown btype " << btype
                           << " passed to SkeletonBoundaryUtilities3::checkBdryData()! "
-                          << endl);
+                          << std::endl);
    }
 
-   tbox::plog << "\n\nCHECKING 3D " << bdry_type_str << " BDRY DATA..." << endl;
-   tbox::plog << "varname = " << varname << " : depth = " << depth << endl;
-   tbox::plog << "bbox = " << bbox.getBox() << endl;
+   tbox::plog << "\n\nCHECKING 3D " << bdry_type_str << " BDRY DATA..." << std::endl;
+   tbox::plog << "varname = " << varname << " : depth = " << depth << std::endl;
+   tbox::plog << "bbox = " << bbox.getBox() << std::endl;
    tbox::plog << "btype, bloc, bcase = "
-              << btype << ", = " << bloc << ", = " << bcase << endl;
+              << btype << ", = " << bloc << ", = " << bcase << std::endl;
 
    tbox::Dimension::dir_t idir;
    double valfact = 0.0, constval = 0.0, dxfact = 0.0;
@@ -657,7 +657,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
             "Unknown bcase " << bcase
                              << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                              << "\n for " << bdry_type_str
-                             << " at location " << bloc << endl);
+                             << " at location " << bloc << std::endl);
       }
 
    } else if (btype == Bdry::EDGE3D) {
@@ -682,7 +682,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
             "Unknown bcase " << bcase
                              << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                              << "\n for " << bdry_type_str
-                             << " at location " << bloc << endl);
+                             << " at location " << bloc << std::endl);
       }
 
    } else if (btype == Bdry::NODE3D) {
@@ -707,7 +707,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
             "Unknown bcase " << bcase
                              << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                              << "\n for " << bdry_type_str
-                             << " at location " << bloc << endl);
+                             << " at location " << bloc << std::endl);
       }
 
    }
@@ -748,7 +748,7 @@ int SkeletonBoundaryUtilities3::checkBdryData(
                                 << " boundary value for " << varname
                                 << " found in cell " << check
                                 << "\n   found = " << (*vardata)(check, depth)
-                                << " : correct = " << offcheckval << endl);
+                                << " : correct = " << offcheckval << std::endl);
          }
          check(idir) += offsign;
       }
@@ -782,7 +782,7 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
 
       for (int s = 0; s < NUM_3D_FACES; ++s) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case BdryLoc::XLO: { bdry_loc_str = "boundary_face_xlo";
                                  break;
@@ -822,7 +822,7 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
                   input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
-                     string bdry_cond_str =
+                     std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
                      if (bdry_cond_str == "FLOW") {
                         face_conds[s] = BdryCond::FLOW;
@@ -842,16 +842,16 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
                            s);
                      } else {
                         TBOX_ERROR("Unknown face boundary string = "
-                           << bdry_cond_str << " found in input." << endl);
+                           << bdry_cond_str << " found in input." << std::endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << endl);
+                        << bdry_loc_str << " input database." << std::endl);
                   }
                }
             } else {
                TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << endl);
+                  << " database entry not found in input." << std::endl);
             }
          } // if (need_data_read)
 
@@ -884,7 +884,7 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
 
       for (int s = 0; s < NUM_3D_EDGES; ++s) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case EdgeBdyLoc3D::YLO_ZLO: {
                bdry_loc_str = "boundary_edge_ylo_zlo";
@@ -960,7 +960,7 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
                   input_db->getDatabase(bdry_loc_str));
                if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
-                     string bdry_cond_str =
+                     std::string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
                      if (bdry_cond_str == "XFLOW") {
                         edge_conds[s] = BdryCond::XFLOW;
@@ -988,7 +988,7 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
                         edge_conds[s] = BdryCond::ZNEUMANN;
                      } else {
                         TBOX_ERROR("Unknown edge boundary string = "
-                           << bdry_cond_str << " found in input." << endl);
+                           << bdry_cond_str << " found in input." << std::endl);
                      }
 
                      bool ambiguous_type = false;
@@ -1020,11 +1020,11 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
                      if (ambiguous_type) {
                         TBOX_ERROR("Ambiguous bdry condition "
                            << bdry_cond_str
-                           << " found for " << bdry_loc_str << endl);
+                           << " found for " << bdry_loc_str << std::endl);
                      }
 
-                     string proper_face;
-                     string proper_face_data;
+                     std::string proper_face;
+                     std::string proper_face_data;
                      bool no_face_data_found = false;
                      if (bdry_cond_str == "XFLOW" ||
                          bdry_cond_str == "XDIRICHLET" ||
@@ -1185,16 +1185,16 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
                                              << "\n but no "
                                              << proper_face_data
                                              << " data found for face "
-                                             << proper_face << endl);
+                                             << proper_face << std::endl);
                      }
                   } else {
                      TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << endl);
+                        << bdry_loc_str << " input database." << std::endl);
                   }
                }
             } else {
                TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << endl);
+                  << " database entry not found in input." << std::endl);
             }
 
          } // if (need_data_read)
@@ -1228,7 +1228,7 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
 
       for (int s = 0; s < NUM_3D_NODES; ++s) {
 
-         string bdry_loc_str;
+         std::string bdry_loc_str;
          switch (s) {
             case NodeBdyLoc3D::XLO_YLO_ZLO: {
                bdry_loc_str = "boundary_node_xlo_ylo_zlo";
@@ -1270,7 +1270,7 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
                input_db->getDatabase(bdry_loc_str));
             if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
-                  string bdry_cond_str =
+                  std::string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");
                   if (bdry_cond_str == "XFLOW") {
                      node_conds[s] = BdryCond::XFLOW;
@@ -1298,11 +1298,11 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
                      node_conds[s] = BdryCond::ZNEUMANN;
                   } else {
                      TBOX_ERROR("Unknown node boundary string = "
-                        << bdry_cond_str << " found in input." << endl);
+                        << bdry_cond_str << " found in input." << std::endl);
                   }
 
-                  string proper_face;
-                  string proper_face_data;
+                  std::string proper_face;
+                  std::string proper_face_data;
                   bool no_face_data_found = false;
                   if (bdry_cond_str == "XFLOW" ||
                       bdry_cond_str == "XDIRICHLET" ||
@@ -1469,17 +1469,17 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
                                           << "\n but no "
                                           << proper_face_data
                                           << " data found for face "
-                                          << proper_face << endl);
+                                          << proper_face << std::endl);
                   }
 
                } else {
                   TBOX_ERROR("'boundary_condition' entry missing from "
-                     << bdry_loc_str << " input database." << endl);
+                     << bdry_loc_str << " input database." << std::endl);
                }
             }
          } else {
             TBOX_ERROR(bdry_loc_str
-               << " database entry not found in input." << endl);
+               << " database entry not found in input." << std::endl);
          }
 
       } // for (int s = 0 ...
@@ -1501,7 +1501,7 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
    int bcase)
 {
 
-   string bdry_type_str;
+   std::string bdry_type_str;
 
    if (btype == Bdry::FACE3D) {
 
@@ -1534,7 +1534,7 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
                                          <<
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                                          << "\n for "
-                                         << bdry_type_str << " boundary " << endl);
+                                         << bdry_type_str << " boundary " << std::endl);
       }
 
    } else if (btype == Bdry::EDGE3D) {
@@ -1586,7 +1586,7 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
             " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                                          << "\n for " << bdry_type_str
                                          << " at location " << bloc
-                                         << endl);
+                                         << std::endl);
       }
 
    } else if (btype == Bdry::NODE3D) {
@@ -1627,7 +1627,7 @@ void SkeletonBoundaryUtilities3::get3dBdryDirectionCheckValues(
          "Unknown boundary type " << btype
                                   << " passed to SkeletonBoundaryUtilities3::checkBdryData()"
                                   << "\n for " << bdry_type_str
-                                  << " at location " << bloc << endl);
+                                  << " at location " << bloc << std::endl);
    }
 
 }

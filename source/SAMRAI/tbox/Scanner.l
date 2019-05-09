@@ -13,7 +13,6 @@
 
 #include <stdlib.h>
 #include <string>
-using namespace std;
 
 #define YY_NEVER_INTERACTIVE 1
 #define YY_NO_UNPUT 1
@@ -90,7 +89,7 @@ S_STRING  (\"([^\n"])*\")
 
 {S_KEYWORD} {
    Parser::getParser()->advanceCursor(yytext);
-   yylval.u_keyword = new string(yytext);
+   yylval.u_keyword = new std::string(yytext);
    return(T_KEYWORD);
 }
 
@@ -102,8 +101,8 @@ S_STRING  (\"([^\n"])*\")
 
 {S_STRING} {
    Parser::getParser()->advanceCursor(yytext);
-   string s(yytext);
-   yylval.u_string = new string(s.substr(1,s.length()-2));
+   std::string s(yytext);
+   yylval.u_string = new std::string(s.substr(1,s.length()-2));
    return(T_STRING);
 }
 
@@ -118,11 +117,11 @@ S_STRING  (\"([^\n"])*\")
 }
 
 "#include"[ \t]+\"[^\"\n]+\"[ \t]*\n {
-   string s(yytext);
-   string::size_type start = s.find("\"")+1;
-   string::size_type end   = s.rfind("\"")-1;
+   std::string s(yytext);
+   std::string::size_type start = s.find("\"")+1;
+   std::string::size_type end   = s.rfind("\"")-1;
 
-   string filename(s, start, end-start+1);
+   std::string filename(s, start, end-start+1);
 
    if (s_include_stack_top >= MAXIMUM_INCLUDE_DEPTH) {
       Parser::getParser()->error("Too many nested #include statements");

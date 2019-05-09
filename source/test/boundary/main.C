@@ -12,7 +12,6 @@
 
 #include <string>
 #include <memory>
-using namespace std;
 
 // Headers for basic SAMRAI objects used in this code.
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -59,11 +58,11 @@ int main(
                        << "<restart dir> <restore number> [options]\n"
                        << "  options:\n"
                        << "  none at this time"
-                       << endl);
+                       << std::endl);
          return -1;
       }
 
-      string input_filename = argv[1];
+      std::string input_filename = argv[1];
 
       /*
        * Create input database and parse all data in input file.
@@ -96,7 +95,7 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      string log_file_name = "boundary.log";
+      std::string log_file_name = "boundary.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }
@@ -133,14 +132,14 @@ int main(
 
       tbox::plog
       << "\nPRINTING BoundaryDataTester object state after initialization..."
-      << endl;
+      << std::endl;
       btester->printClassData(tbox::plog);
 
       /*
        * For simplicity, we manually create a hierachy with a single patch level.
        */
 
-      tbox::plog << "\nBuilding patch hierarchy..." << endl;
+      tbox::plog << "\nBuilding patch hierarchy..." << std::endl;
 
       const hier::BoxContainer& domain = grid_geometry->getPhysicalDomain();
       hier::BoxContainer boxes(domain);
@@ -190,15 +189,15 @@ int main(
        */
 
       tbox::plog << "\nAllocate and initialize data on patch hierarchy..."
-                 << endl;
+                 << std::endl;
 
       btester->initializeDataOnPatchInteriors(patch_hierarchy, 0);
 
-      tbox::plog << "Performing tests..." << endl;
+      tbox::plog << "Performing tests..." << std::endl;
 
       fail_count = btester->runBoundaryTest(patch_hierarchy, 0);
 
-      tbox::plog << "\n\n\nDone." << endl;
+      tbox::plog << "\n\n\nDone." << std::endl;
 
       /*
        * At conclusion of test, deallocate objects.
@@ -209,7 +208,7 @@ int main(
       if (btester) delete btester;
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  boundary test" << endl;
+         tbox::pout << "\nPASSED:  boundary test" << std::endl;
       }
    }
 

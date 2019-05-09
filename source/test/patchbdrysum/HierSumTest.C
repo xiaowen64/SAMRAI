@@ -204,7 +204,7 @@ HierSumTest::setInitialNodeValues(
          // output initial cell values
          int level_number = level->getLevelNumber();
          tbox::plog << "INITIAL Cell values for NODE - Level: " << level_number
-                    << "\tPatch: " << patch->getBox() << endl;
+                    << "\tPatch: " << patch->getBox() << std::endl;
          ucell->print(ucell->getGhostBox(), plog);
 
          // loop over nodes of patch
@@ -317,7 +317,7 @@ HierSumTest::setInitialNodeValues(
 
          // output initial node values
          tbox::plog << "INITIAL Node values - Level: " << level->getLevelNumber()
-                    << "\tPatch: " << patch->getBox() << endl;
+                    << "\tPatch: " << patch->getBox() << std::endl;
          unode->print(unode->getGhostBox(), plog);
 
       } // loop over patches
@@ -361,7 +361,7 @@ HierSumTest::setInitialEdgeValues(
       // output initial cell values
       int level_number = level->getLevelNumber();
       tbox::plog << "INITIAL Cell values for EDGE - Level: " << level_number
-                 << "\tPatch: " << patch->getBox() << endl;
+                 << "\tPatch: " << patch->getBox() << std::endl;
       ucell->print(ucell->getGhostBox(), plog);
 
       const Index ifirst(patch->getBox().lower());
@@ -431,7 +431,7 @@ HierSumTest::setInitialEdgeValues(
                << "PatchBdrySum Edge test FAILED:  Errors on Level: "
                << level->getLevelNumber()
                << "\t Patch: " << patch->getBox()
-               << "\nAll edges are not correct value." << endl;
+               << "\nAll edges are not correct value." << std::endl;
             } else {
 #if (TESTING == 1)
                tbox::plog
@@ -440,7 +440,7 @@ HierSumTest::setInitialEdgeValues(
 #endif
                << "All edges on Level: " << level->getLevelNumber()
                << "\t Patch: " << patch->getBox()
-               << "\tare correct." << endl;
+               << "\tare correct." << std::endl;
             }
          }
 
@@ -448,7 +448,7 @@ HierSumTest::setInitialEdgeValues(
 
 #if (TESTING == 1)
       tbox::plog << "INITIAL Edge values - Level: " << level->getLevelNumber()
-                 << "\tPatch: " << patch->getBox() << endl;
+                 << "\tPatch: " << patch->getBox() << std::endl;
       uedge->print(uedge->getGhostBox(), plog);
 #endif
 
@@ -618,7 +618,7 @@ int HierSumTest::checkNodeResult(
                                 << *i
                                 << " in L" << ln << " " << patch->getBox()
                                 << " depth = " << d << " should be "
-                                << correct_val << endl;
+                                << correct_val << std::endl;
                      all_correct = false;
                      break;
                   }
@@ -631,7 +631,7 @@ int HierSumTest::checkNodeResult(
             tbox::perr << "PatchBdrySum Node test FAILED:  Errors on Level: "
                        << level->getLevelNumber()
                        << "\t Patch: " << patch->getBox()
-                       << "\nAll nodes are not correct value." << endl;
+                       << "\nAll nodes are not correct value." << std::endl;
          } else {
 #if (TESTING == 1)
             tbox::plog
@@ -640,7 +640,7 @@ int HierSumTest::checkNodeResult(
 #endif
             << "All nodes on Level: " << level->getLevelNumber()
             << "\t Patch: " << patch->getBox()
-            << "\tare correct." << endl;
+            << "\tare correct." << std::endl;
          }
 
 #if (TESTING == 1)
@@ -651,12 +651,12 @@ int HierSumTest::checkNodeResult(
 
          tbox::plog << "FINAL Cell values for NODE - Level: "
                     << level->getLevelNumber()
-                    << "\tPatch: " << patch->getBox() << endl;
+                    << "\tPatch: " << patch->getBox() << std::endl;
          ucell_node->print(ucell_node->getGhostBox(), plog);
 
          tbox::plog << "FINAL Node values - Level: " << level->getLevelNumber()
                     << "\tPatch " << patch->getBox()
-                    << endl;
+                    << std::endl;
          unode->print(unode->getBox(), plog);
 #endif
 
@@ -739,7 +739,7 @@ int HierSumTest::checkEdgeResult(
             tbox::perr << "PatchBdrySum Edge test FAILED:  Errors on Level: "
                        << level->getLevelNumber()
                        << "\t Patch: " << patch->getBox()
-                       << "\nAll edges are not correct value." << endl;
+                       << "\nAll edges are not correct value." << std::endl;
          } else {
 #if (TESTING == 1)
             tbox::plog
@@ -748,7 +748,7 @@ int HierSumTest::checkEdgeResult(
 #endif
             << "All edges on Level: " << level->getLevelNumber()
             << "\t Patch: " << patch->getBox()
-            << "\tare correct." << endl;
+            << "\tare correct." << std::endl;
          }
 
       } // loop over depth
@@ -761,12 +761,12 @@ int HierSumTest::checkEdgeResult(
 
       tbox::plog << "FINAL Cell values for EDGE - Level: "
                  << level->getLevelNumber()
-                 << "\tPatch: " << patch->getBox() << endl;
+                 << "\tPatch: " << patch->getBox() << std::endl;
       ucell_edge->print(ucell_edge->getGhostBox(), plog);
 
       tbox::plog << "FINAL Edge values - Level: "
                  << level->getLevelNumber()
-                 << "\tPatch: " << patch->getBox() << endl;
+                 << "\tPatch: " << patch->getBox() << std::endl;
       uedge->print(uedge->getGhostBox(), plog);
 #endif
 
@@ -1394,7 +1394,7 @@ HierSumTest::getFromInput(
       if (static_cast<int>(tmp_array.size()) != d_dim.getValue()) {
          TBOX_ERROR("HierSumTest::getFromInput()"
             << "invalid 'node_ghosts' entry - must be integer"
-            << "array of size d_dim" << endl);
+            << "array of size d_dim" << std::endl);
       }
    } else {
       tmp_array.resize(d_dim.getValue());
@@ -1412,7 +1412,7 @@ HierSumTest::getFromInput(
       if (static_cast<int>(tmp_array.size()) != d_dim.getValue()) {
          TBOX_ERROR("HierSumTest::getFromInput()"
             << "invalid 'edge_ghosts' entry - must be integer"
-            << "array of size d_dim" << endl);
+            << "array of size d_dim" << std::endl);
       }
    } else {
       tmp_array.resize(d_dim.getValue());

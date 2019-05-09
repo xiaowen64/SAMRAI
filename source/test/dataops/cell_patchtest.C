@@ -11,14 +11,12 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <typeinfo>
-// using namespace std;
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
 #include <iomanip>
 #include <memory>
-// using namespace std;
 
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -51,7 +49,6 @@
 
 #include <cmath>
 
-// using namespace std;
 using namespace SAMRAI;
 
 /* Helper function declarations */

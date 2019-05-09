@@ -15,8 +15,6 @@
 namespace SAMRAI {
 namespace appu {
 
-// using namespace std;
-
 VisMaterialsDataStrategy::VisMaterialsDataStrategy()
 {
 }

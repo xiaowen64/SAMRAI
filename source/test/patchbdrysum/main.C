@@ -78,14 +78,14 @@ int main(
 
       if (argc != 2) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
-                    << "[options]\n" << endl;
+                    << "[options]\n" << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
          input_filename = argv[1];
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
+      tbox::plog << "input_filename = " << input_filename << std::endl;
 
       /****************************************************************
       *
@@ -257,10 +257,10 @@ int main(
        */
 
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       VariableDatabase::getDatabase()->printClassData(plog);
 
       /****************************************************************
@@ -318,15 +318,15 @@ int main(
          std::shared_ptr<PatchLevel> level(
             patch_hierarchy->getPatchLevel(pln));
 
-         tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << endl;
+         tbox::plog << "\n PRINTING PATCHES ON LEVEL " << pln << std::endl;
 
          for (PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             tbox::plog << "patch # " << ip->getBox().getBoxId() << " : "
-                       << ip->getBox() << endl;
+                       << ip->getBox() << std::endl;
          }
       }
-      tbox::plog << endl;
+      tbox::plog << std::endl;
 
       /*******************************************************************
        *
@@ -401,7 +401,7 @@ int main(
          fail_count += hier_sum_test->checkNodeResult(patch_hierarchy);
       }
 
-      tbox::pout << "\n" << endl;
+      tbox::pout << "\n" << std::endl;
 
       if (do_edge_sum) {
          for (int ln = 0; ln < nlevels; ++ln) {
@@ -442,7 +442,7 @@ int main(
       main_db.reset();
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  patchbdrysum" << endl;
+         tbox::pout << "\nPASSED:  patchbdrysum" << std::endl;
       }
    }
 

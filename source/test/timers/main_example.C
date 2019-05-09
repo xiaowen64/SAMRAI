@@ -12,7 +12,6 @@
 
 #include <string>
 #include <memory>
-using namespace std;
 
 // Headers for basic SAMRAI objects used in this code.
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -36,13 +35,13 @@ int main(
    {
       tbox::PIO::logAllNodes("Timer.log");
 
-      string input_filename;
+      std::string input_filename;
 
       if ((argc != 2)) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       }
@@ -68,7 +67,7 @@ int main(
        * to avoid the name lookup cost each time it is called (its only
        * looked up the first time).
        */
-      string name = "main::test";
+      std::string name = "main::test";
       std::shared_ptr<tbox::Timer> timer(
          tbox::TimerManager::getManager()->getTimer(name));
 

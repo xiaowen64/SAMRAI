@@ -14,7 +14,6 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
-using namespace std;
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -180,7 +179,7 @@ int main(
                     << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -193,9 +192,9 @@ int main(
          }
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
-      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::plog << "restore_num = " << restore_num << endl;
+      tbox::plog << "input_filename = " << input_filename << std::endl;
+      tbox::plog << "restart_read_dirname = " << restart_read_dirname << std::endl;
+      tbox::plog << "restore_num = " << restore_num << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -284,7 +283,7 @@ int main(
             TBOX_ERROR("main(): "
                << "\nviz_dump_dirname is null ... "
                << "\nThis must be specified for use with VisIt"
-               << endl);
+               << std::endl);
          }
          if (main_db->keyExists("visit_number_procs_per_file")) {
             visit_number_procs_per_file =
@@ -434,13 +433,13 @@ int main(
        */
 
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-      tbox::plog << "\nCheck Linear Advection data... " << endl;
+      tbox::plog << "\nCheck Linear Advection data... " << std::endl;
       linear_advection_model->printClassData(tbox::plog);
 
       if (viz_dump_data) {
@@ -468,10 +467,10 @@ int main(
          iteration_num = time_integrator->getIntegratorStep() + 1;
 
          if ((iteration_num - 1) % 25 == 0) {
-            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << endl;
+            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
             tbox::pout << "At begining of timestep # " << iteration_num - 1
-                       << endl;
-            tbox::pout << "Simulation time is " << loop_time << endl;
+                       << std::endl;
+            tbox::pout << "Simulation time is " << loop_time << std::endl;
          }
 
          double dt_new = time_integrator->advanceHierarchy(dt_now);
@@ -480,9 +479,9 @@ int main(
          dt_now = dt_new;
 
          if ((iteration_num - 1) % 25 == 0) {
-            tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-            tbox::pout << "Simulation time is " << loop_time << endl;
-            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << endl;
+            tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+            tbox::pout << "Simulation time is " << loop_time << std::endl;
+            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
          }
 
          /*
@@ -559,7 +558,7 @@ int main(
    tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();
 
-   tbox::pout << "\nPASSED:  MblkLinAdv" << endl;
+   tbox::pout << "\nPASSED:  MblkLinAdv" << std::endl;
 
    return 0;
 }

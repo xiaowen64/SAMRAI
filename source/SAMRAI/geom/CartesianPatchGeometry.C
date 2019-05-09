@@ -13,7 +13,6 @@
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 /*
  *************************************************************************

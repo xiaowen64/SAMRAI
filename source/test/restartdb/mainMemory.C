@@ -21,7 +21,6 @@
 #include <string>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 #include "database_tests.h"
@@ -75,13 +74,13 @@ int main(
 
       tbox::PIO::logAllNodes("Memorytest.log");
 
-      tbox::plog << "\n--- Memory database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- Memory database tests BEGIN ---" << std::endl;
 
       tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
 
       RestartTester memory_tester;
 
-      tbox::plog << "\n--- Memory write database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- Memory write database tests BEGIN ---" << std::endl;
 
       setupTestData();
 
@@ -92,9 +91,9 @@ int main(
 
       restart_manager->writeRestartToDatabase();
 
-      tbox::plog << "\n--- Memory write database tests END ---" << endl;
+      tbox::plog << "\n--- Memory write database tests END ---" << std::endl;
 
-      tbox::plog << "\n--- Memory read database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- Memory read database tests BEGIN ---" << std::endl;
 
       // In this test just read the database stored in memory that
       // was just created.
@@ -102,12 +101,12 @@ int main(
 
       database->close();
 
-      tbox::plog << "\n--- Memory read database tests END ---" << endl;
+      tbox::plog << "\n--- Memory read database tests END ---" << std::endl;
 
-      tbox::plog << "\n--- Memory database tests END ---" << endl;
+      tbox::plog << "\n--- Memory database tests END ---" << std::endl;
 
       if (number_of_failures == 0) {
-         tbox::pout << "\nPASSED:  Memory" << endl;
+         tbox::pout << "\nPASSED:  Memory" << std::endl;
       }
    }
 

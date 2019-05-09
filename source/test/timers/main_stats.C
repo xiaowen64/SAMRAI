@@ -26,7 +26,6 @@
 #include <string>
 #include <memory>
 
-using namespace std;
 
 using namespace SAMRAI;
 
@@ -49,8 +48,8 @@ int main(
 
       tbox::PIO::logAllNodes("stat.log");
 
-      string input_filename;
-      string restart_dirname;
+      std::string input_filename;
+      std::string restart_dirname;
       int restore_num = 0;
 
       bool is_from_restart = false;
@@ -60,7 +59,7 @@ int main(
                     << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -186,18 +185,18 @@ int main(
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #1a: tbox::Statistician::getNumberProcessorStats()\n"
-         << "incorrect number of processor statistics found" << endl;
+         << "incorrect number of processor statistics found" << std::endl;
       } else {
-         tbox::plog << "Test #1a successful" << endl;
+         tbox::plog << "Test #1a successful" << std::endl;
       }
       tval = statistician->getNumberPatchStats();
       if (tval != 3) {
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #1b: tbox::Statistician::getNumberPatchStats()\n"
-         << "incorrect number of patch statistics found" << endl;
+         << "incorrect number of patch statistics found" << std::endl;
       } else {
-         tbox::plog << "Test #1b successful" << endl;
+         tbox::plog << "Test #1b successful" << std::endl;
       }
 
       // Test #2:
@@ -206,17 +205,17 @@ int main(
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #2a: tbox::Statistician::checkStatisticExists()\n"
-         << "procstat2 added to statistician, but not found" << endl;
+         << "procstat2 added to statistician, but not found" << std::endl;
       } else {
-         tbox::plog << "Test #2a successful" << endl;
+         tbox::plog << "Test #2a successful" << std::endl;
          if (tstat->getName() != "procstat2") {
             ++fail_count;
             tbox::perr
             << "FAILED: - Test #2b: tbox::Statistician::checkStatisticExists()\n"
             << "name of procstat2 does not match statistician entry"
-            << endl;
+            << std::endl;
          } else {
-            tbox::plog << "Test #2b successful" << endl;
+            tbox::plog << "Test #2b successful" << std::endl;
          }
       }
 
@@ -225,16 +224,16 @@ int main(
          tbox::perr
          << "FAILED: - Test #2c: tbox::Statistician::checkStatisticExists()\n"
          << "patchstat1 added to statistician, but not found"
-         << endl;
+         << std::endl;
       } else {
-         tbox::plog << "Test #2c successful" << endl;
+         tbox::plog << "Test #2c successful" << std::endl;
          if (tstat->getName() != "patchstat1") {
             ++fail_count;
             tbox::perr
             << "FAILED: - Test #2d: tbox::Statistician::checkStatisticExists()\n"
-            << "name of patchstat1 does not match statistician entry" << endl;
+            << "name of patchstat1 does not match statistician entry" << std::endl;
          } else {
-            tbox::plog << "Test #2c successful" << endl;
+            tbox::plog << "Test #2c successful" << std::endl;
          }
       }
 
@@ -243,9 +242,9 @@ int main(
          tbox::perr
          << "FAILED: - Test #2e: tbox::Statistician::checkStatisticExists()\n"
          << "wrongly found statistic named dummy in statistician"
-         << endl;
+         << std::endl;
       } else {
-         tbox::plog << "Test #2e successful" << endl;
+         tbox::plog << "Test #2e successful" << std::endl;
       }
       tstat.reset();
 
@@ -256,9 +255,9 @@ int main(
          tbox::perr
          << "FAILED: - Test #3a: tbox::Statistician::getProcStatId()\n"
          << "procstat1 has wrong instance id in statistician"
-         << endl;
+         << std::endl;
       } else {
-         tbox::plog << "Test #3a successful" << endl;
+         tbox::plog << "Test #3a successful" << std::endl;
       }
       if (statistician->getPatchStatId(patchstat2->getName())
           != patchstat2->getInstanceId()) {
@@ -266,41 +265,41 @@ int main(
          tbox::perr
          << "FAILED: - Test #3b: tbox::Statistician::getPatchStatId()\n"
          << "patchstat2 has wrong instance id in statistician"
-         << endl;
+         << std::endl;
       } else {
-         tbox::plog << "Test #3b successful" << endl;
+         tbox::plog << "Test #3b successful" << std::endl;
       }
       if (statistician->getProcStatId(patchstat1->getName()) != -1) {
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #3c: tbox::Statistician::getProcStatId()\n"
-         << "patchstat1 is not a processor statistic" << endl;
+         << "patchstat1 is not a processor statistic" << std::endl;
       } else {
-         tbox::plog << "Test #3c successful" << endl;
+         tbox::plog << "Test #3c successful" << std::endl;
       }
       if (statistician->getPatchStatId(procstat2->getName()) != -1) {
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #3d: tbox::Statistician::getPatchStatId()\n"
-         << "procstat2 is not a patch statistic" << endl;
+         << "procstat2 is not a patch statistic" << std::endl;
       } else {
-         tbox::plog << "Test #3d successful" << endl;
+         tbox::plog << "Test #3d successful" << std::endl;
       }
 
       // Test #4:
       if (procstat1->getType() != "PROC_STAT") {
          ++fail_count;
          tbox::perr << "FAILED: - Test #4a: tbox::Statistic::getType()\n"
-                    << "procstat1 returns incorrect type" << endl;
+                    << "procstat1 returns incorrect type" << std::endl;
       } else {
-         tbox::plog << "Test #4a successful" << endl;
+         tbox::plog << "Test #4a successful" << std::endl;
       }
       if (patchstat1->getType() != "PATCH_STAT") {
          ++fail_count;
          tbox::perr << "FAILED: - Test #4b: tbox::Statistic::getType()\n"
-                    << "patchstat1 returns incorrect type" << endl;
+                    << "patchstat1 returns incorrect type" << std::endl;
       } else {
-         tbox::plog << "Test #4b successful" << endl;
+         tbox::plog << "Test #4b successful" << std::endl;
       }
 
       // Test #5:
@@ -317,33 +316,33 @@ int main(
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #5a: tbox::Statistic::getStatSequenceLength()\n"
-         << "procstat1 returns incorrect sequence length" << endl;
+         << "procstat1 returns incorrect sequence length" << std::endl;
       } else {
-         tbox::plog << "Test #5a successful" << endl;
+         tbox::plog << "Test #5a successful" << std::endl;
       }
       if (procstat2->getStatSequenceLength() != procstat2_seqlen) {
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #5b: tbox::Statistic::getStatSequenceLength()\n"
-         << "procstat2 returns incorrect sequence length" << endl;
+         << "procstat2 returns incorrect sequence length" << std::endl;
       } else {
-         tbox::plog << "Test #5b successful" << endl;
+         tbox::plog << "Test #5b successful" << std::endl;
       }
       if (patchstat1->getStatSequenceLength() != 2) {
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #5c: tbox::Statistic::getStatSequenceLength()\n"
-         << "patchstat1 returns incorrect sequence length" << endl;
+         << "patchstat1 returns incorrect sequence length" << std::endl;
       } else {
-         tbox::plog << "Test #5c successful" << endl;
+         tbox::plog << "Test #5c successful" << std::endl;
       }
       if (patchstat2->getStatSequenceLength() != 2) {
          ++fail_count;
          tbox::perr
          << "FAILED: - Test #5d: tbox::Statistic::getStatSequenceLength()\n"
-         << "patchstat2 returns incorrect sequence length" << endl;
+         << "patchstat2 returns incorrect sequence length" << std::endl;
       } else {
-         tbox::plog << "Test #5d successful" << endl;
+         tbox::plog << "Test #5d successful" << std::endl;
       }
 
       statistician->printLocalStatData(tbox::plog);
@@ -368,9 +367,9 @@ int main(
             tbox::perr << "FAILED: - Test #6a: "
                        << "Statistician::getGlobalProcStatSequenceLength()\n"
                        << "incorrect sequence length returned for procstat1"
-                       << endl;
+                       << std::endl;
          } else {
-            tbox::plog << "Test #6a successful" << endl;
+            tbox::plog << "Test #6a successful" << std::endl;
          }
 
          if (statistician->
@@ -380,9 +379,9 @@ int main(
             tbox::perr << "FAILED: - Test #6b: "
                        << "Statistician::getGlobalProcStatSequenceLength()\n"
                        << "incorrect sequence length returned for procstat2"
-                       << endl;
+                       << std::endl;
          } else {
-            tbox::plog << "Test #6b successful" << endl;
+            tbox::plog << "Test #6b successful" << std::endl;
          }
 
          for (i = 0; i < mpi.getSize(); ++i) {
@@ -393,9 +392,9 @@ int main(
                tbox::perr << "FAILED: - Test #6c: "
                           << "Statistician::getGlobalProcStatValue()\n"
                           << "incorrect global data returned for procstat1"
-                          << endl;
+                          << std::endl;
             } else {
-               tbox::plog << "Test #6c successful" << endl;
+               tbox::plog << "Test #6c successful" << std::endl;
             }
          }
          for (i = 0; i < mpi.getSize(); ++i) {
@@ -406,9 +405,9 @@ int main(
                tbox::perr << "FAILED: - Test #6d: "
                           << "Statistician::getGlobalProcStatValue()\n"
                           << "incorrect global data returned for procstat2"
-                          << endl;
+                          << std::endl;
             } else {
-               tbox::plog << "Test #6d successful" << endl;
+               tbox::plog << "Test #6d successful" << std::endl;
             }
          }
 
@@ -419,9 +418,9 @@ int main(
             tbox::perr << "FAILED: - Test #7a: "
                        << "Statistician::getGlobalPatchStatSequenceLength()\n"
                        << "incorrect sequence length returned for patchstat1"
-                       << endl;
+                       << std::endl;
          } else {
-            tbox::plog << "Test #7a successful" << endl;
+            tbox::plog << "Test #7a successful" << std::endl;
          }
 
          int num_patches = mpi.getSize() * 2;
@@ -431,9 +430,9 @@ int main(
             tbox::perr << "FAILED: - Test #7b: "
                        << "Statistician::getGlobalPatchStatNumberPatches()\n"
                        << "incorrect num patches returned for patchstat1"
-                       << endl;
+                       << std::endl;
          } else {
-            tbox::plog << "Test #7b successful" << endl;
+            tbox::plog << "Test #7b successful" << std::endl;
          }
 
          for (i = 0; i < mpi.getSize(); ++i) {
@@ -450,9 +449,9 @@ int main(
                           << "Statistician::getGlobalPatchStatValue()\n"
                           << "incorrect global data returned for patch "
                           << pnum
-                          << "in patchstat1." << endl;
+                          << "in patchstat1." << std::endl;
             } else {
-               tbox::plog << "Test #7e successful" << endl;
+               tbox::plog << "Test #7e successful" << std::endl;
             }
 
          }
@@ -467,9 +466,9 @@ int main(
             tbox::perr << "FAILED: - Test #7c: "
                        << "Statistician::getGlobalPatchStatNumberPatches()\n"
                        << "incorrect num patches returned for patchstat2"
-                       << endl;
+                       << std::endl;
          } else {
-            tbox::plog << "Test #7c successful" << endl;
+            tbox::plog << "Test #7c successful" << std::endl;
          }
 
          for (i = 0; i < mpi.getSize(); ++i) {
@@ -483,9 +482,9 @@ int main(
                tbox::perr << "FAILED: - Test #7d: "
                           << "Statistician::getGlobalPatchStatPatchMapping()\n"
                           << "incorrect mapping for patch " << pnum << "in "
-                          << "patchstat2." << endl;
+                          << "patchstat2." << std::endl;
             } else {
-               tbox::plog << "Test #7d successful" << endl;
+               tbox::plog << "Test #7d successful" << std::endl;
             }
 
          }
@@ -503,9 +502,9 @@ int main(
                           << "Statistician::getGlobalPatchStatValue()\n"
                           << "incorrect global data returned for patch "
                           << pnum
-                          << "in patchstat2." << endl;
+                          << "in patchstat2." << std::endl;
             } else {
-               tbox::plog << "Test #7f successful" << endl;
+               tbox::plog << "Test #7f successful" << std::endl;
             }
 
          }
@@ -525,9 +524,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8a: "
                        << "Statistician::getGlobalProcStatSum()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8a successful" << endl;
+            tbox::plog << "Test #8a successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalProcStatSum(
@@ -535,9 +534,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8b: "
                        << "Statistician::getGlobalProcStatSum()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8b successful" << endl;
+            tbox::plog << "Test #8b successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalProcStatSum(
@@ -545,9 +544,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8c: "
                        << "Statistician::getGlobalProcStatSum()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8c successful" << endl;
+            tbox::plog << "Test #8c successful" << std::endl;
          }
 
          double max0 = 0.;
@@ -559,9 +558,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8d: "
                        << "Statistician::getGlobalProcStatMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8d successful" << endl;
+            tbox::plog << "Test #8d successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalProcStatMax(
@@ -569,9 +568,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8e: "
                        << "Statistician::getGlobalProcStatMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8e successful" << endl;
+            tbox::plog << "Test #8e successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalProcStatMax(
@@ -579,9 +578,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8f: "
                        << "Statistician::getGlobalProcStatMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8f successful" << endl;
+            tbox::plog << "Test #8f successful" << std::endl;
          }
          if (statistician->getGlobalProcStatMaxProcessorId(
                 procstat1->getInstanceId(),
@@ -589,9 +588,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8g: "
                        << "Statistician::getGlobalProcStatMaxId()\n"
-                       << "returned incorrect ID." << endl;
+                       << "returned incorrect ID." << std::endl;
          } else {
-            tbox::plog << "Test #8g successful" << endl;
+            tbox::plog << "Test #8g successful" << std::endl;
          }
          if (statistician->getGlobalProcStatMaxProcessorId(
                 procstat1->getInstanceId(),
@@ -599,9 +598,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8h: "
                        << "Statistician::getGlobalProcStatMaxId()\n"
-                       << "returned incorrect ID." << endl;
+                       << "returned incorrect ID." << std::endl;
          } else {
-            tbox::plog << "Test #8h successful" << endl;
+            tbox::plog << "Test #8h successful" << std::endl;
          }
 
          double min0 = 0.;
@@ -613,9 +612,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8i: "
                        << "Statistician::getGlobalProcStatMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8i successful" << endl;
+            tbox::plog << "Test #8i successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalProcStatMin(
@@ -623,9 +622,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8j: "
                        << "Statistician::getGlobalProcStatMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8j successful" << endl;
+            tbox::plog << "Test #8j successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalProcStatMin(
@@ -633,32 +632,32 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #8k: "
                        << "Statistician::getGlobalProcStatMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8k successful" << endl;
+            tbox::plog << "Test #8k successful" << std::endl;
          }
 
          if (statistician->getGlobalProcStatMinProcessorId(
                 procstat1->getInstanceId(), 1) != 0) {
             tbox::pout << statistician->getGlobalProcStatMinProcessorId(
-               procstat1->getInstanceId(), 1) << endl;
+               procstat1->getInstanceId(), 1) << std::endl;
             ++fail_count;
             tbox::perr << "FAILED: - Test #8l: "
                        << "Statistician::getGlobalProcStatMinProcessorId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8l successful" << endl;
+            tbox::plog << "Test #8l successful" << std::endl;
          }
          if (statistician->getGlobalProcStatMinProcessorId(
                 procstat1->getInstanceId(), 2) != 0) {
             tbox::pout << statistician->getGlobalProcStatMinProcessorId(
-               procstat1->getInstanceId(), 2) << endl;
+               procstat1->getInstanceId(), 2) << std::endl;
             ++fail_count;
             tbox::perr << "FAILED: - Test #8m: "
                        << "Statistician::getGlobalProcStatMinProcessorId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #8m successful" << endl;
+            tbox::plog << "Test #8m successful" << std::endl;
          }
 
          // Test #9:
@@ -679,9 +678,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9a: "
                        << "Statistician::getGlobalPatchStatSum()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9a successful" << endl;
+            tbox::plog << "Test #9a successful" << std::endl;
          }
 
          if (!tbox::MathUtilities<double>::equalEps(statistician->
@@ -690,9 +689,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9b: "
                        << "Statistician::getGlobalPatchStatSum()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9b successful" << endl;
+            tbox::plog << "Test #9b successful" << std::endl;
          }
 
          max0 = 0.;
@@ -712,9 +711,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9c: "
                        << "Statistician::getGlobalPatchStatMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9c successful" << endl;
+            tbox::plog << "Test #9c successful" << std::endl;
          }
 
          if (!tbox::MathUtilities<double>::equalEps(statistician->
@@ -723,9 +722,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9d: "
                        << "Statistician::getGlobalPatchStatMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9d successful" << endl;
+            tbox::plog << "Test #9d successful" << std::endl;
          }
 
          if (statistician->getGlobalPatchStatMaxPatchId(
@@ -733,9 +732,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9e: "
                        << "Statistician::getGlobalPatchStatMaxPatchId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9e successful" << endl;
+            tbox::plog << "Test #9e successful" << std::endl;
          }
 
          if (statistician->getGlobalPatchStatMaxPatchId(
@@ -743,9 +742,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9f: "
                        << "Statistician::getGlobalPatchStatMaxPatchId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9f successful" << endl;
+            tbox::plog << "Test #9f successful" << std::endl;
          }
 
          min0 = 0.;
@@ -756,9 +755,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9g: "
                        << "Statistician::getGlobalPatchStatMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9g successful" << endl;
+            tbox::plog << "Test #9g successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalPatchStatMin(
@@ -766,9 +765,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9h: "
                        << "Statistician::getGlobalPatchStatMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9h successful" << endl;
+            tbox::plog << "Test #9h successful" << std::endl;
          }
 
          if (statistician->getGlobalPatchStatMinPatchId(
@@ -776,18 +775,18 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #9i: "
                        << "Statistician::getGlobalPatchStatMinPatchId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9i successful" << endl;
+            tbox::plog << "Test #9i successful" << std::endl;
          }
          if (statistician->getGlobalPatchStatMinPatchId(
                 patchstat2->getInstanceId(), 1) != 0) {
             ++fail_count;
             tbox::perr << "FAILED: - Test #9j: "
                        << "Statistician::getGlobalPatchStatMinPatchId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #9j successful" << endl;
+            tbox::plog << "Test #9j successful" << std::endl;
          }
 
          // Test #10:
@@ -806,9 +805,9 @@ int main(
                ++fail_count;
                tbox::perr << "FAILED: - Test #10a: "
                           << "Statistician::getGlobalPatchStatProcessorSum()\n"
-                          << "incorrect value returned." << endl;
+                          << "incorrect value returned." << std::endl;
             } else {
-               tbox::plog << "Test #10a successful" << endl;
+               tbox::plog << "Test #10a successful" << std::endl;
             }
             if (!tbox::MathUtilities<double>::equalEps(statistician->
                    getGlobalPatchStatProcessorSum(
@@ -816,9 +815,9 @@ int main(
                ++fail_count;
                tbox::perr << "FAILED: - Test #10b: "
                           << "Statistician::getGlobalPatchStatProcessorSum()\n"
-                          << "incorrect value returned." << endl;
+                          << "incorrect value returned." << std::endl;
             } else {
-               tbox::plog << "Test #10b successful" << endl;
+               tbox::plog << "Test #10b successful" << std::endl;
             }
          }
 
@@ -828,9 +827,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #10c: "
                        << "Statistician::getGlobalPatchStatProcessorSumMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10c successful" << endl;
+            tbox::plog << "Test #10c successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalPatchStatProcessorSumMax(
@@ -838,9 +837,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #10d: "
                        << "Statistician::getGlobalPatchStatProcessorSumMax()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10d successful" << endl;
+            tbox::plog << "Test #10d successful" << std::endl;
          }
 
          int nnodes = mpi.getSize();
@@ -849,18 +848,18 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #10e: "
                        << "Statistician::getGlobalPatchStatProcessorSumMaxId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10e successful" << endl;
+            tbox::plog << "Test #10e successful" << std::endl;
          }
          if (statistician->getGlobalPatchStatProcessorSumMaxId(
                 patchstat2->getInstanceId(), 1) != nnodes - 1) {
             ++fail_count;
             tbox::perr << "FAILED: - Test #10f: "
                        << "Statistician::getGlobalPatchStatProcessorSumMaxId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10f successful" << endl;
+            tbox::plog << "Test #10f successful" << std::endl;
          }
 
          min0 = 2.;
@@ -871,9 +870,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #10g: "
                        << "Statistician::getGlobalPatchStatProcessorSumMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10g successful" << endl;
+            tbox::plog << "Test #10g successful" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(statistician->
                 getGlobalPatchStatProcessorSumMin(
@@ -881,9 +880,9 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #10h: "
                        << "Statistician::getGlobalPatchStatProcessorSumMin()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10h successful" << endl;
+            tbox::plog << "Test #10h successful" << std::endl;
          }
 
          if (statistician->getGlobalPatchStatProcessorSumMinId(
@@ -891,18 +890,18 @@ int main(
             ++fail_count;
             tbox::perr << "FAILED: - Test #10i: "
                        << "Statistician::getGlobalPatchStatProcessorSumMinId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10i successful" << endl;
+            tbox::plog << "Test #10i successful" << std::endl;
          }
          if (statistician->getGlobalPatchStatProcessorSumMinId(
                 patchstat2->getInstanceId(), 1) != 0) {
             ++fail_count;
             tbox::perr << "FAILED: - Test #10j: "
                        << "Statistician::getGlobalPatchStatProcessorSumMinId()\n"
-                       << "incorrect value returned." << endl;
+                       << "incorrect value returned." << std::endl;
          } else {
-            tbox::plog << "Test #10j successful" << endl;
+            tbox::plog << "Test #10j successful" << std::endl;
          }
 
       }
@@ -910,7 +909,7 @@ int main(
       /*
        * We're done.  Write the restart file.
        */
-      string restart_write_dirname = "restart";
+      std::string restart_write_dirname = "restart";
 #ifdef HAVE_HDF5
       int timestep = 0;
       tbox::RestartManager::getManager()->writeRestartFile(
@@ -919,7 +918,7 @@ int main(
 #endif
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  statstest" << endl;
+         tbox::pout << "\nPASSED:  statstest" << std::endl;
       }
    }
 

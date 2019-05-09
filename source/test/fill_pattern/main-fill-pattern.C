@@ -28,7 +28,6 @@
 #include <cstring>
 #include <stdlib.h>
 
-using namespace std;
 using namespace SAMRAI;
 
 /*
@@ -60,7 +59,7 @@ void txt2boxes(
       }
    }
    if (-1 == width) {
-      cout << "error in box txt" << endl;
+      std::cout << "error in box txt" << std::endl;
       exit(1);
    }
 
@@ -71,25 +70,25 @@ void txt2boxes(
    int cell_max = cell_height - 1;
 
    // make vector of x locations
-   vector<pair<int, int> > ix;
+   std::vector<std::pair<int, int> > ix;
    for (unsigned int idx = 0; idx < strlen(txt); ++idx) {
       if ('x' == txt[idx]) {
          int j = idx / width;
          int i = idx - j * width;
-         ix.push_back(pair<int, int>(i, j));
+         ix.push_back(std::pair<int, int>(i, j));
       }
    }
 
    // foreach x1 in x
-   vector<pair<int, int> >::iterator it;
+   std::vector<std::pair<int, int> >::iterator it;
    for (it = ix.begin(); it != ix.end(); ++it) {
 
-      vector<pair<int, int> >::iterator it2;
+      std::vector<std::pair<int, int> >::iterator it2;
 
       // We need to gather all potential boxes rooted here, and then
       // only take the smallest one.
 
-      vector<hier::Box> boxes_here;
+      std::vector<hier::Box> boxes_here;
       boxes_here.clear();
 
       for (it2 = ix.begin(); it2 != ix.end(); ++it2) {
@@ -153,7 +152,7 @@ void txt2boxes(
 
          hier::Box smallest_box(boxes_here[0]);
 
-         for (vector<hier::Box>::iterator itb = boxes_here.begin();
+         for (std::vector<hier::Box>::iterator itb = boxes_here.begin();
               itb != boxes_here.end(); ++itb) {
             if ((*itb).numberCells() < smallest_box.numberCells()) {
                smallest_box = *itb;
@@ -184,7 +183,7 @@ int txt_width(
       }
    }
    if (-1 == width) {
-      cout << "error in box txt" << endl;
+      std::cout << "error in box txt" << std::endl;
       exit(1);
    }
    return width;
@@ -264,7 +263,7 @@ bool txt_next_val(
       // Check for non-zero zone data
       if (' ' != txt[txt_zone_idx]) {
 
-         istringstream valstr(&txt[txt_zone_idx]);
+         std::istringstream valstr(&txt[txt_zone_idx]);
          valstr >> *datapt;
          return true;
       }
@@ -281,7 +280,7 @@ bool txt_next_val(
           '8' == txt[txt_node_idx] ||
           '9' == txt[txt_node_idx]) {
 
-         istringstream valstr(&txt[txt_node_idx]);
+         std::istringstream valstr(&txt[txt_node_idx]);
          valstr >> *datapt;
          return true;
       }
@@ -290,9 +289,9 @@ bool txt_next_val(
 
    } while (cnt++ < cnt_max);
 
-   cout << "Data reading loop exceeded maximum iterations"
+   std::cout << "Data reading loop exceeded maximum iterations"
         << __LINE__ << " in "
-        << __FILE__ << endl;
+        << __FILE__ << std::endl;
 
    exit(1);
    return false;
@@ -505,7 +504,7 @@ bool SingleLevelTestCase(
    }
 
    if (failed) {
-      tbox::perr << "FAILED: - Test of " << pattern_name << endl;
+      tbox::perr << "FAILED: - Test of " << pattern_name << std::endl;
    }
 
    return failed;
@@ -1551,7 +1550,7 @@ int main(
    failures += Test_SecondLayerNodeVariableFillPattern();
 
    if (failures == 0) {
-      tbox::pout << "\nPASSED:  fill_pattern" << endl;
+      tbox::pout << "\nPASSED:  fill_pattern" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();

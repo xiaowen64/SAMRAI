@@ -65,7 +65,6 @@
 #include <fstream>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 /************************************************************************
@@ -189,8 +188,8 @@ int main(
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       {
-         string input_filename;
-         string restart_read_dirname;
+         std::string input_filename;
+         std::string restart_read_dirname;
          int restore_num = 0;
 
          bool is_from_restart = false;
@@ -200,7 +199,7 @@ int main(
                        << "<restart dir> <restore number> [options]\n"
                        << "  options:\n"
                        << "  none at this time"
-                       << endl;
+                       << std::endl;
             tbox::SAMRAI_MPI::abort();
             return -1;
          } else {
@@ -213,9 +212,9 @@ int main(
             }
          }
 
-         tbox::plog << "input_filename = " << input_filename << endl;
-         tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-         tbox::plog << "restore_num = " << restore_num << endl;
+         tbox::plog << "input_filename = " << input_filename << std::endl;
+         tbox::plog << "restart_read_dirname = " << restart_read_dirname << std::endl;
+         tbox::plog << "restore_num = " << restore_num << std::endl;
 
          /*
           * Create input database and parse all data in input file.
@@ -235,7 +234,7 @@ int main(
                input_db->getDatabase("GlobalInputs"));
 #ifdef SGS
             if (global_db->keyExists("tag_clustering_method")) {
-               string tag_clustering_method =
+               std::string tag_clustering_method =
                   global_db->getString("tag_clustering_method");
                mesh::BergerRigoutsos::setClusteringOption(tag_clustering_method);
             }
@@ -304,7 +303,7 @@ int main(
 
          bool use_refined_timestepping = true;
          if (main_db->keyExists("timestepping")) {
-            string timestepping_method = main_db->getString("timestepping");
+            std::string timestepping_method = main_db->getString("timestepping");
             if (timestepping_method == "SYNCHRONIZED") {
                use_refined_timestepping = false;
             }
@@ -446,13 +445,13 @@ int main(
           */
 
          tbox::plog << "\nCheck input data and variables before simulation:"
-                    << endl;
-         tbox::plog << "Input database..." << endl;
+                    << std::endl;
+         tbox::plog << "Input database..." << std::endl;
          input_db->printClassData(tbox::plog);
-         tbox::plog << "\nVariable database..." << endl;
+         tbox::plog << "\nVariable database..." << std::endl;
          hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-         tbox::plog << "\nCheck Linear Advection data... " << endl;
+         tbox::plog << "\nCheck Linear Advection data... " << std::endl;
          linear_advection_model->printClassData(tbox::plog);
 
          if (viz_dump_data &&
@@ -491,19 +490,19 @@ int main(
 
             iteration_num = time_integrator->getIntegratorStep() + 1;
 
-            tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
             tbox::pout << "At begining of timestep # " << iteration_num - 1
-                       << endl;
-            tbox::pout << "Simulation time is " << loop_time << endl;
+                       << std::endl;
+            tbox::pout << "Simulation time is " << loop_time << std::endl;
 
             double dt_new = time_integrator->advanceHierarchy(dt_now);
 
             loop_time += dt_now;
             dt_now = dt_new;
 
-            tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-            tbox::pout << "Simulation time is " << loop_time << endl;
-            tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+            tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+            tbox::pout << "Simulation time is " << loop_time << std::endl;
+            tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 
             /*
              * At specified intervals, write restart and visualization files.
@@ -638,7 +637,7 @@ int main(
    }
 
    if (num_failures == 0) {
-      tbox::pout << "\nPASSED:  LinAdv" << endl;
+      tbox::pout << "\nPASSED:  LinAdv" << std::endl;
    }
 
    tbox::SAMRAIManager::finalize();

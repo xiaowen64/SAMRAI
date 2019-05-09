@@ -31,7 +31,6 @@ using namespace hier;
 using namespace pdat;
 using namespace tbox;
 
-using namespace std;
 
 #define NN 10
 
@@ -554,7 +553,7 @@ int main(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemSequential", true));
 
-         tbox::plog << "Begin Timing" << endl;
+         tbox::plog << "Begin Timing" << std::endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
@@ -578,14 +577,14 @@ int main(
          size_t numberOfItems = idx_data.getNumberOfItems();
          timer->stop();
 
-         tbox::plog << numberOfItems << endl;
+         tbox::plog << numberOfItems << std::endl;
 
          tbox::plog.precision(16);
 
          tbox::plog << "IndexData appendItem Sequential insert time : "
-                    << timer->getTotalWallclockTime() << endl;
+                    << timer->getTotalWallclockTime() << std::endl;
 
-         tbox::plog << "End Timing" << endl;
+         tbox::plog << "End Timing" << std::endl;
       }
 
       {
@@ -593,7 +592,7 @@ int main(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemPointerSequential", true));
 
-         tbox::plog << "Begin Timing" << endl;
+         tbox::plog << "Begin Timing" << std::endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
@@ -619,9 +618,9 @@ int main(
          tbox::plog.precision(16);
 
          tbox::plog << "IndexData appendItemPointer sequential insert time : "
-                    << timer->getTotalWallclockTime() << endl;
+                    << timer->getTotalWallclockTime() << std::endl;
 
-         tbox::plog << "End Timing" << endl;
+         tbox::plog << "End Timing" << std::endl;
       }
 
       size = 100;
@@ -632,7 +631,7 @@ int main(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemRandom", true));
 
-         tbox::plog << "Begin Timing" << endl;
+         tbox::plog << "Begin Timing" << std::endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
@@ -657,14 +656,14 @@ int main(
          size_t numberOfItems = idx_data.getNumberOfItems();
          timer->stop();
 
-         tbox::plog << numberOfItems << endl;
+         tbox::plog << numberOfItems << std::endl;
 
          tbox::plog.precision(16);
 
          tbox::plog << "IndexData appendItem random insert time : "
-                    << timer->getTotalWallclockTime() << endl;
+                    << timer->getTotalWallclockTime() << std::endl;
 
-         tbox::plog << "End Timing" << endl;
+         tbox::plog << "End Timing" << std::endl;
       }
 
       {
@@ -672,7 +671,7 @@ int main(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataAppendItemPointerRandom", true));
 
-         tbox::plog << "Begin Timing" << endl;
+         tbox::plog << "Begin Timing" << std::endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
@@ -699,9 +698,9 @@ int main(
          tbox::plog.precision(16);
 
          tbox::plog << "IndexData appendItemPointer random insert time : "
-                    << timer->getTotalWallclockTime() << endl;
+                    << timer->getTotalWallclockTime() << std::endl;
 
-         tbox::plog << "End Timing" << endl;
+         tbox::plog << "End Timing" << std::endl;
       }
 
       size = 100;
@@ -711,7 +710,7 @@ int main(
             tbox::TimerManager::getManager()->
             getTimer("IndexDataReplace", true));
 
-         tbox::plog << "Begin Timing" << endl;
+         tbox::plog << "Begin Timing" << std::endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
@@ -738,13 +737,13 @@ int main(
          tbox::plog.precision(16);
 
          tbox::plog << "IndexData replaceAddItemPointer random insert time : "
-                    << timer->getTotalWallclockTime() << endl;
+                    << timer->getTotalWallclockTime() << std::endl;
 
-         tbox::plog << "End Timing" << endl;
+         tbox::plog << "End Timing" << std::endl;
       }
    }
 
-   tbox::pout << "PASSED" << endl;
+   tbox::pout << "PASSED" << std::endl;
 
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();

@@ -27,7 +27,6 @@
 #include <memory>
 
 using namespace SAMRAI;
-using namespace std;
 
 int main(
    int argc,
@@ -101,11 +100,11 @@ int main(
       }
       if (!tbox::MathUtilities<float>::equalEps(f0, f0_correct)) {
          ++fail_count;
-         tbox::perr << "Float test #0 FAILED" << endl;
+         tbox::perr << "Float test #0 FAILED" << std::endl;
       }
       if (!tbox::MathUtilities<double>::equalEps(d0, d0_correct)) {
          ++fail_count;
-         tbox::perr << "Double test #0 FAILED" << endl;
+         tbox::perr << "Double test #0 FAILED" << std::endl;
       }
       if (b0 != b0_correct) {
          ++fail_count;
@@ -169,11 +168,11 @@ int main(
          }
          if (!tbox::MathUtilities<float>::equalEps(f1[i], f1_correct[i])) {
             ++fail_count;
-            tbox::perr << "Float test #1 FAILED" << endl;
+            tbox::perr << "Float test #1 FAILED" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(d1[i], d1_correct[i])) {
             ++fail_count;
-            tbox::perr << "Double test #1 FAILED" << endl;
+            tbox::perr << "Double test #1 FAILED" << std::endl;
          }
          if (b1[i] != b1_correct[i]) {
             ++fail_count;
@@ -238,11 +237,11 @@ int main(
          }
          if (!tbox::MathUtilities<float>::equalEps(f2[i], f2_correct[i])) {
             ++fail_count;
-            tbox::perr << "Float test #2 FAILED" << endl;
+            tbox::perr << "Float test #2 FAILED" << std::endl;
          }
          if (!tbox::MathUtilities<double>::equalEps(d2[i], d2_correct[i])) {
             ++fail_count;
-            tbox::perr << "Double test #2 FAILED" << endl;
+            tbox::perr << "Double test #2 FAILED" << std::endl;
          }
          if (b2[i] != b2_correct[i]) {
             ++fail_count;
@@ -284,11 +283,11 @@ int main(
       }
       if (!tbox::MathUtilities<float>::equalEps(f3, f0_correct)) {
          ++fail_count;
-         tbox::perr << "Float test #3 FAILED" << endl;
+         tbox::perr << "Float test #3 FAILED" << std::endl;
       }
       if (!tbox::MathUtilities<double>::equalEps(d3, d0_correct)) {
          ++fail_count;
-         tbox::perr << "Double test #3 FAILED" << endl;
+         tbox::perr << "Double test #3 FAILED" << std::endl;
       }
       if (b3 != b0_correct) {
          ++fail_count;
@@ -337,7 +336,7 @@ int main(
    }
 
    if (fail_count == 0) {
-      tbox::pout << "\nPASSED:  inputdb" << endl;
+      tbox::pout << "\nPASSED:  inputdb" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();

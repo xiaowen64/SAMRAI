@@ -19,10 +19,6 @@
 #endif
 
 #include <stdlib.h>
-#include <string.h>
-
-#include <string>
-using namespace std;
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Utilities.h"

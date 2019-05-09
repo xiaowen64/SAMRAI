@@ -23,7 +23,6 @@
 
 #include <stdlib.h>
 
-using namespace std;
 using namespace SAMRAI;
 
 int main(
@@ -45,10 +44,10 @@ int main(
       /*
        * Process command line arguments.
        */
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 2) {
-         tbox::pout << "USAGE:  " << argv[0] << " <input filename> " << endl;
+         tbox::pout << "USAGE:  " << argv[0] << " <input filename> " << std::endl;
          exit(-1);
       } else {
          input_filename = argv[1];

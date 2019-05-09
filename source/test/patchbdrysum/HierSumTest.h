@@ -36,7 +36,6 @@
 #include <vector>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 using namespace tbox;
 using namespace hier;
