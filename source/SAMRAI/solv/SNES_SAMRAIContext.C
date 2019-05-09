@@ -297,7 +297,7 @@ SNES_SAMRAIContext::createPetscObjects()
    ierr = SNESCreate(PETSC_COMM_SELF, &d_SNES_solver);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = SNESSetType(d_SNES_solver, SNESLS);
+   ierr = SNESSetType(d_SNES_solver, SNESNEWTONLS);
    PETSC_SAMRAI_ERROR(ierr);
 
    ierr = SNESSetFunction(d_SNES_solver,
