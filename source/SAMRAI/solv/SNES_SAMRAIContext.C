@@ -256,7 +256,7 @@ SNES_SAMRAIContext::reportCompletionCode(
       case SNES_CONVERGED_FNORM_RELATIVE:
          os << " Fnorm less than specified relative tolerance.\n";
          break;
-      case SNES_CONVERGED_PNORM_RELATIVE:
+      case SNES_CONVERGED_SNORM_RELATIVE:
          os << " Step size less than specified tolerance.\n";
          break;
       case SNES_DIVERGED_FUNCTION_COUNT:
