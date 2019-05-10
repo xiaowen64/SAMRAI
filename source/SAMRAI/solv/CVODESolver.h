@@ -448,8 +448,8 @@ public:
    setToleranceType(
       int tolerance_type)
    {
-      TBOX_ASSERT((tolerance_type == CV_SS) ||
-         (tolerance_type == CV_SV));
+//      TBOX_ASSERT((tolerance_type == CV_SS) ||
+//         (tolerance_type == CV_SV));
       d_tolerance_type = tolerance_type;
       d_CVODE_needs_initialization = true;
    }

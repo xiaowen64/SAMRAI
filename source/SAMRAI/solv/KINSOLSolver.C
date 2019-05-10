@@ -195,12 +195,12 @@ KINSOLSolver::initializeKINSOL()
 
       d_kin_mem = KINCreate();
 
-      int ierr = KINMalloc(d_kin_mem,
+      int ierr = KINInit(d_kin_mem,
             KINSOLSolver::KINSOLFuncEval,
             d_solution_vector->getNVector());
       KINSOL_SAMRAI_ERROR(ierr);
 
-      ierr = KINSetFdata(d_kin_mem, this);
+      ierr = KINSetUserData(d_kin_mem, this);
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSetInfoFile(d_kin_mem, d_kinsol_log_file);
@@ -230,13 +230,11 @@ KINSOLSolver::initializeKINSOL()
 
       ierr = KINSpilsSetPreconditioner(d_kin_mem,
             precond_set,
-            precond_solve,
-            (void *)this);
+            precond_solve);
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSpilsSetJacTimesVecFn(d_kin_mem,
-            jac_times_vec,
-            (void *)this);
+            jac_times_vec);
       KINSOL_SAMRAI_ERROR(ierr);
 
       if (!(d_residual_tol < 0)) {

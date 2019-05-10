@@ -63,7 +63,7 @@ CVODESolver::CVODESolver(
 
    setLinearMultistepMethod(CV_BDF);
    setIterationType(CV_FUNCTIONAL);
-   setToleranceType(CV_SS);
+//   setToleranceType(CV_SS);
    setRelativeTolerance(0.0);
    setAbsoluteTolerance(0.0);
    d_absolute_tolerance_vector = 0;
@@ -176,22 +176,22 @@ CVODESolver::initializeCVODE()
        * Set tolerance parameter based on type
        */
       void* abstol;
-      if (d_tolerance_type == CV_SV) {
-         abstol = d_absolute_tolerance_vector->getNVector();
-      } else {
+//      if (d_tolerance_type == CV_SV) {
+//         abstol = d_absolute_tolerance_vector->getNVector();
+//      } else {
          abstol = &d_absolute_tolerance_scalar;
-      }
+//      }
 
-      int ierr = CVodeMalloc(d_cvode_mem,
+      int ierr = CVodeInit(d_cvode_mem,
             RHSFunc,
             d_t_0,
-            d_ic_vector->getNVector(),
-            d_tolerance_type,
-            d_relative_tolerance,
-            abstol);
+            d_ic_vector->getNVector());
+//            d_tolerance_type,
+//            d_relative_tolerance,
+//            abstol);
       CVODE_SAMRAI_ERROR(ierr);
 
-      ierr = CVodeSetFdata(d_cvode_mem, this);
+      ierr = CVodeSetUserData(d_cvode_mem, this);
       CVODE_SAMRAI_ERROR(ierr);
 
       /*
@@ -220,7 +220,7 @@ CVODESolver::initializeCVODE()
             precond_set = CVODESolver::CVSpgmrPrecondSet;
             precond_solve = CVODESolver::CVSpgmrPrecondSolve;
             CVSpilsSetPreconditioner(d_cvode_mem, precond_set,
-               precond_solve, this);
+               precond_solve);
          }
 
          if (!(d_max_num_internal_steps < 0)) {
