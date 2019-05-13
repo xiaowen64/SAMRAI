@@ -14755,14 +14755,14 @@ fi
 $as_echo "#define HAVE_PETSC 1" >>confdefs.h
 
   if test $PETSC_VERSION_MAJOR -ne 3 || \
-     test $PETSC_VERSION_MINOR -ne 2 || \
-     test $PETSC_VERSION_SUBMINOR -ne 0 ; then
+     test $PETSC_VERSION_MINOR -ne 10 || \
+     test $PETSC_VERSION_SUBMINOR -ne 5 ; then
      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING:
-SAMRAI requires PETSc-3.2.0.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
+SAMRAI requires PETSc-3.10.5.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
 which may not work properly!
 " >&5
 $as_echo "$as_me: WARNING:
-SAMRAI requires PETSc-3.2.0.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
+SAMRAI requires PETSc-3.10.5.  You have specified version $PETSC_VERSION_MAJOR.$PETSC_VERSION_MINOR.$PETSC_VERSION_SUBMINOR
 which may not work properly!
 " >&2;}
   fi
