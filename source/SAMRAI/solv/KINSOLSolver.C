@@ -40,8 +40,9 @@ KINSOLSolver::KINSOLSolver(
    d_fval_scale(0),
    d_my_fval_scale_vector(false),
    d_constraints(0),
+   d_linear_solver(0),
    d_KINSOL_needs_initialization(true),
-   d_krylov_dimension(KINSPILS_MAXL),
+   d_krylov_dimension(15),
    d_max_restarts(0),
    d_max_solves_no_set(MSBSET_DEFAULT),
    d_max_iter(MXITER_DEFAULT),
@@ -103,6 +104,10 @@ KINSOLSolver::~KINSOLSolver()
 
    if (d_kin_mem) {
       KINFree(&d_kin_mem);
+   }
+
+   if (d_linear_solver) {
+      SUNLinSolFree(d_linear_solver);
    }
 }
 
@@ -221,11 +226,14 @@ KINSOLSolver::initializeKINSOL()
       /*
        * Initialize KINSOL memory record.
        */
-      ierr = KINSpgmr(d_kin_mem,
-            d_krylov_dimension);
+      d_linear_solver = SUNSPGMR(d_solution_vector->getNVector(),
+                                 PREC_RIGHT,
+                                 d_krylov_dimension);
+
+      ierr = KINSpilsSetLinearSolver(d_kin_mem, d_linear_solver);
       KINSOL_SAMRAI_ERROR(ierr);
 
-      ierr = KINSpilsSetMaxRestarts(d_kin_mem, d_max_restarts);
+      ierr = SUNSPGMRSetMaxRestarts(d_linear_solver, d_max_restarts);
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSpilsSetPreconditioner(d_kin_mem,

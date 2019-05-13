@@ -46,6 +46,7 @@ CVODESolver::CVODESolver(
     * CVODE memory record and log file.
     */
    d_cvode_mem = 0;
+   d_linear_solver = 0;
    d_cvode_log_file = 0;
    d_cvode_log_file_name = "cvode.log";
 
@@ -99,6 +100,9 @@ CVODESolver::~CVODESolver()
    }
    if (d_cvode_mem) {
       CVodeFree(&d_cvode_mem);
+   }
+   if (d_linear_solver) {
+      SUNLinSolFree(d_linear_solver);
    }
 }
 
@@ -172,27 +176,18 @@ CVODESolver::initializeCVODE()
 
       d_cvode_mem = CVodeCreate(d_linear_multistep_method, d_iteration_type);
 
-      /*
-       * Set tolerance parameter based on type
-       */
-      void* abstol;
-//      if (d_tolerance_type == CV_SV) {
-//         abstol = d_absolute_tolerance_vector->getNVector();
-//      } else {
-         abstol = &d_absolute_tolerance_scalar;
-//      }
-
       int ierr = CVodeInit(d_cvode_mem,
             RHSFunc,
             d_t_0,
             d_ic_vector->getNVector());
-//            d_tolerance_type,
-//            d_relative_tolerance,
-//            abstol);
       CVODE_SAMRAI_ERROR(ierr);
 
       ierr = CVodeSetUserData(d_cvode_mem, this);
       CVODE_SAMRAI_ERROR(ierr);
+
+      ierr = CVodeSStolerances(d_cvode_mem,
+                               d_relative_tolerance,
+                               d_absolute_tolerance_scalar);
 
       /*
        * If the iteration type is set to NEWTON, then initialize
@@ -200,9 +195,11 @@ CVODESolver::initializeCVODE()
        */
       if (d_iteration_type == CV_NEWTON) {
 
-         ierr = CVSpgmr(d_cvode_mem,
-               d_precondition_type,
-               d_max_krylov_dim);
+         d_linear_solver = SUNSPGMR(d_solution_vector->getNVector(),
+                                    d_precondition_type,
+                                    d_max_krylov_dim);
+
+         ierr = CVSpilsSetLinearSolver(d_cvode_mem, d_linear_solver);
          CVODE_SAMRAI_ERROR(ierr);
 
          if (!(d_max_order < 1)) {

@@ -54,15 +54,6 @@
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
 #include "CVODEModel.h"
 
-// CVODE includes
-#ifdef HAVE_SUNDIALS
-#ifndef included_cvspgmr_h
-#define included_cvspgmr_h
-#include "cvode/cvode_spgmr.h"
-#endif
-#endif
-
-
 using namespace SAMRAI;
 
 /*

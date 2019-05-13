@@ -26,7 +26,8 @@ extern "C" {
 }
 
 extern "C" {
-#include "cvode/cvode_spgmr.h"
+#include "cvode/cvode_spils.h"
+#include "sunlinsol/sunlinsol_spgmr.h"
 }
 
 #include <string>
@@ -1287,10 +1288,7 @@ private:
       int jok,
       booleantype* jcurPtr,
       realtype gamma,
-      void* my_solver,
-      N_Vector vtemp1,
-      N_Vector vtemp2,
-      N_Vector vtemp3)
+      void* my_solver)
    {
       int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
          CVSpgmrPrecondSet(t,
@@ -1298,10 +1296,7 @@ private:
             SABSVEC_CAST(fy),
             jok,
             jcurPtr,
-            gamma,
-            SABSVEC_CAST(vtemp1),
-            SABSVEC_CAST(vtemp2),
-            SABSVEC_CAST(vtemp3));
+            gamma);
       return success;
    }
 
@@ -1315,8 +1310,7 @@ private:
       realtype gamma,
       realtype delta,
       int lr,
-      void* my_solver,
-      N_Vector vtemp)
+      void* my_solver)
    {
       int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
          CVSpgmrPrecondSolve(t,
@@ -1326,8 +1320,7 @@ private:
             SABSVEC_CAST(z),
             gamma,
             delta,
-            lr,
-            SABSVEC_CAST(vtemp));
+            lr);
       return success;
    }
 
@@ -1371,6 +1364,12 @@ private:
     * CVODE memory record.
     */
    void* d_cvode_mem;                    // CVODE memory structure
+
+   /*
+    * Linear solver for preconditioning
+    */
+   SUNLinearSolver d_linear_solver;
+
 
    /*
     * CVODE log file information.

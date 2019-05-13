@@ -242,8 +242,6 @@ public:
       solv::SundialsAbstractVector* soln_scale,
       solv::SundialsAbstractVector* fval,
       solv::SundialsAbstractVector* fval_scale,
-      solv::SundialsAbstractVector* vtemp1,
-      solv::SundialsAbstractVector* vtemp2,
       int& num_feval);
 
    int
@@ -253,7 +251,6 @@ public:
       solv::SundialsAbstractVector* fval,
       solv::SundialsAbstractVector* fval_scale,
       solv::SundialsAbstractVector* rhs,
-      solv::SundialsAbstractVector* vtemp,
       int& num_feval);
 
    int
