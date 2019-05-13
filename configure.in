@@ -1477,7 +1477,7 @@ else
        [You MUST specify an existing path when using --with-sundials=PATH])
    fi
    AC_DEFINE([HAVE_SUNDIALS],[1],[HAVE_SUNDIALS])
-   LIB_PATH="$LIB_PATH -L$sundials_dir/lib"
+   LIB_PATH="$LIB_PATH -L$sundials_dir/lib64"
    LIB_NAME="$LIB_NAME -lsundials_cvode -lsundials_kinsol"
    INC_PATH="-I$sundials_dir/include $INC_PATH"
 fi

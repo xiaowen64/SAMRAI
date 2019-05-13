@@ -14836,7 +14836,7 @@ else
 
 $as_echo "#define HAVE_SUNDIALS 1" >>confdefs.h
 
-   LIB_PATH="$LIB_PATH -L$sundials_dir/lib"
+   LIB_PATH="$LIB_PATH -L$sundials_dir/lib64"
    LIB_NAME="$LIB_NAME -lsundials_cvode -lsundials_kinsol"
    INC_PATH="-I$sundials_dir/include $INC_PATH"
 fi

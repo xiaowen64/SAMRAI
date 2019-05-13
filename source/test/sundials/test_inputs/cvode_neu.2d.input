@@ -33,9 +33,9 @@ Main {
    uses_preconditioning     = TRUE
 
 // Used for testing only
-   correct_rhs_evals        = 927
-   correct_precond_setups   = 718
-   correct_precond_solves   = 512
+   correct_rhs_evals        = 920
+   correct_precond_setups   = 714
+   correct_precond_solves   = 509
 }
 
 CVODEModel {

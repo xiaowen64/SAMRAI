@@ -63,8 +63,6 @@ CVODESolver::CVODESolver(
     */
 
    setLinearMultistepMethod(CV_BDF);
-   setIterationType(CV_FUNCTIONAL);
-//   setToleranceType(CV_SS);
    setRelativeTolerance(0.0);
    setAbsoluteTolerance(0.0);
    d_absolute_tolerance_vector = 0;
@@ -174,7 +172,7 @@ CVODESolver::initializeCVODE()
        * Allocate main memory for CVODE package.
        */
 
-      d_cvode_mem = CVodeCreate(d_linear_multistep_method, d_iteration_type);
+      d_cvode_mem = CVodeCreate(d_linear_multistep_method);
 
       int ierr = CVodeInit(d_cvode_mem,
             RHSFunc,
@@ -189,61 +187,54 @@ CVODESolver::initializeCVODE()
                                d_relative_tolerance,
                                d_absolute_tolerance_scalar);
 
-      /*
-       * If the iteration type is set to NEWTON, then initialize
-       * the CVSpgmr linear solver.
-       */
-      if (d_iteration_type == CV_NEWTON) {
+      d_linear_solver = SUNSPGMR(d_solution_vector->getNVector(),
+                                 d_precondition_type,
+                                 d_max_krylov_dim);
 
-         d_linear_solver = SUNSPGMR(d_solution_vector->getNVector(),
-                                    d_precondition_type,
-                                    d_max_krylov_dim);
+      ierr = CVSpilsSetLinearSolver(d_cvode_mem, d_linear_solver);
+      CVODE_SAMRAI_ERROR(ierr);
 
-         ierr = CVSpilsSetLinearSolver(d_cvode_mem, d_linear_solver);
+      if (!(d_max_order < 1)) {
+         ierr = CVodeSetMaxOrd(d_cvode_mem, d_max_order);
          CVODE_SAMRAI_ERROR(ierr);
+      }
 
-         if (!(d_max_order < 1)) {
-            ierr = CVodeSetMaxOrd(d_cvode_mem, d_max_order);
-            CVODE_SAMRAI_ERROR(ierr);
-         }
+      /*
+       * Setup CVSpgmr function pointers.
+       */
+      CVSpilsPrecSetupFn precond_set = 0;
+      CVSpilsPrecSolveFn precond_solve = 0;
 
-         /*
-          * Setup CVSpgmr function pointers.
-          */
-         CVSpilsPrecSetupFn precond_set = 0;
-         CVSpilsPrecSolveFn precond_solve = 0;
+      if (d_uses_preconditioner) {
+         precond_set = CVODESolver::CVSpgmrPrecondSet;
+         precond_solve = CVODESolver::CVSpgmrPrecondSolve;
+         CVSpilsSetPreconditioner(d_cvode_mem, precond_set,
+            precond_solve);
+      }
 
-         if (d_uses_preconditioner) {
-            precond_set = CVODESolver::CVSpgmrPrecondSet;
-            precond_solve = CVODESolver::CVSpgmrPrecondSolve;
-            CVSpilsSetPreconditioner(d_cvode_mem, precond_set,
-               precond_solve);
-         }
+      if (!(d_max_num_internal_steps < 0)) {
+         ierr = CVodeSetMaxNumSteps(d_cvode_mem, d_max_num_internal_steps);
+         CVODE_SAMRAI_ERROR(ierr);
+      }
 
-         if (!(d_max_num_internal_steps < 0)) {
-            ierr = CVodeSetMaxNumSteps(d_cvode_mem, d_max_num_internal_steps);
-            CVODE_SAMRAI_ERROR(ierr);
-         }
+      if (!(d_max_num_warnings < 0)) {
+         ierr = CVodeSetMaxHnilWarns(d_cvode_mem, d_max_num_warnings);
+         CVODE_SAMRAI_ERROR(ierr);
+      }
 
-         if (!(d_max_num_warnings < 0)) {
-            ierr = CVodeSetMaxHnilWarns(d_cvode_mem, d_max_num_warnings);
-            CVODE_SAMRAI_ERROR(ierr);
-         }
+      if (!(d_init_step_size < 0)) {
+         ierr = CVodeSetInitStep(d_cvode_mem, d_init_step_size);
+         CVODE_SAMRAI_ERROR(ierr);
+      }
 
-         if (!(d_init_step_size < 0)) {
-            ierr = CVodeSetInitStep(d_cvode_mem, d_init_step_size);
-            CVODE_SAMRAI_ERROR(ierr);
-         }
+      if (!(d_max_step_size < 0)) {
+         ierr = CVodeSetMaxStep(d_cvode_mem, d_max_step_size);
+         CVODE_SAMRAI_ERROR(ierr);
+      }
 
-         if (!(d_max_step_size < 0)) {
-            ierr = CVodeSetMaxStep(d_cvode_mem, d_max_step_size);
-            CVODE_SAMRAI_ERROR(ierr);
-         }
-
-         if (!(d_min_step_size < 0)) {
-            ierr = CVodeSetMinStep(d_cvode_mem, d_min_step_size);
-            CVODE_SAMRAI_ERROR(ierr);
-         }
+      if (!(d_min_step_size < 0)) {
+         ierr = CVodeSetMinStep(d_cvode_mem, d_min_step_size);
+         CVODE_SAMRAI_ERROR(ierr);
       }
 
    } // if no need to initialize CVODE, function does nothing
@@ -310,34 +301,26 @@ void
 CVODESolver::printCVSpgmrStatistics(
    std::ostream& os) const
 {
-   if (d_iteration_type == CV_NEWTON) {
+   os << "CVODESolver: CVSpgmr statistics... " << std::endl;
 
-      os << "CVODESolver: CVSpgmr statistics... " << std::endl;
+   os << "spgmr_lrw       = "
+      << tbox::Utilities::intToString(getCVSpgmrMemoryUsageForDoubles(), 5)
+      << "     spgmr_liw        = "
+      << tbox::Utilities::intToString(getCVSpgmrMemoryUsageForIntegers(),
+      5) << std::endl;
 
-      os << "spgmr_lrw       = "
-         << tbox::Utilities::intToString(getCVSpgmrMemoryUsageForDoubles(), 5)
-         << "     spgmr_liw        = "
-         << tbox::Utilities::intToString(getCVSpgmrMemoryUsageForIntegers(),
-         5) << std::endl;
+   os << "nli             = "
+      << tbox::Utilities::intToString(getNumberOfLinearIterations(), 5)
+      << "     ncfl             = "
+      << tbox::Utilities::intToString(
+      getNumberOfLinearConvergenceFailures(), 5) << std::endl;
 
-      os << "nli             = "
-         << tbox::Utilities::intToString(getNumberOfLinearIterations(), 5)
-         << "     ncfl             = "
-         << tbox::Utilities::intToString(
-         getNumberOfLinearConvergenceFailures(), 5) << std::endl;
-
-      os << "npe             = "
-         << tbox::Utilities::intToString(
-         getNumberOfPreconditionerEvaluations(), 5)
-         << "     nps              = "
-         << tbox::Utilities::intToString(getNumberOfPrecondSolveCalls(),
-         5) << std::endl;
-   } else {
-
-      os << "\nCVODESolver not set to use NEWTON iteration . . . \n"
-         << std::endl;
-
-   }
+   os << "npe             = "
+      << tbox::Utilities::intToString(
+      getNumberOfPreconditionerEvaluations(), 5)
+      << "     nps              = "
+      << tbox::Utilities::intToString(getNumberOfPrecondSolveCalls(),
+      5) << std::endl;
 }
 
 /*
@@ -375,10 +358,6 @@ CVODESolver::printClassData(
 
    os << "d_linear_multistep_method = "
       << d_linear_multistep_method << std::endl;
-   os << "d_iteration_type = "
-      << d_iteration_type << std::endl;
-   os << "d_tolerance_type = "
-      << d_tolerance_type << std::endl;
    os << "d_relative_tolerance = "
       << d_relative_tolerance << std::endl;
    os << "d_use_scalar_absolute_tolerance = ";
