@@ -30,7 +30,6 @@ extern "C" {
 #include "sunlinsol/sunlinsol_spgmr.h"
 }
 
-#include "kinsol/kinsol_impl.h"
 #include "kinsol/kinsol_spils.h"
 
 #include <string>
