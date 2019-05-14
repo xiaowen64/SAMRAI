@@ -51,7 +51,9 @@ add_subdirectory(source)
 
 add_subdirectory(tools)
 
-add_subdirectory(docs)
+if (ENABLE_DOCS)
+  add_subdirectory(docs)
+endif()
 
 export(TARGETS SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
   SAMRAI_math SAMRAI_mesh SAMRAI_pdat SAMRAI_solv SAMRAI_tbox
