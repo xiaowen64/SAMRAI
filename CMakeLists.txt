@@ -19,6 +19,8 @@ endif ()
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
 set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
+set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
+set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
 
 # Third party libraries
 option(ENABLE_CONDUIT "Enable CONDUIT" Off)
