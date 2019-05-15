@@ -74,7 +74,7 @@ int main(
     */
    {
 
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 2) {
          tbox::pout << "USAGE:  " << argv[0] << " <input filename> "
@@ -131,7 +131,7 @@ int main(
          nsteps = main_db->getInteger("nsteps");
       }
 
-      string log_file_name = "hiersumtest.log";
+      std::string log_file_name = "hiersumtest.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }
@@ -145,7 +145,7 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
-      string visit_dump_dirname = "visit_data";
+      std::string visit_dump_dirname = "visit_data";
       int visit_number_procs_per_file = 1;
 
       int visit_dump_interval =

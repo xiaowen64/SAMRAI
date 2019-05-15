@@ -78,7 +78,7 @@ using namespace algs;
  ************************************************************************/
 
 HierSumTest::HierSumTest(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<Database> input_db
 #ifdef HAVE_HDF5

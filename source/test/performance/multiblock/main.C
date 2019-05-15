@@ -154,7 +154,7 @@ int main(
    char* argv[])
 {
    double wc_time = 0.0;
-   string base_name;
+   std::string base_name;
 
    /*
     * Initialize tbox::MPI and SAMRAI, enable logging, and process command line.
@@ -168,8 +168,8 @@ int main(
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      string input_filename;
-      string restart_read_dirname;
+      std::string input_filename;
+      std::string restart_read_dirname;
       int restore_num = 0;
 
       bool is_from_restart = false;
@@ -227,7 +227,7 @@ int main(
          std::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
 //         if (global_db->keyExists("tag_clustering_method")) {
-//            string tag_clustering_method =
+//            std::string tag_clustering_method =
 //               global_db->getString("tag_clustering_method");
 //            mesh::BergerRigoutsos::setClusteringOption(tag_clustering_method);
 //         }
@@ -252,7 +252,7 @@ int main(
 
       base_name = main_db->getString("base_name");
 
-      string log_file_name = "linadv.log";
+      std::string log_file_name = "linadv.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }
@@ -271,8 +271,8 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      string viz_dump_dirname = "";
-      string visit_dump_dirname = "";
+      std::string viz_dump_dirname = "";
+      std::string visit_dump_dirname = "";
       int visit_number_procs_per_file = 1;
       if (viz_dump_interval > 0) {
          if (main_db->keyExists("viz_dump_dirname")) {
@@ -297,7 +297,7 @@ int main(
          restart_interval = main_db->getInteger("restart_interval");
       }
 
-      string restart_write_dirname;
+      std::string restart_write_dirname;
       if (restart_interval > 0) {
          if (main_db->keyExists("restart_write_dirname")) {
             restart_write_dirname = main_db->getString("restart_write_dirname");
@@ -309,7 +309,7 @@ int main(
 
       bool use_refined_timestepping = true;
       if (main_db->keyExists("timestepping")) {
-         string timestepping_method = main_db->getString("timestepping");
+         std::string timestepping_method = main_db->getString("timestepping");
          if (timestepping_method == "SYNCHRONIZED") {
             use_refined_timestepping = false;
          }
@@ -548,7 +548,7 @@ int main(
 
    int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
    if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
-      string timing_file =
+      std::string timing_file =
          base_name + ".timing" + tbox::Utilities::intToString(size);
       FILE* fp = fopen(timing_file.c_str(), "w");
       fprintf(fp, "%f\n", wc_time);

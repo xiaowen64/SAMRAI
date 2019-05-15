@@ -82,7 +82,7 @@ public:
     * Default constructor for HierSumTest.
     */
    HierSumTest(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<Database> input_db
 #ifdef HAVE_HDF5
@@ -288,7 +288,7 @@ private:
     * Object name used for error/warning reporting and as a label
     * for restart database entries.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
