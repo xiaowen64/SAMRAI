@@ -67,42 +67,53 @@ AllocatorDatabase::initialize()
 {
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
 
+  if (!rm.isAllocator("samrai::data_allocator")) {
 #if defined(HAVE_CUDA)
-  // Internal pool for allocations
-  auto main_allocator = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
-      "SAMRAI_UM",
-      rm.getAllocator(umpire::resource::Unified),
-      // Set preferred location to GPU
-      "PREFERRED_LOCATION");
-
-  // Pool for memory used only in the for_all loops
-  auto device_allocator = rm.getAllocator(umpire::resource::Device);
-
-  // Pool for message streams
-  auto stream_allocator = rm.getAllocator(umpire::resource::Pinned);
+    // Internal pool for allocations
+    auto allocator = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
+        "internal::samrai::um_allocation_advisor",
+        rm.getAllocator(umpire::resource::Unified),
+        // Set preferred location to GPU
+        "PREFERRED_LOCATION");
 #else
-  auto main_allocator = rm.getAllocator(umpire::resource::Host);
-  auto device_allocator = rm.getAllocator(umpire::resource::Host);
-  auto stream_allocator = rm.getAllocator(umpire::resource::Host);
+    auto allocator = rm.getAllocator(umpire::resource::Host);
 #endif
 
-  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_pool", main_allocator);
-  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_device_pool", device_allocator);
-  rm.makeAllocator<umpire::strategy::DynamicPool>("SAMRAI_stream_pool", stream_allocator);
+    rm.makeAllocator<umpire::strategy::DynamicPool>("samrai::data_allocator", allocator);
+  }
+
+  if (!rm.isAllocator("samrai::stream_allocator")) {
+#if defined(HAVE_CUDA)
+    auto allocator = rm.getAllocator(umpire::resource::Pinned);
+#else
+    auto allocator = rm.getAllocator(umpire::resource::Host);
+#endif
+
+    rm.makeAllocator<umpire::strategy::DynamicPool>("samrai::stream_allocator", allocator);
+  }
+
+  if (!rm.isAllocator("samrai::temporary_data_allocator")) {
+#if defined(HAVE_CUDA)
+    auto allocator = rm.getAllocator(umpire::resource::Device);
+#else
+    auto allocator = rm.getAllocator(umpire::resource::Host);
+#endif
+    rm.makeAllocator<umpire::strategy::DynamicPool>("samrai::temporary_data_allocator", allocator);
+  }
 }
 
 umpire::Allocator
 AllocatorDatabase::getDevicePool()
 {
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
-  return rm.getAllocator("SAMRAI_device_pool");
+  return rm.getAllocator("samrai::temporary_data_allocator");
 }
 
 umpire::TypedAllocator<char>
 AllocatorDatabase::getStreamAllocator()
 {
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
-  return umpire::TypedAllocator<char>(rm.getAllocator("SAMRAI_stream_pool"));
+  return umpire::TypedAllocator<char>(rm.getAllocator("samrai::stream_allocator"));
 }
 
 #endif
