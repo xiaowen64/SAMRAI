@@ -91,7 +91,6 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfaceflot3d2, CARTWGTAVGOUTFACEFLOT3D2) (const 
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianOuterfaceFloatWeightedAverage::CartesianOuterfaceFloatWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")

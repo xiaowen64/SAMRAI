@@ -16,7 +16,6 @@
 
 #include <string>
 
-using namespace std;
 using namespace SAMRAI;
 
 /*
@@ -42,8 +41,8 @@ public:
  */
    static void
    writeRedistributedRestartFiles(
-      const string& output_dirname,
-      const string& input_dirname,
+      const std::string& output_dirname,
+      const std::string& input_dirname,
       const int total_input_files,
       const int total_output_files,
       const std::vector<std::vector<int> >& file_mapping,
@@ -68,7 +67,7 @@ private:
    readAndWriteRestartData(
       std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
       const std::vector<std::shared_ptr<tbox::Database> >& input_dbs,
-      const string& key,
+      const std::string& key,
       const std::vector<std::vector<int> >* file_mapping = 0,
       int num_files_written = -1,
       int which_file_mapping = -1,
@@ -84,7 +83,7 @@ private:
    readAndWritePatchLevelRestartData(
       std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
       const std::vector<std::shared_ptr<tbox::Database> >& level_in_dbs,
-      const string& key,
+      const std::string& key,
       const int num_files_written,
       const std::vector<int>& input_proc_nums,
       const int total_output_files);
@@ -98,7 +97,7 @@ private:
    readAndWriteBoxLevelRestartData(
       std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
       const std::vector<std::shared_ptr<tbox::Database> >& level_in_dbs,
-      const string& key,
+      const std::string& key,
       const int num_files_written,
       const std::vector<int>& input_proc_nums,
       const int total_output_files);

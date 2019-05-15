@@ -22,8 +22,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-// using namespace std;
-
 int LoadBalanceStrategy::s_sequence_number = 0;
 
 /*

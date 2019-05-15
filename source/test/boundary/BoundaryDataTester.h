@@ -29,7 +29,6 @@
 #include <vector>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 class BoundaryDataTester:
@@ -41,7 +40,7 @@ public:
     * The constructor reads variable data from input database.
     */
    BoundaryDataTester(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database> input_db,
       std::shared_ptr<geom::CartesianGridGeometry> grid_geom);
@@ -106,7 +105,7 @@ public:
    void
    readDirichletBoundaryDataEntry(
       const std::shared_ptr<tbox::Database>& db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
 
    /**
@@ -119,7 +118,7 @@ public:
    void
    readNeumannBoundaryDataEntry(
       const std::shared_ptr<tbox::Database>& db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
 
    /**
@@ -144,7 +143,7 @@ public:
     */
    void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
    /*!
     * @brief Return the dimension of this object.
@@ -158,7 +157,7 @@ private:
    /*
     * The object name is used for error/warning reporting.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -167,7 +166,7 @@ private:
    /*
     * Vectors of information read from input file describing test variables
     */
-   std::vector<string> d_variable_name;
+   std::vector<std::string> d_variable_name;
    std::vector<int> d_variable_depth;
    std::vector<hier::IntVector> d_variable_num_ghosts;
    std::vector<std::vector<double> > d_variable_interior_values;
@@ -214,7 +213,7 @@ private:
    void
    readBoundaryDataStateEntry(
       std::shared_ptr<tbox::Database> db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
    void
    setBoundaryDataDefaults();

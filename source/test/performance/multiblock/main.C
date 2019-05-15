@@ -14,7 +14,6 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
-using namespace std;
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -155,7 +154,7 @@ int main(
    char* argv[])
 {
    double wc_time = 0.0;
-   string base_name;
+   std::string base_name;
 
    /*
     * Initialize tbox::MPI and SAMRAI, enable logging, and process command line.
@@ -169,8 +168,8 @@ int main(
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      string input_filename;
-      string restart_read_dirname;
+      std::string input_filename;
+      std::string restart_read_dirname;
       int restore_num = 0;
 
       bool is_from_restart = false;
@@ -180,7 +179,7 @@ int main(
                     << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -193,9 +192,9 @@ int main(
          }
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
-      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::plog << "restore_num = " << restore_num << endl;
+      tbox::plog << "input_filename = " << input_filename << std::endl;
+      tbox::plog << "restart_read_dirname = " << restart_read_dirname << std::endl;
+      tbox::plog << "restore_num = " << restore_num << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -228,7 +227,7 @@ int main(
          std::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
 //         if (global_db->keyExists("tag_clustering_method")) {
-//            string tag_clustering_method =
+//            std::string tag_clustering_method =
 //               global_db->getString("tag_clustering_method");
 //            mesh::BergerRigoutsos::setClusteringOption(tag_clustering_method);
 //         }
@@ -253,7 +252,7 @@ int main(
 
       base_name = main_db->getString("base_name");
 
-      string log_file_name = "linadv.log";
+      std::string log_file_name = "linadv.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
       }
@@ -272,8 +271,8 @@ int main(
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
       }
 
-      string viz_dump_dirname = "";
-      string visit_dump_dirname = "";
+      std::string viz_dump_dirname = "";
+      std::string visit_dump_dirname = "";
       int visit_number_procs_per_file = 1;
       if (viz_dump_interval > 0) {
          if (main_db->keyExists("viz_dump_dirname")) {
@@ -284,7 +283,7 @@ int main(
             TBOX_ERROR("main(): "
                << "\nviz_dump_dirname is null ... "
                << "\nThis must be specified for use with VisIt"
-               << endl);
+               << std::endl);
          }
          if (main_db->keyExists("visit_number_procs_per_file")) {
             visit_number_procs_per_file =
@@ -298,7 +297,7 @@ int main(
          restart_interval = main_db->getInteger("restart_interval");
       }
 
-      string restart_write_dirname;
+      std::string restart_write_dirname;
       if (restart_interval > 0) {
          if (main_db->keyExists("restart_write_dirname")) {
             restart_write_dirname = main_db->getString("restart_write_dirname");
@@ -310,7 +309,7 @@ int main(
 
       bool use_refined_timestepping = true;
       if (main_db->keyExists("timestepping")) {
-         string timestepping_method = main_db->getString("timestepping");
+         std::string timestepping_method = main_db->getString("timestepping");
          if (timestepping_method == "SYNCHRONIZED") {
             use_refined_timestepping = false;
          }
@@ -434,13 +433,13 @@ int main(
        */
 
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-      tbox::plog << "\nCheck Linear Advection data... " << endl;
+      tbox::plog << "\nCheck Linear Advection data... " << std::endl;
       linear_advection_model->printClassData(tbox::plog);
 
       if (viz_dump_data) {
@@ -468,10 +467,10 @@ int main(
          iteration_num = time_integrator->getIntegratorStep() + 1;
 
          if ((iteration_num - 1) % 25 == 0) {
-            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << endl;
+            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
             tbox::pout << "At begining of timestep # " << iteration_num - 1
-                       << endl;
-            tbox::pout << "Simulation time is " << loop_time << endl;
+                       << std::endl;
+            tbox::pout << "Simulation time is " << loop_time << std::endl;
          }
 
          double dt_new = time_integrator->advanceHierarchy(dt_now);
@@ -480,9 +479,9 @@ int main(
          dt_now = dt_new;
 
          if ((iteration_num - 1) % 25 == 0) {
-            tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-            tbox::pout << "Simulation time is " << loop_time << endl;
-            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << endl;
+            tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+            tbox::pout << "Simulation time is " << loop_time << std::endl;
+            tbox::pout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
          }
 
          /*
@@ -549,7 +548,7 @@ int main(
 
    int size = tbox::SAMRAI_MPI::getSAMRAIWorld().getSize();
    if (tbox::SAMRAI_MPI::getSAMRAIWorld().getRank() == 0) {
-      string timing_file =
+      std::string timing_file =
          base_name + ".timing" + tbox::Utilities::intToString(size);
       FILE* fp = fopen(timing_file.c_str(), "w");
       fprintf(fp, "%f\n", wc_time);
@@ -559,7 +558,7 @@ int main(
    tbox::SAMRAIManager::finalize();
    tbox::SAMRAI_MPI::finalize();
 
-   tbox::pout << "\nPASSED:  MblkLinAdv" << endl;
+   tbox::pout << "\nPASSED:  MblkLinAdv" << std::endl;
 
    return 0;
 }

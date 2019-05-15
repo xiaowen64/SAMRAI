@@ -39,7 +39,6 @@
 #define NAME_BUFSIZE (32)
 #endif
 
-using namespace std;
 using namespace SAMRAI;
 
 #ifdef _MSC_VER
@@ -142,21 +141,21 @@ int main(
    char* argv[])
 {
 
-   const string slash = "/";
+   const std::string slash = "/";
 
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
    tbox::SAMRAIManager::startup();
 
-   string read_dirname;
-   string write_dirname;
+   std::string read_dirname;
+   std::string write_dirname;
    int restore_num = 0;
    int num_output_files = 1;
 
    if ((argc != 5)) {
       tbox::pout << "USAGE:  " << argv[0] << " input-dir "
                  << "output-dir restore-number num-output-files\n"
-                 << endl;
+                 << std::endl;
       exit(-1);
       return -1;
    } else {
@@ -170,7 +169,7 @@ int main(
    const std::string restore_buf =
       "/restore." + tbox::Utilities::intToString(restore_num, 6);
 
-   string restore_dirname;
+   std::string restore_dirname;
    if (read_dirname.compare(0, 1, "/") == 0) {
       restore_dirname = read_dirname + restore_buf;
    } else {
@@ -196,8 +195,8 @@ int main(
          "restore directory should contain restart files for a single run; this probably indicates runs with different number of nodes have been done in in the restart directory");
    }
 
-   string nodes_dirname;
-   string prefix = "nodes.";
+   std::string nodes_dirname;
+   std::string prefix = "nodes.";
    for (int i = 0; i < num_entries; i++) {
       if (strncmp(prefix.c_str(), namelist[i]->d_name, prefix.length()) == 0) {
          nodes_dirname = namelist[i]->d_name;
@@ -209,7 +208,7 @@ int main(
    // Check if nodes_dirname is valid and extract number of processors for the saved run.
    if (nodes_dirname.size() == 13) {
 
-      string int_str = &(nodes_dirname.c_str()[6]);
+      std::string int_str = &(nodes_dirname.c_str()[6]);
 
       num_input_files = atoi(int_str.c_str());
 
@@ -223,7 +222,7 @@ int main(
    }
    free(namelist);
 
-   string full_nodes_dirname = restore_dirname + slash + nodes_dirname;
+   std::string full_nodes_dirname = restore_dirname + slash + nodes_dirname;
    num_entries = scandir(full_nodes_dirname.c_str(), &namelist, 0, 0);
    if (num_entries != num_input_files + 2) {
       TBOX_ERROR(

@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/AssumedPartition.h"
 #include "SAMRAI/geom/GridGeometry.h"
 
-using namespace std;
 
 using namespace SAMRAI;
 

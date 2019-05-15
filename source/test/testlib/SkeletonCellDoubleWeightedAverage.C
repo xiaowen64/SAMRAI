@@ -150,7 +150,7 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
             cdata->getPointer(d));
       } else {
          TBOX_ERROR("SkeletonCellDoubleWeightedAverage error...\n"
-            << "dimension > 3 not supported." << endl);
+            << "dimension > 3 not supported." << std::endl);
 
       }
    }

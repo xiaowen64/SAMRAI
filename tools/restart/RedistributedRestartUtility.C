@@ -28,8 +28,8 @@
  */
 
 void RedistributedRestartUtility::writeRedistributedRestartFiles(
-   const string& output_dirname,
-   const string& input_dirname,
+   const std::string& output_dirname,
+   const std::string& input_dirname,
    const int total_input_files,
    const int total_output_files,
    const std::vector<std::vector<int> >& file_mapping,
@@ -63,12 +63,12 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       int num_files_to_write = (total_input_files < total_output_files) ?
          static_cast<int>(file_mapping[icount].size()) : 1;
 
-      string restore_buf =
+      std::string restore_buf =
          "/restore." + tbox::Utilities::intToString(restore_num, 6);
-      string nodes_buf =
+      std::string nodes_buf =
          "/nodes." + tbox::Utilities::nodeToString(total_output_files);
 
-      string restart_dirname = output_dirname + restore_buf + nodes_buf;
+      std::string restart_dirname = output_dirname + restore_buf + nodes_buf;
 
       //Make the subdirectories if this is the first iteration.
       if (icount == 0) {
@@ -96,10 +96,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
             }
          }
 
-         string proc_buf =
+         std::string proc_buf =
             "/proc." + tbox::Utilities::processorToString(cur_out_file_id);
 
-         string output_filename = restart_dirname + proc_buf;
+         std::string output_filename = restart_dirname + proc_buf;
 
          output_dbs[i].reset(new tbox::HDFDatabase(output_filename));
 
@@ -120,8 +120,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
       nodes_buf = "/nodes." + tbox::Utilities::nodeToString(total_input_files);
 
-      std::vector<string> input_keys(0);
-      std::vector<string> test_keys(0);
+      std::vector<std::string> input_keys(0);
+      std::vector<std::string> test_keys(0);
       int num_keys = 0;
 
       int input_files_per_proc = total_input_files / nprocs;
@@ -142,10 +142,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
             cur_in_file_id = file_mapping[icount][i];
          }
 
-         string proc_buf =
+         std::string proc_buf =
             "/proc." + tbox::Utilities::processorToString(cur_in_file_id);
 
-         string restart_filename = input_dirname + restore_buf + nodes_buf
+         std::string restart_filename = input_dirname + restore_buf + nodes_buf
             + proc_buf;
 
          input_dbs[i].reset(new tbox::HDFDatabase(restart_filename));
@@ -205,7 +205,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 void RedistributedRestartUtility::readAndWriteRestartData(
    std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
    const std::vector<std::shared_ptr<tbox::Database> >& input_dbs,
-   const string& key,
+   const std::string& key,
    const std::vector<std::vector<int> >* file_mapping,  // = 0
    const int num_files_written, // = -1,
    const int which_file_mapping, // = -1
@@ -345,7 +345,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
             child_out_dbs[i] = output_dbs[i]->putDatabase(key);
          }
 
-         std::vector<string> child_keys = db->getAllKeys();
+         std::vector<std::string> child_keys = db->getAllKeys();
 
          for (int j = 0; j < static_cast<int>(child_keys.size()); ++j) {
             readAndWriteRestartData(child_out_dbs,
@@ -399,7 +399,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 
    } else if (input_dbs[0]->isString(key)) {
 
-      std::vector<string> string_array = input_dbs[0]->getStringVector(key);
+      std::vector<std::string> string_array = input_dbs[0]->getStringVector(key);
 
       for (int i = 0; i < static_cast<int>(output_dbs.size()); ++i) {
          output_dbs[i]->putStringVector(key, string_array);
@@ -447,7 +447,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
    std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
    const std::vector<std::shared_ptr<tbox::Database> >& level_in_dbs,
-   const string& key,
+   const std::string& key,
    const int num_files_written,
    const std::vector<int>& input_proc_nums,
    const int total_output_files)
@@ -669,11 +669,11 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
             }
          }
 
-         string in_patch_name =
+         std::string in_patch_name =
             "level_" + tbox::Utilities::levelToString(level_number)
             + "-patch_" + tbox::Utilities::patchToString(*ilp)
             + "-block_" + tbox::Utilities::blockToString(*ilb);
-         string out_patch_name =
+         std::string out_patch_name =
             "level_" + tbox::Utilities::levelToString(level_number)
             + "-patch_" + tbox::Utilities::patchToString(*olp)
             + "-block_" + tbox::Utilities::blockToString(*olb);
@@ -713,7 +713,7 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
    const int output_proc)
 {
    //Get the keys in the patch input database.
-   std::vector<string> keys = patch_in_db->getAllKeys();
+   std::vector<std::string> keys = patch_in_db->getAllKeys();
 
    //Place the database on arrays of length 1.
    std::vector<std::shared_ptr<tbox::Database> > in_db_array(1);
@@ -742,7 +742,7 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
 void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    std::vector<std::shared_ptr<tbox::Database> >& output_dbs,
    const std::vector<std::shared_ptr<tbox::Database> >& level_in_dbs,
-   const string& key,
+   const std::string& key,
    const int num_files_written,
    const std::vector<int>& input_proc_nums,
    const int total_output_files)
@@ -768,7 +768,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    std::vector<std::vector<int> > ratio;
    int b = 0;
    for ( ; ; ++b ) {   
-      string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b);
+      std::string ratio_name = "d_ratio_" + tbox::Utilities::intToString(b);
       if (level_in_dbs[0]->isInteger(ratio_name)) {
          ratio.push_back(level_in_dbs[0]->getIntegerVector(ratio_name));
       } else {
@@ -780,7 +780,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       level_out_dbs[i]->putInteger("HIER_MAPPED_BOX_LEVEL_VERSION", version);
       level_out_dbs[i]->putInteger("dim", dim);
       for (int nb = 0; nb < static_cast<int>(ratio.size()); ++nb) {
-         string ratio_name = "d_ratio_" + tbox::Utilities::intToString(nb);
+         std::string ratio_name = "d_ratio_" + tbox::Utilities::intToString(nb);
          level_out_dbs[i]->putIntegerVector(ratio_name, ratio[nb]);
       }
       level_out_dbs[i]->putInteger("d_nproc", total_output_files);

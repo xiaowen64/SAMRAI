@@ -12,7 +12,6 @@
 
 #include <string>
 #include <iostream>
-using namespace std;
 
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -29,7 +28,7 @@ class StreamAppender:public tbox::Logger::Appender
 
 public:
    StreamAppender(
-      ostream* stream) {
+      std::ostream* stream) {
       d_stream = stream;
    }
 
@@ -43,7 +42,7 @@ public:
    }
 
 private:
-   ostream* d_stream;
+   std::ostream* d_stream;
 };
 
 int main(
@@ -62,7 +61,7 @@ int main(
     */
    {
 
-      fstream file("user.log", fstream::out);
+      std::fstream file("user.log", std::fstream::out);
 
       std::shared_ptr<tbox::Logger::Appender> appender(
          new StreamAppender(&file));

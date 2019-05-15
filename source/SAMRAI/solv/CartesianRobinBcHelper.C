@@ -76,8 +76,6 @@ void SAMRAI_F77_FUNC(settype3cells3d, SETTYPE3CELLS3D) (
 namespace SAMRAI {
 namespace solv {
 
-// using namespace std;
-
 /*
  ************************************************************************
  * Constructor

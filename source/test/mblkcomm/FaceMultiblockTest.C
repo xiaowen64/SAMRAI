@@ -23,10 +23,10 @@
 using namespace SAMRAI;
 
 FaceMultiblockTest::FaceMultiblockTest(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> main_input_db,
-   const string& refine_option):
+   const std::string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
 {
@@ -533,9 +533,9 @@ bool FaceMultiblockTest::verifyResults(
    const hier::BlockId& block_id)
 {
 
-   tbox::plog << "\nEntering FaceMultiblockTest::verifyResults..." << endl;
-   tbox::plog << "level_number = " << level_number << endl;
-   tbox::plog << "Patch box = " << patch.getBox() << endl;
+   tbox::plog << "\nEntering FaceMultiblockTest::verifyResults..." << std::endl;
+   tbox::plog << "level_number = " << level_number << std::endl;
+   tbox::plog << "Patch box = " << patch.getBox() << std::endl;
 
    hier::IntVector tgcw(d_dim, 0);
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
@@ -585,11 +585,11 @@ bool FaceMultiblockTest::verifyResults(
 
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : face index = " << *ci << endl;
+                             << " : face index = " << *ci << std::endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
-                             << " : depth index = " << d << endl;
+                             << " : depth index = " << d << std::endl;
                   tbox::perr << "    result = " << result
-                             << " : correct = " << correct << endl;
+                             << " : correct = " << correct << std::endl;
                   test_failed = true;
                }
             }
@@ -645,12 +645,12 @@ bool FaceMultiblockTest::verifyResults(
                         if (!tbox::MathUtilities<double>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
-                                      << " : face index = " << fi << endl;
+                                      << " : face index = " << fi << std::endl;
                            tbox::perr << "  Variable = "
                                       << d_variable_src_name[i]
-                                      << " : depth index = " << d << endl;
+                                      << " : depth index = " << d << std::endl;
                            tbox::perr << "    result = " << result
-                                      << " : correct = " << correct << endl;
+                                      << " : correct = " << correct << std::endl;
                            test_failed = true;
                         }
                      }
@@ -736,12 +736,12 @@ bool FaceMultiblockTest::verifyResults(
                            if (!tbox::MathUtilities<double>::equalEps(correct,
                                   result)) {
                               tbox::perr << "Test FAILED: ...."
-                                         << " : face index = " << *ci << endl;
+                                         << " : face index = " << *ci << std::endl;
                               tbox::perr << "  Variable = "
                                          << d_variable_src_name[i]
-                                         << " : depth index = " << d << endl;
+                                         << " : depth index = " << d << std::endl;
                               tbox::perr << "    result = " << result
-                                         << " : correct = " << correct << endl;
+                                         << " : correct = " << correct << std::endl;
                               test_failed = true;
                            }
                         }
@@ -754,16 +754,16 @@ bool FaceMultiblockTest::verifyResults(
    }
 
    if (!test_failed) {
-      tbox::plog << "FaceMultiblockTest Successful!" << endl;
+      tbox::plog << "FaceMultiblockTest Successful!" << std::endl;
    } else {
-      tbox::perr << "Multiblock FaceMultiblockTest FAILED: .\n" << endl;
+      tbox::perr << "Multiblock FaceMultiblockTest FAILED: .\n" << std::endl;
    }
 
    solution.reset();   // just to be anal...
 
-   tbox::plog << "\nExiting FaceMultiblockTest::verifyResults..." << endl;
-   tbox::plog << "level_number = " << level_number << endl;
-   tbox::plog << "Patch box = " << patch.getBox() << endl << endl;
+   tbox::plog << "\nExiting FaceMultiblockTest::verifyResults..." << std::endl;
+   tbox::plog << "level_number = " << level_number << std::endl;
+   tbox::plog << "Patch box = " << patch.getBox() << std::endl << std::endl;
 
    return !test_failed;
 }

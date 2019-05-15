@@ -99,8 +99,6 @@ void SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const in
 namespace SAMRAI {
 namespace appu {
 
-// using namespace std;
-
 bool CartesianBoundaryUtilities3::s_fortran_constants_stuffed = false;
 
 /*

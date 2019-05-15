@@ -71,7 +71,6 @@ void SAMRAI_F77_FUNC(cartwgtavgcellcplx4d, CARTWGTAVGCELLCPLX4D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianCellComplexWeightedAverage::CartesianCellComplexWeightedAverage():
    hier::CoarsenOperator("CONSERVATIVE_COARSEN")

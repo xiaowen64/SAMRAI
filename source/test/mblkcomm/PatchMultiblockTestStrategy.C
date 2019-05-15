@@ -64,7 +64,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 {
    TBOX_ASSERT(db);
 
-   std::vector<string> var_keys = db->getAllKeys();
+   std::vector<std::string> var_keys = db->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
    d_variable_src_name.resize(nkeys);
@@ -82,14 +82,14 @@ void PatchMultiblockTestStrategy::readVariableInput(
          d_variable_src_name[i] = var_db->getString("src_name");
       } else {
          TBOX_ERROR("Variable input error: No `src_name' string found for "
-            << "key = " << var_keys[i] << endl);
+            << "key = " << var_keys[i] << std::endl);
       }
 
       if (var_db->keyExists("dst_name")) {
          d_variable_dst_name[i] = var_db->getString("dst_name");
       } else {
          TBOX_ERROR("Variable input error: No `dst_name' string found for "
-            << "key = " << var_keys[i] << endl);
+            << "key = " << var_keys[i] << std::endl);
       }
 
       if (var_db->keyExists("depth")) {
@@ -123,7 +123,7 @@ void PatchMultiblockTestStrategy::readRefinementInput(
 {
    TBOX_ASSERT(db);
 
-   std::vector<string> box_keys = db->getAllKeys();
+   std::vector<std::string> box_keys = db->getAllKeys();
    int nkeys = static_cast<int>(box_keys.size());
 
    d_refine_level_boxes.resize(nkeys);

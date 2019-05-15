@@ -22,7 +22,6 @@
 
 #include <string>
 #include <vector>
-using namespace std;
 #define included_String
 
 #include "MblkGeometry.h"
@@ -43,7 +42,7 @@ public:
    // the constructor and destructor
    //
    MblkEuler(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database> input_db,
       std::shared_ptr<hier::BaseGridGeometry>& grid_geom);
@@ -233,7 +232,7 @@ public:
     */
    void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
 private:
    /*
@@ -264,7 +263,7 @@ private:
     * The object name is used for error/warning reporting and also as a
     * string label for restart database entries.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -354,7 +353,7 @@ private:
    //
    // Indicator for problem type and initial conditions
    //
-   string d_data_problem;
+   std::string d_data_problem;
 
    //
    // region initialization inputs
@@ -366,7 +365,7 @@ private:
    // array of initial conditions and their names [region][state]
    //
    std::vector<std::vector<double> > d_state_ic;
-   std::vector<string> d_state_names;
+   std::vector<std::string> d_state_names;
 
    //
    // This class stores geometry information used for constructing the
@@ -388,11 +387,11 @@ private:
    // ====================== Refinement Data (private) =======================
    //
 
-   std::vector<string> d_refinement_criteria;
+   std::vector<std::string> d_refinement_criteria;
 
    /// history variable gradient tagging tolerance
    std::vector<std::vector<double> > d_state_grad_tol;
-   std::vector<string> d_state_grad_names;
+   std::vector<std::string> d_state_grad_names;
    std::vector<int> d_state_grad_id;
 
    //

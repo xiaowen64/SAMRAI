@@ -19,7 +19,6 @@
 
 namespace SAMRAI {
 
-using namespace std;
 
 // These are used in the cell tagging routine.
 #ifndef TRUE
@@ -67,7 +66,7 @@ void PatchDataTestStrategy::readVariableInput(
 {
    TBOX_ASSERT(db);
 
-   std::vector<string> var_keys = db->getAllKeys();
+   std::vector<std::string> var_keys = db->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
    d_variable_src_name.resize(nkeys);
@@ -86,14 +85,14 @@ void PatchDataTestStrategy::readVariableInput(
          d_variable_src_name[i] = var_db->getString("src_name");
       } else {
          TBOX_ERROR("Variable input error: No `src_name' string found for "
-            << "key = " << var_keys[i] << endl);
+            << "key = " << var_keys[i] << std::endl);
       }
 
       if (var_db->keyExists("dst_name")) {
          d_variable_dst_name[i] = var_db->getString("dst_name");
       } else {
          TBOX_ERROR("Variable input error: No `dst_name' string found for "
-            << "key = " << var_keys[i] << endl);
+            << "key = " << var_keys[i] << std::endl);
       }
 
       if (var_db->keyExists("depth")) {

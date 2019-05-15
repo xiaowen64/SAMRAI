@@ -51,7 +51,6 @@
 #include <string>
 #include <fstream>
 #include <memory>
-using namespace std;
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -176,8 +175,8 @@ using namespace SAMRAI;
 
 static void
 dumpMatlabData1dPencil(
-   const string& dirname,
-   const string& filename,
+   const std::string& dirname,
+   const std::string& filename,
    const int ext,
    const double plot_time,
    const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -204,8 +203,8 @@ int main(
 
    {
 
-      string input_filename;
-      string restart_read_dirname;
+      std::string input_filename;
+      std::string restart_read_dirname;
       int restore_num = 0;
 
       bool is_from_restart = false;
@@ -215,7 +214,7 @@ int main(
                     << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -228,9 +227,9 @@ int main(
          }
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
-      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::plog << "restore_num = " << restore_num << endl;
+      tbox::plog << "input_filename = " << input_filename << std::endl;
+      tbox::plog << "restart_read_dirname = " << restart_read_dirname << std::endl;
+      tbox::plog << "restore_num = " << restore_num << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -252,7 +251,7 @@ int main(
 #ifdef SGS
          // TODO change to what?
          if (global_db->keyExists("tag_clustering_method")) {
-            string tag_clustering_method =
+            std::string tag_clustering_method =
                global_db->getString("tag_clustering_method");
             mesh::BergerRigoutsos::setClusteringOption(tag_clustering_method);
          }
@@ -317,8 +316,8 @@ int main(
          }
       }
 
-      string matlab_dump_filename;
-      string matlab_dump_dirname;
+      std::string matlab_dump_filename;
+      std::string matlab_dump_dirname;
       int matlab_dump_interval = 0;
       tbox::Dimension::dir_t matlab_pencil_direction = 0;
       std::vector<int> matlab_pencil_index(dim.getValue() - 1);
@@ -365,7 +364,7 @@ int main(
 
       bool use_refined_timestepping = true;
       if (main_db->keyExists("timestepping")) {
-         string timestepping_method = main_db->getString("timestepping");
+         std::string timestepping_method = main_db->getString("timestepping");
          if (timestepping_method == "SYNCHRONIZED") {
             use_refined_timestepping = false;
          }
@@ -532,14 +531,14 @@ int main(
 
 #if 1
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
 #endif
-      tbox::plog << "\nCheck Euler data... " << endl;
+      tbox::plog << "\nCheck Euler data... " << std::endl;
       euler_model->printClassData(tbox::plog);
 
       /*
@@ -599,20 +598,20 @@ int main(
 
          int iteration_num = time_integrator->getIntegratorStep() + 1;
 
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
          tbox::pout << "At begining of timestep # " << iteration_num - 1
-                    << endl;
-         tbox::pout << "Simulation time is " << loop_time << endl;
-         tbox::pout << "Current dt is " << dt_now << endl;
+                    << std::endl;
+         tbox::pout << "Simulation time is " << loop_time << std::endl;
+         tbox::pout << "Current dt is " << dt_now << std::endl;
 
          double dt_new = time_integrator->advanceHierarchy(dt_now);
 
          loop_time += dt_now;
          dt_now = dt_new;
 
-         tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-         tbox::pout << "Simulation time is " << loop_time << endl;
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+         tbox::pout << "Simulation time is " << loop_time << std::endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 
          /*
           * At specified intervals, write restart files.
@@ -674,7 +673,7 @@ int main(
          tbox::plog << "Step " << num_buf
                     << " P" << mpi.getRank()
                     << ": " << tbox::SAMRAI_MPI::getIncomingBytes()
-                    << " bytes in" << endl;
+                    << " bytes in" << std::endl;
 #endif
 
       }
@@ -708,7 +707,7 @@ int main(
    }
 
    if (num_failures == 0) {
-      tbox::pout << "\nPASSED:  Euler" << endl;
+      tbox::pout << "\nPASSED:  Euler" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();
@@ -719,8 +718,8 @@ int main(
 }
 
 static void dumpMatlabData1dPencil(
-   const string& dirname,
-   const string& filename,
+   const std::string& dirname,
+   const std::string& filename,
    const int ext,
    const double plot_time,
    const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -795,7 +794,7 @@ static void dumpMatlabData1dPencil(
     * Create matlab filename and open the output stream.
     */
 
-   string dump_filename = filename;
+   std::string dump_filename = filename;
    if (!dirname.empty()) {
       tbox::Utilities::recursiveMkdir(dirname);
       dump_filename = dirname;
@@ -817,8 +816,8 @@ static void dumpMatlabData1dPencil(
     * Open a new output file having name name of buffer character array.
     */
 
-   ofstream outfile(buffer, ios::out);
-   outfile.setf(ios::scientific);
+   std::ofstream outfile(buffer, std::ios::out);
+   outfile.setf(std::ios::scientific);
    outfile.precision(10);
 
    delete[] buffer;
@@ -829,7 +828,7 @@ static void dumpMatlabData1dPencil(
    for (int i = 0; i < 6 + 1; ++i) {
       outfile << plot_time << "  ";
    }
-   outfile << endl;
+   outfile << std::endl;
 
    euler_model->setDataContext(
       hier::VariableDatabase::getDatabase()->getContext("CURRENT"));

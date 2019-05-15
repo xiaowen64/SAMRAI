@@ -23,7 +23,6 @@
 
 using namespace SAMRAI;
 
-// using namespace std;
 
 DLBGTest::DLBGTest(
    const std::string& object_name,

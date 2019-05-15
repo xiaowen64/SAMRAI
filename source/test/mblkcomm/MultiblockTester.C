@@ -33,12 +33,12 @@ using namespace SAMRAI;
  */
 
 MultiblockTester::MultiblockTester(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database>& main_input_db,
    std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    PatchMultiblockTestStrategy* data_test,
-   const string& refine_option):
+   const std::string& refine_option):
    xfer::RefinePatchStrategy(),
    xfer::SingularityPatchStrategy(),
    d_object_name(object_name),
@@ -71,7 +71,7 @@ MultiblockTester::MultiblockTester(
    if (!((d_refine_option == "INTERIOR_FROM_SAME_LEVEL")
          || (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL"))) {
       TBOX_ERROR(object_name << " input error: illegal refine_option = "
-                             << d_refine_option << endl);
+                             << d_refine_option << std::endl);
    }
 
    d_patch_data_components.clrAllFlags();
@@ -98,7 +98,7 @@ void MultiblockTester::registerVariable(
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
    const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
-   const string& operator_name)
+   const std::string& operator_name)
 {
    TBOX_ASSERT(src_variable);
    TBOX_ASSERT(dst_variable);
@@ -160,7 +160,7 @@ void MultiblockTester::registerVariableForReset(
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
    const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
-   const string& operator_name)
+   const std::string& operator_name)
 {
    TBOX_ASSERT(src_variable);
    TBOX_ASSERT(dst_variable);

@@ -21,7 +21,6 @@
 #include <string>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 #include "database_tests.h"
@@ -78,13 +77,13 @@ int main(
 
 #ifdef HAVE_SILO
 
-      tbox::plog << "\n--- Silo database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- Silo database tests BEGIN ---" << std::endl;
 
       tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
 
       RestartTester silo_tester;
 
-      tbox::plog << "\n--- Silo write database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- Silo write database tests BEGIN ---" << std::endl;
 
       setupTestData();
 
@@ -101,9 +100,9 @@ int main(
 
       database->close();
 
-      tbox::plog << "\n--- Silo write database tests END ---" << endl;
+      tbox::plog << "\n--- Silo write database tests END ---" << std::endl;
 
-      tbox::plog << "\n--- Silo read database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- Silo read database tests BEGIN ---" << std::endl;
 
       database.reset(new tbox::SiloDatabase("SAMRAI Restart"));
 
@@ -117,14 +116,14 @@ int main(
 
       database->close();
 
-      tbox::plog << "\n--- Silo read database tests END ---" << endl;
+      tbox::plog << "\n--- Silo read database tests END ---" << std::endl;
 
-      tbox::plog << "\n--- Silo database tests END ---" << endl;
+      tbox::plog << "\n--- Silo database tests END ---" << std::endl;
 
 #endif
 
       if (number_of_failures == 0) {
-         tbox::pout << "\nPASSED:  Silo" << endl;
+         tbox::pout << "\nPASSED:  Silo" << std::endl;
       }
    }
 

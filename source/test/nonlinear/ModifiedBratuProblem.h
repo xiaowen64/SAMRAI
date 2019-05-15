@@ -69,7 +69,6 @@
 
 using namespace SAMRAI;
 using namespace xfer;
-using namespace std;
 using namespace hier;
 
 /**
@@ -104,7 +103,7 @@ public:
     * for communicating data between patches on the hierarchy.
     */
    ModifiedBratuProblem(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       const std::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
       std::shared_ptr<tbox::Database> input_db,
@@ -410,7 +409,7 @@ public:
     */
    void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
 private:
    /*
@@ -500,7 +499,7 @@ private:
     * The object name is used as a handle to databases stored in
     * restart files and for error reporting purposes.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Dimension of the problem.

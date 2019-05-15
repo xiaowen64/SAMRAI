@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/Logger.h"
 
 #include <string>
-using namespace std;
 
 using namespace SAMRAI;
 

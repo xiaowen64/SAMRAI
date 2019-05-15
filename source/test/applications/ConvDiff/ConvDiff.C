@@ -27,8 +27,6 @@
 #endif
 #endif
 
-using namespace std;
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -86,7 +84,7 @@ using namespace std;
  */
 
 ConvDiff::ConvDiff(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> input_db,
    std::shared_ptr<geom::CartesianGridGeometry> grid_geom):
@@ -204,7 +202,7 @@ ConvDiff::ConvDiff(
          d_object_name << ": "
                        << "Unknown d_data_problem string = "
                        << d_data_problem
-                       << " encountered in constructor" << endl);
+                       << " encountered in constructor" << std::endl);
    }
 
    /*
@@ -336,13 +334,13 @@ void ConvDiff::registerModelVariables(
    int prim_var_id = vardb->mapVariableAndContextToIndex(
          d_primitive_vars, getInteriorContext());
 
-   string dump_name = "Primitive Var #";
+   std::string dump_name = "Primitive Var #";
    const int size = static_cast<int>(dump_name.length()) + 16;
    char* buffer = new char[size];
 
    for (int n = 0; n < NEQU; ++n) {
       sprintf(buffer, "%s%01d", dump_name.c_str(), n);
-      string variable_name(buffer);
+      std::string variable_name(buffer);
 #ifdef HAVE_HDF5
       if (d_visit_writer) {
          d_visit_writer->
@@ -354,7 +352,7 @@ void ConvDiff::registerModelVariables(
             d_object_name << ": registerModelVariables()\n"
                           << "VisIt data writer was not registered.\n"
                           << "Consequently, no plot data will\n"
-                          << "be written." << endl);
+                          << "be written." << std::endl);
       }
 #endif
 
@@ -428,8 +426,8 @@ void ConvDiff::initializeDataOnPatch(
             NEQU);
       }
 
-      // tbox::plog << "Level:" << patch.getPatchLevelNumber() << "\n" << endl;
-      // tbox::plog << "Patch:" << endl;
+      // tbox::plog << "Level:" << patch.getPatchLevelNumber() << "\n" << std::endl;
+      // tbox::plog << "Patch:" << std::endl;
       // primitive_vars->print(pbox,tbox::plog);
    }
 }
@@ -528,9 +526,9 @@ void ConvDiff::singleStep(
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
-//      tbox::plog << "----primitive_var_current" << endl;
+//      tbox::plog << "----primitive_var_current" << std::endl;
 //      prim_var_current->print(prim_var_current->getGhostBox(),tbox::plog);
-//      tbox::plog << "----primitive_var_scratch" << endl;
+//      tbox::plog << "----primitive_var_scratch" << std::endl;
 //      prim_var_scratch->print(prim_var_scratch->getGhostBox(),tbox::plog);
 //
 // Evaluate Right hand side F(prim_var_scratch)
@@ -561,7 +559,7 @@ void ConvDiff::singleStep(
          NEQU);
    }
 
-//    tbox::plog << "Function Evaluation" << endl;
+//    tbox::plog << "Function Evaluation" << std::endl;
 //    function_eval->print(function_eval->getBox());
 //
 // Take RK step
@@ -591,7 +589,7 @@ void ConvDiff::singleStep(
          function_eval->getPointer(),
          NEQU);
    }
-//        tbox::plog << "----prim_var_scratch after RK step" << endl;
+//        tbox::plog << "----prim_var_scratch after RK step" << std::endl;
 //        prim_var_scratch->print(prim_var_scratch->getGhostBox(),tbox::plog);
 
 }
@@ -796,80 +794,80 @@ void ConvDiff::registerVisItDataWriter(
  */
 
 void ConvDiff::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
    fflush(stdout);
    int j;
 
-   os << "ptr ConvDiff = " << (ConvDiff *)this << endl;
+   os << "ptr ConvDiff = " << (ConvDiff *)this << std::endl;
    os << "ptr grid geometry = "
-      << d_grid_geometry.get() << endl;
+      << d_grid_geometry.get() << std::endl;
 
-   os << "Coefficients..." << endl;
+   os << "Coefficients..." << std::endl;
    for (j = 0; j < d_dim.getValue(); ++j) os << "d_convection_coeff[" << j << "] = "
-                                             << d_convection_coeff[j] << endl;
-   os << "d_diffusion_coeff = " << d_diffusion_coeff << endl;
-   os << "d_source_coeff = " << d_source_coeff << endl;
+                                             << d_convection_coeff[j] << std::endl;
+   os << "d_diffusion_coeff = " << d_diffusion_coeff << std::endl;
+   os << "d_source_coeff = " << d_source_coeff << std::endl;
 
-   os << "Problem description and initial data..." << endl;
-   os << "   d_data_problem = " << d_data_problem << endl;
+   os << "Problem description and initial data..." << std::endl;
+   os << "   d_data_problem = " << d_data_problem << std::endl;
 
-   os << "       d_radius = " << d_radius << endl;
+   os << "       d_radius = " << d_radius << std::endl;
    os << "       d_center = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
-   os << endl;
+   os << std::endl;
    os << "       d_val_inside = ";
    for (j = 0; j < NEQU; ++j) os << d_val_inside[j] << " ";
-   os << endl;
+   os << std::endl;
    os << "       d_val_outside = ";
    for (j = 0; j < NEQU; ++j) os << d_val_outside[j] << " ";
-   os << endl;
+   os << std::endl;
 
-   os << "Boundary Condition data..." << endl;
+   os << "Boundary Condition data..." << std::endl;
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_val[" << j << "] = "
-               << d_bdry_edge_val[j] << endl;
+               << d_bdry_edge_val[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << std::endl;
       }
    } else if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << std::endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_val[" << j << "] = "
-               << d_bdry_face_val[j] << endl;
+               << d_bdry_face_val[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << std::endl;
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << std::endl;
       }
    }
 
-   os << "         d_nghosts = " << d_nghosts << endl;
-   os << "         d_zero_ghosts = " << d_zero_ghosts << endl;
-   os << "         d_cfl = " << d_cfl << endl;
+   os << "         d_nghosts = " << d_nghosts << std::endl;
+   os << "         d_zero_ghosts = " << d_zero_ghosts << std::endl;
+   os << "         d_cfl = " << d_cfl << std::endl;
 
 }
 
@@ -926,13 +924,13 @@ void ConvDiff::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`data_problem' value not found in input."
-                          << endl);
+                          << std::endl);
       }
 
       if (!input_db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << std::endl);
       }
       std::shared_ptr<tbox::Database> init_data_db(
          input_db->getDatabase("Initial_data"));
@@ -946,28 +944,28 @@ void ConvDiff::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("center")) {
             init_data_db->getDoubleArray("center", d_center, d_dim.getValue());
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("val_inside")) {
             init_data_db->getDoubleArray("val_inside", d_val_inside, NEQU);
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "val_inside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("val_outside")) {
             init_data_db->getDoubleArray("val_outside", d_val_outside, NEQU);
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`val_outside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
 
          found_problem_data = true;
@@ -978,7 +976,7 @@ void ConvDiff::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "Bad data in `Initial_data' database."
-                          << endl);
+                          << std::endl);
       }
 
       const hier::IntVector& one_vec(hier::IntVector::getOne(d_dim));
@@ -1011,7 +1009,7 @@ void ConvDiff::getFromInput(
          TBOX_WARNING(
             d_object_name << ": "
                           << "Key data `Boundary_data' not found in input. "
-                          << "Using default FLOW boundary conditions." << endl);
+                          << "Using default FLOW boundary conditions." << std::endl);
       }
    }
 }
@@ -1125,7 +1123,7 @@ void ConvDiff::getFromRestart()
 
 void ConvDiff::readDirichletBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -1146,7 +1144,7 @@ void ConvDiff::readDirichletBoundaryDataEntry(
 
 void ConvDiff::readNeumannBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -1167,7 +1165,7 @@ void ConvDiff::readNeumannBoundaryDataEntry(
 
 void ConvDiff::readStateDataEntry(
    std::shared_ptr<tbox::Database> db,
-   const string& db_name,
+   const std::string& db_name,
    int array_indx,
    std::vector<double>& val)
 {
@@ -1181,7 +1179,7 @@ void ConvDiff::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`val' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
 
 }
@@ -1290,7 +1288,7 @@ void ConvDiff::checkBoundaryData(
                     << "     " << num_bad_values
                     << " bad VAL values found for\n"
                     << "     boundary type " << btype << " at location "
-                    << bloc << endl;
+                    << bloc << std::endl;
       }
 #endif
 

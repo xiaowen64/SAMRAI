@@ -16,9 +16,7 @@
 #include <fstream>
 #include <memory>
 
-using namespace std;
 
-using namespace std;
 
 #ifndef _MSC_VER
 #include <unistd.h>
@@ -109,16 +107,16 @@ int main(
 #if !defined(HAVE_SUNDIALS) || !defined(HAVE_HYPRE)
       tbox::pout << "Library compiled WITHOUT CVODE -and- HYPRE...\n"
                  << "SAMRAI was not configured with one, or both, of "
-                 << "these packages.  Cannot run this example." << endl;
+                 << "these packages.  Cannot run this example." << std::endl;
 #else
 
       /*
        * Process command line arguments.
        */
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 2) {
-         tbox::pout << "USAGE:  " << argv[0] << " <input filename> " << endl;
+         tbox::pout << "USAGE:  " << argv[0] << " <input filename> " << std::endl;
          exit(-1);
       } else {
          input_filename = argv[1];
@@ -350,13 +348,13 @@ int main(
          std::shared_ptr<hier::PatchHierarchy> init_hierarchy(
             y_init->getPatchHierarchy());
 
-         tbox::pout << "Initial solution vector y() at initial time: " << endl;
+         tbox::pout << "Initial solution vector y() at initial time: " << std::endl;
          int ln;
-         tbox::pout << "y(" << init_time << "): " << endl;
+         tbox::pout << "y(" << init_time << "): " << std::endl;
          for (ln = 0; ln < init_hierarchy->getNumberOfLevels(); ++ln) {
             std::shared_ptr<hier::PatchLevel> level(
                init_hierarchy->getPatchLevel(ln));
-            tbox::plog << "level = " << ln << endl;
+            tbox::plog << "level = " << ln << std::endl;
 
             for (hier::PatchLevel::iterator p(level->begin());
                  p != level->end(); ++p) {
@@ -375,10 +373,10 @@ int main(
        * Compute maxNorm and L1Norm of initial vector
        */
       if (solution_logging) {
-         tbox::pout << "\n\nBefore solve..." << endl;
-         tbox::pout << "Max Norm of y()= " << y_init->maxNorm() << endl;
-         tbox::pout << "L1 Norm of y()= " << y_init->L1Norm() << endl;
-         tbox::pout << "L2 Norm of y()= " << y_init->L2Norm() << endl;
+         tbox::pout << "\n\nBefore solve..." << std::endl;
+         tbox::pout << "Max Norm of y()= " << y_init->maxNorm() << std::endl;
+         tbox::pout << "L1 Norm of y()= " << y_init->L1Norm() << std::endl;
+         tbox::pout << "L2 Norm of y()= " << y_init->L2Norm() << std::endl;
       }
 
       /**************************************************************************
@@ -404,7 +402,7 @@ int main(
           * Perform CVODE solve to the requested interval time.
           */
          t_cvode_solve->start();
-         tbox::plog << "return code = " << cvode_solver->solve() << endl;
+         tbox::plog << "return code = " << cvode_solver->solve() << std::endl;
          t_cvode_solve->stop();
          double actual_time =
             cvode_solver->getActualFinalValueOfIndependentVariable();
@@ -431,13 +429,13 @@ int main(
           * Write solution (if desired).
           */
          if (solution_logging) {
-            tbox::plog << "y(" << final_time << "): " << endl << endl;
+            tbox::plog << "y(" << final_time << "): " << std::endl << std::endl;
             t_log_dump->start();
             for (int ln = 0; ln < result_hierarchy->getNumberOfLevels();
                  ++ln) {
                std::shared_ptr<hier::PatchLevel> level(
                   result_hierarchy->getPatchLevel(ln));
-               tbox::plog << "level = " << ln << endl;
+               tbox::plog << "level = " << ln << std::endl;
 
                for (hier::PatchLevel::iterator p(level->begin());
                     p != level->end(); ++p) {
@@ -469,32 +467,32 @@ int main(
       int correct_precond_solves = main_db->getInteger("correct_precond_solves");
 
       if (counters[0] == correct_rhs_evals) {
-         tbox::plog << "Test 0: Number RHS evals CORRECT" << endl;
+         tbox::plog << "Test 0: Number RHS evals CORRECT" << std::endl;
       } else {
-         tbox::perr << "Test 0 FAILED: Number RHS evals INCORRECT" << endl;
+         tbox::perr << "Test 0 FAILED: Number RHS evals INCORRECT" << std::endl;
          tbox::perr << "Correct Number RHS evals:  " << correct_rhs_evals
-                    << endl;
-         tbox::perr << "Number RHS evals computed: " << counters[0] << endl;
+                    << std::endl;
+         tbox::perr << "Number RHS evals computed: " << counters[0] << std::endl;
       }
 
       if (counters[1] == correct_precond_setups) {
-         tbox::plog << "Test 1: Number precond setups CORRECT" << endl;
+         tbox::plog << "Test 1: Number precond setups CORRECT" << std::endl;
       } else {
-         tbox::perr << "Test 1 FAILED: Number precond setups INCORRECT" << endl;
+         tbox::perr << "Test 1 FAILED: Number precond setups INCORRECT" << std::endl;
          tbox::perr << "Correct number precond setups:  "
-                    << correct_precond_setups << endl;
+                    << correct_precond_setups << std::endl;
          tbox::perr << "Number precond setups computed: " << counters[1]
-                    << endl;
+                    << std::endl;
       }
 
       if (counters[2] == correct_precond_solves) {
-         tbox::plog << "Test 2: Number precond solves CORRECT" << endl;
+         tbox::plog << "Test 2: Number precond solves CORRECT" << std::endl;
       } else {
-         tbox::perr << "Test 2 FAILED: Number precond solves INCORRECT" << endl;
+         tbox::perr << "Test 2 FAILED: Number precond solves INCORRECT" << std::endl;
          tbox::perr << "Correct number precond solves:  "
-                    << correct_precond_solves << endl;
+                    << correct_precond_solves << std::endl;
          tbox::perr << "Number precond solves computed: " << counters[2]
-                    << endl;
+                    << std::endl;
       }
 #endif
 
@@ -503,7 +501,7 @@ int main(
                     << "\n\tTotal number of RHS evaluations = " << counters[0]
                     << "\n\tTotal number of precond setups = " << counters[1]
                     << "\n\tTotal number of precond solves = " << counters[2]
-                    << endl;
+                    << std::endl;
 
          /*
           * Write out timestep sequence information
@@ -512,7 +510,7 @@ int main(
                     << "  time                   \t"
                     << "  Max Norm  \t"
                     << "  L1 Norm  \t"
-                    << "  L2 Norm  " << endl;
+                    << "  L2 Norm  " << std::endl;
 
          for (interval = 0; interval < num_print_intervals; ++interval) {
             tbox::pout.precision(18);
@@ -520,7 +518,7 @@ int main(
             tbox::pout.precision(6);
             tbox::pout << "  " << maxnorm[interval] << "  \t"
                        << "  " << l1norm[interval] << "  \t"
-                       << "  " << l2norm[interval] << endl;
+                       << "  " << l2norm[interval] << std::endl;
          }
       }
 
@@ -546,7 +544,7 @@ int main(
 
 #endif // HAVE_SUNDIALS
 
-      tbox::pout << "\nPASSED:  cvode" << endl;
+      tbox::pout << "\nPASSED:  cvode" << std::endl;
 
    }
 

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <string>
 #include <memory>
-using namespace std;
 #define included_String
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
@@ -973,43 +972,43 @@ int main(
 
       // Print out control volume data and compute integrals...
 
-      tbox::plog << "cell control volume data" << endl;
+      tbox::plog << "cell control volume data" << std::endl;
       cell_ops->printData(cwgt_id, tbox::plog);
-      tbox::plog << "face control volume data" << endl;
+      tbox::plog << "face control volume data" << std::endl;
       face_ops->printData(fwgt_id, tbox::plog);
-      tbox::plog << "node control volume data" << endl;
+      tbox::plog << "node control volume data" << std::endl;
       node_ops->printData(nwgt_id, tbox::plog);
 
       double norm;
-      //pout << "sum of each control volume is " << endl;
+      //pout << "sum of each control volume is " << std::endl;
 
       norm = cell_ops->sumControlVolumes(cvindx[0], cwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.5)) {
          ++fail_count;
          tbox::perr << "FAILED: - Test #1, norm != 0.5\n";
       }
-      //pout << "Component 0 : " << norm << " = 0.5?" << endl;
+      //pout << "Component 0 : " << norm << " = 0.5?" << std::endl;
 
       norm = face_ops->sumControlVolumes(fvindx[0], fwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.75)) {
          ++fail_count;
          tbox::perr << "FAILED: - Test #2, norm != 0.75\n";
       }
-      //pout << "Component 1 : " << norm << " = 0.75?" << endl;
+      //pout << "Component 1 : " << norm << " = 0.75?" << std::endl;
 
       norm = node_ops->sumControlVolumes(nvindx[0], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.25)) {
          ++fail_count;
          tbox::perr << "FAILED: - Test #3, norm != 0.25\n";
       }
-      //pout << "Component 2 : " << norm << " = 0.25?" << endl;
+      //pout << "Component 2 : " << norm << " = 0.25?" << std::endl;
 
       norm = node_ops->sumControlVolumes(nvindx[1], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, (double)0.25)) {
          ++fail_count;
          tbox::perr << "FAILED: - Test #4, norm != 0.25\n";
       }
-      //pout << "Component 3 : " << norm << " = 0.25?\n" << endl;
+      //pout << "Component 3 : " << norm << " = 0.25?\n" << std::endl;
 
       // Simple tests of SAMRAI vector operations
 
@@ -1037,9 +1036,9 @@ int main(
       double p_norm;
       double l1_norm;
       my_norm = my_vec0->L1Norm();
-      //pout << "L1-norm of my_vec0 is " << norm << " = 6.0?\n" << endl;
+      //pout << "L1-norm of my_vec0 is " << norm << " = 6.0?\n" << std::endl;
       VecNorm(pvec0, NORM_1, &p_norm);
-      //pout << "L1-norm of pvec0 is " << norm << " = 6.0?\n" << endl;
+      //pout << "L1-norm of pvec0 is " << norm << " = 6.0?\n" << std::endl;
       if (!tbox::MathUtilities<double>::equalEps(my_norm, p_norm)) {
          ++fail_count;
          tbox::perr << "FAILED: - Test #5, L1-norm calculation\n";
@@ -1066,7 +1065,7 @@ int main(
          tbox::perr << "FAILED: - Test #8, both norms calculation, L2-norm\n";
       }
       //pout << "Both norms of pvec0: " << both_norms[0] << " and "
-      //                                << both_norms[1] << "\n" << endl;
+      //                                << both_norms[1] << "\n" << std::endl;
 
       // Set fine data in my_vec0 = 3.0
       cell_ops->resetLevels(1, 1);
@@ -1077,7 +1076,7 @@ int main(
       node_ops->setToScalar(nvindx[0], 3.0);
       node_ops->setToScalar(nvindx[1], 3.0);
 
-      tbox::plog << "CHECK my_vec0" << endl;
+      tbox::plog << "CHECK my_vec0" << std::endl;
       my_vec0->print(tbox::plog);
 
       double my_min_val = my_vec0->min();
@@ -1087,7 +1086,7 @@ int main(
       VecMin(pvec0, &dummy1, &p_min_val);
       double min_val;
       VecMin(pvec0, &dummy1, &min_val);
-      tbox::plog << "min of pvec0 is " << min_val << " = 2.0?\n" << endl;
+      tbox::plog << "min of pvec0 is " << min_val << " = 2.0?\n" << std::endl;
       if (!tbox::MathUtilities<double>::equalEps(my_min_val, p_min_val)) {
          ++fail_count;
          tbox::perr << "FAILED: - Test #9, min val calculation\n";
@@ -1177,7 +1176,7 @@ int main(
       }
 
       tbox::plog << "my_vec1 = 0.5 (& bogus values) on L0, = 0.3333 on L1?"
-                 << endl;
+                 << std::endl;
       my_vec1->print(tbox::plog);
 
       double max_val = my_vec1->max();
@@ -1238,7 +1237,7 @@ int main(
       my_vec0->setToScalar(-1.0);
       my_vec0->compareToScalar(my_vec0, 0.4);
       tbox::plog
-      << "my_vec0 = 1.0 on L0 (-1.0 in covered region), = 0.0 pn L1?" << endl;
+      << "my_vec0 = 1.0 on L0 (-1.0 in covered region), = 0.0 pn L1?" << std::endl;
       my_vec0->print(tbox::plog);
 
       int test = my_vec0->testReciprocal(my_vec1);
@@ -1247,7 +1246,7 @@ int main(
       }
 
       tbox::plog
-      << "my_vec0 = 2.0 on L0 (-1.0 in covered region), = 3.0 pn L1?" << endl;
+      << "my_vec0 = 2.0 on L0 (-1.0 in covered region), = 3.0 pn L1?" << std::endl;
       my_vec0->print(tbox::plog);
 
       // NOTE: -1's on face and node components on level 1 are due to fact
@@ -1266,7 +1265,7 @@ int main(
             my_vec2);
 
       tbox::plog
-      << "\n\nPRINTING VARIABLE DATABASE before adding new vector" << endl;
+      << "\n\nPRINTING VARIABLE DATABASE before adding new vector" << std::endl;
       variable_db->printClassData(tbox::plog);
 
       Vec pvec3;
@@ -1287,30 +1286,30 @@ int main(
       }
 
       tbox::plog << "\n\nPRINTING VARIABLE DATABASE after adding new vector"
-                 << endl;
+                 << std::endl;
       variable_db->printClassData(tbox::plog);
 
-      tbox::plog << "pvec3 = Random....?" << endl;
+      tbox::plog << "pvec3 = Random....?" << std::endl;
       VecView(pvec3, 0);
 
       VecSwap(pvec0, pvec3);
       tbox::plog << "After swapping pvec0 and pvec3, pvec0 = Random....?"
-                 << endl;
+                 << std::endl;
       VecView(pvec0, 0);
       tbox::plog
-      << "pvec3 = 2.0 on L0 (-1.0 in covered region), = 3.0 pn L1?" << endl;
+      << "pvec3 = 2.0 on L0 (-1.0 in covered region), = 3.0 pn L1?" << std::endl;
       VecView(pvec3, 0);
 
       VecAXPY(pvec0, four, pvec3);
       tbox::plog
       <<
       "pvec0 = pvec0 + 4.0 * pvec3 = Random + 8.0 on L0 (-3.0 - Random in covered region), = 12.0 + Random on L1?"
-      << endl;
+      << std::endl;
       VecView(pvec0, 0);
 
       VecScale(pvec3, half);
       tbox::plog
-      << "pvec3 = 1.0 on L0 (-0.5 in covered region), = 1.5 pn L1?" << endl;
+      << "pvec3 = 1.0 on L0 (-0.5 in covered region), = 1.5 pn L1?" << std::endl;
       VecView(pvec3, 0);
 
       VecSet(pvec0, one);
@@ -1318,15 +1317,15 @@ int main(
       VecSet(pvec2, three);
 
       VecAXPBY(pvec0, three, half, pvec1);
-      tbox::plog << "pvec0 = 3 * 2 + 0.5 * 1 = 6.5?" << endl;
+      tbox::plog << "pvec0 = 3 * 2 + 0.5 * 1 = 6.5?" << std::endl;
       VecView(pvec0, 0);
 
       VecAYPX(pvec1, twelve, pvec0);
-      tbox::plog << "pvec1 = 6.5 + 12 * 2 = 30.5?" << endl;
+      tbox::plog << "pvec1 = 6.5 + 12 * 2 = 30.5?" << std::endl;
       VecView(pvec1, 0);
 
       VecWAXPY(result, zero, pvec0, pvec0);
-      tbox::plog << "pvec0 = 0 * 6.5 + 6.5 = 6.5?" << endl;
+      tbox::plog << "pvec0 = 0 * 6.5 + 6.5 = 6.5?" << std::endl;
       VecView(result, 0);
 
       // No more tests....Destroy vectors and data...
@@ -1334,7 +1333,7 @@ int main(
       VecDestroy(&pvec3);
 
       tbox::plog
-      << "\n\nPRINTING VARIABLE DATABASE after freeing new vector" << endl;
+      << "\n\nPRINTING VARIABLE DATABASE after freeing new vector" << std::endl;
       variable_db->printClassData(tbox::plog);
 
       // Destroy PETSc vector wrappers
@@ -1378,7 +1377,7 @@ int main(
 #endif
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  pvtest" << endl;
+         tbox::pout << "\nPASSED:  pvtest" << std::endl;
       }
 
    }
