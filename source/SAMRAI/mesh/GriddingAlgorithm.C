@@ -24,6 +24,7 @@
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/tbox/Collectives.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
+#include "SAMRAI/tbox/AllocatorDatabase.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,21 +144,40 @@ GriddingAlgorithm::GriddingAlgorithm(
          var_db->getVariable(tag_interior_variable_name));
    if (!d_user_tag) {
       d_user_tag.reset(
-         new pdat::CellVariable<int>(dim, tag_interior_variable_name, 1));
+         new pdat::CellVariable<int>(
+           dim,
+           tag_interior_variable_name,
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+           1
+           ));
    }
 
    d_saved_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
          var_db->getVariable(tag_saved_variable_name));
    if (!d_saved_tag) {
       d_saved_tag.reset(
-         new pdat::CellVariable<int>(dim, tag_saved_variable_name, 1));
+         new pdat::CellVariable<int>(dim,
+           tag_saved_variable_name,
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+           1
+           ));
    }
 
    d_boolean_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
          var_db->getVariable(tag_algorithm_variable_name));
    if (!d_boolean_tag) {
       d_boolean_tag.reset(
-         new pdat::CellVariable<int>(dim, tag_algorithm_variable_name, 1));
+         new pdat::CellVariable<int>(dim,
+           tag_algorithm_variable_name,
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+           1
+           ));
    }
 
    d_buf_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
@@ -165,7 +185,11 @@ GriddingAlgorithm::GriddingAlgorithm(
    if (!d_buf_tag) {
       d_buf_tag.reset(new pdat::CellVariable<int>(dim,
             tag_buffer_variable_name,
-            1));
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+            1
+            ));
    }
 
    d_user_tag_indx = var_db->registerInternalSAMRAIVariable(d_user_tag,
