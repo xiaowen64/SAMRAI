@@ -82,6 +82,11 @@ AllocatorDatabase::initialize()
     rm.makeAllocator<umpire::strategy::DynamicPool>("samrai::data_allocator", allocator);
   }
 
+  if (!rm.isAllocator("samrai::tag_allocator")) {
+    rm.makeAllocator<umpire::strategy::DynamicPool>("samrai::tag_allocator",
+        rm.getAllocator(umpire::resource::Host));
+  }
+
   if (!rm.isAllocator("samrai::stream_allocator")) {
 #if defined(HAVE_CUDA)
     auto allocator = rm.getAllocator(umpire::resource::Pinned);
@@ -114,6 +119,13 @@ AllocatorDatabase::getStreamAllocator()
 {
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
   return umpire::TypedAllocator<char>(rm.getAllocator("samrai::stream_allocator"));
+}
+
+umpire::Allocator
+AllocatorDatabase::getTagAllocator()
+{
+  umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
+  return rm.getAllocator("samrai::tag_allocator");
 }
 
 #endif

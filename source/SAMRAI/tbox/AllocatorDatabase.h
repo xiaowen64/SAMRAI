@@ -34,6 +34,9 @@ public:
    umpire::TypedAllocator<char>
    getStreamAllocator();
 
+   umpire::Allocator
+     getTagAllocator();
+
 protected:
    AllocatorDatabase() = default;
 
