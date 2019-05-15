@@ -147,10 +147,10 @@ GriddingAlgorithm::GriddingAlgorithm(
          new pdat::CellVariable<int>(
            dim,
            tag_interior_variable_name,
-           1
 #if defined(HAVE_UMPIRE)
-           , tbox::AllocatorDatabase::getDatabase()->getTagAllocator()
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
 #endif
+           1
            ));
    }
 
@@ -160,10 +160,10 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_saved_tag.reset(
          new pdat::CellVariable<int>(dim,
            tag_saved_variable_name,
-           1
 #if defined(HAVE_UMPIRE)
-           , tbox::AllocatorDatabase::getDatabase()->getTagAllocator()
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
 #endif
+           1
            ));
    }
 
@@ -173,10 +173,10 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_boolean_tag.reset(
          new pdat::CellVariable<int>(dim,
            tag_algorithm_variable_name,
-           1
 #if defined(HAVE_UMPIRE)
-           , tbox::AllocatorDatabase::getDatabase()->getTagAllocator()
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
 #endif
+           1
            ));
    }
 
@@ -185,10 +185,10 @@ GriddingAlgorithm::GriddingAlgorithm(
    if (!d_buf_tag) {
       d_buf_tag.reset(new pdat::CellVariable<int>(dim,
             tag_buffer_variable_name,
-            1
 #if defined(HAVE_UMPIRE)
-           , tbox::AllocatorDatabase::getDatabase()->getTagAllocator()
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
 #endif
+            1
             ));
    }
 

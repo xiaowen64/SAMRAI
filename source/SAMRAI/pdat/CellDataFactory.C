@@ -56,7 +56,7 @@ template<class TYPE>
 CellDataFactory<TYPE>::CellDataFactory(
    int depth,
    const hier::IntVector& ghosts,
-   umpire::Allocator d_allocator):
+   umpire::Allocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_allocator(allocator),
@@ -87,7 +87,17 @@ CellDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
+#if defined(HAVE_UMPIRE)
+   if (d_has_allocator) {
+     return
+       std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts, d_allocator);
+   } else {
+#endif
+   return 
+     std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
+#if defined(HAVE_UMPIRE)
+   }
+#endif
 }
 
 /*
