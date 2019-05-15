@@ -418,7 +418,7 @@ void SAMRAI_F77_FUNC(detectshock3d, DETECTSHOCK3D) (
  */
 
 MblkLinAdv::MblkLinAdv(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> input_db,
    std::shared_ptr<hier::BaseGridGeometry>& grid_geoms):
@@ -2021,7 +2021,7 @@ void MblkLinAdv::tagGradientDetectorCells(
    for (int ncrit = 0;
         ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
-      string ref = d_refinement_criteria[ncrit];
+      std::string ref = d_refinement_criteria[ncrit];
       std::shared_ptr<pdat::CellData<double> > var(
          SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
@@ -2294,7 +2294,7 @@ void MblkLinAdv::registerVisItDataWriter(
  */
 
 void MblkLinAdv::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
    int j, k;
 
@@ -2530,7 +2530,7 @@ void MblkLinAdv::getFromInput(
    if (db->keyExists("Refinement_data")) {
       std::shared_ptr<tbox::Database> refine_db(
          db->getDatabase("Refinement_data"));
-      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      std::vector<std::string> refinement_keys = refine_db->getAllKeys();
       int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
@@ -2542,12 +2542,12 @@ void MblkLinAdv::getFromInput(
                           << " RefinementData. No refinement will occur." << std::endl);
       }
 
-      std::vector<string> ref_keys_defined(num_keys);
+      std::vector<std::string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       std::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; ++i) {
 
-         string error_key = refinement_keys[i];
+         std::string error_key = refinement_keys[i];
          error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
@@ -2780,7 +2780,7 @@ void MblkLinAdv::getFromInput(
             }
          }
 
-         std::vector<string> init_data_keys = init_data_db->getAllKeys();
+         std::vector<std::string> init_data_keys = init_data_db->getAllKeys();
 
          if (init_data_db->keyExists("front_position")) {
             d_front_position = init_data_db->getDoubleVector("front_position");
@@ -3100,7 +3100,7 @@ void MblkLinAdv::getFromRestart()
 
 void MblkLinAdv::readDirichletBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -3122,7 +3122,7 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
 
 void MblkLinAdv::readStateDataEntry(
    std::shared_ptr<tbox::Database> db,
-   const string& db_name,
+   const std::string& db_name,
    int array_indx,
    std::vector<double>& uval)
 {
