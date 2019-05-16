@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/math/PatchCellDataBasicOps.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
-#include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
@@ -3081,13 +3080,6 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
          if (!preserve_existing_tags) {
             tag_data->fill(tag_value, box);
          } else {
-#if defined(HAVE_RAJA)
-            auto tags = tag_data->getView<2>();
-            auto false_tag = d_false_tag;
-            pdat::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-               if (tags(j,k) == false_tag) tags(j,k) = tag_value;
-            });
-#else
             pdat::CellIterator icend(pdat::CellGeometry::end(box));
             for (pdat::CellIterator ic(pdat::CellGeometry::begin(box));
                  ic != icend; ++ic) {
@@ -3095,7 +3087,6 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
                   (*tag_data)(*ic) = tag_value;
                }
             }
-#endif
          }
       }
 
@@ -3115,8 +3106,6 @@ void GriddingAlgorithm::setBooleanTagData(
    const std::shared_ptr<hier::PatchLevel>& tag_level,
    bool preserve_existing_tags) const
 {
-   tbox::parallel_synchronize();
-
    for (hier::PatchLevel::iterator ip(tag_level->begin());
         ip != tag_level->end(); ++ip) {
       const std::shared_ptr<hier::Patch>& patch = *ip;
@@ -3138,20 +3127,11 @@ void GriddingAlgorithm::setBooleanTagData(
       const int* user_tag_ptr = user_tag_data->getPointer();
       int* boolean_tag_ptr = boolean_tag_data->getPointer();
 
-#if defined(HAVE_RAJA)
-      const int false_tag = d_false_tag;
-      const int true_tag = d_true_tag;
-
-      pdat::parallel_for_all(0, data_length, [=] SAMRAI_HOST_DEVICE (int i) {
-         if (user_tag_ptr[i] != false_tag) boolean_tag_ptr[i] = true_tag;
-      });
-#else
      for (unsigned int i = 0; i < data_length; ++i) {
         if (user_tag_ptr[i] != d_false_tag) {
            boolean_tag_ptr[i] = d_true_tag;
         }
      }
-#endif
    }
 }
 
@@ -3214,16 +3194,6 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       const hier::Box& interior(patch->getBox());
 
-#if defined(HAVE_RAJA)
-      auto buf_tags = buf_tag_data->getView<2>();
-      auto bool_tags = boolean_tag_data->getView<2>();
-
-      int true_tag = d_true_tag;
-
-      pdat::parallel_for_all(interior, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-         if (bool_tags(j,k) == tag_value) buf_tags(j,k) = true_tag;
-      });
-#else
      pdat::CellIterator icend(pdat::CellGeometry::end(interior));
      for (pdat::CellIterator ic(pdat::CellGeometry::begin(interior));
           ic != icend; ++ic) {
@@ -3231,7 +3201,6 @@ GriddingAlgorithm::bufferTagsOnLevel(
            (*buf_tag_data)(*ic) = d_true_tag;
         }
      }
-#endif
    }
 
    /*
@@ -3268,31 +3237,6 @@ GriddingAlgorithm::bufferTagsOnLevel(
 
       boolean_tag_data->fillAll(not_tag);
 
-#if defined(HAVE_RAJA)
-      auto buf_tags = buf_tag_data->getView<2>();
-      auto bool_tags = boolean_tag_data->getView<2>();
-
-      const int true_tag = d_true_tag;
-
-      const int jmin = tag_box.lower(0);
-      const int jmax = tag_box.upper(0);
-
-      const int kmin = tag_box.lower(1);
-      const int kmax = tag_box.upper(1);
-
-      pdat::parallel_for_all(buf_tag_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-         if (buf_tags(j,k) == true_tag) {
-            for (int buf_j = -buffer_size; buf_j <= buffer_size; buf_j++) {
-               for (int buf_k = -buffer_size; buf_k <= buffer_size; buf_k++) {
-                  if (j+buf_j >= jmin && j+buf_j <= jmax
-                      && k+buf_k >= kmin && k+buf_k <= kmax) {
-                     bool_tags(j+buf_j,k+buf_k) = tag_value;
-                  }
-               }
-            }
-         }
-      });
-#else
       pdat::CellIterator icend(pdat::CellGeometry::end(buf_tag_box));
       for (pdat::CellIterator ic(pdat::CellGeometry::begin(buf_tag_box));
            ic != icend; ++ic) {
@@ -3303,7 +3247,6 @@ GriddingAlgorithm::bufferTagsOnLevel(
             boolean_tag_data->fill(tag_value, buf_box);
          }
       }
-#endif
    }
 
    /*
@@ -3328,24 +3271,12 @@ GriddingAlgorithm::bufferTagsOnLevel(
       int* user_tag_ptr = user_tag_data->getPointer();
       const int* boolean_tag_ptr = boolean_tag_data->getPointer();
 
-#if defined(HAVE_RAJA)
-      const int true_tag = d_true_tag;
-      const int false_tag = d_false_tag;
-      const int buffer_tag = d_buffer_tag;
-      pdat::parallel_for_all(0, data_length, [=] SAMRAI_HOST_DEVICE (int i) {
-         if (boolean_tag_ptr[i] == true_tag &&
-             user_tag_ptr[i] == false_tag) {
-            user_tag_ptr[i] = buffer_tag;
-         }
-      });
-#else
      for (unsigned int i = 0; i < data_length; ++i) {
         if (boolean_tag_ptr[i] == d_true_tag &&
             user_tag_ptr[i] == d_false_tag) {
            user_tag_ptr[i] = d_buffer_tag;
         }
      }
-#endif
    }
 
    t_buffer_tags->stop();
