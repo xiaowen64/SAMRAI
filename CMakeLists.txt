@@ -48,6 +48,7 @@ set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 option(ENABLE_NVTX_REGIONS "Enable NVTX regions with push/pop for NVVP." Off)
 set(CUDA_ARCH "sm_35" CACHE STRING "Compute architecture to pass to CUDA builds")
 set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
+set(CMAKE_INSTALL_LIBDIR lib)
 
 include(GNUInstallDirs)
 
