@@ -40,6 +40,7 @@ option(ENABLE_DEPRECATED "Build with deprecated features." On)
 option(ENABLE_TIMERS "Enable SAMRAI timers." On)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
+set(CMAKE_INSTALL_LIBDIR lib)
 
 include(GNUInstallDirs)
 
