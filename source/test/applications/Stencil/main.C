@@ -16,9 +16,7 @@
 
 // Headers for major algorithm/data structure objects
 
-#if 1
 #include "SAMRAI/appu/VisItDataWriter.h"
-#endif
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
@@ -158,7 +156,7 @@ int main(
       viz_dump_interval = main_db->getInteger("viz_dump_interval");
     }
 
-#if 1
+#ifdef HAVE_HDF5
     const std::string viz_dump_dirname =
       main_db->getStringWithDefault("viz_dump_dirname", base_name + ".visit");
     int visit_number_procs_per_file = 1;
@@ -288,7 +286,7 @@ int main(
           hyp_level_integrator,
           gridding_algorithm));
 
-#if 1
+#ifdef HAVE_HDF5
     std::shared_ptr<appu::VisItDataWriter> visit_data_writer(
        new appu::VisItDataWriter(
           dim,
@@ -320,7 +318,7 @@ int main(
     tbox::plog << "\nVariable database..." << endl;
     hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
-#if 1
+#ifdef HAVE_HDF5
     if ((viz_dump_interval > 0))
       visit_data_writer->writePlotData(
           patch_hierarchy,
@@ -373,7 +371,7 @@ int main(
       tbox::pout << "Simulation time is " << loop_time << endl;
       tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
 
-#if 1
+#ifdef HAVE_HDF5
        if ((viz_dump_interval > 0)
            && (iteration_num % viz_dump_interval) == 0) {
           visit_data_writer->writePlotData(patch_hierarchy,

@@ -65,6 +65,7 @@ Stencil::registerModelVariables(
          "CONSERVATIVE_COARSEN",
          "CONSERVATIVE_LINEAR_REFINE");
 
+#ifdef HAVE_HDF5
       if (i == 0) {
          hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
@@ -74,6 +75,7 @@ Stencil::registerModelVariables(
             vardb->mapVariableAndContextToIndex(
                rho_var, integrator->getPlotContext()));
       }
+#endif
       i++;
    }
 }
@@ -357,7 +359,7 @@ Stencil::readNeumannBoundaryDataEntry(
    // no-op
 }
 
-#if 1
+#ifdef HAVE_HDF5
 void
 Stencil::registerVisItDataWriter(std::shared_ptr<appu::VisItDataWriter> viz_writer)
 {

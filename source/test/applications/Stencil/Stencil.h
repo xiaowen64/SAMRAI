@@ -7,9 +7,7 @@
 #include "SAMRAI/appu/BoundaryUtilityStrategy.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
-#if 1
 #include "SAMRAI/appu/VisItDataWriter.h"
-#endif
 
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
@@ -152,7 +150,7 @@ class Stencil :
   double
   computeNorm(const std::shared_ptr<hier::VariableContext>& context, hier::Patch& patch) const;
 
-#if 1
+#ifdef HAVE_HDF5
    void
      registerVisItDataWriter(
         std::shared_ptr<appu::VisItDataWriter> viz_writer);
@@ -172,7 +170,7 @@ class Stencil :
 
     hier::IntVector d_nghosts;
 
-#if 1
+#ifdef HAVE_HDF5
     std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
