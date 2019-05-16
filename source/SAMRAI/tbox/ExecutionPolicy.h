@@ -17,8 +17,9 @@ namespace SAMRAI {
 namespace tbox {
 
 namespace policy {
-struct sequential {};
-struct parallel {};
+struct base {};
+struct sequential : base {};
+struct parallel : base {};
 }
 
 namespace detail {
