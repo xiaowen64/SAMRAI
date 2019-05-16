@@ -158,8 +158,8 @@ int main(
        *               <restart number>
        */
 
-      string input_filename;
-      string restart_read_dirname;
+      std::string input_filename;
+      std::string restart_read_dirname;
       int restore_num = 0;
       bool is_from_restart = false;
 
@@ -168,7 +168,7 @@ int main(
                     << "<restart dir> <restore number> [options]\n"
                     << "  options:\n"
                     << "  none at this time"
-                    << endl;
+                    << std::endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -181,9 +181,9 @@ int main(
          }
       }
 
-      tbox::plog << "input_filename = " << input_filename << endl;
-      tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
-      tbox::plog << "restore_num = " << restore_num << endl;
+      tbox::plog << "input_filename = " << input_filename << std::endl;
+      tbox::plog << "restart_read_dirname = " << restart_read_dirname << std::endl;
+      tbox::plog << "restore_num = " << restore_num << std::endl;
 
       /*
        * Create input database and parse all data in input file.
@@ -379,10 +379,10 @@ int main(
        */
 
       tbox::plog << "\nCheck input data and variables before simulation:"
-                 << endl;
-      tbox::plog << "Input database..." << endl;
+                 << std::endl;
+      tbox::plog << "Input database..." << std::endl;
       input_db->printClassData(tbox::plog);
-      tbox::plog << "\nVariable database..." << endl;
+      tbox::plog << "\nVariable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
       mol_integrator->initializeIntegrator(gridding_algorithm);
 
@@ -412,7 +412,7 @@ int main(
          tag_buffer_array[il] = main_restart_data->getTagBuffer();
          tbox::pout << "il = " << il << " tag_buffer = "
                     << tag_buffer_array[il]
-                    << endl;
+                    << std::endl;
       }
 
       std::vector<double> regrid_start_time(
@@ -512,10 +512,10 @@ int main(
          iteration_num = main_restart_data->getIterationNumber();
          ++iteration_num;
 
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
          tbox::pout << "At begining of timestep # " << iteration_num - 1
-                    << endl;
-         tbox::pout << "Simulation time is " << loop_time << endl;
+                    << std::endl;
+         tbox::pout << "Simulation time is " << loop_time << std::endl;
 
          double dt = mol_integrator->getTimestep(patch_hierarchy, loop_time);
 
@@ -523,9 +523,9 @@ int main(
 
          loop_time += dt;
 
-         tbox::pout << "At end of timestep # " << iteration_num - 1 << endl;
-         tbox::pout << "Simulation time is " << loop_time << endl;
-         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+         tbox::pout << "At end of timestep # " << iteration_num - 1 << std::endl;
+         tbox::pout << "Simulation time is " << loop_time << std::endl;
+         tbox::pout << "++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 
          /*
           * Write restart file at specified intervals.  Set current state
@@ -561,10 +561,10 @@ int main(
          if ((iteration_num % main_restart_data->getRegridStep()) == 0 &&
              patch_hierarchy->getMaxNumberOfLevels() > 1) {
             tbox::plog << "\n\n############################################"
-                       << endl;
-            tbox::plog << "                 REGRIDDING" << endl;
+                       << std::endl;
+            tbox::plog << "                 REGRIDDING" << std::endl;
             tbox::plog << "Finest level before regrid: "
-                       << patch_hierarchy->getFinestLevelNumber() << endl;
+                       << patch_hierarchy->getFinestLevelNumber() << std::endl;
 
             gridding_algorithm->regridAllFinerLevels(0,
                tag_buffer_array,
@@ -573,9 +573,9 @@ int main(
                regrid_start_time);
 
             tbox::plog << "Finest level after regrid: "
-                       << patch_hierarchy->getFinestLevelNumber() << endl;
+                       << patch_hierarchy->getFinestLevelNumber() << std::endl;
             tbox::plog << "############################################\n\n"
-                       << endl;
+                       << std::endl;
          }
 
 #if (TESTING == 1)
@@ -627,7 +627,7 @@ int main(
    }
 
    if (num_failures == 0) {
-      tbox::pout << "\nPASSED:  ConvDiff" << endl;
+      tbox::pout << "\nPASSED:  ConvDiff" << std::endl;
    }
 
    tbox::SAMRAIManager::shutdown();

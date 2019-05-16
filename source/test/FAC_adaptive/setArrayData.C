@@ -14,7 +14,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include <math.h>
 
-// using namespace std;
 
 /*!
  * \file

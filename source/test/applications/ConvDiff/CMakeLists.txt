@@ -41,3 +41,12 @@ target_include_directories(
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/applications/ConvDiff)
 
 set_target_properties(convdiff PROPERTIES LINKER_LANGUAGE CXX)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME convdiff
+  EXECUTABLE convdiff
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
+

@@ -11,7 +11,6 @@
 
 #include IOMANIP_HEADER_FILE
 #include <fstream>
-// using namespace std;
 
 #include "AdaptivePoisson.h"
 #include "test/testlib/get-input-filename.h"

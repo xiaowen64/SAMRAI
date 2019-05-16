@@ -92,7 +92,6 @@ void SAMRAI_F77_FUNC(cartwgtavgoutfacecplx3d2, CARTWGTAVGOUTFACECPLX3D2) (const 
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianOuterfaceComplexWeightedAverage::
 CartesianOuterfaceComplexWeightedAverage():

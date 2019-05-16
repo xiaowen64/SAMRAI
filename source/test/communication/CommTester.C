@@ -19,7 +19,6 @@
 
 namespace SAMRAI {
 
-using namespace std;
 
 /*
  *************************************************************************
@@ -30,13 +29,13 @@ using namespace std;
  */
 
 CommTester::CommTester(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> main_input_db,
    PatchDataTestStrategy* data_test,
    bool do_refine,
    bool do_coarsen,
-   const string& refine_option):
+   const std::string& refine_option):
    RefinePatchStrategy(),
    CoarsenPatchStrategy(),
    d_dim(dim),
@@ -71,7 +70,7 @@ CommTester::CommTester(
    if (!((d_refine_option == "INTERIOR_FROM_SAME_LEVEL")
          || (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL"))) {
       TBOX_ERROR(object_name << " input error: illegal refine_option = "
-                             << d_refine_option << endl);
+                             << d_refine_option << std::endl);
    }
 
    d_patch_data_components.clrAllFlags();
@@ -116,7 +115,7 @@ void CommTester::registerVariable(
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
    const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
-   const string& operator_name)
+   const std::string& operator_name)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
 
@@ -191,7 +190,7 @@ void CommTester::registerVariableForReset(
    const hier::IntVector& src_ghosts,
    const hier::IntVector& dst_ghosts,
    const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
-   const string& operator_name)
+   const std::string& operator_name)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
 

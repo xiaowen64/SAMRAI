@@ -21,7 +21,6 @@
 
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 /**
@@ -63,7 +62,7 @@ public:
     * The constructor for the serializable base class does nothing interesting.
     */
    MainRestartData(
-      const string& object_name,
+      const std::string& object_name,
       std::shared_ptr<tbox::Database> input_db);
 
    /**
@@ -165,7 +164,7 @@ private:
    double d_loop_time;
    int d_iteration_number;
 
-   string d_object_name;
+   std::string d_object_name;
 };
 
 #endif

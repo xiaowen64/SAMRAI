@@ -14,8 +14,6 @@
 namespace SAMRAI {
 namespace mesh {
 
-// using namespace std;
-
 StandardTagAndInitStrategy::StandardTagAndInitStrategy()
 {
 }

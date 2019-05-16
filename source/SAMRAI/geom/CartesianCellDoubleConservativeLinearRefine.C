@@ -85,7 +85,6 @@ void SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-// using namespace std;
 
 CartesianCellDoubleConservativeLinearRefine::
 CartesianCellDoubleConservativeLinearRefine():

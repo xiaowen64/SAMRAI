@@ -28,15 +28,14 @@
 
 namespace SAMRAI {
 
-using namespace std;
 
 OutersideDataTest::OutersideDataTest(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
-   const string& refine_option):
+   const std::string& refine_option):
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
@@ -99,7 +98,7 @@ void OutersideDataTest::readTestInput(
    readVariableInput(db->getDatabase("VariableData"));
 
    std::shared_ptr<tbox::Database> var_data(db->getDatabase("VariableData"));
-   std::vector<string> var_keys = var_data->getAllKeys();
+   std::vector<std::string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
    d_use_fine_value_at_interface.resize(nkeys);
@@ -120,25 +119,25 @@ void OutersideDataTest::readTestInput(
    if (db->keyExists("Acoef")) {
       d_Acoef = db->getDouble("Acoef");
    } else {
-      TBOX_ERROR(d_object_name << " input error: No `Acoeff' found." << endl);
+      TBOX_ERROR(d_object_name << " input error: No `Acoeff' found." << std::endl);
    }
    if (db->keyExists("Dcoef")) {
       d_Dcoef = db->getDouble("Dcoef");
    } else {
-      TBOX_ERROR(d_object_name << " input error: No `Dcoef' found." << endl);
+      TBOX_ERROR(d_object_name << " input error: No `Dcoef' found." << std::endl);
    }
    if (d_dim > tbox::Dimension(1)) {
       if (db->keyExists("Bcoef")) {
          d_Bcoef = db->getDouble("Bcoef");
       } else {
-         TBOX_ERROR(d_object_name << " input error: No `Bcoef' found." << endl);
+         TBOX_ERROR(d_object_name << " input error: No `Bcoef' found." << std::endl);
       }
    }
    if (d_dim > tbox::Dimension(2)) {
       if (db->keyExists("Ccoef")) {
          d_Ccoef = db->getDouble("Ccoef");
       } else {
-         TBOX_ERROR(d_object_name << " input error: No `Ccoef' found." << endl);
+         TBOX_ERROR(d_object_name << " input error: No `Ccoef' found." << std::endl);
       }
    }
 
@@ -318,7 +317,7 @@ void OutersideDataTest::checkPatchInteriorData(
             if (!(tbox::MathUtilities<double>::equalEps((*data)(*si,
                                                                 d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled"
-                          << endl;
+                          << std::endl;
             }
          }
       }
@@ -482,9 +481,9 @@ bool OutersideDataTest::verifyResults(
    bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 
-      tbox::plog << "\nEntering OutersideDataTest::verifyResults..." << endl;
-      tbox::plog << "level_number = " << level_number << endl;
-      tbox::plog << "Patch box = " << patch.getBox() << endl;
+      tbox::plog << "\nEntering OutersideDataTest::verifyResults..." << std::endl;
+      tbox::plog << "level_number = " << level_number << std::endl;
+      tbox::plog << "Patch box = " << patch.getBox() << std::endl;
 
       hier::IntVector tgcw(d_dim, 0);
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
@@ -528,12 +527,12 @@ bool OutersideDataTest::verifyResults(
                         if (!tbox::MathUtilities<double>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
-                                      << " : side_data index = " << *si << endl;
+                                      << " : side_data index = " << *si << std::endl;
                            tbox::perr << "    hier::Variable = "
                                       << d_variable_src_name[i]
-                                      << " : depth index = " << d << endl;
+                                      << " : depth index = " << d << std::endl;
                            tbox::perr << "    result = " << result
-                                      << " : correct = " << correct << endl;
+                                      << " : correct = " << correct << std::endl;
                            test_failed = true;
                         }
                      }
@@ -560,12 +559,12 @@ bool OutersideDataTest::verifyResults(
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
-                                   << " : oside_data index = " << sndx << endl;
+                                   << " : oside_data index = " << sndx << std::endl;
                         tbox::perr << "    hier::Variable = "
                                    << d_variable_src_name[i]
-                                   << " : depth index = " << d << endl;
+                                   << " : depth index = " << d << std::endl;
                         tbox::perr << "    result = " << result
-                                   << " : correct = " << correct << endl;
+                                   << " : correct = " << correct << std::endl;
                         test_failed = true;
                      }
                   }
@@ -582,12 +581,12 @@ bool OutersideDataTest::verifyResults(
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
-                                   << " : oside_data index = " << sndx << endl;
+                                   << " : oside_data index = " << sndx << std::endl;
                         tbox::perr << "    hier::Variable = "
                                    << d_variable_src_name[i]
-                                   << " : depth index = " << d << endl;
+                                   << " : depth index = " << d << std::endl;
                         tbox::perr << "    result = " << result
-                                   << " : correct = " << correct << endl;
+                                   << " : correct = " << correct << std::endl;
                         test_failed = true;
                      }
                   }
@@ -597,14 +596,14 @@ bool OutersideDataTest::verifyResults(
 
       }
       if (!test_failed) {
-         tbox::plog << "Outerside test Successful!" << endl;
+         tbox::plog << "Outerside test Successful!" << std::endl;
       }
 
       solution.reset();   // just to be anal...
 
-      tbox::plog << "\nExiting OutersidedataTest::verifyResults..." << endl;
-      tbox::plog << "level_number = " << level_number << endl;
-      tbox::plog << "Patch box = " << patch.getBox() << endl << endl;
+      tbox::plog << "\nExiting OutersidedataTest::verifyResults..." << std::endl;
+      tbox::plog << "level_number = " << level_number << std::endl;
+      tbox::plog << "Patch box = " << patch.getBox() << std::endl << std::endl;
 
    }
 

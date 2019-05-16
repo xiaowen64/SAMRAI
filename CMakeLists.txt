@@ -22,6 +22,8 @@ set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
 set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_CUDA On CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
+set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
+set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
 
 # Third party libraries
 option(ENABLE_UMPIRE "Enable UMPIRE memory management" ON)
@@ -87,7 +89,9 @@ set(SAMRAI_LIBRARIES SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
 
 add_subdirectory(source)
 add_subdirectory(tools)
-add_subdirectory(docs)
+if (ENABLE_DOCS)
+  add_subdirectory(docs)
+endif()
 
 export(TARGETS ${SAMRAI_LIBRARIES}
   FILE ${CMAKE_CURRENT_BINARY_DIR}/SAMRAITargets.cmake)

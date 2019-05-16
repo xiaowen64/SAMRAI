@@ -27,7 +27,6 @@
 
 #include <string>
 #include <vector>
-using namespace std;
 #define included_String
 
 // Local classes used for this application
@@ -75,7 +74,7 @@ public:
     * database (potentially overriding those found in the restart file).
     */
    MblkLinAdv(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database> input_db,
       std::shared_ptr<hier::BaseGridGeometry>& grid_geom);
@@ -268,7 +267,7 @@ public:
    void
    readDirichletBoundaryDataEntry(
       const std::shared_ptr<tbox::Database>& db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
 
    /**
@@ -279,7 +278,7 @@ public:
    void
    readNeumannBoundaryDataEntry(
       const std::shared_ptr<tbox::Database>& db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
 
    hier::IntVector
@@ -303,7 +302,7 @@ public:
     */
    void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
 private:
    /*
@@ -326,7 +325,7 @@ private:
    void
    readStateDataEntry(
       std::shared_ptr<tbox::Database> db,
-      const string& db_name,
+      const std::string& db_name,
       int array_indx,
       std::vector<double>& uval);
 
@@ -358,7 +357,7 @@ private:
     * The object name is used for error/warning reporting and also as a
     * string label for restart database entries.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -421,7 +420,7 @@ private:
     *
     */
    int d_godunov_order;
-   string d_corner_transport;
+   std::string d_corner_transport;
    hier::IntVector d_nghosts;
    hier::IntVector d_fluxghosts;
    hier::IntVector d_nodeghosts;
@@ -429,7 +428,7 @@ private:
    /*
     * Indicator for problem type and initial conditions
     */
-   string d_data_problem;
+   std::string d_data_problem;
    int d_data_problem_int;
 
    /*
@@ -483,7 +482,7 @@ private:
     * Refinement criteria parameters for gradient detector and
     * Richardson extrapolation.
     */
-   std::vector<string> d_refinement_criteria;
+   std::vector<std::string> d_refinement_criteria;
    std::vector<double> d_dev_tol;
    std::vector<double> d_dev;
    std::vector<double> d_dev_time_max;

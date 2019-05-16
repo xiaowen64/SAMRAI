@@ -20,7 +20,6 @@
 #include <string>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 // Number of (non-abortive) failures.
@@ -53,4 +52,4 @@ readTestData(
 void
 testDatabaseContents(
    std::shared_ptr<tbox::Database> db,
-   const string& tag);
+   const std::string& tag);

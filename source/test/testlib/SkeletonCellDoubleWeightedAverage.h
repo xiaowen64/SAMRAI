@@ -23,7 +23,6 @@
 #include "SAMRAI/hier/CoarsenOperator.h"
 
 
-using namespace std;
 using namespace SAMRAI;
 
 /**

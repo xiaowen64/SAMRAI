@@ -22,8 +22,6 @@ namespace algs {
 
 const int ImplicitIntegrator::ALGS_IMPLICIT_INTEGRATOR_VERSION = 1;
 
-// using namespace std;
-
 /*
  *************************************************************************
  *

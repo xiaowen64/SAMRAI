@@ -21,7 +21,6 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
-using namespace std;
 
 using namespace SAMRAI;
 
@@ -73,7 +72,7 @@ int main(
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
             ++fail_count;
-            tbox::perr << "FAILED: - 2D trivial tranformation" << endl;
+            tbox::perr << "FAILED: - 2D trivial tranformation" << std::endl;
          }
 
          fail_count += testGeometryTransformations(zero_trans, ref_box);
@@ -95,7 +94,7 @@ int main(
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
             ++fail_count;
-            tbox::perr << "FAILED: - 3D trivial tranformation" << endl;
+            tbox::perr << "FAILED: - 3D trivial tranformation" << std::endl;
          }
 
          fail_count += testGeometryTransformations(zero_trans, ref_box);
@@ -123,7 +122,7 @@ int main(
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
             ++fail_count;
-            tbox::perr << "FAILED: - 2D shift tranformation" << endl;
+            tbox::perr << "FAILED: - 2D shift tranformation" << std::endl;
          }
 
          fail_count += testGeometryTransformations(shift_trans, ref_box);
@@ -152,7 +151,7 @@ int main(
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
             ++fail_count;
-            tbox::perr << "FAILED: - 3D shift tranformation" << endl;
+            tbox::perr << "FAILED: - 3D shift tranformation" << std::endl;
          }
 
          fail_count += testGeometryTransformations(shift_trans, ref_box);
@@ -184,7 +183,7 @@ int main(
 
             if (!trans_box.isSpatiallyEqual(ref_box)) {
                ++fail_count;
-               tbox::perr << "FAILED: - 2D rotate/shift transformation" << endl;
+               tbox::perr << "FAILED: - 2D rotate/shift transformation" << std::endl;
             }
 
             fail_count += testGeometryTransformations(trans, ref_box);
@@ -217,7 +216,7 @@ int main(
 
             if (!trans_box.isSpatiallyEqual(ref_box)) {
                ++fail_count;
-               tbox::perr << "FAILED: - 3D rotate/shift transformation" << endl;
+               tbox::perr << "FAILED: - 3D rotate/shift transformation" << std::endl;
             }
 
             fail_count += testGeometryTransformations(trans, ref_box);
@@ -273,7 +272,7 @@ int main(
                trans.transform(trans_box);
                if (!trans_box.isSpatiallyEqual(*cdi)) {
                   ++fail_count;
-                  tbox::perr << "FAILED: - 2D CellOverlap getSourceBoxContainer" << endl;
+                  tbox::perr << "FAILED: - 2D CellOverlap getSourceBoxContainer" << std::endl;
                }
 
                ++cdi;
@@ -310,7 +309,7 @@ int main(
                pdat::NodeGeometry::transform(trans_box, trans);
                if (!trans_box.isSpatiallyEqual(*ndi)) {
                   ++fail_count;
-                  tbox::perr << "FAILED: - 2D NodeOverlap getSourceBoxContainer" << endl;
+                  tbox::perr << "FAILED: - 2D NodeOverlap getSourceBoxContainer" << std::endl;
                }
 
                ++ndi;
@@ -355,7 +354,7 @@ int main(
                   if (!trans_box.isSpatiallyEqual(*sdi) ||
                       test_normal != normal) {
                      ++fail_count;
-                     tbox::perr << "FAILED: - 2D SideOverlap getSourceBoxContainer" << endl;
+                     tbox::perr << "FAILED: - 2D SideOverlap getSourceBoxContainer" << std::endl;
                   }
 
                   ++sdi;
@@ -401,7 +400,7 @@ int main(
                   if (!trans_box.isSpatiallyEqual(*fdi) ||
                       test_normal != normal) {
                      ++fail_count;
-                     tbox::perr << "FAILED: - 2D FaceOverlap getSourceBoxContainer" << endl;
+                     tbox::perr << "FAILED: - 2D FaceOverlap getSourceBoxContainer" << std::endl;
                   }
 
                   ++fdi;
@@ -447,7 +446,7 @@ int main(
                   if (!trans_box.isSpatiallyEqual(*edi) ||
                       test_axis != axis) {
                      ++fail_count;
-                     tbox::perr << "FAILED: - 2D EdgeOverlap getSourceBoxContainer" << endl;
+                     tbox::perr << "FAILED: - 2D EdgeOverlap getSourceBoxContainer" << std::endl;
                   }
 
                   ++edi;
@@ -507,7 +506,7 @@ int main(
                trans.transform(trans_box);
                if (!trans_box.isSpatiallyEqual(*cdi)) {
                   ++fail_count;
-                  tbox::perr << "FAILED: - 3D CellOverlap getSourceBoxContainer" << endl;
+                  tbox::perr << "FAILED: - 3D CellOverlap getSourceBoxContainer" << std::endl;
                }
 
                ++cdi;
@@ -544,7 +543,7 @@ int main(
                pdat::NodeGeometry::transform(trans_box, trans);
                if (!trans_box.isSpatiallyEqual(*ndi)) {
                   ++fail_count;
-                  tbox::perr << "FAILED: - 3D NodeOverlap getSourceBoxContainer" << endl;
+                  tbox::perr << "FAILED: - 3D NodeOverlap getSourceBoxContainer" << std::endl;
                }
 
                ++ndi;
@@ -589,7 +588,7 @@ int main(
                   if (!trans_box.isSpatiallyEqual(*sdi) ||
                       test_normal != normal) {
                      ++fail_count;
-                     tbox::perr << "FAILED: - 3D SideOverlap getSourceBoxContainer" << endl;
+                     tbox::perr << "FAILED: - 3D SideOverlap getSourceBoxContainer" << std::endl;
                   }
 
                   ++sdi;
@@ -635,7 +634,7 @@ int main(
                   if (!trans_box.isSpatiallyEqual(*fdi) ||
                       test_normal != normal) {
                      ++fail_count;
-                     tbox::perr << "FAILED: - 3D FaceOverlap getSourceBoxContainer" << endl;
+                     tbox::perr << "FAILED: - 3D FaceOverlap getSourceBoxContainer" << std::endl;
                   }
 
                   ++fdi;
@@ -681,7 +680,7 @@ int main(
                   if (!trans_box.isSpatiallyEqual(*edi) ||
                       test_axis != axis) {
                      ++fail_count;
-                     tbox::perr << "FAILED: - 3D EdgeOverlap getSourceBoxContainer" << endl;
+                     tbox::perr << "FAILED: - 3D EdgeOverlap getSourceBoxContainer" << std::endl;
                   }
 
                   ++edi;
@@ -734,7 +733,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
 
    if (trans_cindex != ref_cindex) {
       ++fail_count;
-      tbox::perr << "FAILED: - CellIndex transformation" << endl;
+      tbox::perr << "FAILED: - CellIndex transformation" << std::endl;
    }
 
    /*
@@ -746,7 +745,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    pdat::NodeGeometry::transform(trans_node_box, reverse_trans);
    if (!trans_node_box.isSpatiallyEqual(ref_node_box)) {
       ++fail_count;
-      tbox::perr << "FAILED: - Node box transformation" << endl;
+      tbox::perr << "FAILED: - Node box transformation" << std::endl;
    }
 
    pdat::NodeIndex ref_nindex(box.upper(), hier::IntVector::getOne(dim));
@@ -756,7 +755,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
 
    if (trans_nindex != ref_nindex) {
       ++fail_count;
-      tbox::perr << "FAILED: - NodeIndex transformation" << endl;
+      tbox::perr << "FAILED: - NodeIndex transformation" << std::endl;
    }
 
    /*
@@ -770,7 +769,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       pdat::SideGeometry::transform(trans_side_box, direction, reverse_trans);
       if (!trans_side_box.isSpatiallyEqual(ref_side_box)) {
          ++fail_count;
-         tbox::perr << "FAILED: - Side box transformation" << endl;
+         tbox::perr << "FAILED: - Side box transformation" << std::endl;
       }
 
       pdat::SideIndex ref_sindex(box.upper(), d, 0);
@@ -780,7 +779,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
 
       if (trans_sindex != ref_sindex) {
          ++fail_count;
-         tbox::perr << "FAILED: - SideIndex transformation" << endl;
+         tbox::perr << "FAILED: - SideIndex transformation" << std::endl;
       }
    }
 
@@ -795,7 +794,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       pdat::EdgeGeometry::transform(trans_edge_box, direction, reverse_trans);
       if (!trans_edge_box.isSpatiallyEqual(ref_edge_box)) {
          ++fail_count;
-         tbox::perr << "FAILED: - Edge box transformation" << endl;
+         tbox::perr << "FAILED: - Edge box transformation" << std::endl;
       }
 
       pdat::EdgeIndex ref_eindex(box.upper(), d, 0);
@@ -805,7 +804,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
 
       if (trans_eindex != ref_eindex) {
          ++fail_count;
-         tbox::perr << "FAILED: - EdgeIndex transformation" << endl;
+         tbox::perr << "FAILED: - EdgeIndex transformation" << std::endl;
       }
    }
 
@@ -820,7 +819,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       pdat::FaceGeometry::transform(trans_face_box, direction, reverse_trans);
       if (!trans_face_box.isSpatiallyEqual(ref_face_box)) {
          ++fail_count;
-         tbox::perr << "FAILED: - Face box transformation" << endl;
+         tbox::perr << "FAILED: - Face box transformation" << std::endl;
       }
 
       pdat::FaceIndex ref_findex(box.upper(), d, 0);
@@ -830,7 +829,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
 
       if (trans_findex != ref_findex) {
          ++fail_count;
-         tbox::perr << "FAILED: - FaceIndex transformation" << endl;
+         tbox::perr << "FAILED: - FaceIndex transformation" << std::endl;
       }
    }
 

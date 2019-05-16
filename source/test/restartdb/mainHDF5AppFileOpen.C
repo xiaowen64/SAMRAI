@@ -21,7 +21,6 @@
 #include <string>
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 #include "database_tests.h"
@@ -78,13 +77,13 @@ int main(
 
 #ifdef HAVE_HDF5
 
-      tbox::plog << "\n--- HDF5 database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- HDF5 database tests BEGIN ---" << std::endl;
 
       tbox::RestartManager* restart_manager = tbox::RestartManager::getManager();
 
       RestartTester hdf_tester;
 
-      tbox::plog << "\n--- HDF5 write database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- HDF5 write database tests BEGIN ---" << std::endl;
 
       setupTestData();
 
@@ -109,9 +108,9 @@ int main(
 
       restart_manager->writeRestartToDatabase();
 
-      tbox::plog << "\n--- HDF5 write database tests END ---" << endl;
+      tbox::plog << "\n--- HDF5 write database tests END ---" << std::endl;
 
-      tbox::plog << "\n--- HDF5 read database tests BEGIN ---" << endl;
+      tbox::plog << "\n--- HDF5 read database tests BEGIN ---" << std::endl;
 
       database->close();
 
@@ -138,14 +137,14 @@ int main(
 
       H5Fclose(file_id);
 
-      tbox::plog << "\n--- HDF5 read database tests END ---" << endl;
+      tbox::plog << "\n--- HDF5 read database tests END ---" << std::endl;
 
-      tbox::plog << "\n--- HDF5 database tests END ---" << endl;
+      tbox::plog << "\n--- HDF5 database tests END ---" << std::endl;
 
 #endif
 
       if (number_of_failures == 0) {
-         tbox::pout << "\nPASSED:  HDF5" << endl;
+         tbox::pout << "\nPASSED:  HDF5" << std::endl;
       }
    }
 

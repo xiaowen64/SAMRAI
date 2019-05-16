@@ -22,10 +22,10 @@
 using namespace SAMRAI;
 
 CellMultiblockTest::CellMultiblockTest(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> main_input_db,
-   const string& refine_option):
+   const std::string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
 {
@@ -367,9 +367,9 @@ bool CellMultiblockTest::verifyResults(
    const hier::BlockId& block_id)
 {
 
-   tbox::plog << "\nEntering CellMultiblockTest::verifyResults..." << endl;
-   tbox::plog << "level_number = " << level_number << endl;
-   tbox::plog << "Patch box = " << patch.getBox() << endl;
+   tbox::plog << "\nEntering CellMultiblockTest::verifyResults..." << std::endl;
+   tbox::plog << "level_number = " << level_number << std::endl;
+   tbox::plog << "Patch box = " << patch.getBox() << std::endl;
 
    hier::IntVector tgcw(d_dim, 0);
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
@@ -414,11 +414,11 @@ bool CellMultiblockTest::verifyResults(
 
             if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                tbox::perr << "Test FAILED: ...."
-                          << " : cell index = " << *ci << endl;
+                          << " : cell index = " << *ci << std::endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
-                          << " : depth index = " << d << endl;
+                          << " : depth index = " << d << std::endl;
                tbox::perr << "    result = " << result
-                          << " : correct = " << correct << endl;
+                          << " : correct = " << correct << std::endl;
                test_failed = true;
             }
          }
@@ -453,11 +453,11 @@ bool CellMultiblockTest::verifyResults(
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
                      tbox::perr << "Test FAILED: ...."
-                                << " : cell index = " << *ci << endl;
+                                << " : cell index = " << *ci << std::endl;
                      tbox::perr << "    Variable = " << d_variable_src_name[i]
-                                << " : depth index = " << d << endl;
+                                << " : depth index = " << d << std::endl;
                      tbox::perr << "    result = " << result
-                                << " : correct = " << correct << endl;
+                                << " : correct = " << correct << std::endl;
                      test_failed = true;
                   }
                }
@@ -521,11 +521,11 @@ bool CellMultiblockTest::verifyResults(
                   if (!tbox::MathUtilities<double>::equalEps(correct,
                          result)) {
                      tbox::perr << "Test FAILED: ...."
-                                << " : cell index = " << *ci << endl;
+                                << " : cell index = " << *ci << std::endl;
                      tbox::perr << "    Variable = " << d_variable_src_name[i]
-                                << " : depth index = " << d << endl;
+                                << " : depth index = " << d << std::endl;
                      tbox::perr << "    result = " << result
-                                << " : correct = " << correct << endl;
+                                << " : correct = " << correct << std::endl;
                      test_failed = true;
                   }
                }
@@ -537,16 +537,16 @@ bool CellMultiblockTest::verifyResults(
    }
 
    if (!test_failed) {
-      tbox::plog << "CellMultiblockTest Successful!" << endl;
+      tbox::plog << "CellMultiblockTest Successful!" << std::endl;
    } else {
-      tbox::perr << "Multiblock CellMultiblockTest FAILED: \n" << endl;
+      tbox::perr << "Multiblock CellMultiblockTest FAILED: \n" << std::endl;
    }
 
    solution.reset();   // just to be anal...
 
-   tbox::plog << "\nExiting CellMultiblockTest::verifyResults..." << endl;
-   tbox::plog << "level_number = " << level_number << endl;
-   tbox::plog << "Patch box = " << patch.getBox() << endl << endl;
+   tbox::plog << "\nExiting CellMultiblockTest::verifyResults..." << std::endl;
+   tbox::plog << "level_number = " << level_number << std::endl;
+   tbox::plog << "Patch box = " << patch.getBox() << std::endl << std::endl;
 
    return !test_failed;
 }

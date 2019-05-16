@@ -12,7 +12,6 @@
 
 #include <string>
 #include <memory>
-using namespace std;
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
@@ -206,12 +205,12 @@ int main(
        *    executable <input file name>
        *
        */
-      string input_filename;
+      std::string input_filename;
 
       if (argc != 2) {
          TBOX_ERROR("USAGE:  " << argv[0] << " <input file> \n"
                                << "  options:\n"
-                               << "  none at this time" << endl);
+                               << "  none at this time" << std::endl);
       } else {
          input_filename = argv[1];
       }
@@ -255,10 +254,10 @@ int main(
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
-      const string base_name =
+      const std::string base_name =
          main_db->getStringWithDefault("base_name", "component_test");
 
-      string log_file_name = base_name + ".log";
+      std::string log_file_name = base_name + ".log";
       bool log_all_nodes = false;
       if (main_db->keyExists("log_all_nodes")) {
          log_all_nodes = main_db->getBool("log_all_nodes");
@@ -282,24 +281,24 @@ int main(
          ntimes_run = main_db->getInteger("ntimes_run");
       }
 
-      string test_to_run;
+      std::string test_to_run;
       if (main_db->keyExists("test_to_run")) {
          test_to_run = main_db->getString("test_to_run");
       } else {
-         TBOX_ERROR("Error in Main input: no test specified." << endl);
+         TBOX_ERROR("Error in Main input: no test specified." << std::endl);
       }
 
       bool do_refine = false;
       bool do_coarsen = false;
-      string refine_option = "INTERIOR_FROM_SAME_LEVEL";
+      std::string refine_option = "INTERIOR_FROM_SAME_LEVEL";
       if (main_db->keyExists("do_refine")) {
          do_refine = main_db->getBool("do_refine");
          if (do_refine) {
-            tbox::plog << "\nPerforming refine data test..." << endl;
+            tbox::plog << "\nPerforming refine data test..." << std::endl;
             if (main_db->keyExists("refine_option")) {
                refine_option = main_db->getString("refine_option");
             }
-            tbox::plog << "\nRefine data option = " << refine_option << endl;
+            tbox::plog << "\nRefine data option = " << refine_option << std::endl;
 
          }
       }
@@ -309,7 +308,7 @@ int main(
             do_coarsen = main_db->getBool("do_coarsen");
          }
          if (do_coarsen) {
-            tbox::plog << "\nPerforming coarsen data test..." << endl;
+            tbox::plog << "\nPerforming coarsen data test..." << std::endl;
          }
       }
 
@@ -377,10 +376,10 @@ int main(
                do_coarsen,
                refine_option);
       } else if (test_to_run == "MultiVariableDataTest") {
-         TBOX_ERROR("Error in Main input: no multi-variable test yet." << endl);
+         TBOX_ERROR("Error in Main input: no multi-variable test yet." << std::endl);
       } else {
          TBOX_ERROR(
-            "Error in Main input: illegal test = " << test_to_run << endl);
+            "Error in Main input: illegal test = " << test_to_run << std::endl);
       }
 
       std::shared_ptr<CommTester> comm_tester(
@@ -401,12 +400,12 @@ int main(
 
       comm_tester->setupHierarchy(input_db, cell_tagger);
 
-      tbox::plog << "Specified input file is: " << input_filename << endl;
+      tbox::plog << "Specified input file is: " << input_filename << std::endl;
 
-      tbox::plog << "\nInput file data is ...." << endl;
+      tbox::plog << "\nInput file data is ...." << std::endl;
       input_db->printClassData(tbox::plog);
 
-      tbox::plog << "\nCheck hier::Variable database..." << endl;
+      tbox::plog << "\nCheck hier::Variable database..." << std::endl;
       hier::VariableDatabase::getDatabase()->printClassData(tbox::plog);
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
@@ -644,11 +643,11 @@ int main(
 
       tbox::TimerManager::getManager()->print(tbox::plog);
 
-      tbox::plog << "\nInput file data at end of run is ...." << endl;
+      tbox::plog << "\nInput file data at end of run is ...." << std::endl;
       input_db->printClassData(tbox::plog);
 
       if (test1_passed && test2_passed && composite_test_passed) {
-         tbox::pout << "\nPASSED:  communication" << endl;
+         tbox::pout << "\nPASSED:  communication" << std::endl;
          return_val = 0;
       }
    }

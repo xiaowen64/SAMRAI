@@ -25,7 +25,6 @@
 #endif
 #endif
 
-using namespace std;
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -113,7 +112,7 @@ using namespace std;
  */
 
 LinAdv::LinAdv(
-   const string& object_name,
+   const std::string& object_name,
    const tbox::Dimension& dim,
    std::shared_ptr<tbox::Database> input_db,
    std::shared_ptr<geom::CartesianGridGeometry> grid_geom):
@@ -234,7 +233,7 @@ LinAdv::LinAdv(
          d_object_name << ": "
                        << "Unknown d_data_problem string = "
                        << d_data_problem
-                       << " encountered in constructor" << endl);
+                       << " encountered in constructor" << std::endl);
    }
 
    /*
@@ -373,7 +372,7 @@ void LinAdv::registerModelVariables(
       TBOX_WARNING(d_object_name << ": registerModelVariables()"
                                  << "\nVisIt data writer was not registered.\n"
                                  << "Consequently, no plot data will"
-                                 << "\nbe written." << endl);
+                                 << "\nbe written." << std::endl);
    }
 #endif
 
@@ -420,7 +419,7 @@ void LinAdv::setupLoadBalancer(
          TBOX_WARNING(
             d_object_name << ": "
                           << "  Unknown load balancer used in gridding algorithm."
-                          << "  Ignoring request for nonuniform load balancing." << endl);
+                          << "  Ignoring request for nonuniform load balancing." << std::endl);
          d_use_nonuniform_workload = false;
       }
    } else {
@@ -853,7 +852,7 @@ void LinAdv::computeFluxesOnPatch(
             double delta = (*flux)(fm) - (*flux)(fp);
             if (fabs(delta) > 1.e-10) {
                tbox::perr << "\nLinAdv Time Refinement Test FAILED: \n"
-                          << " found non-zero net fluxes" << endl;
+                          << " found non-zero net fluxes" << std::endl;
             }
          }
       }
@@ -1145,7 +1144,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
       traced_right.getPointer(1),
       traced_right.getPointer(2));
 
-//     tbox::plog << "flux values: option1...." << endl;
+//     tbox::plog << "flux values: option1...." << std::endl;
 //     flux->print(pbox, tbox::plog);
 
 }
@@ -1370,7 +1369,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
       traced_right.getPointer(1),
       traced_right.getPointer(2));
 
-//     tbox::plog << "flux values: option2...." << endl;
+//     tbox::plog << "flux values: option2...." << std::endl;
 //     flux->print(pbox, tbox::plog);
 }
 
@@ -1702,7 +1701,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
    for (int ncrit = 0;
         ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
-      string ref = d_refinement_criteria[ncrit];
+      std::string ref = d_refinement_criteria[ncrit];
       int size;
       double tol;
       bool time_allowed;
@@ -1911,7 +1910,7 @@ void LinAdv::tagGradientDetectorCells(
    for (int ncrit = 0;
         ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
-      string ref = d_refinement_criteria[ncrit];
+      std::string ref = d_refinement_criteria[ncrit];
       std::shared_ptr<pdat::CellData<double> > var(
          SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
@@ -2138,167 +2137,167 @@ void LinAdv::registerVisItDataWriter(
  */
 
 void LinAdv::printClassData(
-   ostream& os) const
+   std::ostream& os) const
 {
    int j, k;
 
-   os << "\nLinAdv::printClassData..." << endl;
-   os << "LinAdv: this = " << (LinAdv *)this << endl;
-   os << "d_object_name = " << d_object_name << endl;
+   os << "\nLinAdv::printClassData..." << std::endl;
+   os << "LinAdv: this = " << (LinAdv *)this << std::endl;
+   os << "d_object_name = " << d_object_name << std::endl;
    os << "d_grid_geometry = "
-      << d_grid_geometry.get() << endl;
+      << d_grid_geometry.get() << std::endl;
 
-   os << "Parameters for numerical method ..." << endl;
+   os << "Parameters for numerical method ..." << std::endl;
    os << "   d_advection_velocity = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
-   os << endl;
-   os << "   d_source = " << d_source << endl;
-   os << "   d_godunov_order = " << d_godunov_order << endl;
-   os << "   d_corner_transport = " << d_corner_transport << endl;
-   os << "   d_nghosts = " << d_nghosts << endl;
-   os << "   d_fluxghosts = " << d_fluxghosts << endl;
+   os << std::endl;
+   os << "   d_source = " << d_source << std::endl;
+   os << "   d_godunov_order = " << d_godunov_order << std::endl;
+   os << "   d_corner_transport = " << d_corner_transport << std::endl;
+   os << "   d_nghosts = " << d_nghosts << std::endl;
+   os << "   d_fluxghosts = " << d_fluxghosts << std::endl;
 
-   os << "Problem description and initial data..." << endl;
-   os << "   d_data_problem = " << d_data_problem << endl;
-   os << "   d_data_problem_int = " << d_data_problem << endl;
+   os << "Problem description and initial data..." << std::endl;
+   os << "   d_data_problem = " << d_data_problem << std::endl;
+   os << "   d_data_problem_int = " << d_data_problem << std::endl;
 
-   os << "       d_radius = " << d_radius << endl;
+   os << "       d_radius = " << d_radius << std::endl;
    os << "       d_center = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
-   os << endl;
-   os << "       d_uval_inside = " << d_uval_inside << endl;
-   os << "       d_uval_outside = " << d_uval_outside << endl;
+   os << std::endl;
+   os << "       d_uval_inside = " << d_uval_inside << std::endl;
+   os << "       d_uval_outside = " << d_uval_outside << std::endl;
 
-   os << "       d_number_of_intervals = " << d_number_of_intervals << endl;
+   os << "       d_number_of_intervals = " << d_number_of_intervals << std::endl;
    os << "       d_front_position = ";
    for (k = 0; k < d_number_of_intervals - 1; ++k) {
       os << d_front_position[k] << "  ";
    }
-   os << endl;
-   os << "       d_interval_uval = " << endl;
+   os << std::endl;
+   os << "       d_interval_uval = " << std::endl;
    for (k = 0; k < d_number_of_intervals; ++k) {
-      os << "            " << d_interval_uval[k] << endl;
+      os << "            " << d_interval_uval[k] << std::endl;
    }
-   os << "   Boundary condition data " << endl;
+   os << "   Boundary condition data " << std::endl;
 
    if (d_dim == tbox::Dimension(2)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_edge_uval[" << j << "] = "
-               << d_bdry_edge_uval[j] << endl;
+               << d_bdry_edge_uval[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_edge[" << j << "] = "
-            << d_node_bdry_edge[j] << endl;
+            << d_node_bdry_edge[j] << std::endl;
       }
    }
    if (d_dim == tbox::Dimension(3)) {
       for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
-            << d_scalar_bdry_face_conds[j] << endl;
+            << d_scalar_bdry_face_conds[j] << std::endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
             os << "         d_bdry_face_uval[" << j << "] = "
-               << d_bdry_face_uval[j] << endl;
+               << d_bdry_face_uval[j] << std::endl;
          }
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
-            << d_scalar_bdry_edge_conds[j] << endl;
+            << d_scalar_bdry_edge_conds[j] << std::endl;
          os << "       d_edge_bdry_face[" << j << "] = "
-            << d_edge_bdry_face[j] << endl;
+            << d_edge_bdry_face[j] << std::endl;
       }
-      os << endl;
+      os << std::endl;
       for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
-            << d_scalar_bdry_node_conds[j] << endl;
+            << d_scalar_bdry_node_conds[j] << std::endl;
          os << "       d_node_bdry_face[" << j << "] = "
-            << d_node_bdry_face[j] << endl;
+            << d_node_bdry_face[j] << std::endl;
       }
    }
 
-   os << "   Refinement criteria parameters " << endl;
+   os << "   Refinement criteria parameters " << std::endl;
 
    for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
-         << d_refinement_criteria[j] << endl;
+         << d_refinement_criteria[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_tol.size()); ++j) {
       os << "       d_dev_tol[" << j << "] = "
-         << d_dev_tol[j] << endl;
+         << d_dev_tol[j] << std::endl;
    }
    for (j = 0; j < static_cast<int>(d_dev.size()); ++j) {
       os << "       d_dev[" << j << "] = "
-         << d_dev[j] << endl;
+         << d_dev[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_time_max.size()); ++j) {
       os << "       d_dev_time_max[" << j << "] = "
-         << d_dev_time_max[j] << endl;
+         << d_dev_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_dev_time_min.size()); ++j) {
       os << "       d_dev_time_min[" << j << "] = "
-         << d_dev_time_min[j] << endl;
+         << d_dev_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_tol.size()); ++j) {
       os << "       d_grad_tol[" << j << "] = "
-         << d_grad_tol[j] << endl;
+         << d_grad_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_time_max.size()); ++j) {
       os << "       d_grad_time_max[" << j << "] = "
-         << d_grad_time_max[j] << endl;
+         << d_grad_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_grad_time_min.size()); ++j) {
       os << "       d_grad_time_min[" << j << "] = "
-         << d_grad_time_min[j] << endl;
+         << d_grad_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_onset.size()); ++j) {
       os << "       d_shock_onset[" << j << "] = "
-         << d_shock_onset[j] << endl;
+         << d_shock_onset[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_tol.size()); ++j) {
       os << "       d_shock_tol[" << j << "] = "
-         << d_shock_tol[j] << endl;
+         << d_shock_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_time_max.size()); ++j) {
       os << "       d_shock_time_max[" << j << "] = "
-         << d_shock_time_max[j] << endl;
+         << d_shock_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_shock_time_min.size()); ++j) {
       os << "       d_shock_time_min[" << j << "] = "
-         << d_shock_time_min[j] << endl;
+         << d_shock_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_tol.size()); ++j) {
       os << "       d_rich_tol[" << j << "] = "
-         << d_rich_tol[j] << endl;
+         << d_rich_tol[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_time_max.size()); ++j) {
       os << "       d_rich_time_max[" << j << "] = "
-         << d_rich_time_max[j] << endl;
+         << d_rich_time_max[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
    for (j = 0; j < static_cast<int>(d_rich_time_min.size()); ++j) {
       os << "       d_rich_time_min[" << j << "] = "
-         << d_rich_time_min[j] << endl;
+         << d_rich_time_min[j] << std::endl;
    }
-   os << endl;
+   os << std::endl;
 
 }
 
@@ -2354,7 +2353,7 @@ void LinAdv::getFromInput(
           (d_godunov_order != 4)) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "`godunov_order' in input must be 1, 2, or 4." << endl);
+                          << "`godunov_order' in input must be 1, 2, or 4." << std::endl);
       }
    } else {
       d_godunov_order = input_db->getIntegerWithDefault("d_godunov_order",
@@ -2368,7 +2367,7 @@ void LinAdv::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`corner_transport' in input must be either string"
-                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
+                          << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << std::endl);
       }
    } else {
       d_corner_transport = input_db->getStringWithDefault("corner_transport",
@@ -2378,7 +2377,7 @@ void LinAdv::getFromInput(
    if (input_db->keyExists("Refinement_data")) {
       std::shared_ptr<tbox::Database> refine_db(
          input_db->getDatabase("Refinement_data"));
-      std::vector<string> refinement_keys = refine_db->getAllKeys();
+      std::vector<std::string> refinement_keys = refine_db->getAllKeys();
       int num_keys = static_cast<int>(refinement_keys.size());
 
       if (refine_db->keyExists("refine_criteria")) {
@@ -2387,15 +2386,15 @@ void LinAdv::getFromInput(
          TBOX_WARNING(
             d_object_name << ": "
                           << "No key `refine_criteria' found in data for"
-                          << " RefinementData. No refinement will occur." << endl);
+                          << " RefinementData. No refinement will occur." << std::endl);
       }
 
-      std::vector<string> ref_keys_defined(num_keys);
+      std::vector<std::string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       std::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < num_keys; ++i) {
 
-         string error_key = refinement_keys[i];
+         std::string error_key = refinement_keys[i];
          error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
@@ -2409,7 +2408,7 @@ void LinAdv::getFromInput(
                   d_object_name << ": "
                                 << "Unknown refinement criteria: "
                                 << error_key
-                                << "\nin input." << endl);
+                                << "\nin input." << std::endl);
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
@@ -2428,7 +2427,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `dev_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("uval_dev")) {
@@ -2437,7 +2436,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `uval_dev' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2464,7 +2463,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `grad_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2491,7 +2490,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_onset' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("shock_tol")) {
@@ -2500,7 +2499,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `shock_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2527,7 +2526,7 @@ void LinAdv::getFromInput(
                   TBOX_ERROR(
                      d_object_name << ": "
                                    << "No key `rich_tol' found in data for "
-                                   << error_key << endl);
+                                   << error_key << std::endl);
                }
 
                if (error_db->keyExists("time_max")) {
@@ -2555,17 +2554,17 @@ void LinAdv::getFromInput(
        */
       for (int k0 = 0;
            k0 < static_cast<int>(d_refinement_criteria.size()); ++k0) {
-         string use_key = d_refinement_criteria[k0];
+         std::string use_key = d_refinement_criteria[k0];
          bool key_found = false;
          for (int k1 = 0; k1 < def_key_cnt; ++k1) {
-            string def_key = ref_keys_defined[k1];
+            std::string def_key = ref_keys_defined[k1];
             if (def_key == use_key) key_found = true;
          }
 
          if (!key_found) {
             TBOX_ERROR(d_object_name << ": "
                                      << "No input found for specified refine criteria: "
-                                     << d_refinement_criteria[k0] << endl);
+                                     << d_refinement_criteria[k0] << std::endl);
          }
       }
 
@@ -2584,13 +2583,13 @@ void LinAdv::getFromInput(
          TBOX_ERROR(
             d_object_name << ": "
                           << "`data_problem' value not found in input."
-                          << endl);
+                          << std::endl);
       }
 
       if (!input_db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
-                          << "No `Initial_data' database found in input." << endl);
+                          << "No `Initial_data' database found in input." << std::endl);
       }
       std::shared_ptr<tbox::Database> init_data_db(
          input_db->getDatabase("Initial_data"));
@@ -2604,28 +2603,28 @@ void LinAdv::getFromInput(
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`radius' input required for SPHERE problem." << endl);
+                             << "`radius' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("center")) {
             d_center = init_data_db->getDoubleVector("center");
          } else {
             TBOX_ERROR(
                d_object_name << ": "
-                             << "`center' input required for SPHERE problem." << endl);
+                             << "`center' input required for SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("uval_inside")) {
             d_uval_inside = init_data_db->getDouble("uval_inside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`uval_inside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
          if (init_data_db->keyExists("uval_outside")) {
             d_uval_outside = init_data_db->getDouble("uval_outside");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`uval_outside' input required for "
-                                     << "SPHERE problem." << endl);
+                                     << "SPHERE problem." << std::endl);
          }
 
          found_problem_data = true;
@@ -2646,7 +2645,7 @@ void LinAdv::getFromInput(
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Y' "
                                 << "problem invalid in 1 dimension."
-                                << endl);
+                                << std::endl);
             }
             idir = 1;
          }
@@ -2655,19 +2654,19 @@ void LinAdv::getFromInput(
             if (d_dim < tbox::Dimension(3)) {
                TBOX_ERROR(
                   d_object_name << ": `PIECEWISE_CONSTANT_Z' "
-                                << "problem invalid in 1 or 2 dimensions." << endl);
+                                << "problem invalid in 1 or 2 dimensions." << std::endl);
             }
             idir = 2;
          }
 
-         std::vector<string> init_data_keys = init_data_db->getAllKeys();
+         std::vector<std::string> init_data_keys = init_data_db->getAllKeys();
 
          if (init_data_db->keyExists("front_position")) {
             d_front_position = init_data_db->getDoubleVector("front_position");
          } else {
             TBOX_ERROR(d_object_name << ": "
                                      << "`front_position' input required for "
-                                     << d_data_problem << " problem." << endl);
+                                     << d_data_problem << " problem." << std::endl);
          }
 
          d_number_of_intervals =
@@ -2698,7 +2697,7 @@ void LinAdv::getFromInput(
                } else {
                   TBOX_ERROR(d_object_name << ": "
                                            << "`uval' data missing in input for key = "
-                                           << init_data_keys[nkey] << endl);
+                                           << init_data_keys[nkey] << std::endl);
                }
                ++i;
 
@@ -2721,7 +2720,7 @@ void LinAdv::getFromInput(
             } else {
                TBOX_ERROR(
                   d_object_name << ": "
-                                << "`frequency' input required for SINE problem." << endl);
+                                << "`frequency' input required for SINE problem." << std::endl);
             }
          }
 
@@ -2730,7 +2729,7 @@ void LinAdv::getFromInput(
                d_object_name << ": "
                              << "Insufficient interval data given in input"
                              << " for PIECEWISE_CONSTANT_*problem."
-                             << endl);
+                             << std::endl);
          }
 
          found_problem_data = true;
@@ -2739,7 +2738,7 @@ void LinAdv::getFromInput(
       if (!found_problem_data) {
          TBOX_ERROR(d_object_name << ": "
                                   << "`Initial_data' database found in input."
-                                  << " But bad data supplied." << endl);
+                                  << " But bad data supplied." << std::endl);
       }
 
    } // if !is_from_restart read in problem data
@@ -2775,7 +2774,7 @@ void LinAdv::getFromInput(
    } else {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Key data `Boundary_data' not found in input. " << endl);
+                       << "Key data `Boundary_data' not found in input. " << std::endl);
    }
 
 }
@@ -2909,14 +2908,14 @@ void LinAdv::getFromRestart()
    if (!(d_nghosts == CELLG)) {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Key data `d_nghosts' in restart file != CELLG." << endl);
+                       << "Key data `d_nghosts' in restart file != CELLG." << std::endl);
    }
    int* tmp_fluxghosts = &d_fluxghosts[0];
    db->getIntegerArray("d_fluxghosts", tmp_fluxghosts, d_dim.getValue());
    if (!(d_fluxghosts == FLUXG)) {
       TBOX_ERROR(
          d_object_name << ": "
-                       << "Key data `d_fluxghosts' in restart file != FLUXG." << endl);
+                       << "Key data `d_fluxghosts' in restart file != FLUXG." << std::endl);
    }
 
    d_data_problem = db->getString("d_data_problem");
@@ -2993,7 +2992,7 @@ void LinAdv::getFromRestart()
 
 void LinAdv::readDirichletBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    TBOX_ASSERT(db);
@@ -3015,7 +3014,7 @@ void LinAdv::readDirichletBoundaryDataEntry(
 
 void LinAdv::readNeumannBoundaryDataEntry(
    const std::shared_ptr<tbox::Database>& db,
-   string& db_name,
+   std::string& db_name,
    int bdry_location_index)
 {
    NULL_USE(db);
@@ -3025,7 +3024,7 @@ void LinAdv::readNeumannBoundaryDataEntry(
 
 void LinAdv::readStateDataEntry(
    std::shared_ptr<tbox::Database> db,
-   const string& db_name,
+   const std::string& db_name,
    int array_indx,
    std::vector<double>& uval)
 {
@@ -3039,7 +3038,7 @@ void LinAdv::readStateDataEntry(
    } else {
       TBOX_ERROR(d_object_name << ": "
                                << "`uval' entry missing from " << db_name
-                               << " input database. " << endl);
+                               << " input database. " << std::endl);
    }
 
 }
@@ -3147,7 +3146,7 @@ void LinAdv::checkBoundaryData(
                     << "     " << num_bad_values
                     << " bad UVAL values found for\n"
                     << "     boundary type " << btype << " at location "
-                    << bloc << endl;
+                    << bloc << std::endl;
       }
 #endif
 

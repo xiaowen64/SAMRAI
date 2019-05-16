@@ -227,7 +227,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
             &diff2[0], slope2.getPointer());
       } else {
          TBOX_ERROR("SkeletonCellDoubleConservativeLinearRefine error...\n"
-            << "dimension > 3 not supported." << endl);
+            << "dimension > 3 not supported." << std::endl);
 
       }
    }

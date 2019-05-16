@@ -26,7 +26,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include <string>
-using namespace std;
 #define included_String
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
@@ -77,7 +76,7 @@ public:
     * potentially overriding those in the restart file.
     */
    ConvDiff(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database> input_db,
       std::shared_ptr<geom::CartesianGridGeometry> grid_geom);
@@ -261,20 +260,20 @@ public:
     * This routine is a concrete implementation of the virtual function
     * in the base class BoundaryUtilityStrategy.  It reads DIRICHLET
     * boundary state values from the given database with the
-    * given name string idenifier.  The integer location index
+    * given name std::string idenifier.  The integer location index
     * indicates the face (in 3D) or edge (in 2D) to which the boundary
     * condition applies.
     */
    void
    readDirichletBoundaryDataEntry(
       const std::shared_ptr<tbox::Database>& db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
 
    void
    readNeumannBoundaryDataEntry(
       const std::shared_ptr<tbox::Database>& db,
-      string& db_name,
+      std::string& db_name,
       int bdry_location_index);
 
    /**
@@ -293,7 +292,7 @@ public:
     */
    void
    printClassData(
-      ostream& os) const;
+      std::ostream& os) const;
 
 private:
    /*
@@ -316,7 +315,7 @@ private:
    void
    readStateDataEntry(
       std::shared_ptr<tbox::Database> db,
-      const string& db_name,
+      const std::string& db_name,
       int array_indx,
       std::vector<double>& uval);
 
@@ -334,7 +333,7 @@ private:
     * Object name used for error/warning reporting and as a label
     * for restart database entries.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    /*
     * Dimension of problem.
@@ -386,7 +385,7 @@ private:
    /*
     * Indicator for problem type and initial conditions
     */
-   string d_data_problem;
+   std::string d_data_problem;
    int d_data_problem_int;
 
    /*

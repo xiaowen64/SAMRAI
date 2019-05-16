@@ -49,3 +49,12 @@ target_include_directories( linadv
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/applications/LinAdv)
 
 set_target_properties(linadv PROPERTIES LINKER_LANGUAGE CXX)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME linadv
+  EXECUTABLE linadv
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
+

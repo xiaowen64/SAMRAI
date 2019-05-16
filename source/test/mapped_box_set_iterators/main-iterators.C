@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 
-using namespace std;
 using namespace SAMRAI;
 
 int main(
@@ -74,7 +73,7 @@ int main(
 
             if (bi->getBlockId() != bid) {
                tbox::perr << "FAILED: - Test #1: box id " << bi->getBlockId()
-                          << " should have BlockId " << bid << endl;
+                          << " should have BlockId " << bid << std::endl;
                ++fail_count;
             }
 
@@ -90,7 +89,7 @@ int main(
 
             if (bi->getOwnerRank() != owner_rank) {
                tbox::perr << "FAILED: - Test #2: box id " << bi->getBlockId()
-                          << " should have rank " << owner_rank << endl;
+                          << " should have rank " << owner_rank << std::endl;
                ++fail_count;
             }
 
@@ -98,7 +97,7 @@ int main(
       }
 
       if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  testboxcontaineriterator" << endl;
+         tbox::pout << "\nPASSED:  testboxcontaineriterator" << std::endl;
       }
    }
 

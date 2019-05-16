@@ -39,7 +39,6 @@
 
 #include <memory>
 
-using namespace std;
 using namespace SAMRAI;
 
 class PatchMultiblockTestStrategy;
@@ -68,12 +67,12 @@ public:
     * Constructor performs basic setup operations.
     */
    MultiblockTester(
-      const string& object_name,
+      const std::string& object_name,
       const tbox::Dimension& dim,
       std::shared_ptr<tbox::Database>& main_input_db,
       std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       PatchMultiblockTestStrategy* strategy,
-      const string& refine_option = "INTERIOR_FROM_SAME_LEVEL");
+      const std::string& refine_option = "INTERIOR_FROM_SAME_LEVEL");
 
    /**
     * Destructor is empty.
@@ -101,7 +100,7 @@ public:
       const hier::IntVector& src_ghosts,
       const hier::IntVector& dst_ghosts,
       const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
-      const string& operator_name);
+      const std::string& operator_name);
 
    /**
     * Register variable for communication testing.
@@ -115,7 +114,7 @@ public:
       const hier::IntVector& src_ghosts,
       const hier::IntVector& dst_ghosts,
       const std::shared_ptr<hier::BaseGridGeometry> xfer_geom,
-      const string& operator_name);
+      const std::string& operator_name);
 
    /**
     * Create communication schedules for refining data to given level.
@@ -244,7 +243,7 @@ private:
    /*
     * Object name for error reporting.
     */
-   string d_object_name;
+   std::string d_object_name;
 
    const tbox::Dimension d_dim;
 
@@ -258,7 +257,7 @@ private:
     * data on refined patches.  Options are "INTERIOR_FROM_SAME_LEVEL"
     * and "INTERIOR_FROM_COARSER_LEVEL".
     */
-   string d_refine_option;
+   std::string d_refine_option;
 
    /*
     * Patch hierarchy on which tests occur.

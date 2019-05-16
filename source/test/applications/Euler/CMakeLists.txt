@@ -59,3 +59,12 @@ target_include_directories( euler
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/applications/Euler)
 
 set_target_properties(euler PROPERTIES LINKER_LANGUAGE CXX)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME euler
+  EXECUTABLE euler
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
+

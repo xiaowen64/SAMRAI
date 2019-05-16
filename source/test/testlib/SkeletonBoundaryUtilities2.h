@@ -91,7 +91,6 @@
  * @see appu::BoundaryUtilityStrategy2
  */
 
-using namespace std;
 using namespace SAMRAI;
 using namespace appu;
 
@@ -154,7 +153,7 @@ public:
     */
    static void
    fillEdgeBoundaryData(
-      const string& varname,
+      const std::string& varname,
       std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
@@ -178,7 +177,7 @@ public:
     */
    static void
    fillNodeBoundaryData(
-      const string& varname,
+      const std::string& varname,
       std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
@@ -226,7 +225,7 @@ public:
     */
    static int
    checkBdryData(
-      const string& varname,
+      const std::string& varname,
       const hier::Patch& patch,
       int data_id,
       int depth,

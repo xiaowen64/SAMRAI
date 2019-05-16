@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include <string>
-// using namespace std;
 #include "SAMRAI/hier/VariableDatabase.h"
 
 #include "HierarchyTester.h"
