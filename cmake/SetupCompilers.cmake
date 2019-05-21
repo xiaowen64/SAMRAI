@@ -1,13 +1,13 @@
 set(CMAKE_Fortran_FORMAT FIXED)
 
-# message(FATAL_ERROR ${CUDA_NVCC_FLAGS})
+# Set specific options for CUDA if enabled
+if (ENABLE_RAJA AND ENABLE_CUDA)
+  # RAJA requires some experimental features
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -arch ${CUDA_ARCH}--expt-extended-lambda --expt-relaxed-constexpr")
+endif ()
 
-# set (CUDA_NVCC_FLAGS
-#   -Xcompiler; ${OpenMP_CXX_FLAGS};
-#   -g; -G; -arch sm_60
-#   --expt-extended-lambda;
-#   -std=c++11)
-# set (CUDA_NVCC_FLAGS
-#   -Xcompiler; ${OpenMP_CXX_FLAGS};
-#   --expt-relaxed-constexpr;
-#   --expt-extended-lambda)
+# TODO Ensure openmp flags are not enabled twice!
+if (ENABLE_OPENMP AND ENABLE_CUDA)
+  # CMAKE_CUDA_FLAGS does not pass OpenMP_CXX_FLAGS to the host compiler by default
+  set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -Xcompiler ${OpenMP_CXX_FLAGS}")
+endif ()
