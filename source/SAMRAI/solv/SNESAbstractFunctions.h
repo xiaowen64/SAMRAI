@@ -28,9 +28,7 @@
 #undef OMPI_SKIP_MPICXX
 #endif
 
-extern "C" {
 #include "petscsnes.h"
-}
 #endif
 
 #ifdef REQUIRES_CMATH

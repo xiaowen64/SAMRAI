@@ -80,10 +80,7 @@ public:
       SundialsAbstractVector* fy,
       int jok,
       int* jcurPtr,
-      double gamma,
-      SundialsAbstractVector* vtemp1,
-      SundialsAbstractVector* vtemp2,
-      SundialsAbstractVector* vtemp3) = 0;
+      double gamma) = 0;
 
    /**
     * User-supplied function for setting up the preconditioner
@@ -99,8 +96,7 @@ public:
       SundialsAbstractVector* z,
       double gamma,
       double delta,
-      int lr,
-      SundialsAbstractVector* vtemp) = 0;
+      int lr) = 0;
 
 };
 
