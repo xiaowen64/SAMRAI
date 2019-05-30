@@ -34,9 +34,9 @@ Main {
    uses_preconditioning     = TRUE
 
 // Used for testing only
-   correct_rhs_evals        = 498
-   correct_precond_setups   = 372
-   correct_precond_solves   = 246
+   correct_rhs_evals        = 262
+   correct_precond_setups   = 195
+   correct_precond_solves   = 128
 
 }
 

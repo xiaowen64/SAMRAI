@@ -40,23 +40,24 @@ KINSOLSolver::KINSOLSolver(
    d_fval_scale(0),
    d_my_fval_scale_vector(false),
    d_constraints(0),
+   d_linear_solver(0),
    d_KINSOL_needs_initialization(true),
-   d_krylov_dimension(KINSPILS_MAXL),
+   d_krylov_dimension(15),
    d_max_restarts(0),
-   d_max_solves_no_set(MSBSET_DEFAULT),
-   d_max_iter(MXITER_DEFAULT),
+   d_max_solves_no_set(10),
+   d_max_iter(200),
    d_max_newton_step(-1.0),
    d_global_strategy(KIN_NONE),
    d_residual_tol(-1.0),
    d_step_tol(-1.0),
-   d_maxsub(MSBSET_SUB_DEFAULT),
+   d_maxsub(5),
    d_no_initial_setup(0),
    d_no_residual_monitoring(0),
    d_omega_min(0.00001),
    d_omega_max(0.9),
    d_omega(0.0),
    d_no_min_eps(0),
-   d_max_beta_fails(MXNBCF_DEFAULT),
+   d_max_beta_fails(10),
    d_eta_choice(KIN_ETACONSTANT),
    d_eta_constant(0.1),
    d_eta_gamma(0.9),
@@ -103,6 +104,10 @@ KINSOLSolver::~KINSOLSolver()
 
    if (d_kin_mem) {
       KINFree(&d_kin_mem);
+   }
+
+   if (d_linear_solver) {
+      SUNLinSolFree(d_linear_solver);
    }
 }
 
@@ -195,12 +200,12 @@ KINSOLSolver::initializeKINSOL()
 
       d_kin_mem = KINCreate();
 
-      int ierr = KINMalloc(d_kin_mem,
+      int ierr = KINInit(d_kin_mem,
             KINSOLSolver::KINSOLFuncEval,
             d_solution_vector->getNVector());
       KINSOL_SAMRAI_ERROR(ierr);
 
-      ierr = KINSetFdata(d_kin_mem, this);
+      ierr = KINSetUserData(d_kin_mem, this);
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSetInfoFile(d_kin_mem, d_kinsol_log_file);
@@ -221,22 +226,23 @@ KINSOLSolver::initializeKINSOL()
       /*
        * Initialize KINSOL memory record.
        */
-      ierr = KINSpgmr(d_kin_mem,
-            d_krylov_dimension);
+      d_linear_solver = SUNSPGMR(d_solution_vector->getNVector(),
+                                 PREC_RIGHT,
+                                 d_krylov_dimension);
+
+      ierr = KINSpilsSetLinearSolver(d_kin_mem, d_linear_solver);
       KINSOL_SAMRAI_ERROR(ierr);
 
-      ierr = KINSpilsSetMaxRestarts(d_kin_mem, d_max_restarts);
+      ierr = SUNSPGMRSetMaxRestarts(d_linear_solver, d_max_restarts);
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSpilsSetPreconditioner(d_kin_mem,
             precond_set,
-            precond_solve,
-            (void *)this);
+            precond_solve);
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSpilsSetJacTimesVecFn(d_kin_mem,
-            jac_times_vec,
-            (void *)this);
+            jac_times_vec);
       KINSOL_SAMRAI_ERROR(ierr);
 
       if (!(d_residual_tol < 0)) {

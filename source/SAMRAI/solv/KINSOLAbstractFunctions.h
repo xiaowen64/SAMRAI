@@ -99,8 +99,6 @@ public:
     *                               scaling matrix}
     * - \b fval_scale   (INPUT) {diagonal entries of the nonlinear residual
     *                               scaling matrix}
-    * - \b vtemp1        (INOUT) {temporary vector managed by KINSOL}
-    * - \b vtemp2        (INOUT) {temporary vector managed by KINSOL}
     * - \b num_feval    (OUTPUT){number of nonlinear function evaluations
     *                               made to approximate the Jacobian, if any.
     *                               For example, if the routine evaluates the
@@ -120,8 +118,6 @@ public:
       SundialsAbstractVector* soln_scale,
       SundialsAbstractVector* fval,
       SundialsAbstractVector* fval_scale,
-      SundialsAbstractVector* vtemp1,
-      SundialsAbstractVector* vtemp2,
       int& num_feval) = 0;
 
    /**
@@ -143,7 +139,6 @@ public:
     *                               scaling matrix}
     * - \b rhs           (OUTPUT){rhs-side (r) on input and must be set to
     *                              preconditioner solution (i.e., x) on output}
-    * - \b vtemp1        (INOUT) {temporary vector managed by KINSOL}
     * - \b num_feval    (OUTPUT){number of nonlinear function evaluations
     *                               made to approximate the Jacobian, if any.
     *                               For example, if the routine evaluates the
@@ -162,7 +157,6 @@ public:
       SundialsAbstractVector* fval,
       SundialsAbstractVector* fval_scale,
       SundialsAbstractVector* rhs,
-      SundialsAbstractVector* vtemp,
       int& num_feval) = 0;
 
    /**

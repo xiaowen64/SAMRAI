@@ -27,10 +27,9 @@
 
 extern "C" {
 #include "kinsol/kinsol.h"
-#include "kinsol/kinsol_spgmr.h"
+#include "sunlinsol/sunlinsol_spgmr.h"
 }
 
-#include "kinsol/kinsol_impl.h"
 #include "kinsol/kinsol_spils.h"
 
 #include <string>
@@ -706,9 +705,7 @@ private:
       N_Vector uscale,
       N_Vector fval,
       N_Vector fscale,
-      void* my_solver,
-      N_Vector vtemp1,
-      N_Vector vtemp2)
+      void* my_solver)
    {
       ((KINSOLSolver *)my_solver)->initializeKINSOL();
       int num_feval = 0;
@@ -717,8 +714,6 @@ private:
             SABSVEC_CAST(uscale),
             SABSVEC_CAST(fval),
             SABSVEC_CAST(fscale),
-            SABSVEC_CAST(vtemp1),
-            SABSVEC_CAST(vtemp2),
             num_feval);
       return success;
    }
@@ -730,8 +725,7 @@ private:
       N_Vector fval,
       N_Vector fscale,
       N_Vector vv,
-      void* my_solver,
-      N_Vector vtemp)
+      void* my_solver)
 
    {
       int num_feval = 0;
@@ -741,7 +735,6 @@ private:
             SABSVEC_CAST(fval),
             SABSVEC_CAST(fscale),
             SABSVEC_CAST(vv),
-            SABSVEC_CAST(vtemp),
             num_feval);
       return success;
    }
@@ -815,6 +808,11 @@ private:
     * Constraints on nonlinear solution vector.
     */
    SundialsAbstractVector* d_constraints;
+
+   /*
+    * Linear solver for preconditioning
+    */
+   SUNLinearSolver d_linear_solver;
 
    /*
     * Integer flag indicating whether KINSOL needs initialization

@@ -33,23 +33,21 @@ int
 SNES_SAMRAIContext::SNESJacobianSet(
    SNES snes,
    Vec x,
-   Mat* A,
-   Mat* B,
-   MatStructure* mstruct,
+   Mat A,
+   Mat B,
    void* ctx)
 {
    NULL_USE(snes);
    NULL_USE(B);
-   NULL_USE(mstruct);
    int retval = 0;
    if (((SNES_SAMRAIContext *)ctx)->getUsesExplicitJacobian()) {
       retval =
          ((SNES_SAMRAIContext *)ctx)->getSNESFunctions()->
          evaluateJacobian(x);
    } else {
-      int ierr = MatAssemblyBegin(*A, MAT_FINAL_ASSEMBLY);
+      int ierr = MatAssemblyBegin(A, MAT_FINAL_ASSEMBLY);
       PETSC_SAMRAI_ERROR(ierr);
-      ierr = MatAssemblyEnd(*A, MAT_FINAL_ASSEMBLY);
+      ierr = MatAssemblyEnd(A, MAT_FINAL_ASSEMBLY);
       PETSC_SAMRAI_ERROR(ierr);
    }
    return retval;
@@ -256,7 +254,7 @@ SNES_SAMRAIContext::reportCompletionCode(
       case SNES_CONVERGED_FNORM_RELATIVE:
          os << " Fnorm less than specified relative tolerance.\n";
          break;
-      case SNES_CONVERGED_PNORM_RELATIVE:
+      case SNES_CONVERGED_SNORM_RELATIVE:
          os << " Step size less than specified tolerance.\n";
          break;
       case SNES_DIVERGED_FUNCTION_COUNT:
@@ -297,7 +295,7 @@ SNES_SAMRAIContext::createPetscObjects()
    ierr = SNESCreate(PETSC_COMM_SELF, &d_SNES_solver);
    PETSC_SAMRAI_ERROR(ierr);
 
-   ierr = SNESSetType(d_SNES_solver, SNESLS);
+   ierr = SNESSetType(d_SNES_solver, SNESNEWTONLS);
    PETSC_SAMRAI_ERROR(ierr);
 
    ierr = SNESSetFunction(d_SNES_solver,

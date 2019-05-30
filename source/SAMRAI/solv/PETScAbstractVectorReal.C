@@ -977,8 +977,10 @@ PETScAbstractVectorReal<TYPE>::vecResetArray(
 template<class TYPE>
 PetscErrorCode
 PETScAbstractVectorReal<TYPE>::vecSetFromOptions(
+   PetscOptionItems* options,
    Vec vec)
 {
+   NULL_USE(options);
    NULL_USE(vec);
    TBOX_ERROR(
       "PETScAbstractVectorReal<TYPE>::vecSetFromOptions() unimplemented"
