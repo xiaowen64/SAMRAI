@@ -4,12 +4,9 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.12.1
+                     Release Notes for SAMRAI v3.12.0
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
-
-v3.12.1 is a bug fix patch release.  All notes in this file are copied from
-v3.12.0's release notes, except the note under "Significant bug fixes".
 
 *****************************************************************************
 
@@ -32,9 +29,6 @@ Please send email to samrai-bugs@llnl.gov.
                 Significant bug fixes
 ----------------------------------------------------------------------------
 
-1) For version 3.12.1, there is a bug fix in RefineSchedule that fixes
-a parallel hang that only can occur when a single-block domain is flat
-(one cell wide) in one of its dimensional directions.
 
 *****************************************************************************
 
