@@ -28,9 +28,7 @@
 #ifdef OMPI_SKIP_MPICXX
 #undef OMPI_SKIP_MPICXX
 #endif
-extern "C" {
 #include "petscsnes.h"
-}
 #endif
 
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
@@ -1016,9 +1014,8 @@ private:
    SNESJacobianSet(
       SNES snes,                                      // SNES context
       Vec x,                                          // input vector
-      Mat* A,                                         // Jacobian matrix
-      Mat* B,                                         // precond matrix
-      MatStructure* mstruct,                          // precond matrix structure
+      Mat A,                                          // Jacobian matrix
+      Mat B,                                          // precond matrix
       void* ctx);                                     // user-defined context
 
    static int

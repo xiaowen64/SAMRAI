@@ -380,10 +380,7 @@ public:
       SundialsAbstractVector* fy,
       int jok,
       int* jcurPtr,
-      double gamma,
-      SundialsAbstractVector* vtemp1,
-      SundialsAbstractVector* vtemp2,
-      SundialsAbstractVector* vtemp3);
+      double gamma);
 
    virtual int
    CVSpgmrPrecondSolve(
@@ -394,8 +391,7 @@ public:
       SundialsAbstractVector* z,
       double gamma,
       double delta,
-      int lr,
-      SundialsAbstractVector* vtemp);
+      int lr);
 
 /*************************************************************************
  *

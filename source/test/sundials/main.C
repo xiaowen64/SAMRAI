@@ -54,15 +54,6 @@
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
 #include "CVODEModel.h"
 
-// CVODE includes
-#ifdef HAVE_SUNDIALS
-#ifndef included_cvspgmr_h
-#define included_cvspgmr_h
-#include "cvode/cvode_spgmr.h"
-#endif
-#endif
-
-
 using namespace SAMRAI;
 
 /*
@@ -321,9 +312,6 @@ int main(
            i != level_0_boxes.end(); ++i) {
          neq += i->size();
       }
-      cvode_solver->setIterationType(uses_newton ? CV_NEWTON : CV_FUNCTIONAL);
-      //cvode_solver->setToleranceType(SV); // this is in craig's code, but
-      // causes mine to bomb.  Why??
       cvode_solver->setRelativeTolerance(relative_tolerance);
       cvode_solver->setAbsoluteTolerance(absolute_tolerance);
       cvode_solver->setMaximumNumberOfInternalSteps(max_internal_steps);

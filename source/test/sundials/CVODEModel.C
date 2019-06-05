@@ -737,10 +737,7 @@ int CVODEModel::CVSpgmrPrecondSet(
    SundialsAbstractVector* fy,
    int jok,
    int* jcurPtr,
-   double gamma,
-   SundialsAbstractVector* vtemp1,
-   SundialsAbstractVector* vtemp2,
-   SundialsAbstractVector* vtemp3)
+   double gamma)
 {
 #ifndef USE_FAC_PRECONDITIONER
    NULL_USE(t);
@@ -750,9 +747,6 @@ int CVODEModel::CVSpgmrPrecondSet(
    NULL_USE(fy);
    NULL_USE(jok);
    NULL_USE(jcurPtr);
-   NULL_USE(vtemp1);
-   NULL_USE(vtemp2);
-   NULL_USE(vtemp3);
 
 #ifdef USE_FAC_PRECONDITIONER
 
@@ -952,12 +946,10 @@ int CVODEModel::CVSpgmrPrecondSolve(
    SundialsAbstractVector* z,
    double gamma,
    double delta,
-   int lr,
-   SundialsAbstractVector* vtemp)
+   int lr)
 {
    NULL_USE(y);
    NULL_USE(fy);
-   NULL_USE(vtemp);
 #ifndef USE_FAC_PRECONDITIONER
    NULL_USE(gamma);
 #endif

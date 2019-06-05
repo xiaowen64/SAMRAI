@@ -26,7 +26,8 @@ extern "C" {
 }
 
 extern "C" {
-#include "cvode/cvode_spgmr.h"
+#include "cvode/cvode_spils.h"
+#include "sunlinsol/sunlinsol_spgmr.h"
 }
 
 #include <string>
@@ -127,12 +128,6 @@ namespace solv {
  *
  *           - @b Linear Multistep Method
  *                BDF
- *
- *           - @b Iteration Type
- *                FUNCTIONAL
- *
- *           - @b Tolerance Type
- *                SS (scalar relative and scalar absolute tolerances)
  *
  *           - @b Relative Tolerance
  *                0.0
@@ -406,51 +401,6 @@ public:
       TBOX_ASSERT((linear_multistep_method == CV_ADAMS) ||
          (linear_multistep_method == CV_BDF));
       d_linear_multistep_method = linear_multistep_method;
-      d_CVODE_needs_initialization = true;
-   }
-
-   /**
-    * Set iteration type.  The user can specify either FUNCTIONAL
-    * iteration, which does not require linear algebra, or a
-    * NEWTON iteration, which requires the solution of linear
-    * systems. In the NEWTON case, the user must also specify a
-    * CVODE linear solver. NEWTON is recommended in case of
-    * stiff problems.
-    *
-    * Note: the enumeration constants FUNCTIONAL and NEWTON are defined
-    * in cvode.h.
-    *
-    * @pre (iteration_type == CV_FUNCTIONAL) || (iteration_type == CV_NEWTON)
-    */
-   void
-   setIterationType(
-      int iteration_type)
-   {
-      TBOX_ASSERT((iteration_type == CV_FUNCTIONAL) ||
-         (iteration_type == CV_NEWTON));
-      d_iteration_type = iteration_type;
-      d_CVODE_needs_initialization = true;
-   }
-
-   /**
-    * Set tolerance type.  This parameter specifies the relative
-    * and absolute tolerance types to be used. The SS tolerance type
-    * means a scalar relative and absolute tolerance, while the SV
-    * tolerance type means a scalar relative tolerance and a
-    * vector absolute tolerance (a potentially different
-    * absolute tolerance for each vector component).
-    *
-    * Note: the enumeration constants SS and SV are defined in cvode.h.
-    *
-    * @pre (tolerance_type == CV_SS) || (tolerance_type == CV_SV)
-    */
-   void
-   setToleranceType(
-      int tolerance_type)
-   {
-      TBOX_ASSERT((tolerance_type == CV_SS) ||
-         (tolerance_type == CV_SV));
-      d_tolerance_type = tolerance_type;
       d_CVODE_needs_initialization = true;
    }
 
@@ -1287,10 +1237,7 @@ private:
       int jok,
       booleantype* jcurPtr,
       realtype gamma,
-      void* my_solver,
-      N_Vector vtemp1,
-      N_Vector vtemp2,
-      N_Vector vtemp3)
+      void* my_solver)
    {
       int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
          CVSpgmrPrecondSet(t,
@@ -1298,10 +1245,7 @@ private:
             SABSVEC_CAST(fy),
             jok,
             jcurPtr,
-            gamma,
-            SABSVEC_CAST(vtemp1),
-            SABSVEC_CAST(vtemp2),
-            SABSVEC_CAST(vtemp3));
+            gamma);
       return success;
    }
 
@@ -1315,8 +1259,7 @@ private:
       realtype gamma,
       realtype delta,
       int lr,
-      void* my_solver,
-      N_Vector vtemp)
+      void* my_solver)
    {
       int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
          CVSpgmrPrecondSolve(t,
@@ -1326,8 +1269,7 @@ private:
             SABSVEC_CAST(z),
             gamma,
             delta,
-            lr,
-            SABSVEC_CAST(vtemp));
+            lr);
       return success;
    }
 
@@ -1373,6 +1315,12 @@ private:
    void* d_cvode_mem;                    // CVODE memory structure
 
    /*
+    * Linear solver for preconditioning
+    */
+   SUNLinearSolver d_linear_solver;
+
+
+   /*
     * CVODE log file information.
     */
    FILE* d_cvode_log_file;                   // CVODE message log file
@@ -1390,8 +1338,6 @@ private:
     * ODE integration parameters.
     */
    int d_linear_multistep_method;
-   int d_iteration_type;
-   int d_tolerance_type;
    double d_relative_tolerance;
    bool d_use_scalar_absolute_tolerance;
    double d_absolute_tolerance_scalar;

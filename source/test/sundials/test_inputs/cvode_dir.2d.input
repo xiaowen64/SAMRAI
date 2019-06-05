@@ -41,9 +41,9 @@ Main {
 
    // Used for testing only
    // These values serve as baselines for testing verification.
-   correct_rhs_evals        = 678
-   correct_precond_setups   = 507
-   correct_precond_solves   = 337
+   correct_rhs_evals        = 201
+   correct_precond_setups   = 150
+   correct_precond_solves   = 99
 }
 
 CVODEModel {
