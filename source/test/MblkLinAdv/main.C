@@ -318,7 +318,7 @@ int main(
          }
       }
 
-#if (TESTING == 1) && !(HAVE_HDF5)
+#if (TESTING == 1) && !defined(HAVE_HDF5)
       /*
        * If we are autotesting on a system w/o HDF5, the read from
        * restart will result in an error.  We want this to happen
@@ -458,7 +458,7 @@ int main(
        * of the problem. If no automated testing is done, the object does
        * not get used.
        */
-      AutoTester autotester("AutoTester", input_db);
+      AutoTester autotester("AutoTester", dim, input_db);
 #endif
 
       /*
@@ -501,10 +501,10 @@ int main(
        * If we are doing autotests, check result...
        */
       autotester.evalTestData(iteration_num,
-         patch_hierarchy,
+         mblk_patch_hierarchy,
          time_integrator,
-         hyp_level_integrator,
-         gridding_algorithm);
+         mblk_hyp_level_integrator,
+         mblk_gridding_algorithm);
 #endif
 
       while ((loop_time < loop_time_end) &&
@@ -557,10 +557,10 @@ int main(
           * If we are doing autotests, check result...
           */
          autotester.evalTestData(iteration_num,
-            patch_hierarchy,
+            mblk_patch_hierarchy,
             time_integrator,
-            hyp_level_integrator,
-            gridding_algorithm);
+            mblk_hyp_level_integrator,
+            mblk_gridding_algorithm);
 #endif
 
       }

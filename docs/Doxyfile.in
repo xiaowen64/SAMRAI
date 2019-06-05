@@ -451,7 +451,7 @@ WARN_LOGFILE           = dox.warnings
 # with spaces.
 
 INPUT                  = @top_srcdir@/source/SAMRAI/mainpage.dox \
-	                 @top_srcdir@/source/SAMRAI/tbox \
+                         @top_srcdir@/source/SAMRAI/tbox \
                          @top_srcdir@/source/SAMRAI/hier \
                          @top_srcdir@/source/SAMRAI/xfer \
                          @top_srcdir@/source/SAMRAI/pdat \

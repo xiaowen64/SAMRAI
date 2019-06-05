@@ -85,7 +85,7 @@ int main(
    }
 
    int fail_count = 0;
-
+#ifdef HAVE_HDF5
    {
 
       /*
@@ -404,7 +404,7 @@ int main(
       tbox::plog << "\nShutting down..." << std::endl;
 
    }
-
+#endif
    /*
     * Shut down.
     */

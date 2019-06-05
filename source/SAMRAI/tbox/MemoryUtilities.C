@@ -20,13 +20,6 @@
 #ifdef HAVE_MALLOC_H
 #include <malloc.h>
 #endif
-#ifdef HAVE_TAU
-#if (PROFILING_ON || TRACING_ON)
-#include "Profile/Profiler.h"
-/* Register an "event" with Tau to track memory usage. */
-TAU_PROFILE_STMT(TauUserEvent ue("memory use"))
-#endif
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -96,57 +89,6 @@ MemoryUtilities::printMemoryInfo(
       << reserved_mem / (1024.0 * 1024.0) << "MB reserved ("
       << free_mem << " unused)" << std::endl;
 
-#endif
-}
-
-/*
- *************************************************************************
- *
- * Records memory usage to user-defined event in TAU.  Note that if TAU
- * is not included, this method does nothing.
- *
- *************************************************************************
- */
-
-void
-MemoryUtilities::recordMemoryInfo(
-   double time)
-{
-   NULL_USE(time);
-
-#ifdef HAVE_TAU
-#ifdef HAVE_MALLINFO
-   /*
-    * Access information from mallinfo
-    */
-   struct mallinfo my_mallinfo = mallinfo();
-
-   /* Get total memory reserved by the system for malloc currently*/
-   double reserved_mem = my_mallinfo.arena;
-
-   /* Get all the memory currently allocated to user by malloc, etc. */
-   double used_mem = my_mallinfo.hblkhd + my_mallinfo.usmblks
-      + my_mallinfo.uordblks;
-
-   /* Get memory not currently allocated to user but malloc controls */
-   double free_mem = my_mallinfo.fsmblks + my_mallinfo.fordblks;
-
-   /* Get number of items currently allocated */
-   double number_allocated = my_mallinfo.ordblks + my_mallinfo.smblks;
-
-   /* These vars are unused now but we may use them in the future */
-   NULL_USE(reserved_mem);
-   NULL_USE(free_mem);
-   NULL_USE(number_allocated);
-
-   /* Record high-water mark for memory used. */
-   s_max_memory = MathUtilities<double>::Max(s_max_memory, used_mem);
-
-   /*
-    * Record "used_mem" in MB to tau event.
-    */
-   TAU_PROFILE_STMT(ue.TriggerEvent(used_mem / (1024.0 * 1024.0)));
-#endif
 #endif
 }
 
