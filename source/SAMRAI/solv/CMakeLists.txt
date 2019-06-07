@@ -71,6 +71,18 @@ set (solv_depends_on
   SAMRAI_tbox
   SAMRAI_xfer)
 
+if (ENABLE_HYPRE)
+  list (APPEND solv_depends_on HYPRE)
+endif()
+
+if (ENABLE_SUNDIALS)
+  list (APPEND solv_depends_on SUNDIALS)
+endif()
+
+if (ENABLE_PETSC)
+  list (APPEND solv_depends_on PETSc)
+endif()
+
 blt_add_library(
   NAME SAMRAI_solv
   SOURCES ${solv_sources}

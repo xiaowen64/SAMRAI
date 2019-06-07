@@ -25,17 +25,17 @@ if (ENABLE_HDF5)
 endif ()
 
 
-# HYPRE
+#HAVE_HYPRE
 if (ENABLE_HYPRE)
   find_package(HYPRE REQUIRED)
 
   if(HYPRE_FOUND)
-    set (HAVE_HPYRE True)
+    set (HAVE_HYPRE True)
 
     blt_register_library(
-      NAME hypre
+      NAME HYPRE
       INCLUDES ${HYPRE_INCLUDE_DIRS}
-      LIBRARIES ${HPYRE_LIBRARIES})
+      LIBRARIES ${HYPRE_LIBRARIES})
   endif ()
 endif ()
 
@@ -55,7 +55,7 @@ if (ENABLE_PETSC)
 
     blt_register_library(
       NAME PETSc
-      INCLUDES ${PETSC_INCLUDES}
+      INCLUDES ${PETSC_INCLUDE_DIRS}
       LIBRARIES ${PETSC_LIBRARIES})
   endif ()
 endif()
@@ -96,7 +96,7 @@ if (ENABLE_SUNDIALS)
 
     blt_register_library(
       NAME SUNDIALS
-      INCLUDES ${SUNDIALS_INCLUDES}
+      INCLUDES ${SUNDIALS_INCLUDE_DIRS}
       LIBRARIES ${SUNDIALS_LIBRARIES})
   endif ()
 endif ()

@@ -79,7 +79,7 @@
 #cmakedefine HAVE_HDF5
 
 /* HYPRE library is available so use it */
-#undef HAVE_HYPRE
+#cmakedefine HAVE_HYPRE
 
 /* HAVE_INLINE_ISNAND */
 #undef HAVE_INLINE_ISNAND
@@ -133,7 +133,7 @@
 #undef HAVE_OPENMP
 
 /* PETSC library is available so use it */
-#undef HAVE_PETSC
+#cmakedefine HAVE_PETSC
 
 /* HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION */
 #undef HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION
@@ -169,7 +169,7 @@
 #cmakedefine HAVE_STRING_H
 
 /* HAVE_SUNDIALS */
-#undef HAVE_SUNDIALS
+#cmakedefine HAVE_SUNDIALS
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #cmakedefine HAVE_SYS_STAT_H
