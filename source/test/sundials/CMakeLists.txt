@@ -1,6 +1,12 @@
 set (sundials_sources
   main.C
-  CVODEModel.C)
+  CVODEModel.C
+  ${CMAKE_CURRENT_BINARY_DIR}/fortran/FACjacobian2d.f
+  ${CMAKE_CURRENT_BINARY_DIR}/fortran/FACjacobian3d.f)
+
+process_m4(NAME fortran/FACjacobian2d)
+process_m4(NAME fortran/FACjacobian3d)
+
 
 blt_add_executable(
   NAME sundials_test
@@ -10,6 +16,7 @@ blt_add_executable(
     SAMRAI_geom
     SAMRAI_mesh
     SAMRAI_hier
+    SAMRAI_appu
     SAMRAI_solv)
 
 target_include_directories( sundials_test

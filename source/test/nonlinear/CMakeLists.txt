@@ -90,6 +90,7 @@ set (nonlinear_depends_on
     SAMRAI_solv
     SAMRAI_appu
     SAMRAI_mesh
+    SAMRAI_algs
     SAMRAI_tbox)
 
 blt_add_executable(
@@ -106,4 +107,5 @@ samrai_add_tests(
   NAME nonlinear
   EXECUTABLE nonlinear
   INPUTS ${test_inputs}
-  PARALLEL TRUE)
+  PARALLEL TRUE
+  EXTRA_ARG "-skip-petscrc")
