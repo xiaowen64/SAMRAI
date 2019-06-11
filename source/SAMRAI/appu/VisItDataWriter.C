@@ -1602,7 +1602,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
                tot_number_of_patches * sizeof(patchMinMaxStruct));
             ipi->d_master_min_max[comp] = mm;
 
-            for (int pn = 0; pn < number_local_patches; ++pn) {
+            for (unsigned int pn = 0; pn < number_local_patches; ++pn) {
                ipi->d_master_min_max[comp][pn].patch_data_on_disk = false;
                ipi->d_master_min_max[comp][pn].min =
                   tbox::MathUtilities<double>::getMax();
@@ -2842,7 +2842,7 @@ VisItDataWriter::writeSummaryToHDFFile(
    TBOX_ASSERT(coarsest_plot_level >= 0);
    TBOX_ASSERT(finest_plot_level >= 0);
 
-   int i, ln, pn;
+   int i, ln;
 
    /*
     * Pack patch min/max information
@@ -3288,14 +3288,14 @@ VisItDataWriter::writeSummaryToHDFFile(
          const std::vector<int>& proc_mapping =
             patch_level->getProcessorMapping().getProcessorMapping();
 
-         for (pn = 0; pn < patch_level->getGlobalNumberOfPatches(); ++pn) {
-            int proc_num = proc_mapping[pn];
-            int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pn);
+         for (int p = 0; p < patch_level->getGlobalNumberOfPatches(); ++p) {
+            int proc_num = proc_mapping[p];
+            int global_patch_id = getGlobalPatchNumber(hierarchy, ln, p);
             pms[global_patch_id].processor_number = proc_num;
             pms[global_patch_id].file_cluster_number =
                d_processor_in_file_cluster_number[proc_num];
             pms[global_patch_id].level_number = ln;
-            pms[global_patch_id].patch_number = pn;
+            pms[global_patch_id].patch_number = p;
          }
       }
 
@@ -3324,7 +3324,7 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
       patchExtentsStruct* pes = new patchExtentsStruct[tot_number_of_patches];
 
-      for (pn = 0; pn < tot_number_of_patches; ++pn) {
+      for (unsigned int pn = 0; pn < tot_number_of_patches; ++pn) {
          for (i = 0; i < VISIT_FIXED_DIM; ++i) {
             pes[pn].lower[i] = 0;
             pes[pn].upper[i] = 0;
@@ -3393,10 +3393,10 @@ VisItDataWriter::writeSummaryToHDFFile(
                phys_domain_box = phys_domain.front(); 
             }
          }
-         pn = 0;
+         int pnum = 0;
          for (hier::BoxContainer::const_iterator itr = boxes.begin();
-              itr != boxes.end(); ++itr, ++pn) {
-            int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pn);
+              itr != boxes.end(); ++itr, ++pnum) {
+            int global_patch_id = getGlobalPatchNumber(hierarchy, ln, pnum);
             const hier::Box& box = *itr;
             const int* lower = &box.lower()[0];
             const int* upper = &box.upper()[0];

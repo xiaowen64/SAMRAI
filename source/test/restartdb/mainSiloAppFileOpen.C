@@ -71,11 +71,11 @@ int main(
     * then there will be memory leaks reported.
     */
    {
-      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-
       tbox::PIO::logAllNodes("Silotest.log");
 
 #ifdef HAVE_SILO
+
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       tbox::plog << "\n--- Silo database tests BEGIN ---" << std::endl;
 
