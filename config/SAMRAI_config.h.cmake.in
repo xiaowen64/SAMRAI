@@ -142,7 +142,7 @@
 #undef HAVE_PTSCOTCH
 
 /* SILO library is available so use it */
-#undef HAVE_SILO
+#cmakedefine HAVE_SILO
 
 /* HAVE_SSTREAM */
 #undef HAVE_SSTREAM
