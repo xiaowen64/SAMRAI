@@ -115,6 +115,10 @@ if (HAVE_HDF5)
     list(APPEND tbox_depends_on hdf5)
 endif ()
 
+if (HAVE_SILO)
+    list(APPEND tbox_depends_on SILO)
+endif ()
+
 if (ENABLE_MPI)
   list(APPEND tbox_depends_on mpi)
 endif ()
