@@ -1523,7 +1523,6 @@ PatchHierarchy::makeAdjacencySets(
 
          std::shared_ptr<tbox::Database> adjsets_db;
 
-         int ncount = 0;
          Connector::ConstNeighborhoodIterator nbh =
             self_to_self.findLocal(box_id);
          if (nbh == self_to_self.end())  {

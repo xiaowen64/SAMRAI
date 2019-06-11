@@ -1630,7 +1630,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
       *hiercoarse_level->getBoxLevel());
 
    const hier::IntVector& zero_vec(hier::IntVector::getZero(dim));
-   const hier::IntVector& one_vec(hier::IntVector::getOne(dim));
 
    /*
     * To compute coarse_interp<==>hiercoarse, we will perform this bridge:

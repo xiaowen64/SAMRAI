@@ -312,8 +312,6 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    const hier::IntVector box_dims = trial.d_whole_box.numberCells();
 
-   const size_t box_vol = box_dims.getProduct();
-
    if (trial.d_whole_box_load <= trial.d_ideal_load) {
       // Easy: break off everything.
       trial.computeBreakData(trial.d_whole_box);
@@ -346,8 +344,6 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
        * to break across longer directions.
        */
       const tbox::Dimension::dir_t brk_dir = static_cast<tbox::Dimension::dir_t>(sorted_dirs(d));
-
-      const size_t brk_area = box_vol / box_dims(brk_dir);
 
       const std::vector<bool>& bad = trial.d_bad_cuts[brk_dir];
 
@@ -555,11 +551,6 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
    const tbox::Dimension dim(trial.d_whole_box.getDim());
 
    const hier::IntVector box_dims(trial.d_whole_box.numberCells());
-
-   const size_t box_vol = box_dims.getProduct();
-
-   double box_load_ratio = trial.d_whole_box_load /
-                           static_cast<double>(box_vol);
 
    if (trial.d_ideal_load >= trial.d_whole_box_load) {
       // Easy: break off everything.
