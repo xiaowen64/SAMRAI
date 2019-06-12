@@ -20,14 +20,14 @@ endif ()
 # BLT Options need to be set in the CACHE
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
 set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
-set(ENABLE_CUDA On CACHE Bool "Enable CUDA")
+set(ENABLE_CUDA Off CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
 set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
 
 # Third party libraries
-option(ENABLE_UMPIRE "Enable UMPIRE memory management" ON)
-option(ENABLE_RAJA "Enable RAJA" ON)
+option(ENABLE_UMPIRE "Enable UMPIRE memory management" On)
+option(ENABLE_RAJA "Enable RAJA" Off)
 option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
