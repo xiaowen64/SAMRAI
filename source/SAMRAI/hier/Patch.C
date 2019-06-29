@@ -367,7 +367,8 @@ operator << (
       if (!patch.d_patch_data[i]) {
          s << "NULL\n";
       } else {
-         s << typeid(*patch.d_patch_data[i]).name()
+         auto& p = *patch.d_patch_data[i];
+         s << typeid(p).name()
          << " [GCW=" << patch.d_patch_data[i]->getGhostCellWidth() << "]\n";
       }
    }

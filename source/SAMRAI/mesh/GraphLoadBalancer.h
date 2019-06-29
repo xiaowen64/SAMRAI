@@ -169,8 +169,12 @@ public:
     */
    void
    setWorkloadPatchDataIndex(
-      int data_id,
-      int level_number = -1) {}
+      int NULL_USE_PARAM(data_id),
+      int level_number = -1)
+   {
+     NULL_USE(level_number);
+     return;
+   }
 
    /*!
     * @brief Return true if load balancing procedure for given level
