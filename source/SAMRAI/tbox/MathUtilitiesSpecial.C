@@ -45,34 +45,16 @@ namespace SAMRAI {
 namespace tbox {
 
 template<>
-bool MathUtilities<bool>::s_zero = false;
-template<>
-bool MathUtilities<bool>::s_one = true;
+dcomplex MathUtilities<dcomplex>::getZero()
+{
+   return dcomplex(0.0,0.0);
+}
 
 template<>
-char MathUtilities<char>::s_zero = 0;
-template<>
-char MathUtilities<char>::s_one = 1;
-
-template<>
-int MathUtilities<int>::s_zero = 0;
-template<>
-int MathUtilities<int>::s_one = 1;
-
-template<>
-float MathUtilities<float>::s_zero = 0.0;
-template<>
-float MathUtilities<float>::s_one = 1.0;
-
-template<>
-double MathUtilities<double>::s_zero = 0.0;
-template<>
-double MathUtilities<double>::s_one = 1.0;
-
-template<>
-dcomplex MathUtilities<dcomplex>::s_zero = dcomplex(0.0, 0.0);
-template<>
-dcomplex MathUtilities<dcomplex>::s_one = dcomplex(1.0, 0.0);
+dcomplex MathUtilities<dcomplex>::getOne()
+{
+   return dcomplex(1.0,0.0);
+}
 
 template<>
 bool MathUtilities<float>::isNaN(

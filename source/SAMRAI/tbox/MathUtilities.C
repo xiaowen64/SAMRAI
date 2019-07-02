@@ -16,13 +16,6 @@
 namespace SAMRAI {
 namespace tbox {
 
-// initialize static private members?
-template <class TYPE>
-TYPE MathUtilities<TYPE>::s_zero = 0;
-
-template <class TYPE>
-TYPE MathUtilities<TYPE>::s_one = 1;
-
 /*
  *************************************************************************
  *
@@ -143,14 +136,14 @@ template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getZero()
 {
-   return s_zero;
+   return static_cast< TYPE >( 0 );
 }
 
 template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getOne()
 {
-   return s_one;
+   return static_cast< TYPE >( 1 );
 }
 
 template<class TYPE>
