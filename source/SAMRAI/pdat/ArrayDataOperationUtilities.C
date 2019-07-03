@@ -83,6 +83,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
       + dst_start_depth * dst_offset;
    size_t src_begin = src_box.offset(opbox.lower() - src_shift)
       + src_start_depth * src_offset;
+
 #else
    NULL_USE(src_ptr);
    NULL_USE(dst_ptr);
@@ -102,27 +103,32 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
       case 1: {
          auto dest = get_view<1>(dst, d);
          auto source = get_const_view<1>(src, d);
-
+         const int shift_i = src_shift[0];
+         
          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int i) {
-            op(dest(i), source(i));
+            op(dest(i), source(i-shift_i));
          });
       } break;
 
       case 2: {
          auto dest = get_view<2>(dst, d);
          auto source = get_const_view<2>(src, d);
+         const int shift_i = src_shift[0];
+         const int shift_j = src_shift[1];
 
          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int j, int i) {
-            op(dest(i, j), source(i, j));
+            op(dest(i, j), source(i-shift_i, j-shift_j));
          });
       } break;
 
       case 3: {
          auto dest = get_view<3>(dst, d);
          auto source = get_const_view<3>(src, d);
-
+         const int shift_i = src_shift[0];
+         const int shift_j = src_shift[1];
+         const int shift_k = src_shift[2];
          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
-            op(dest(i,j,k), source(i,j,k));
+            op(dest(i,j,k), source(i-shift_i,j-shift_j,k-shift_k));
          });
       } break;
 
@@ -199,8 +205,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 #endif
 
    }  // d loop over depth indices
-
-}
+} // end doArrayDataOperationOnBox
 
 /*
  *************************************************************************
@@ -310,7 +315,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
                 TBOX_ERROR("Aborting in " __FILE__);
                 break;
      }
-#else
+#else // !HAVE_RAJA
       size_t dat_counter = dat_begin;
       size_t buf_counter = buf_begin;
 
@@ -377,8 +382,9 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 
    }  // d loop over depth indices
 
-}
+} // end doArrayDataBufferOperationOnBox
 
-}
-}
+} // namespace pdat
+} // namespace SAMRAI
+
 #endif

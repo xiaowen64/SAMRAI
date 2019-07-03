@@ -1,6 +1,7 @@
 #include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/Box.h"
+#include <cstdio>
 
 using namespace SAMRAI;
 
@@ -24,7 +25,8 @@ int main(int argc, char* argv[]) {
   }
 
   pdat::parallel_for_all(box, [=] __host__ __device__ (int k, int j) {
-      std::cout << "(" << j << "," << k << ")" << std::endl;
+      //std::cout << "(" << j << "," << k << ")" << std::endl;
+      printf("[j,k] = [%d,%d]\n",j,k);
   });
 
   return 0;
