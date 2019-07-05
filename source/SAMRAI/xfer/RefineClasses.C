@@ -140,7 +140,7 @@ RefineClasses::itemIsValid(
          if (item_good && (*itr < 0)) {
             item_good = false;
             TBOX_ERROR("Bad data given to RefineClasses...\n"
-               << "`Work' patch data id invalid (< 0!)" << std::endl); 
+               << "`Work' patch data id invalid (< 0!)" << std::endl);
          }
       }
    }
@@ -239,7 +239,9 @@ RefineClasses::itemIsValid(
       std::shared_ptr<hier::PatchDataFactory> src_tnew_fact(
          pd->getPatchDataFactory(src_tnew_id));
 
-      if (item_good && typeid(*src_told_fact) != typeid(*src_fact)) {
+      auto& told_fact = *src_told_fact;
+      auto& fact      = *src_fact;
+      if (item_good && typeid(told_fact) != typeid(fact)) {
          item_good = false;
          TBOX_ERROR("Bad data given to RefineClasses...\n"
             << "`Source' patch data " << pd->mapIndexToName(src_id)
@@ -249,7 +251,8 @@ RefineClasses::itemIsValid(
             << "\n been made to time interpolate with them" << std::endl);
       }
 
-      if (item_good && typeid(*src_tnew_fact) != typeid(*src_fact)) {
+      auto& tnew_fact = *src_tnew_fact;
+      if (item_good && typeid(tnew_fact) != typeid(fact)) {
          item_good = false;
          TBOX_ERROR("Bad data given to RefineClasses...\n"
             << "`Source' patch data " << pd->mapIndexToName(src_id)
@@ -384,8 +387,9 @@ RefineClasses::itemsAreEquivalent(
    equivalent &= (!data1.d_var_fill_pattern ==
                   !data2.d_var_fill_pattern);
    if (equivalent && data1.d_var_fill_pattern) {
-      equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
-                     typeid(*(data2.d_var_fill_pattern)));
+      auto& d1 = *(data1.d_var_fill_pattern);
+      auto& d2 = *(data2.d_var_fill_pattern);
+      equivalent &= (typeid(d1) == typeid(d2));
    }
 
    return equivalent;
@@ -453,8 +457,9 @@ RefineClasses::printRefineItem(
    if (!data.d_oprefine) {
       stream << "NULL refining operator" << std::endl;
    } else {
+      auto& oprefine = *data.d_oprefine;
       stream << "refine operator name:          "
-             << typeid(*data.d_oprefine).name()
+             << typeid(oprefine).name()
              << std::endl;
       stream << "operator priority:      "
              << data.d_oprefine->getOperatorPriority()
@@ -467,19 +472,21 @@ RefineClasses::printRefineItem(
    if (!data.d_time_interpolate) {
       stream << "time interpolate is false" << std::endl;
    } else {
+      auto& optime = *data.d_optime;
       stream << "old source component:   "
              << data.d_src_told << std::endl;
       stream << "new source component:   "
              << data.d_src_tnew << std::endl;
       stream << "time interpolation operator name:          "
-             << typeid(*data.d_optime).name()
+             << typeid(optime).name()
              << std::endl;
    }
    if (!data.d_var_fill_pattern) {
       stream << "var fill pattern is null" << std::endl;
    } else {
+      auto& d = *data.d_var_fill_pattern;
       stream << "var fill pattern name:          "
-             << typeid(*data.d_var_fill_pattern).name()
+             << typeid(d).name()
              << std::endl;
    }
    stream << std::endl;
@@ -510,7 +517,9 @@ RefineClasses::patchDataMatch(
       std::shared_ptr<hier::PatchDataFactory> pdf2(
          pd->getPatchDataFactory(item_id2));
 
-      items_match = (typeid(*pdf1) == typeid(*pdf2));
+      auto& p1 = *pdf1;
+      auto& p2 = *pdf2;
+      items_match = (typeid(p1) == typeid(p2));
 
       if (items_match) {
          items_match = (pdf1->getGhostCellWidth() ==

@@ -235,97 +235,135 @@ int main(
 
          switch (desc_id) {
             case 0:
+               {
+
                if (var_ctxt_name != cell_double_variable1) {
                   descriptor_test_passed = false;
                   name_error_indx[desc_id] = true;
                }
 
-               test = typeid(*hier::VariableDatabase::getDatabase()
-                             ->getPatchDescriptor()
-                             ->getPatchDataFactory(desc_id)) ==
-                  typeid(pdat::CellDataFactory<double>);
+               auto& pdf = *(hier::VariableDatabase::getDatabase()
+                                            ->getPatchDescriptor()
+                                            ->getPatchDataFactory(desc_id));
+
+               test = ( typeid(pdf) == typeid(pdat::CellDataFactory<double>) );
 
                if (!test) {
                   descriptor_test_passed = false;
                   factory_error_indx[desc_id] = true;
                }
+
+               } // END case 0
                break;
 
             case 1:
+               {
+
+
                if (var_ctxt_name != cell_double_variable2) {
                   descriptor_test_passed = false;
                   name_error_indx[desc_id] = true;
                }
 
-               test = typeid(*hier::VariableDatabase::getDatabase()
-                             ->getPatchDescriptor()
-                             ->getPatchDataFactory(desc_id)) ==
-                  typeid(pdat::CellDataFactory<double>);
+               auto& pdf = *(hier::VariableDatabase::getDatabase()
+                                            ->getPatchDescriptor()
+                                            ->getPatchDataFactory(desc_id));
+
+               test = (typeid(pdf) == typeid(pdat::CellDataFactory<double>) );
+
                if (!test) {
                   descriptor_test_passed = false;
                   factory_error_indx[desc_id] = true;
                }
+
+               } // END case 1
                break;
 
             case 2:
+               {
+
                if (var_ctxt_name != cell_double_variable3) {
                   descriptor_test_passed = false;
                   name_error_indx[desc_id] = true;
                }
-               test = typeid(*hier::VariableDatabase::getDatabase()
-                             ->getPatchDescriptor()
-                             ->getPatchDataFactory(desc_id)) ==
-                  typeid(pdat::CellDataFactory<double>);
+
+               auto& pdf = *(hier::VariableDatabase::getDatabase()
+                                            ->getPatchDescriptor()
+                                            ->getPatchDataFactory(desc_id));
+
+               test = ( typeid(pdf) == typeid(pdat::CellDataFactory<double>) );
 
                if (!test) {
                   descriptor_test_passed = false;
                   factory_error_indx[desc_id] = true;
                }
+
+               } // END case 2
                break;
 
             case 3:
+               {
+
                if (var_ctxt_name != cwgt_variable0) {
                   descriptor_test_passed = false;
                   name_error_indx[desc_id] = true;
                }
-               test = typeid(*hier::VariableDatabase::getDatabase()
-                             ->getPatchDescriptor()
-                             ->getPatchDataFactory(desc_id)) ==
-                  typeid(pdat::CellDataFactory<double>);
+
+               auto& pdf = *(hier::VariableDatabase::getDatabase()
+                                            ->getPatchDescriptor()
+                                            ->getPatchDataFactory(desc_id));
+
+               test = ( typeid(pdf) == typeid(pdat::CellDataFactory<double>) );
+
                if (!test) {
                   descriptor_test_passed = false;
                   factory_error_indx[desc_id] = true;
                }
+
+               } // END case 3
                break;
 
             case 4:
+               {
+
                if (var_ctxt_name != cell_int_variable1) {
                   descriptor_test_passed = false;
                   name_error_indx[desc_id] = true;
                }
-               test = typeid(*hier::VariableDatabase::getDatabase()
-                             ->getPatchDescriptor()
-                             ->getPatchDataFactory(desc_id)) ==
-                  typeid(pdat::CellDataFactory<int>);
+
+               auto& pdf = *(hier::VariableDatabase::getDatabase()
+                                            ->getPatchDescriptor()
+                                            ->getPatchDataFactory(desc_id));
+
+               test = ( typeid(pdf) == typeid(pdat::CellDataFactory<int>) );
+
                if (!test) {
                   descriptor_test_passed = false;
                   factory_error_indx[desc_id] = true;
                }
+
+               } // END case 4
                break;
 
             case 5:
+               {
                if (var_ctxt_name != cell_int_variable2) {
                   descriptor_test_passed = false;
                   name_error_indx[desc_id] = true;
                }
-               test = typeid(*hier::VariableDatabase::getDatabase()
-                             ->getPatchDescriptor()
-                             ->getPatchDataFactory(desc_id)) ==
-                  typeid(pdat::CellDataFactory<int>);
+
+               auto& pdf = *(hier::VariableDatabase::getDatabase()
+                                            ->getPatchDescriptor()
+                                            ->getPatchDataFactory(desc_id));
+
+               test = ( typeid(pdf) == typeid(pdat::CellDataFactory<int>) );
+
                if (!test) {
                   descriptor_test_passed = false;
                   factory_error_indx[desc_id] = true;
                }
+
+               } // END case 5
                break;
          }
       }
@@ -408,16 +446,17 @@ int main(
                        << " should be allocated but isn't!" << std::endl;
          } else {
 
-            std::string patch_data_name =
-               typeid(*tpatch->getPatchData(desc_id)).name();
+            auto& p = *tpatch->getPatchData(desc_id);
+            std::string patch_data_name = typeid(p).name();
 
             hier::IntVector ghost_width(tpatch->getPatchData(
                                            desc_id)->getGhostCellWidth());
 
             switch (desc_id) {
                case 0:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #3c.0.a: hier::Patch Data name incorrect\n"
@@ -431,11 +470,14 @@ int main(
                      << "Expected: (1,1)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 0
                   break;
 
                case 1:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #3c.1.a: hier::Patch Data name incorrect\n"
@@ -449,11 +491,14 @@ int main(
                      << "Expected: (2,2)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 1
                   break;
 
                case 2:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #3c.2.a: hier::Patch Data name incorrect\n"
@@ -467,11 +512,14 @@ int main(
                      << "Expected: (3,3)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 2
                   break;
 
                case 3:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #3c.3.a: hier::Patch Data name incorrect\n"
@@ -485,11 +533,14 @@ int main(
                      << "Expected: (0,0)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 3
                   break;
 
                case 4:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<int>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<int>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #3c.4.a: hier::Patch Data name incorrect\n"
@@ -503,11 +554,14 @@ int main(
                      << "Expected: (1,1)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 4
                   break;
 
                case 5:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<int>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<int>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #3c.5.a: hier::Patch Data name incorrect\n"
@@ -521,6 +575,8 @@ int main(
                      << "Expected: (2,2)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 5
                   break;
 
             }
@@ -1076,16 +1132,17 @@ int main(
                        << " should be allocated but isn't!" << std::endl;
          } else {
 
-            std::string patch_data_name =
-               typeid(*tpatch->getPatchData(desc_id)).name();
+            auto& p = *tpatch->getPatchData(desc_id);
+            std::string patch_data_name = typeid(p).name();
 
             hier::IntVector ghost_width(tpatch->getPatchData(
                                            desc_id)->getGhostCellWidth());
 
             switch (desc_id) {
                case 0:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #26c.0.a: hier::Patch Data name incorrect\n"
@@ -1099,11 +1156,14 @@ int main(
                      << "Expected: (1,1)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 0
                   break;
 
                case 1:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #26c.1.a: hier::Patch Data name incorrect\n"
@@ -1117,11 +1177,14 @@ int main(
                      << "Expected: (2,2)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 1
                   break;
 
                case 2:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #26c.2.a: hier::Patch Data name incorrect\n"
@@ -1135,11 +1198,14 @@ int main(
                      << "Expected: (3,3)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 2
                   break;
 
                case 3:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<double>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<double>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #26c.3.a: hier::Patch Data name incorrect\n"
@@ -1153,11 +1219,14 @@ int main(
                      << "Expected: (0,0)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 3
                   break;
 
                case 4:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<int>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<int>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #26c.4.a: hier::Patch Data name incorrect\n"
@@ -1171,11 +1240,14 @@ int main(
                      << "Expected: (1,1)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 4
                   break;
 
                case 5:
-                  if (typeid(*tpatch->getPatchData(desc_id)) !=
-                      typeid(pdat::CellData<int>)) {
+                  {
+                  auto& p = *tpatch->getPatchData(desc_id);
+                  if (typeid(p) != typeid(pdat::CellData<int>)) {
                      ++num_failures;
                      tbox::perr
                      << "FAILED: - Test #26c.5.a: hier::Patch Data name incorrect\n"
@@ -1189,6 +1261,8 @@ int main(
                      << "Expected: (2,2)\n"
                      << "Actual: " << ghost_width << std::endl;
                   }
+
+                  } // END case 5
                   break;
 
             }

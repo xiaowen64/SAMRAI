@@ -305,13 +305,19 @@ private:
    operator = (
       const MathUtilities& rhs);
 
-   static TYPE s_zero;
-   static TYPE s_one;
 };
 
 /*
  * Template specializations.
  */
+template<>
+dcomplex
+MathUtilities<dcomplex>::getZero();
+
+template<>
+dcomplex
+MathUtilities<dcomplex>::getOne();
+
 template<>
 bool
 MathUtilities<float>::isNaN(

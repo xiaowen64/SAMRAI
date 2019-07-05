@@ -171,10 +171,9 @@ HierarchyCellDataOpsComplex::printData(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
+   auto& pdf = *d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id);
    s << "Patch descriptor id = " << data_id << std::endl;
-   s << "Factory = " << typeid(*d_hierarchy->getPatchDescriptor()->
-                               getPatchDataFactory(data_id)).name()
-     << std::endl;
+   s << "Factory = " << typeid(pdf).name() << std::endl;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       s << "Level number = " << ln << std::endl;

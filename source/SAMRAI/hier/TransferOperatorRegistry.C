@@ -150,14 +150,15 @@ TransferOperatorRegistry::lookupCoarsenOperator(
             << " could not find any operators with name " << op_name
             << std::endl);
       }
+      auto& v = *var;
       std::unordered_map<std::string,
                            std::shared_ptr<CoarsenOperator> >::iterator the_op =
-         coarsen_ops->second.find(typeid(*var).name());
+         coarsen_ops->second.find(typeid(v).name());
       if (the_op == coarsen_ops->second.end()) {
          TBOX_ERROR(
             "TransferOperatorRegistry::lookupCoarsenOperator"
             << " could not find operator with name " << op_name
-            << " for variable named " << typeid(*var).name() << std::endl);
+            << " for variable named " << typeid(v).name() << std::endl);
       }
       coarsen_op = the_op->second;
    }
@@ -190,14 +191,15 @@ TransferOperatorRegistry::lookupRefineOperator(
             << " could not find any operators with name " << op_name
             << std::endl);
       }
+      auto& v = *var;
       std::unordered_map<std::string,
                            std::shared_ptr<RefineOperator> >::iterator the_op =
-         refine_ops->second.find(typeid(*var).name());
+         refine_ops->second.find(typeid(v).name());
       if (the_op == refine_ops->second.end()) {
          TBOX_ERROR(
             "TransferOperatorRegistry::lookupRefineOperator"
             << " could not find operator with name " << op_name
-            << " for variable named " << typeid(*var).name() << std::endl);
+            << " for variable named " << typeid(v).name() << std::endl);
       }
       refine_op = the_op->second;
    }
@@ -230,14 +232,15 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
             << " could not find any operators with name " << op_name
             << std::endl);
       }
+      auto& v = *var;
       std::unordered_map<std::string,
                            std::shared_ptr<TimeInterpolateOperator> >::iterator the_op =
-         time_ops->second.find(typeid(*var).name());
+         time_ops->second.find(typeid(v).name());
       if (the_op == time_ops->second.end()) {
          TBOX_ERROR(
             "TransferOperatorRegistry::lookupTimeInterpolateOperator"
             << " could not find operator with name " << op_name
-            << " for variable named " << typeid(*var).name() << std::endl);
+            << " for variable named " << typeid(v).name() << std::endl);
       }
       time_op = the_op->second;
    }
