@@ -43,7 +43,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
     mkdir -p $samrai_build && cd $_ || exit $?
     cmake -DENABLE_MPI=Off -DENABLE_CUDA=OFF -DENABLE_HDF5=Off -DENABLE_RAJA=ON -DRAJA_DIR=$raja_install/share/raja/cmake -DENABLE_UMPIRE=ON -Dumpire_DIR=$umpire_install/share/umpire/cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_EXAMPLES=ON -DENABLE_TESTS=ON -DCMAKE_Fortran_COMPILER=gfortran $samrai_source || exit $?
     make -j $threads || exit $?
-    [[ "$DO_TEST" == "yes" ]] && ctest -j $threads || exit $?
+    [[ "$DO_TEST" == "yes" ]] && ctest --extra-verbose -j $threads || exit $?
 fi
 
 exit 0
