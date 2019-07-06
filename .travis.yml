@@ -18,5 +18,5 @@ matrix:
       #    - IMG=clang-5
 
 script:
-- docker run --rm --user='root' -w /home/llnl llnl/samrai-$IMG:${VERSION} /bin/bash -c "chown -R llnl . && mkdir /home/llnl/SAMRAI"
+- docker run --rm --user='root' -w /home/llnl llnl/samrai-$IMG:${VERSION} /bin/bash -c "chown -R llnl . && mkdir SAMRAI"
 - docker run --rm  -w /home/llnl -v ${TRAVIS_BUILD_DIR}:/home/llnl/SAMRAI -e COMPILER -e DO_BUILD -e DO_TEST -e CMAKE_EXTRA_FLAGS llnl/samrai-$IMG:${VERSION} SAMRAI/source/scripts/travis/build_and_test.sh
