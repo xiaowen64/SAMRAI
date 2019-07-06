@@ -3,13 +3,9 @@ set -x
 env
 
 threads=6
-compiler_fullpath=$(which $COMPILER)
-
 
 if [[ "$DO_BUILD" == "yes" ]] ; then
     base_path=$(pwd)
-
-    git submodule init && git submodule update
 
     # Umpire
     umpire_build=$base_path/umpire-build
@@ -42,6 +38,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
     # SAMRAI
     # Travis already cloned this to /home/llnl/SAMRAI = $base_path/SAMRAI -- see SAMRAI/.travis.yml for more details
     samrai_source=$base_path/SAMRAI
+    cd $samrai_source && git submodule init && git submodule update || exit $?
     samrai_build=$base_path/SAMRAI-build
     mkdir -p $samrai_build && cd $_ || exit $?
     cmake -DENABLE_MPI=Off -DENABLE_CUDA=OFF -DENABLE_HDF5=Off -DENABLE_RAJA=ON -DRAJA_DIR=$raja_install/share/raja/cmake -DENABLE_UMPIRE=ON -Dumpire_DIR=$umpire_install/share/umpire/cmake -DCMAKE_CXX_COMPILER=$COMPILER -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_EXAMPLES=ON -DENABLE_TESTS=ON -DCMAKE_Fortran_COMPILER=gfortran $samrai_source || exit $?
