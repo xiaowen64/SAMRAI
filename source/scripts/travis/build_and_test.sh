@@ -37,7 +37,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
 
     # SAMRAI
     # Travis already cloned this to /home/llnl/SAMRAI = $base_path/SAMRAI -- see SAMRAI/.travis.yml for more details
-    samrai_source=${TRAVIS_BUILD_DIR}/jonesholger/SAMRAI
+    samrai_source=/home/travis/build/jonesholger/SAMRAI
     cd $samrai_source && git submodule init && git submodule update || exit $?
     samrai_build=$base_path/SAMRAI-build
     mkdir -p $samrai_build && cd $_ || exit $?
