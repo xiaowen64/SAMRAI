@@ -12,10 +12,11 @@ matrix:
     - COMPILER=g++
     - IMG=gcc
     - VERSION=4.9.3
-      #  - compiler: clang4
-      #    env:
-      #    - COMPILER=clang++
-      #    - IMG=clang-5
+
+#   - compiler: clang4
+#     env:
+#     - COMPILER=clang++
+#     - IMG=clang-5
 
 script:
 - docker run --rm --user='root' -w /home/llnl llnl/samrai-$IMG:${VERSION} /bin/bash -c "chown -R llnl . && mkdir SAMRAI"
