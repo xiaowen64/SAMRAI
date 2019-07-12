@@ -37,8 +37,11 @@ if (ENABLE_OPENMP)
 endif ()
 
 if (ENABLE_CUDA)
-  set(linadv_depends ${linadv_depends} cuda)
+  set(linadv_depends ${linadv_depends} testlib)
 endif ()
+
+
+set(linadv_depends ${linadv_depends} cuda)
 
 blt_add_executable(
   NAME linadv

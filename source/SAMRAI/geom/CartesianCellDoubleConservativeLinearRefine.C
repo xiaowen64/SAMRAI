@@ -192,9 +192,50 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
    pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
    pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
+   //pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+   //pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
-      if ((dim == tbox::Dimension(1))) {
+      if ((dim == tbox::Dimension(1))) { // need to generate a test for 1D variant
+#if defined(HAVE_RAJA)
+      auto fine_array = fdata->getView<1>(d);
+      auto coarse_array = cdata->getView<1>(d);
+
+      auto diff0 = diff.getView<1>(0);
+      auto slope0 = slope.getView<1>(0);
+
+      const double* fdx = fgeom->getDx();
+      const double* cdx = cgeom->getDx();
+
+      const int fdx0 = fdx[0];
+      const int cdx0 = cdx[0];
+
+      const int r0 = ratio[0];
+
+      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int i) {
+         diff0(i) = coarse_array(i) - coarse_array(i-1);
+      });
+
+      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int i) {
+         const double coef2i = 0.5*(diff0(i+1)+diff0(i));
+         const double boundi = 2.0*MIN(ABS(diff0(i+1)),ABS(diff0(i)));
+
+         if (diff0(i)*diff0(i+1) > 0.0) {
+            slope0(i) = COPYSIGN(MIN(ABS(coef2i),boundi),coef2i)/cdx0;
+         } else {
+            slope0(i) = 0.0;
+         }
+      });
+
+      pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int i) {
+         const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
+         const int ir0 = i - ic0*r0;
+
+         const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+
+         fine_array(i) = coarse_array(ic0) + slope0(ic0)*deltax0;
+      });
+#else
          std::vector<double> diff0(cgbox.numberCells(0) + 1);
 
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
@@ -208,6 +249,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d),
             &diff0[0], slope.getPointer());
+#endif
       } else if ((dim == tbox::Dimension(2))) {
 
 #if defined(HAVE_RAJA)
@@ -287,6 +329,80 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 #endif
       } else if ((dim == tbox::Dimension(3))) {
 
+#if defined(HAVE_RAJA)
+      auto fine_array = fdata->getView<3>(d);
+      auto coarse_array = cdata->getView<3>(d);
+
+      auto diff0 = diff.getView<3>(0);
+      auto diff1 = diff.getView<3>(1);
+      auto diff2 = diff.getView<3>(2);
+
+      auto slope0 = slope.getView<3>(0);
+      auto slope1 = slope.getView<3>(1);
+      auto slope2 = slope.getView<3>(2);
+
+      const double* fdx = fgeom->getDx();
+      const double* cdx = cgeom->getDx();
+
+      const int fdx0 = fdx[0];
+      const int fdx1 = fdx[1];
+      const int fdx2 = fdx[2];
+      const int cdx0 = cdx[0];
+      const int cdx1 = cdx[1];
+      const int cdx2 = cdx[2];
+
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+      const int r2 = ratio[2];
+
+      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+         diff0(i,j,k) = coarse_array(i,j,k) - coarse_array(i-1,j,k);
+         diff1(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j-1,k);
+         diff2(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j,k-1);
+      });
+
+      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+         const double coef2i = 0.5*(diff0(i+1,j,k)+diff0(i,j,k));
+         const double boundi = 2.0*MIN(ABS(diff0(i+1,j,k)),ABS(diff0(i,j,k)));
+         if (diff0(i,j,k)*diff0(i+1,j,k) > 0.0) {
+            slope0(i,j,k) = COPYSIGN(MIN(ABS(coef2i),boundi),coef2i)/cdx0;
+         } else {
+            slope0(i,j,k) = 0.0;
+         }
+
+         const double coef2j = 0.5*(diff1(i,j+1,k)+diff1(i,j,k));
+         const double boundj = 2.0*MIN(ABS(diff1(i,j+1,k)),ABS(diff1(i,j,k)));
+         if (diff1(i,j,k)*diff1(i,j+1,k) > 0.0) {
+            slope1(i,j,k) = COPYSIGN(MIN(ABS(coef2j),boundj),coef2j)/cdx1;
+         } else {
+            slope1(i,j,k) = 0.0;
+         }
+
+         const double coef2k = 0.5*(diff2(i,j,k+1)+diff2(i,j,k));
+         const double boundk = 2.0*MIN(ABS(diff2(i,j,k+1)),ABS(diff2(i,j,k)));
+         if (diff2(i,j,k)*diff2(i,j,k+1) > 0.0) {
+            slope2(i,j,k) = COPYSIGN(MIN(ABS(coef2k),boundk),coef2k)/cdx2;
+         } else {
+            slope2(i,j,k) = 0.0;
+         }
+      });
+
+      pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+         const int ic2 = (k < 0) ? (k+1)/r2-1 : k/r2;
+         const int ic1 = (j < 0) ? (j+1)/r1-1 : k/r1;
+         const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
+
+         const int ir0 = i - ic0*r0;
+         const int ir1 = j - ic1*r1;
+         const int ir2 = k - ic2*r2;
+
+         const double deltax2 = (static_cast<double>(ir2)+0.5)*fdx2-cdx2*0.5;
+         const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+         const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+
+         fine_array(i,j,k) = coarse_array(ic0,ic1,ic2) + slope0(ic0,ic1,ic2)*deltax0 + slope1(ic0,ic1,ic2)*deltax1 + slope2(ic0,ic1,ic2)*deltax2;
+      });
+#else
          std::vector<double> diff0(cgbox.numberCells(0) + 1);
          std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
@@ -311,6 +427,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             &diff0[0], slope.getPointer(0),
             &diff1[0], slope.getPointer(1),
             &diff2[0], slope.getPointer(2));
+#endif         
       } else {
          TBOX_ERROR("CartesianCellDoubleConservativeLinearRefine error...\n"
             << "dim > 3 not supported." << std::endl);

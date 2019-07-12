@@ -43,8 +43,9 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-// Classes for run-time plotting and autotesting.
 
+// Classes for run-time plotting and autotesting.
+#define TESTING 1
 #if (TESTING == 1)
 #include "test/testlib/AutoTester.h"
 #endif
@@ -436,6 +437,7 @@ int main(
           * not get used.
           */
          AutoTester autotester("AutoTester", dim, input_db);
+         std::cerr << "autotesting object initialized!!" << std::endl;
 #endif
 
          /*
