@@ -190,11 +190,13 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
    tbox::AllocatorDatabase* alloc_db = tbox::AllocatorDatabase::getDatabase();
 
-   pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
-   pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
-   //pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
-   //pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
-
+   //pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
+   //pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
+   pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+   pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+#if !defined(HAVE_RAJA)
+   std::vector<double> diff0(cgbox.numberCells(0) + 1);
+#endif   
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) { // need to generate a test for 1D variant
 #if defined(HAVE_RAJA)
@@ -236,7 +238,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          fine_array(i) = coarse_array(ic0) + slope0(ic0)*deltax0;
       });
 #else
-         std::vector<double> diff0(cgbox.numberCells(0) + 1);
+
 
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
             ilastc(0),
@@ -310,7 +312,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
          fine_array(j,k) = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
       });
-#else
+#else // No Raja
          std::vector<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
@@ -326,7 +328,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fdata->getPointer(d),
             &diff0[0], slope.getPointer(0),
             &diff1[0], slope.getPointer(1));
-#endif
+#endif // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
 
 #if defined(HAVE_RAJA)
@@ -433,13 +435,13 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             << "dim > 3 not supported." << std::endl);
 
       }
-   }
+   }  // for (int d = 0; d < fdata->getDepth(); ++d) 
 
    RANGE_POP;
-}
+} // end CartesianCellDoubleConservativeLinearRefine::refine(
 
-}
-}
+} // end namespace geom
+} // end namespace SAMRAI
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

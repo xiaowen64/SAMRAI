@@ -196,7 +196,7 @@ ArrayData<TYPE>::getPointer(
 #if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
-ArrayData<TYPE>::View<DIM>
+typename ArrayData<TYPE>::template View<DIM>
 ArrayData<TYPE>::getView(
         int depth)
 {
@@ -205,7 +205,7 @@ ArrayData<TYPE>::getView(
 
 template<class TYPE>
 template<int DIM>
-ArrayData<TYPE>::ConstView<DIM>
+typename ArrayData<TYPE>::template ConstView<DIM>
 ArrayData<TYPE>::getConstView(
         int depth) const
 {

@@ -11,6 +11,8 @@
 #ifndef included_tbox_Collectives
 #define included_tbox_Collectives
 
+#if defined(HAVE_RAJA)
+
 #include "RAJA/RAJA.hpp"
 
 #include "SAMRAI/tbox/ExecutionPolicy.h"
@@ -83,5 +85,5 @@ using parallel_reduction_variable_t = typename parallel_reduction_variable<R, TY
 
 }
 }
-
+#endif
 #endif

@@ -1219,8 +1219,9 @@ BergerRigoutsosNode::makeLocalTagHistogram()
             TBOX_ASSERT(tag_data_);
 
             pdat::CellData<int>& tag_data = *tag_data_;
-
+#if defined(HAVE_RAJA)
             tbox::parallel_synchronize();
+#endif
 
             pdat::CellIterator ciend(pdat::CellGeometry::end(intersection));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(intersection));

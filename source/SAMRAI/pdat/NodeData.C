@@ -100,7 +100,7 @@ NodeData<TYPE>::getPointer(
 #if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
-NodeData<TYPE>::View<DIM>
+typename NodeData<TYPE>::template View<DIM>
 NodeData<TYPE>::getView(int depth)
 {
    const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
@@ -109,7 +109,7 @@ NodeData<TYPE>::getView(int depth)
 
 template<class TYPE>
 template<int DIM>
-NodeData<TYPE>::ConstView<DIM>
+typename NodeData<TYPE>::template ConstView<DIM>
 NodeData<TYPE>::getConstView(int depth) const
 {
    const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());

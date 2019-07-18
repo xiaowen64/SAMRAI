@@ -130,7 +130,7 @@ SideData<TYPE>::getPointer(
 #if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
-SideData<TYPE>::View<DIM>
+typename SideData<TYPE>::template View<DIM>
 SideData<TYPE>::getView(
         int side_normal,
         int depth)
@@ -141,7 +141,7 @@ SideData<TYPE>::getView(
 
 template<class TYPE>
 template<int DIM>
-SideData<TYPE>::ConstView<DIM>
+typename SideData<TYPE>::template ConstView<DIM>
 SideData<TYPE>::getConstView(
         int side_normal,
         int depth) const

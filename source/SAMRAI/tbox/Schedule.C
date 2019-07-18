@@ -376,7 +376,9 @@ Schedule::postSends()
            pack != transactions.end(); ++pack) {
          (*pack)->packStream(outgoing_stream);
       }
+#if defined(HAVE_RAJA)      
       parallel_synchronize();
+#endif
 
       d_object_timers->t_pack_stream->stop();
 
@@ -453,8 +455,9 @@ Schedule::processCompletedCommunications()
               recv != d_recv_sets[sender].end(); ++recv) {
             (*recv)->unpackStream(incoming_stream);
          }
-
+#if defined(HAVE_RAJA)
          parallel_synchronize();
+#endif
 
          d_object_timers->t_unpack_stream->stop();
          completed_comm.clearRecvData();
@@ -494,9 +497,9 @@ Schedule::processCompletedCommunications()
                  recv != d_recv_sets[sender].end(); ++recv) {
                (*recv)->unpackStream(incoming_stream);
             }
-
+#if defined(HAVE_RAJA)
             parallel_synchronize();
-
+#endif
             d_object_timers->t_unpack_stream->stop();
             completed_comm->clearRecvData();
          } else {
