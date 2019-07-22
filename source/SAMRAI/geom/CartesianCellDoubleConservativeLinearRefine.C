@@ -195,7 +195,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
    pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
 #if !defined(HAVE_RAJA)
-   std::vector<double> diff0(cgbox.numberCells(0) + 1);
+   //std::vector<double> diff0(cgbox.numberCells(0) + 1);
 #endif   
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) { // need to generate a test for 1D variant
@@ -254,7 +254,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 #endif
       } else if ((dim == tbox::Dimension(2))) {
 
-#if defined(HAVE_RAJA)
+//#if defined(HAVE_RAJA)
       auto fine_array = fdata->getView<2>(d);
       auto coarse_array = cdata->getView<2>(d);
 
@@ -310,25 +310,36 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
          const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
 
-         fine_array(j,k) = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
-      });
-#else // No Raja
-         std::vector<double> diff1(cgbox.numberCells(1) + 1);
-         pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
+         double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
 
-         SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (ifirstc(0),
-            ifirstc(1), ilastc(0), ilastc(1),
-            ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
-            cilo(0), cilo(1), cihi(0), cihi(1),
-            filo(0), filo(1), fihi(0), fihi(1),
-            &ratio[0],
-            cgeom->getDx(),
-            fgeom->getDx(),
-            cdata->getPointer(d),
-            fdata->getPointer(d),
-            &diff0[0], slope.getPointer(0),
-            &diff1[0], slope.getPointer(1));
-#endif // test for RAJA
+         fprintf(stderr,"fine_array[%d,%d]=%f at %p\n",j,k,fine_tmp,&fine_array(j,k));
+
+         fine_array(j,k) = fine_tmp;
+      });
+//#else // No Raja
+      std::vector<double> diff1_f(cgbox.numberCells(1) + 1);
+      std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
+      //pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
+
+      double *ptr_fdata = fdata->getPointer(d);
+
+      fprintf(stderr,"ptr_fdata=%p\n",ptr_fdata);
+
+      SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (ifirstc(0),
+         ifirstc(1), ilastc(0), ilastc(1),
+         ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
+         cilo(0), cilo(1), cihi(0), cihi(1),
+         filo(0), filo(1), fihi(0), fihi(1),
+         &ratio[0],
+         cgeom->getDx(),
+         fgeom->getDx(),
+         cdata->getPointer(d),
+         fdata->getPointer(d),
+         &diff0_f[0], slope.getPointer(0),
+         &diff1_f[0], slope.getPointer(1));
+
+         exit(-1);
+//#endif // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
 
 #if defined(HAVE_RAJA)
