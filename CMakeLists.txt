@@ -27,7 +27,6 @@ option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
 option(ENABLE_PETSC "Enable PETSc" Off)
-option(ENABLE_PTSCOTCH "Enable Scotch" Off)
 option(ENABLE_SILO "Enable Silo" Off)
 option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
 

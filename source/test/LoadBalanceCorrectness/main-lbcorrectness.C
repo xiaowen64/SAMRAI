@@ -28,7 +28,6 @@
 #include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/mesh/GraphLoadBalancer.h"
 #include "SAMRAI/mesh/TileClustering.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
@@ -526,14 +525,7 @@ int main(
       input_db->printClassData(plog);
 
       bool do_test = true;
-#ifndef HAVE_PTSCOTCH
-      /*
-       * Skip GraphLoadBalancer test if PT-Scotch is not available.
-       */
-      if (load_balancer_type == "GraphLoadBalancer") {
-         do_test = false;
-      }
-#endif
+
       /*
        * Step 1: Build L0.
        */
@@ -1379,22 +1371,6 @@ createLoadBalancer(
          db->printClassData(plog);
       }
       return tree_lb;
-
-   } else if (lb_type == "GraphLoadBalancer") {
-
-      const std::shared_ptr<tbox::Database> db =
-         input_db->getDatabaseWithDefault("GraphLoadBalancer",
-            std::shared_ptr<tbox::Database>());
-      std::shared_ptr<mesh::GraphLoadBalancer>
-      graph_lb(new mesh::GraphLoadBalancer(
-                  dim,
-                  std::string("mesh::GraphLoadBalancer") + tbox::Utilities::intToString(ln),
-                  db));
-      if (db) {
-         tbox::plog << "GraphLoadBalancer created with this input database:\n";
-         db->printClassData(plog);
-      }
-      return graph_lb;
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
