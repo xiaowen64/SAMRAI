@@ -1230,54 +1230,6 @@ fi
 CASC_AC_LOG_VAR(
 [hdf5_INCLUDES INC_PATH hdf5_LIB_PATH hdf5_LIB_NAME LIB_PATH LIB_NAME])
 
-# Defines ptscotch_PREFIX ptscotch_INCLUDES and ptscotch_LIBS.
-AC_ARG_WITH(ptscotch,
-[  --with-ptscotch[=PATH]  Use PT-SCOTCH and specify where PT-SCOTCH is installed.],
-, with_ptscotch=no)
-
-case "$with_ptscotch" in
-  no)
-    : Do nothing
-  ;;
-  yes)
-    # PT-SCOTCH install path was not specified.
-    # Look in a couple of standard locations to probe if
-    # PT-SCOTCH header files are there.
-    AC_MSG_CHECKING([for PT-SCOTCH installation])
-    for dir in /usr /usr/local; do
-      if test -f ${dir}/ptscotch/include/ptscotch.h; then
-        ptscotch_PREFIX=${dir}
-        break
-      fi
-    done
-    AC_MSG_RESULT([$ptscotch_PREFIX])
-  ;;
-  *)
-    # PT-SCOTCH install path was specified.
-    AC_MSG_CHECKING([for PT-SCOTCH installation])
-
-    if test -f ${with_ptscotch}/include/ptscotch.h; then
-        ptscotch_PREFIX=$with_ptscotch
-        ptscotch_INCLUDES="-I${ptscotch_PREFIX}/include"
-        ptscotch_LIBS="-L${ptscotch_PREFIX}/lib -lptscotch -lptscotcherr -lscotch -lscotcherr"
-        AC_MSG_RESULT([$ptscotch_PREFIX])
-    else
-        AC_MSG_RESULT([$ptscotch_PREFIX])
-        AC_MSG_ERROR([PT-SCOTCH not found in $with_ptscotch])
-    fi
-  ;;
-esac
-if test "${ptscotch_PREFIX+set}" = set; then
-   SAMRAI_SPLIT_LIBS_STRING(ptscotch_LIBS,ptscotch_LIB_PATH,ptscotch_LIB_NAME)
-   LIB_PATH="$ptscotch_LIB_PATH $LIB_PATH"
-   LIB_NAME="$ptscotch_LIB_NAME $LIB_NAME"
-   INC_PATH="$ptscotch_INCLUDES $INC_PATH"
-   AC_DEFINE([HAVE_PTSCOTCH],[1],[PTSCOTCH headers are available to use])
-fi
-CASC_AC_LOG_VAR(
-[ptscotch_INCLUDES INC_PATH ptscotch_LIBS LIB_PATH LIB_NAME])dnl
-
-
 dnl
 dnl Thread Building Blocks support
 dnl
