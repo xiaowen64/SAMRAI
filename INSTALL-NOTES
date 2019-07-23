@@ -25,7 +25,9 @@
 Overview
 --------
 
-This document describes the SAMRAI installation process.
+This document describes the SAMRAI installation process using the original
+autoconf/configure build system.  For the new CMake-based build system,
+see the document INSTALL-NOTES-CMAKE
 
 Documentation for the library can be found in the docs directory after
 you untar the distribution.  See the docs/main.html web page for pointers
@@ -313,38 +315,27 @@ installation in the configure step.  You may still build the library
 without it by explicitly specifying "--without-hdf5" in the configure
 arguments.
 
-Tool 		Version(s)
---------------  --------------------------------------  
-gcc		4.5.0, 4.6.0
+Tool            Version(s)
+--------------  --------------------------------------
+gcc             7.3.0, 8.1.0
 
-icc		12.0.191, 12.1.293
+icc             18.0.2, 19.0.0
 
-xlc	        v9
+HDF5            1.8.5
 
-pathscale	Does not currently work.  Core dumps and produces incorrect results.
+MVAPICH2        2.2
 
-PGI             Does not currently work.
+PETSc           3.10.5    (this version is required if PETSc is used)
 
-Boost		1.45.0, 1.46.1
+Sundials        4.1.0
 
-HDF5		1.8.4, 1.8.5
+hypre           2.11.1
 
-MPICH2          1.3.2    (MPICH1 is no longer supported and 
-	                  has bugs which will hang SAMRAI)
+VisIt           2.13.3
 
-OpenMPI	        1.5
+doxygen         1.6.1
 
-PETSc 	        3.2    (this version is required if PETSc is used)
-
-Sundials        2.3.0
-
-hypre           2.6.0b
-
-VisIt		1.8.0
-
-doxygen	        1.6.1
-
-graphviz	2.26
+graphviz        2.26
 
 
 Visualization Tools:
