@@ -60,20 +60,6 @@ if (ENABLE_PETSC)
   endif ()
 endif()
 
-#HAVE_PTSCOTCH
-if (ENABLE_PTSCOTCH)
-  find_package(Scotch REQUIRED)
-
-  if (Scotch_FOUND)
-    set (HAVE_SCOTCH True)
-
-    blt_register_library(
-      NAME Scotch
-      INCLUDES ${SCOTCH_INCLUDES}
-      LIBRARIES ${SCOTCH_LIBRARIES})
-  endif ()
-endif ()
-
 #HAVE_SILO
 if (ENABLE_SILO)
   find_package(SILO REQUIRED)

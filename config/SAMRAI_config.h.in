@@ -141,9 +141,6 @@
 /* HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION */
 #undef HAVE_PRAGMA_STATIC_DATA_SPECIALIZATION
 
-/* PTSCOTCH headers are available to use */
-#undef HAVE_PTSCOTCH
-
 /* SILO library is available so use it */
 #undef HAVE_SILO
 

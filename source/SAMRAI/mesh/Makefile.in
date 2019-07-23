@@ -32,7 +32,6 @@ OBJS = 	\
 	TagAndInitializeStrategy.o \
 	BalanceUtilities.o \
 	TreeLoadBalancer.o \
-	GraphLoadBalancer.o \
 	ChopAndPackLoadBalancer.o \
 	CascadePartitioner.o \
 	CascadePartitionerTree.o \
