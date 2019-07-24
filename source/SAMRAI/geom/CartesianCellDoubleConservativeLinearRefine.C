@@ -182,6 +182,8 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index& ifirstf = fine_box.lower();
    const hier::Index& ilastf = fine_box.upper();
 
+   fprintf(stderr,"fine_box lower(%d,%d) upper(%d,%d)\n",ifirstf[0],ifirstf[1],ilastf[0],ilastf[1]);
+
    const hier::IntVector tmp_ghosts(dim, 0);
 
 
@@ -275,12 +277,22 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       const int r0 = ratio[0];
       const int r1 = ratio[1];
 
-      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
-         diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
-         diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
+      hier::Box coarse_box_transpose = coarse_box;
+      hier::Index llc(coarse_box.lower()[1],coarse_box.lower()[0]);
+      hier::Index uuc(coarse_box.upper()[1],coarse_box.upper()[0]);
+      coarse_box_transpose.setLower(llc);
+      coarse_box_transpose.setUpper(uuc);
+      //pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(coarse_box_transpose, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         //diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
+         //diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
+         diff0(k,j) = coarse_array(k,j) - coarse_array(k,j-1);
+         diff1(k,j) = coarse_array(k,j) - coarse_array(k-1,j);
       });
 
-      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      //pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(coarse_box_transpose, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+#if 0          
          const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
          const double boundj = 2.0*MIN(ABS(diff0(j+1,k)),ABS(diff0(j,k)));
 
@@ -298,9 +310,35 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          } else {
             slope1(j,k) = 0.0;
          }
+#endif         
+         const double coef2j = 0.5*(diff0(k,j+1)+diff0(k,j));
+         const double boundj = 2.0*MIN(ABS(diff0(k,j+1)),ABS(diff0(k,j)));
+
+         if (diff0(k,j)*diff0(k,j+1) > 0.0) {
+            slope0(k,j) = COPYSIGN(MIN(ABS(coef2j),boundj),coef2j)/cdx0;
+         } else {
+            slope0(k,j) = 0.0;
+         }
+
+         const double coef2k = 0.5*(diff1(k+1,j)+diff1(k,j));
+         const double boundk = 2.0*MIN(ABS(diff1(k+1,j)),ABS(diff1(k,j)));
+
+         if (diff1(k,j)*diff1(k+1,j) > 0.0) {
+            slope1(k,j) = COPYSIGN(MIN(ABS(coef2k),boundk),coef2k)/cdx1;
+         } else {
+            slope1(k,j) = 0.0;
+         }
       });
 
-      pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+
+      hier::Box fine_box_transpose = fine_box;
+      hier::Index ll(fine_box.lower()[1],fine_box.lower()[0]);
+      hier::Index uu(fine_box.upper()[1],fine_box.upper()[0]);
+      fine_box_transpose.setLower(ll);
+      fine_box_transpose.setUpper(uu);
+      pdat::parallel_for_all(fine_box_transpose, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      //pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      //pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int j, int k) {
          const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
          const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
 
@@ -310,11 +348,14 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
          const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
 
-         double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
+         //double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
+         double fine_tmp = coarse_array(ic1,ic0) + slope0(ic1, ic0)*deltax0 + slope1(ic1,ic0)*deltax1;
 
-         fprintf(stderr,"fine_array[%d,%d]=%f at %p\n",j,k,fine_tmp,&fine_array(j,k));
+         //fprintf(stderr,"fine_array[%d,%d]=%f at %p\n",j,k,fine_tmp,&fine_array(j,k));
+         fprintf(stderr,"fine_array[%d,%d]=%f at %p\n",k,j,fine_tmp,&fine_array(k,j));
 
-         fine_array(j,k) = fine_tmp;
+         //fine_array(j,k) = fine_tmp;
+         fine_array(k,j) = fine_tmp;
       });
 //#else // No Raja
       std::vector<double> diff1_f(cgbox.numberCells(1) + 1);
