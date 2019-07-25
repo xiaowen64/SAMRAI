@@ -170,6 +170,31 @@ struct for_all<3> {
    }
 };
 
+template <>
+struct for_all_x<3> {
+   template <typename Policy, typename LoopBody,
+             typename std::enable_if<std::is_base_of<tbox::policy::base, Policy>::value, int>::type = 0>
+   inline static void eval(const hier::Index& ifirst, const hier::Index& ilast, LoopBody body)
+   {
+      RAJA::kernel<typename tbox::detail::policy_traits<Policy>::Policy3d>(
+         RAJA::make_tuple(make_range(ifirst, ilast, 0),
+                          make_range(ifirst, ilast, 1),
+                          make_range(ifirst, ilast, 2)),
+         body);
+   }
+
+   template <typename Policy, typename LoopBody,
+             typename std::enable_if<!std::is_base_of<tbox::policy::base, Policy>::value, int>::type = 0>
+   inline static void eval(const hier::Index& ifirst, const hier::Index& ilast, LoopBody body)
+   {
+      RAJA::kernel<Policy>(
+         RAJA::make_tuple(make_range(ifirst, ilast, 2),
+                          make_range(ifirst, ilast, 1),
+                          make_range(ifirst, ilast, 0)),
+         body);
+   }
+};
+
 } // namespace detail
 
 // does NOT include end

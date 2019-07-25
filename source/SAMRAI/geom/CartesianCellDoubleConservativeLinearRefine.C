@@ -219,7 +219,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          const double coef2i = 0.5*(diff0(i+1)+diff0(i));
          const double boundi = 2.0*MIN(ABS(diff0(i+1)),ABS(diff0(i)));
 
-         if (diff0(i)*diff0(i+1) > 0.0) {
+         if (diff0(i)*diff0(i+1) > 0.0 && cdx0 != 0) {
             slope0(i) = COPYSIGN(MIN(ABS(coef2i),boundi),coef2i)/cdx0;
          } else {
             slope0(i) = 0.0;
@@ -358,16 +358,16 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       const int r1 = ratio[1];
       const int r2 = ratio[2];
 
-      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+      pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
          diff0(i,j,k) = coarse_array(i,j,k) - coarse_array(i-1,j,k);
          diff1(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j-1,k);
          diff2(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j,k-1);
       });
 
-      pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+      pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
          const double coef2i = 0.5*(diff0(i+1,j,k)+diff0(i,j,k));
          const double boundi = 2.0*MIN(ABS(diff0(i+1,j,k)),ABS(diff0(i,j,k)));
-         if (diff0(i,j,k)*diff0(i+1,j,k) > 0.0) {
+         if (diff0(i,j,k)*diff0(i+1,j,k) > 0.0 && cdx0 != 0) {
             slope0(i,j,k) = COPYSIGN(MIN(ABS(coef2i),boundi),coef2i)/cdx0;
          } else {
             slope0(i,j,k) = 0.0;
@@ -375,7 +375,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
          const double coef2j = 0.5*(diff1(i,j+1,k)+diff1(i,j,k));
          const double boundj = 2.0*MIN(ABS(diff1(i,j+1,k)),ABS(diff1(i,j,k)));
-         if (diff1(i,j,k)*diff1(i,j+1,k) > 0.0) {
+         if (diff1(i,j,k)*diff1(i,j+1,k) > 0.0 && cdx1 != 0) {
             slope1(i,j,k) = COPYSIGN(MIN(ABS(coef2j),boundj),coef2j)/cdx1;
          } else {
             slope1(i,j,k) = 0.0;
@@ -383,16 +383,16 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
          const double coef2k = 0.5*(diff2(i,j,k+1)+diff2(i,j,k));
          const double boundk = 2.0*MIN(ABS(diff2(i,j,k+1)),ABS(diff2(i,j,k)));
-         if (diff2(i,j,k)*diff2(i,j,k+1) > 0.0) {
+         if (diff2(i,j,k)*diff2(i,j,k+1) > 0.0 && cdx2 != 0) {
             slope2(i,j,k) = COPYSIGN(MIN(ABS(coef2k),boundk),coef2k)/cdx2;
          } else {
             slope2(i,j,k) = 0.0;
          }
       });
 
-      pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
+      pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
          const int ic2 = (k < 0) ? (k+1)/r2-1 : k/r2;
-         const int ic1 = (j < 0) ? (j+1)/r1-1 : k/r1;
+         const int ic1 = (j < 0) ? (j+1)/r1-1 : j/r1;
          const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
 
          const int ir0 = i - ic0*r0;
