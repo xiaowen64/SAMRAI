@@ -146,6 +146,8 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 {
    RANGE_PUSH("ConservativeLinearRefine::refine", 3);
 
+   //fprintf(stderr,"ConservativeLinearRefine\n");
+
    const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
@@ -328,6 +330,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          fdata->getPointer(d),
          &diff0_f[0], slope.getPointer(0),
          &diff1_f[0], slope.getPointer(1));
+
 
 #endif // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {

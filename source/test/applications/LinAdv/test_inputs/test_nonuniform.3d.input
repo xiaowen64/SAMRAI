@@ -213,7 +213,7 @@ Main {
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry{
-   domain_boxes	= [ (0,0,0) , (29,19,19) ]
+   domain_boxes	= [ (0,0,0) , (14,9,9) ]
 
    x_lo = 0.e0 , 0.e0 , 0.e0    // lower end of computational domain.
    x_up = 30.e0 , 20.e0 , 20.e0 // upper end of computational domain.
