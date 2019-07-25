@@ -75,6 +75,9 @@ inline RAJA::RangeSegment make_range(const hier::Index& ifirst, const hier::Inde
 template <int ArgumentCount>
 struct for_all {};
 
+template <int ArgumentCount>
+struct for_all_x {};
+
 template <>
 struct for_all<1> {
    template <typename Policy, typename LoopBody,
@@ -115,6 +118,29 @@ struct for_all<2> {
       RAJA::kernel<Policy>(
          RAJA::make_tuple(make_range(ifirst, ilast, 1),
                           make_range(ifirst, ilast, 0)),
+         body);
+   }
+};
+
+template <>
+struct for_all_x<2> {
+   template <typename Policy, typename LoopBody,
+             typename std::enable_if<std::is_base_of<tbox::policy::base, Policy>::value, int>::type = 0>
+   inline static void eval(const hier::Index& ifirst, const hier::Index& ilast, LoopBody body)
+   {
+      RAJA::kernel<typename tbox::detail::policy_traits<Policy>::Policy2d>(
+         RAJA::make_tuple(make_range(ifirst, ilast, 0),
+                          make_range(ifirst, ilast, 1)),
+         body);
+   }
+
+   template <typename Policy, typename LoopBody,
+             typename std::enable_if<!std::is_base_of<tbox::policy::base, Policy>::value, int>::type = 0>
+   inline static void eval(const hier::Index& ifirst, const hier::Index& ilast, LoopBody body)
+   {
+      RAJA::kernel<Policy>(
+         RAJA::make_tuple(make_range(ifirst, ilast, 0),
+                          make_range(ifirst, ilast, 1)),
          body);
    }
 };
@@ -189,10 +215,23 @@ inline void for_all(const hier::Box& box, LoopBody body)
    detail::for_all<arg_count>::template eval<Policy>(box.lower(), box.upper(), body);
 }
 
+template <typename Policy, typename LoopBody>
+inline void for_all_x(const hier::Box& box, LoopBody body)
+{
+   constexpr int arg_count = detail::function_traits<LoopBody>::argument_count;
+   detail::for_all_x<arg_count>::template eval<Policy>(box.lower(), box.upper(), body);
+}
+
 template <typename LoopBody>
 inline void parallel_for_all(const hier::Box& box, LoopBody body)
 {
    for_all<tbox::policy::parallel>(box, body);
+}
+
+template <typename LoopBody>
+inline void parallel_for_all_x(const hier::Box& box, LoopBody body)
+{
+   for_all_x<tbox::policy::parallel>(box, body);
 }
 
 }
