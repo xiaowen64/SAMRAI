@@ -182,10 +182,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index& ifirstf = fine_box.lower();
    const hier::Index& ilastf = fine_box.upper();
 
-   fprintf(stderr,"fine_box lower(%d,%d) upper(%d,%d)\n",ifirstf[0],ifirstf[1],ilastf[0],ilastf[1]);
-
    const hier::IntVector tmp_ghosts(dim, 0);
-
 
    SAMRAI::hier::Box diff_box = coarse_box;
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
@@ -196,9 +193,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    //pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getDevicePool());
    pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
    pdat::CellData<double> slope(cgbox, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
-#if !defined(HAVE_RAJA)
-   //std::vector<double> diff0(cgbox.numberCells(0) + 1);
-#endif   
+
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) { // need to generate a test for 1D variant
 #if defined(HAVE_RAJA)
@@ -241,7 +236,6 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       });
 #else
 
-
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
@@ -257,7 +251,6 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       } else if ((dim == tbox::Dimension(2))) {
 
 #if defined(HAVE_RAJA)
-#if 0        
       auto fine_array = fdata->getView<2>(d);
       auto coarse_array = cdata->getView<2>(d);
 
@@ -287,7 +280,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
          const double boundj = 2.0*MIN(ABS(diff0(j+1,k)),ABS(diff0(j,k)));
 
-         if (diff0(j,k)*diff0(j+1,k) > 0.0) {
+         if (diff0(j,k)*diff0(j+1,k) > 0.0 && cdx0 != 0) {
             slope0(j,k) = COPYSIGN(MIN(ABS(coef2j),boundj),coef2j)/cdx0;
          } else {
             slope0(j,k) = 0.0;
@@ -296,7 +289,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          const double coef2k = 0.5*(diff1(j,k+1)+diff1(j,k));
          const double boundk = 2.0*MIN(ABS(diff1(j,k+1)),ABS(diff1(j,k)));
 
-         if (diff1(j,k)*diff1(j,k+1) > 0.0) {
+         if (diff1(j,k)*diff1(j,k+1) > 0.0 && cdx1 != 0) {
             slope1(j,k) = COPYSIGN(MIN(ABS(coef2k),boundk),coef2k)/cdx1;
          } else {
             slope1(j,k) = 0.0;
@@ -315,20 +308,13 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
 
          double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
-
-         //fprintf(stderr,"fine_array[%d,%d]=%f at %p\n",j,k,fine_tmp,&fine_array(j,k));
-
          fine_array(j,k) = fine_tmp;
       });
-//#else // No Raja
-#endif      
+#else // No Raja Dimension 2
       std::vector<double> diff1_f(cgbox.numberCells(1) + 1);
       std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
-      //pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
       double *ptr_fdata = fdata->getPointer(d);
-
-      //fprintf(stderr,"ptr_fdata=%p\n",ptr_fdata);
 
       SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (ifirstc(0),
          ifirstc(1), ilastc(0), ilastc(1),
@@ -451,7 +437,6 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
       }
    }  // for (int d = 0; d < fdata->getDepth(); ++d) 
-
    RANGE_POP;
 } // end CartesianCellDoubleConservativeLinearRefine::refine(
 
