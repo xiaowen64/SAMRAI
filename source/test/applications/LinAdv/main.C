@@ -45,7 +45,7 @@
 
 
 // Classes for run-time plotting and autotesting.
-#define TESTING 1
+//#define TESTING 1
 #if (TESTING == 1)
 #include "test/testlib/AutoTester.h"
 #endif
@@ -455,7 +455,6 @@ int main(
 
          tbox::plog << "\nCheck Linear Advection data... " << std::endl;
          linear_advection_model->printClassData(tbox::plog);
-
          if (viz_dump_data &&
              time_integrator->getIntegratorStep() % viz_dump_interval == 0) {
 #ifdef HAVE_HDF5
@@ -521,7 +520,6 @@ int main(
             /*
              * At specified intervals, write out data files for plotting.
              */
-
             if (viz_dump_data) {
                if ((iteration_num % viz_dump_interval) == 0) {
 #ifdef HAVE_HDF5
@@ -531,7 +529,6 @@ int main(
 #endif
                }
             }
-
             if (write_blueprint && viz_dump_interval) {
                if ((iteration_num % viz_dump_interval) == 0) {
 #ifdef HAVE_CONDUIT
@@ -614,7 +611,6 @@ int main(
          /*
           * At conclusion of simulation, deallocate objects.
           */
-
 #ifdef HAVE_HDF5
          visit_data_writer.reset();
 #endif

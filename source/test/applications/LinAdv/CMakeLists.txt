@@ -40,7 +40,6 @@ if (ENABLE_CUDA)
   set(linadv_depends ${linadv_depends} cuda)
 endif ()
 
-
 set(linadv_depends ${linadv_depends} testlib)
 
 

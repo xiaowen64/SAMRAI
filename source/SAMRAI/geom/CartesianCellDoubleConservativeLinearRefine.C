@@ -146,8 +146,6 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 {
    RANGE_PUSH("ConservativeLinearRefine::refine", 3);
 
-   //fprintf(stderr,"ConservativeLinearRefine\n");
-
    const tbox::Dimension& dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
@@ -312,7 +310,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
          fine_array(j,k) = fine_tmp;
       });
-#else // No Raja Dimension 2
+#else // Fortran Dimension 2
       std::vector<double> diff1_f(cgbox.numberCells(1) + 1);
       std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
 

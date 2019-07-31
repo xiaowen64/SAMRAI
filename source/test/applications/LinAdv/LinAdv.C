@@ -2668,7 +2668,6 @@ void LinAdv::getFromInput(
                                      << "`front_position' input required for "
                                      << d_data_problem << " problem." << std::endl);
          }
-
          d_number_of_intervals =
             tbox::MathUtilities<int>::Min(static_cast<int>(d_front_position.size()) + 1,
                static_cast<int>(init_data_keys.size()) - 1);
