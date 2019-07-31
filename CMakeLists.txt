@@ -8,12 +8,28 @@ set(SAMRAI_VERSION_PATCHLEVEL 1)
 set(SAMRAI_VERSION
   "${SAMRAI_VERSION_MAJOR}.${SAMRAI_VERSION_MINOR}.${SAMRAI_VERSION_PATCHLEVEL}")
 
-if (NOT EXISTS ${PROJECT_SOURCE_DIR}/blt/SetupBLT.cmake)
-  message(FATAL_ERROR "The BLT submodule is not present. \
-If in the git repository, please run the following commands:\n \
-git submodule init\n \
-git submodule update")
-endif ()
+#------------------------------------------------------------------------------
+# Initialize BLT build system
+#------------------------------------------------------------------------------
+if (DEFINED BLT_SOURCE_DIR)
+
+    # Support a shared BLT outside of the repository if given a BLT_SOURCE_DIR
+    if (NOT EXISTS ${BLT_SOURCE_DIR}/SetupBLT.cmake)
+        message(FATAL_ERROR "Cannot find SetupBLT.cmake in [${BLT_SOURCE_DIR}]")
+    endif()
+
+else()
+
+    # Use internal 'blt' submodule path if BLT_SOURCE_DIR not provided
+    set(BLT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/blt" CACHE PATH "")
+    if (NOT EXISTS ${BLT_SOURCE_DIR}/SetupBLT.cmake)
+         message(FATAL_ERROR "The BLT submodule is not present. \
+                  If in the git repository, please run the following commands:\n \
+                  git submodule init\n \
+                  git submodule update")
+    endif()
+
+endif()
 
 # BLT Options need to be set in the CACHE
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
@@ -43,7 +59,7 @@ set(CMAKE_INSTALL_LIBDIR lib)
 
 include(GNUInstallDirs)
 
-include(blt/SetupBLT.cmake)
+include(${BLT_SOURCE_DIR}/SetupBLT.cmake)
 
 include_directories(${CMAKE_BINARY_DIR}/include)
 
