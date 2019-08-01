@@ -170,6 +170,51 @@ CartesianCellDoubleLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
+#if defined(HAVE_RAJA)
+      //fprintf(stderr,"CellLinearRefine\n");  
+      auto fine_array = fdata->getView<2>(d);
+      auto coarse_array = cdata->getView<2>(d);
+      const double* fdx = fgeom->getDx();
+      const double* cdx = cgeom->getDx();
+      const double fdx0 = fdx[0];
+      const double fdx1 = fdx[1];
+      const double cdx0 = cdx[0];
+      const double cdx1 = cdx[1];
+
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+
+      pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k) {
+         const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
+         const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
+         const int ir0 = j - ic0*r0;
+         const int ir1 = k - ic1*r1;
+
+         int jj = ic0;
+         int kk = ic1;
+
+         const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+         const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+
+         double x = deltax0/cdx0;
+         double y = deltax1/cdx1;
+
+         //fprintf(stderr,"deltax0=%f deltax1=%f cdx0=%d cdx1=%d fdx0=%d fdx1=%d x=%f y=%f\n",deltax0,deltax1,cdx0,cdx1,fdx0,fdx1,x,y);
+         
+         if(x < 0.0) {
+           jj--;
+           x += 1.0;  
+         }
+         if(y < 0.0) {
+           kk--;
+           y += 1.0;
+         }
+         fine_array(j,k) = (coarse_array(jj,kk) + (coarse_array(jj+1,kk) - coarse_array(jj,kk))*x) *(1.0-y) 
+                         + (coarse_array(jj,kk+1) + (coarse_array(jj+1,kk+1) - coarse_array(jj,kk+1))*x) * y;
+         //fprintf(stderr,"fine(%d,%d) = %f @ %p with jj=%d kk=%d x=%f y=%f \n",j,k,fine_array(j,k),&fine_array(j,k),jj,kk,x,y);
+      });
+#else // Fortran Dimension 2
+
          SAMRAI_F77_FUNC(cartlinrefcelldoub2d, CARTLINREFCELLDOUB2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -180,7 +225,75 @@ CartesianCellDoubleLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d));
+//         exit(-1);
+#endif // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
+#if defined(HAVE_RAJA)
+      //fprintf(stderr,"CellLinearRefine\n");  
+      auto fine_array = fdata->getView<3>(d);
+      auto coarse_array = cdata->getView<3>(d);
+      const double* fdx = fgeom->getDx();
+      const double* cdx = cgeom->getDx();
+      const double fdx0 = fdx[0];
+      const double fdx1 = fdx[1];
+      const double fdx2 = fdx[2];
+      const double cdx0 = cdx[0];
+      const double cdx1 = cdx[1];
+      const double cdx2 = cdx[2];
+
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+      const int r2 = ratio[2];
+
+      pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest */, int j, int k) {
+         const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
+         const int ic1 = (j < 0) ? (j+1)/r1-1 : j/r1;
+         const int ic2 = (k < 0) ? (k+1)/r2-1 : k/r2;
+
+         const int ir0 = i - ic0*r0;
+         const int ir1 = j - ic1*r1;
+         const int ir2 = k - ic2*r2;
+
+         int ii = ic0;
+         int jj = ic1;
+         int kk = ic2;
+
+         const double deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+         const double deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+         const double deltax2 = (static_cast<double>(ir2)+0.5)*fdx2-cdx2*0.5;
+
+         double x = deltax0/cdx0;
+         double y = deltax1/cdx1;
+         double z = deltax2/cdx2;
+
+         if(x < 0.0) {
+           ii--;
+           x += 1.0;  
+         }
+         if(y < 0.0) {
+           jj--;
+           y += 1.0;
+         }
+         if(z < 0.0) {
+           kk--;
+           z += 1.0;
+         }
+
+         fine_array(i,j,k) = ((coarse_array(ii,jj,kk) 
+               +(coarse_array(ii+1,jj,kk) - coarse_array(ii,jj,kk))*x)*(1.0-y)
+               +(coarse_array(ii,jj+1,kk)
+               +(coarse_array(ii+1,jj+1,kk) - coarse_array(ii,jj+1,kk))*x)*y )
+               *(1.0-z)
+               +((coarse_array(ii,jj,kk+1)
+               +(coarse_array(ii+1,jj,kk+1) - coarse_array(ii,jj,kk+1))*x)
+               *(1.0-y)
+               +(coarse_array(ii,jj+1,kk+1)
+               +(coarse_array(ii+1,jj+1,kk+1) - coarse_array(ii,jj+1,kk+1))*x)*y)
+               *z;      
+
+      });
+         
+#else         
          SAMRAI_F77_FUNC(cartlinrefcelldoub3d, CARTLINREFCELLDOUB3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
@@ -195,6 +308,7 @@ CartesianCellDoubleLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d));
+#endif         
       } else {
          TBOX_ERROR("CartesianCellDoubleLinearRefine error...\n"
             << "dim > 3 not supported." << std::endl);

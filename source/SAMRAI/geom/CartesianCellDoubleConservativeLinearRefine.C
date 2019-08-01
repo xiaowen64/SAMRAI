@@ -206,8 +206,8 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();
 
-      const int fdx0 = fdx[0];
-      const int cdx0 = cdx[0];
+      const double fdx0 = fdx[0];
+      const double cdx0 = cdx[0];
 
       const int r0 = ratio[0];
 
@@ -262,11 +262,10 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();
-
-      const int fdx0 = fdx[0];
-      const int fdx1 = fdx[1];
-      const int cdx0 = cdx[0];
-      const int cdx1 = cdx[1];
+      const double fdx0 = fdx[0];
+      const double fdx1 = fdx[1];
+      const double cdx0 = cdx[0];
+      const double cdx1 = cdx[1];
 
       const int r0 = ratio[0];
       const int r1 = ratio[1];
@@ -348,12 +347,12 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       const double* fdx = fgeom->getDx();
       const double* cdx = cgeom->getDx();
 
-      const int fdx0 = fdx[0];
-      const int fdx1 = fdx[1];
-      const int fdx2 = fdx[2];
-      const int cdx0 = cdx[0];
-      const int cdx1 = cdx[1];
-      const int cdx2 = cdx[2];
+      const double fdx0 = fdx[0];
+      const double fdx1 = fdx[1];
+      const double fdx2 = fdx[2];
+      const double cdx0 = cdx[0];
+      const double cdx1 = cdx[1];
+      const double cdx2 = cdx[2];
 
       const int r0 = ratio[0];
       const int r1 = ratio[1];
