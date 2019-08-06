@@ -247,7 +247,7 @@ Versions of libraries/tools used by the development team
 --------------------------------------------------------
 
 The following are the versions of libraries and tools we have used in
-the development of this release.  This list should not be considered
+the development of the library.  This list should not be considered
 as a requirement list (with the exception of PETSc), it is intended to
 provide information on versions we believe should be working.  Users
 who encounter problems compiling and linking and want to see if they
@@ -281,7 +281,7 @@ Visualization Tools:
 --------------------
 
 SAMRAI uses the VisIt visualization system.  This replaces the
-vizamrai utility in previous releases.  VisIt binaries, source, and
+vizamrai utility used in the past.  VisIt binaries, source, and
 documentation are available at http://www.llnl.gov/visit.  You must
 compile with HDF in order to create VisIt output files.  See the
 SAMRAI/test/applications/Euler program for an example of how to use
