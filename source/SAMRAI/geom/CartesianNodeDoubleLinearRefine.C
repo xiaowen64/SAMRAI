@@ -172,6 +172,56 @@ CartesianNodeDoubleLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
+#if defined(HAVE_RAJA)
+      // this kernel has iterations writing to the same address
+      // we're going to use atomics until kernel undergoes rewrite or we can verify thread-safe  
+      auto fine_array = fdata->getView<2>(d);
+      auto coarse_array = cdata->getView<2>(d);
+
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+
+      const int filo0 = filo(0);
+      const int filo1 = filo(1);
+      const int fihi0 = fihi(0);
+      const int fihi1 = fihi(1);
+
+      pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k) {
+         const int ic0 = j;
+         const int ic1 = k;
+         const int if0 = ic0*r0;
+         const int if1 = ic1*r1;
+         
+         const double realrat0 = 1.0/static_cast<double>(r0);
+         const double realrat1 = 1.0/static_cast<double>(r1);
+
+         for(int ir1 = 0; ir1 <= r1; ++ir1) {
+           int ie1 = if1+ir1;
+           //fprintf(stderr,"ir1=%d if1=%d ie1=%d filo1=%d fihi1=%d\n",ir1,if1,ie1,filo1,fihi1);
+           if(ie1 >= filo1 && ie1 <= fihi1+1) {
+             for(int ir0 = 0; ir0 <= r0; ++ir0) {
+               int ie0 = if0+ir0;
+
+               if(ie0 >= filo0 && ie0 <= fihi0+1) {
+                 double x = double(ir0) * realrat0;
+                 double y = double(ir1) * realrat1;
+                 //fprintf(stderr,"ie0=%d ie1=%d filo0=%d fihi0=%d filo1=%d fihi1=%d r0=%d r1=%d\n",
+                 //        ie0,ie1,filo0,fihi0,filo1,fihi1,r0,r1); 
+                 double fineValue =
+                   (coarse_array(ic0,ic1)*(1.0-x) +
+                    coarse_array(ic0+1,ic1)*x)*(1.0-y) +
+                   (coarse_array(ic0,ic1+1)*(1.0-x) +
+                    coarse_array(ic0+1,ic1+1)*x)*y;
+                 //fine_array(ie0,ie1) = fineValue;
+                 RAJA::atomic::atomicExchange<RAJA::atomic::auto_atomic>(&fine_array(ie0,ie1),fineValue);
+                 //fprintf(stderr,"fine_array(%d,%d) = %f @ %p\n",ie0,ie1,fine_array(ie0,ie1),&fine_array(ie0,ie1));
+               }
+             }
+           }
+         }
+      });
+#else // Fortran Dimension 2
+
          SAMRAI_F77_FUNC(cartlinrefnodedoub2d, CARTLINREFNODEDOUB2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -182,7 +232,72 @@ CartesianNodeDoubleLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d));
+
+         //exit(-1);
+#endif // test for RAJA
+
       } else if ((dim == tbox::Dimension(3))) {
+#if defined(HAVE_RAJA)
+      // this kernel has iterations writing to the same address
+      // we're going to use atomics until kernel undergoes rewrite or we can verify thread-safe  
+      auto fine_array = fdata->getView<3>(d);
+      auto coarse_array = cdata->getView<3>(d);
+
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+      const int r2 = ratio[2];
+
+      const int filo0 = filo(0);
+      const int filo1 = filo(1);
+      const int filo2 = filo(2);
+
+      const int fihi0 = fihi(0);
+      const int fihi1 = fihi(1);
+      const int fihi2 = fihi(2);
+
+      pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE (int i /*fast*/, int j, int k) {
+         const int ic0 = i;
+         const int ic1 = j;
+         const int ic2 = k;
+
+         const int if0 = ic0*r0;
+         const int if1 = ic1*r1;
+         const int if2 = ic2*r2;
+         
+         const double realrat0 = 1.0/static_cast<double>(r0);
+         const double realrat1 = 1.0/static_cast<double>(r1);
+         const double realrat2 = 1.0/static_cast<double>(r2);
+
+         for(int ir2 = 0; ir2 <= r2; ++ir2) {
+           int ie2 = if2+ir2;
+           if(ie2 >= filo2 && ie2 <= (fihi2+1)) {
+             for(int ir1 = 0; ir1 <= r1; ++ir1) {
+               int ie1 = if1+ir1;
+               if(ie1 >= filo1 && ie1 <= fihi1+1) {
+                 for(int ir0 = 0; ir0 <= r0; ++ir0) {
+                   int ie0 = if0+ir0;
+                   if(ie0 >= filo0 && ie0 <= fihi0+1) {
+                     double x = double(ir0) * realrat0;
+                     double y = double(ir1) * realrat1;
+                     double z = double(ir2) * realrat2;
+                     double fineValue =
+                       ((coarse_array(ic0,ic1,ic2)*(1.0-x) +
+                         coarse_array(ic0+1,ic1,ic2)*x)*(1.0-y)
+                       + (coarse_array(ic0,ic1+1,ic2)*(1.0-x) +
+                         coarse_array(ic0+1,ic1+1,ic2)*x)*y) * (1.0-z) +
+                       ((coarse_array(ic0,ic1,ic2+1)*(1.0-x) +
+                         coarse_array(ic0+1,ic1,ic2+1)*x)*(1.0-y)
+                       + (coarse_array(ic0,ic1+1,ic2+1)*(1.0-x) +
+                          coarse_array(ic0+1,ic1+1,ic2+1)*x)*y)*z; 
+                     RAJA::atomic::atomicExchange<RAJA::atomic::auto_atomic>(&fine_array(ie0,ie1,ie2),fineValue);
+                   }
+                 }
+               }
+             }
+           }
+         }
+      });
+#else // Fortran Dimension 3
          SAMRAI_F77_FUNC(cartlinrefnodedoub3d, CARTLINREFNODEDOUB3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
@@ -197,6 +312,9 @@ CartesianNodeDoubleLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d));
+         //exit(-1);
+#endif // test for RAJA
+
       } else {
          TBOX_ERROR("CartesianNodeDoubleLinearRefine error...\n"
             << "dim > 3 not supported." << std::endl);

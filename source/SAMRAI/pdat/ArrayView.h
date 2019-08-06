@@ -89,7 +89,6 @@ struct ArrayView<1, const TYPE> : public RAJA::View<const TYPE, detail::layout_t
             RAJA::as_array<RAJA::PERM_I>::get())){}
 };
 
-#if 1
 template<class TYPE>
 struct ArrayView<2, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout2d>
 {
@@ -103,23 +102,7 @@ struct ArrayView<2, const TYPE> : public RAJA::View<const TYPE, detail::layout_t
             std::array<RAJA::Index_type, 2>{ {box.upper()[0], box.upper()[1]} },
             RAJA::as_array<RAJA::PERM_JI>::get())){}
 };
-#endif
 
-#if 0
-template<class TYPE>
-struct ArrayView<2, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout2d>
-{
-   using Layout = detail::layout_traits::Layout2d;
-
-   SAMRAI_INLINE ArrayView<2, const TYPE>(const TYPE* data, const hier::Box& box) :
-      RAJA::View<const TYPE, Layout>(
-         data,
-         RAJA::make_permuted_offset_layout(
-            std::array<RAJA::Index_type, 2>{ {box.lower()[1], box.lower()[0]} },
-            std::array<RAJA::Index_type, 2>{ {box.upper()[1], box.upper()[0]} },
-            RAJA::as_array<RAJA::PERM_IJ>::get())){}
-};
-#endif
 
 template<class TYPE>
 struct ArrayView<3, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout3d>
