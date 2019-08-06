@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.12.0
+                     Release Notes for SAMRAI v3.14.0
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -21,7 +21,8 @@ Where to report Bugs
 If a bug is found in the SAMRAI library, we ask that you kindly report
 it to us so that we may fix it.
 
-Please send email to samrai-bugs@llnl.gov.
+Please send email to samrai-bugs@llnl.gov or post an issue on github.
+https://github.com/LLNL/SAMRAI
 
 *****************************************************************************
 
@@ -36,15 +37,27 @@ Please send email to samrai-bugs@llnl.gov.
                 Summary of what's new
 -----------------------------------------------------------------------------
 
-1) SAMRAI now uses C++ 11 standard features and must be compiled with
-C++ 11-compliant compilers and flags.
+1) A new CMake-based build system has been added.  The previous autoconf-based
+system still works as well.
+
+2) tbox::ConduitDatabase is a new concrete implementation of
+tbox::Database that uses the Conduit library (https://github.com/LLNL/conduit)
+to store its data.  Conduit is a new optional dependency for SAMRAI.
+
+3) A new method createBlueprintDatabase in PatchHierarchy provides a way to
+create a code-portable description of a SAMRAI hierarchy using the Conduit
+Blueprint protocols.
 
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
 -----------------------------------------------------------------------------
 
-1) All usage of the Boost library has been removed.
+1) Classes that use PETSc and Sundials have been updated to work with
+newer versions of these libraries.
+
+2) Support for PT-Scotch as a third-party library has been removed, and
+the GraphLoadBalancer class that relied on this library has been removed.
 
 
 *****************************************************************************
@@ -53,35 +66,44 @@ C++ 11-compliant compilers and flags.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-1) SAMRAI now uses C++ 11 standard features and must be compiled with
-C++ 11-compliant compilers and compiler flags.  For any compiler that
-requires a flag such as "-std=c++11", the flag should be set in the configure
-line.  This can be done by adding it in quotes to the --with-CXX configure
-flag as if it were part of the compiler's name, such as
+1) A new CMake-based build system has been added.  The previous autoconf-based
+system still works as well.  We intend to transition fully to the CMake system
+in future releases.
 
-% configure --with-CXX="g++ -std=c++11"
+The new system uses CMake (https://cmake.org) supplemented with the BLT macro
+library (https://github.com/LLNL/blt).  See INSTALL-NOTES-CMAKE for more
+information.
 
-Alternatively -std=c++11 could be added to the C++ flags using the
---with-extra-cxx-flags configure flag.
+2) tbox::ConduitDatabase is a new concrete implementation of
+tbox::Database that uses the Conduit library (https://github.com/LLNL/conduit)
+to store its data.  Conduit is a new optional dependency for SAMRAI.
 
+When SAMRAI is built with Conduit, tbox::Database also has a method to write
+out its data into an instance of Conduit's native data structure,
+conduit::Node.
 
+3) A new method createBlueprintDatabase in PatchHierarchy provides a way to
+create a code-portable description of a SAMRAI hierarchy using the Conduit
+Blueprint protocols.
+
+createBlueprintDatabase creates as much of the Blueprint as possible from
+evaluating the PatchHierarchy, and then uses classes BlueprintUtils and
+BlueprintUtilsStrategy to bring in application-specific information.  See
+the Doxygen documenation for more information.
 
 -----------------------------------------------------------------------------
                 Details about what's changed
 ----------------------------------------------------------------------------
 
-1) All usage of the Boost library has been removed.  The main API change
-is that all instances of boost::shared_ptr have been replaced with
-std::shared_ptr.  This is exposed in the arguments of many methods throughout
-the library, so applications will need to make corresponding changes in
-their codes.  For the most part, this requires only a textual change of
-the prefix "boost::" to "std::".  When configuring, the --with-boost flag
-should no longer be used.
+1) Classes that use PETSc and Sundials have been updated to work with
+newer versions of these libraries.  SAMRAI is now compatible with PETSc
+version 3.10.5 and Sundials version 4.1.0.
 
-Additionally, if any application codes used the macro BOOST_CAST from
-tbox/Utilities.h, this should be replaced with SAMRAI_SHARED_PTR_CAST. 
-The macro expands to a dynamic cast when compiling with debugging flags and
-to a static cast when compiling with optimization flags.
+2) Support for PT-Scotch as a third-party library has been removed, and
+the GraphLoadBalancer class that relied on this library has been removed.
+This was never more than an experimental feature, and we decided not to
+continue support.
+
 
 =============================================================================
 =============================================================================

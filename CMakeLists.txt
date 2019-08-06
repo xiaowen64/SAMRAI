@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.1)
 project(SAMRAI C CXX Fortran)
 
 set(SAMRAI_VERSION_MAJOR 3)
-set(SAMRAI_VERSION_MINOR 11)
-set(SAMRAI_VERSION_PATCHLEVEL 1)
+set(SAMRAI_VERSION_MINOR 14)
+set(SAMRAI_VERSION_PATCHLEVEL 0)
 set(SAMRAI_VERSION
   "${SAMRAI_VERSION_MAJOR}.${SAMRAI_VERSION_MINOR}.${SAMRAI_VERSION_PATCHLEVEL}")
 
@@ -53,6 +53,7 @@ option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." O
 option(ENABLE_BOX_COUNTING "Turns on box telemetry." Off)
 option(ENABLE_DEPRECATED "Build with deprecated features." On)
 option(ENABLE_TIMERS "Enable SAMRAI timers." On)
+option(ENABLE_TOOLS "Turns on building of executable tools." Off)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 set(CMAKE_INSTALL_LIBDIR lib)
@@ -67,7 +68,9 @@ include(cmake/CMakeBasics.cmake)
 
 add_subdirectory(source)
 
-add_subdirectory(tools)
+if (ENABLE_TOOLS)
+  add_subdirectory(tools)
+endif()
 
 if (ENABLE_DOCS)
   add_subdirectory(docs)
