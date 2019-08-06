@@ -92,5 +92,10 @@ if (ENABLE_CONDUIT)
   find_package(CONDUIT REQUIRED)
   if (CONDUIT_FOUND)
     set (HAVE_CONDUIT True)
+
+    blt_register_library(
+      NAME CONDUIT
+      INCLUDES ${CONDUIT_INCLUDE_DIRS}
+      LIBRARIES ${CONDUIT_LIBRARIES})
   endif ()
 endif ()

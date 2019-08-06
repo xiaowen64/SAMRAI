@@ -119,6 +119,10 @@ if (HAVE_SILO)
     list(APPEND tbox_depends_on SILO)
 endif ()
 
+if (HAVE_CONDUIT)
+    list(APPEND tbox_depends_on CONDUIT)
+endif ()
+
 if (ENABLE_MPI)
   list(APPEND tbox_depends_on mpi)
 endif ()
