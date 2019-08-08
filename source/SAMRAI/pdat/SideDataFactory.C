@@ -41,6 +41,9 @@ SideDataFactory<TYPE>::SideDataFactory(
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
    d_directions(directions)
+#if defined(HAVE_UMPIRE)
+   , d_has_allocator(false)
+#endif
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -56,10 +59,54 @@ SideDataFactory<TYPE>::SideDataFactory(
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
    d_directions(hier::IntVector::getOne(ghosts.getDim()))
+#if defined(HAVE_UMPIRE)
+   , d_has_allocator(false)
+#endif
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
+
+#if defined(HAVE_UMPIRE)
+template<class TYPE>
+SideDataFactory<TYPE>::SideDataFactory(
+   int depth,
+   const hier::IntVector& ghosts,
+   bool fine_boundary_represents_var,
+   const hier::IntVector& directions,
+   umpire::Allocator allocator):
+   hier::PatchDataFactory(ghosts),
+   d_depth(depth),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(directions),
+   d_allocator(allocator),
+   d_has_allocator(true)
+{
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(directions.min() >= 0);
+}
+#endif
+
+
+#if defined(HAVE_UMPIRE)
+template<class TYPE>
+SideDataFactory<TYPE>::SideDataFactory(
+   int depth,
+   const hier::IntVector& ghosts,
+   bool fine_boundary_represents_var,
+   umpire::Allocator allocator):
+   hier::PatchDataFactory(ghosts),
+   d_depth(depth),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(hier::IntVector::getOne(ghosts.getDim())),
+   d_allocator(allocator),
+   d_has_allocator(true)
+{
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+}
+#endif
 
 template<class TYPE>
 SideDataFactory<TYPE>::~SideDataFactory()

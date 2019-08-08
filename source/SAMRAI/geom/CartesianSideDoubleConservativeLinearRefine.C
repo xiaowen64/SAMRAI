@@ -185,6 +185,9 @@ CartesianSideDoubleConservativeLinearRefine::refine(
          hier::Box fine_box(*b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
+         const auto fine_side_box = pdat::SideGeometry::toSideBox(fine_box,axis);
+         tbox::AllocatorDatabase* alloc_db = tbox::AllocatorDatabase::getDatabase();
+
          fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
@@ -194,6 +197,8 @@ CartesianSideDoubleConservativeLinearRefine::refine(
          const hier::Index& ilastf = fine_box.upper();
 
          const hier::IntVector tmp_ghosts(dim, 0);
+
+         //std::cerr << "tmp_ghosts: " << tmp_ghosts << std::endl;
          std::vector<double> diff0(cgbox.numberCells(0) + 2);
          pdat::SideData<double> slope0(cgbox, 1, tmp_ghosts,
                                        directions);
@@ -214,6 +219,14 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      &diff0[0], slope0.getPointer(0));
                }
             } else if ((dim == tbox::Dimension(2))) {
+#if defined(HAVE_RAJA)
+             auto fine_array =  fdata->getView<2>(axis,d);
+             auto coarse_array = cdata->getConstView<2>(axis, d);
+
+
+
+
+//#else // Fortran Dimension 2
                std::vector<double> diff1(cgbox.numberCells(1) + 2);
                pdat::SideData<double> slope1(cgbox, 1, tmp_ghosts,
                                              directions);
@@ -246,6 +259,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      &diff1[0], slope1.getPointer(1),
                      &diff0[0], slope0.getPointer(1));
                }
+#endif // test for RAJA
             } else if ((dim == tbox::Dimension(3))) {
                std::vector<double> diff1(cgbox.numberCells(1) + 2);
                pdat::SideData<double> slope1(cgbox, 1, tmp_ghosts,

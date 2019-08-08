@@ -150,6 +150,14 @@ public:
       const hier::IntVector& ghosts,
       const hier::IntVector& directions);
 
+#if defined(HAVE_UMPIRE)
+   SideData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      const hier::IntVector& directions,
+      umpire::Allocator allocator);
+#endif
    /*!
     * @brief Same as previous constructor but with directions
     * vector of 1's.
@@ -164,6 +172,14 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
+   SideData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+#endif
+      
    /*!
     * @brief The virtual destructor for a side data object.
     */
