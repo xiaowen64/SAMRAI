@@ -127,12 +127,27 @@ SideDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
-
-   return std::make_shared<SideDataFactory<TYPE> >(
+#if defined(HAVE_UMPIRE)
+   if (d_has_allocator) {
+     return
+       std::make_shared<SideDataFactory<TYPE> >(
              d_depth,
              ghosts,
              d_fine_boundary_represents_var,
-             d_directions);
+             d_directions,
+             d_allocator);
+
+   } else {
+#endif
+   return 
+       std::make_shared<SideDataFactory<TYPE> >(
+            d_depth,
+            ghosts,
+            d_fine_boundary_represents_var,
+            d_directions);
+#if defined(HAVE_UMPIRE)
+   }
+#endif
 }
 
 /*
@@ -150,11 +165,25 @@ SideDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-   return std::make_shared<SideData<TYPE> >(
+#if defined(ENABLE_UMPIRE)
+   if (d_has_allocator) {
+      return std::make_shared<SideData<TYPE> >(
+             patch.getBox(),
+             d_depth,
+             d_ghosts,
+             d_directions,
+             d_allocator);
+
+   } else {
+#endif
+      return std::make_shared<SideData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts,
              d_directions);
+#if defined(ENABLE_UMPIRE)
+   }
+#endif
 }
 
 /*

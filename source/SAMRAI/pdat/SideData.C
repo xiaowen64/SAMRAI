@@ -65,6 +65,55 @@ template<class TYPE>
 SideData<TYPE>::SideData(
    const hier::Box& box,
    int depth,
+   const hier::IntVector& ghosts,
+   const hier::IntVector& directions,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth),
+   d_directions(directions)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY3(box, ghosts, directions);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(directions.min() >= 0);
+
+   const tbox::Dimension& dim(box.getDim());
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      if (d_directions(d)) {
+         const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
+         d_data[d].reset(new ArrayData<TYPE>(side, depth, allocator));
+      } else {
+         d_data[d].reset(new ArrayData<TYPE>(hier::Box::getEmptyBox(dim), depth, allocator));
+      }
+   }
+}
+
+template<class TYPE>
+SideData<TYPE>::SideData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth),
+   d_directions(hier::IntVector::getOne(box.getDim()))
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(d_directions.min() >= 0);
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
+      d_data[d].reset(new ArrayData<TYPE>(side, depth, allocator));
+   }
+}
+
+template<class TYPE>
+SideData<TYPE>::SideData(
+   const hier::Box& box,
+   int depth,
    const hier::IntVector& ghosts):
 
    hier::PatchData(box, ghosts),
@@ -81,7 +130,6 @@ SideData<TYPE>::SideData(
       d_data[d].reset(new ArrayData<TYPE>(side, depth));
    }
 }
-
 template<class TYPE>
 SideData<TYPE>::~SideData()
 {

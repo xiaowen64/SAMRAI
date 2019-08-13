@@ -214,8 +214,8 @@ private:
 #endif
 };
 
-}
-}
+} // Namespace pdat
+} // Namespace SAMRAI
 
 #include "SAMRAI/pdat/SideDataFactory.C"
 

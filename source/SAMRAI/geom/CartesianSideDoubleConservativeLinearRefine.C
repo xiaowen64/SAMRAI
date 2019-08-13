@@ -201,7 +201,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
          //std::cerr << "tmp_ghosts: " << tmp_ghosts << std::endl;
          std::vector<double> diff0(cgbox.numberCells(0) + 2);
          pdat::SideData<double> slope0(cgbox, 1, tmp_ghosts,
-                                       directions);
+                                       directions, alloc_db->getTagAllocator());
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -229,7 +229,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
 //#else // Fortran Dimension 2
                std::vector<double> diff1(cgbox.numberCells(1) + 2);
                pdat::SideData<double> slope1(cgbox, 1, tmp_ghosts,
-                                             directions);
+                                             directions, alloc_db->getTagAllocator());
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (
@@ -263,11 +263,11 @@ CartesianSideDoubleConservativeLinearRefine::refine(
             } else if ((dim == tbox::Dimension(3))) {
                std::vector<double> diff1(cgbox.numberCells(1) + 2);
                pdat::SideData<double> slope1(cgbox, 1, tmp_ghosts,
-                                             directions);
+                                             directions, alloc_db->getTagAllocator());
 
                std::vector<double> diff2(cgbox.numberCells(2) + 2);
                pdat::SideData<double> slope2(cgbox, 1, tmp_ghosts,
-                                             directions);
+                                             directions, alloc_db->getTagAllocator());
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0) (
