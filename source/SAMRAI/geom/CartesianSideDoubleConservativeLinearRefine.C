@@ -222,8 +222,6 @@ CartesianSideDoubleConservativeLinearRefine::refine(
          pdat::SideData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
                                        directions, alloc_db->getTagAllocator());
 
-         SAMRAI::hier::Box fine_box_plus = fine_box;
-         fine_box_plus.growUpper(1,1);
 
          //fprintf(stderr,"diff_box[%d:%d,%d:%d]\n",diff_box.lower(0),diff_box.upper(0),diff_box.lower(1),diff_box.upper(1));
          //fprintf(stderr,"coarse_box[%d:%d,%d:%d]\n",coarse_box.lower(0),coarse_box.upper(0),coarse_box.lower(1),coarse_box.upper(1));
@@ -252,27 +250,34 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                }
             } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
-              auto fine_array =  fdata->getView<2>(axis,d);
-              auto coarse_array = cdata->getConstView<2>(axis, d);
-              auto diff0 = diff.getView<2>(0);
-              auto diff1 = diff.getView<2>(1);
-
-              auto slope0 = slope.getView<2>(axis,0);
-              auto slope1 = slope.getView<2>(axis,1);
-
-              const double* fdx = fgeom->getDx();
-              const double* cdx = cgeom->getDx();
-              const double fdx0 = fdx[0];
-              const double fdx1 = fdx[1];
-              const double cdx0 = cdx[0];
-              const double cdx1 = cdx[1];
-
-              const int r0 = ratio[0];
-              const int r1 = ratio[1];
-
-              //fprintf(stderr,"axis=%d directions(0)=%d  directions(1)=%d\n",axis,directions(0),directions(1));
-
               if((axis == 0 && directions(0)) || (axis == 1 && directions(1))) {
+                SAMRAI::hier::Box fine_box_plus = fine_box;
+                if(axis == 0 && directions(0)) {
+                  fine_box_plus.growUpper(0,1);
+                }
+                else {
+                  fine_box_plus.growUpper(1,1);
+                }
+
+                auto fine_array =  fdata->getView<2>(axis,d);
+                auto coarse_array = cdata->getConstView<2>(axis, d);
+
+                auto diff0 = diff.getView<2>(0);
+                auto diff1 = diff.getView<2>(1);
+
+                auto slope0 = slope.getView<2>(axis,0);
+                auto slope1 = slope.getView<2>(axis,1);
+
+                const double* fdx = fgeom->getDx();
+                const double* cdx = cgeom->getDx();
+                const double fdx0 = fdx[0];
+                const double fdx1 = fdx[1];
+                const double cdx0 = cdx[0];
+                const double cdx1 = cdx[1];
+
+                const int r0 = ratio[0];
+                const int r1 = ratio[1];
+
                 pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k /*slow */) {
                    diff0(j,k) = coarse_array(j+1,k) - coarse_array(j,k);
                    diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
@@ -300,9 +305,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                    } else {
                       slope1(j,k) = 0.0;
                    }
-
                    //fprintf(stderr,"slope0(%d,%d) = %f cdx0=%f  coef2j=%f boundj=%f\n",j,k,slope0(j,k),cdx0,coef2j,boundj);
-
                 });
 
 
@@ -326,7 +329,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
 
                    double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
                    fine_array(j,k) = fine_tmp;
-                   //fprintf(stderr,"fine_array(%d,%d)=%f @ %p  coarse_array(%d,%d)=%f\n",j,k,fine_tmp,&fine_array(j,k),ic0,ic1,coarse_array(ic0,ic1));
+                   //fprintf(stdout,"axis=%d directions(0)=%d directions(1)=%d fine_array(%d,%d)=%f @ %p  coarse_array(%d,%d)=%f\n",axis,directions(0),directions(1),j,k,fine_tmp,&fine_array(j,k),ic0,ic1,coarse_array(ic0,ic1));
                    //fprintf(stderr,"deltax0=%f deltax1=%f slope0=%f slope1=%f\n",deltax0,deltax1,slope0(ic0,ic1),slope1(ic0,ic1));
                 });
               }
@@ -336,6 +339,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                                              directions, alloc_db->getTagAllocator());
 
                if (axis == 0 && directions(0)) {
+                  fprintf(stdout,"Fortran Side 2D0\n");
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -348,9 +352,10 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      fdata->getPointer(0, d),
                      &diff0_f[0], slope0_f.getPointer(0),
                      &diff1_f[0], slope1_f.getPointer(0));
-                     exit(-1);
+                   //exit(-1);
                }
                if (axis == 1 && directions(1)) {
+                  fprintf(stdout,"Fortran Side 2D1\n");
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -363,7 +368,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      fdata->getPointer(1, d),
                      &diff1_f[0], slope1_f.getPointer(1),
                      &diff0_f[0], slope0_f.getPointer(1));
-                  exit(-1);
+                  //exit(-1);
                }
                //exit(-1);
 #endif // test for RAJA
