@@ -236,6 +236,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
       });
 #else
 
+         std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
@@ -246,7 +247,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d),
-            &diff0[0], slope.getPointer());
+            &diff0_f[0], slope.getPointer());
 #endif
       } else if ((dim == tbox::Dimension(2))) {
 
