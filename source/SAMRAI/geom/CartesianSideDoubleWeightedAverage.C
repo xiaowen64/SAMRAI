@@ -168,6 +168,65 @@ CartesianSideDoubleWeightedAverage::coarsen(
                cdata->getPointer(0, d));
          }
       } else if ((dim == tbox::Dimension(2))) {
+#if defined(HAVE_RAJA)
+
+         const double* fdx = fgeom->getDx();
+         const double* cdx = cgeom->getDx();
+
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
+
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
+
+
+
+         if(directions(0)) {
+           SAMRAI::hier::Box coarse_box_plus = coarse_box;
+           coarse_box_plus.growUpper(0,1);
+
+           auto fine_array =  fdata->getConstView<2>(0,d);
+           auto coarse_array = cdata->getView<2>(0, d);
+
+           const double lengthf = fdx1;
+           const double lengthc = cdx1;
+
+           pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+              double spv = 0.0;
+              int jf = j*r0;
+              for (int ry = 0; ry < r1; ry++) {
+                 int kf = k*r1+ry;
+                 spv += fine_array(jf,kf)*lengthf;
+              }
+
+              coarse_array(j,k) = spv/lengthc;
+           });
+         }
+         if (directions(1)) {
+           SAMRAI::hier::Box coarse_box_plus = coarse_box;
+           coarse_box_plus.growUpper(1,1);
+
+           auto fine_array =  fdata->getConstView<2>(1,d);
+           auto coarse_array = cdata->getView<2>(1, d);
+
+           const double lengthf = fdx0;
+           const double lengthc = cdx0;
+
+           pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+              double spv = 0.0;
+              int kf = k*r1;
+              for (int rx = 0; rx < r0; rx++) {
+                 int jf = j*r0+rx;
+                 spv += fine_array(jf,kf)*lengthf;
+              }
+
+              coarse_array(j,k) = spv/lengthc;
+           });
+         }
+
+#else
          if (directions(0)) {
             SAMRAI_F77_FUNC(cartwgtavgsidedoub2d0, CARTWGTAVGSIDEDOUB2D0) (ifirstc(0),
                ifirstc(1), ilastc(0), ilastc(1),
@@ -190,7 +249,102 @@ CartesianSideDoubleWeightedAverage::coarsen(
                fdata->getPointer(1, d),
                cdata->getPointer(1, d));
          }
+#endif
       } else if ((dim == tbox::Dimension(3))) {
+#if defined(HAVE_RAJA)
+
+         const double* fdx = fgeom->getDx();
+         const double* cdx = cgeom->getDx();
+
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double fdx2 = fdx[2];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
+         const double cdx2 = cdx[2];
+
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
+         const int r2 = ratio[2];
+
+         //fprintf(stdout,"directions(0)=%d directions(1)=%d directions(2)=%d\n",directions(0),directions(1),directions(2));
+
+         if(directions(0)) {
+           SAMRAI::hier::Box coarse_box_plus = coarse_box;
+           coarse_box_plus.growUpper(0,1);
+
+           auto fine_array =  fdata->getConstView<3>(0,d);
+           auto coarse_array = cdata->getView<3>(0, d);
+
+           const double areaf = fdx1 * fdx2;
+           const double areac = cdx1 * cdx2;
+
+           pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+              double spv = 0.0;
+              int ii = i*r0;
+              for (int rz = 0; rz < r2; rz++) {
+                for(int ry = 0; ry < r1; ry++) {
+                  int kk = k*r2+rz;
+                  int jj = j*r1+ry;
+                  spv += fine_array(ii,jj,kk)*areaf;
+                 }
+              }
+
+              coarse_array(i,j,k) = spv/areac;
+           });
+         }
+         if (directions(1)) {
+           SAMRAI::hier::Box coarse_box_plus = coarse_box;
+           coarse_box_plus.growUpper(1,1);
+
+           auto fine_array =  fdata->getConstView<3>(1,d);
+           auto coarse_array = cdata->getView<3>(1, d);
+
+           const double areaf = fdx0 * fdx2;
+           const double areac = cdx0 * cdx2;
+
+           pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+              double spv = 0.0;
+              int jj = j*r1;
+              for (int rz = 0; rz < r2; rz++) {
+                for(int rx = 0; rx < r0; rx++) {
+                  int ii = i*r0+rx;
+                  int kk = k*r2+rz;
+                  spv += fine_array(ii,jj,kk)*areaf;
+                 }
+              }
+
+              coarse_array(i,j,k) = spv/areac;
+
+           });
+         }
+         if(directions(2)) {
+           SAMRAI::hier::Box coarse_box_plus = coarse_box;
+           coarse_box_plus.growUpper(2,1);
+
+           auto fine_array =  fdata->getConstView<3>(2,d);
+           auto coarse_array = cdata->getView<3>(2, d);
+
+           const double areaf = fdx0 * fdx1;
+           const double areac = cdx0 * cdx1;
+
+           pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+              double spv = 0.0;
+              int kk = k*r2;
+              for (int ry = 0; ry < r1; ry++) {
+                for(int rx = 0; rx < r0; rx++) {
+                  int ii = i*r0+rx;
+                  int jj = j*r1+ry;
+                  spv += fine_array(ii,jj,kk)*areaf;
+                 }
+              }
+
+              coarse_array(i,j,k) = spv/areac;
+              //fprintf(stdout,"direction(2) coarse_array(%d,%d,%d)=%f @ %p\n",i,j,k,coarse_array(i,j,k),&coarse_array(i,j,k));
+           });
+         }
+
+#else
          if (directions(0)) {
             SAMRAI_F77_FUNC(cartwgtavgsidedoub3d0, CARTWGTAVGSIDEDOUB3D0) (ifirstc(0),
                ifirstc(1), ifirstc(2),
@@ -232,7 +386,9 @@ CartesianSideDoubleWeightedAverage::coarsen(
                cgeom->getDx(),
                fdata->getPointer(2, d),
                cdata->getPointer(2, d));
+               exit(-1);
          }
+#endif
       } else {
          TBOX_ERROR("CartesianCellSideDoubleWeightedAverage error...\n"
             << "dim > 3 not supported." << std::endl);
