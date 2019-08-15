@@ -206,24 +206,11 @@ CartesianSideDoubleConservativeLinearRefine::refine(
 
          const hier::IntVector tmp_ghosts(dim, 0);
 
-
-         SAMRAI::hier::Box slope_box = coarse_box;
-         slope_box.growUpper(0,1);
-         pdat::SideData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
-                                       directions, alloc_db->getTagAllocator());
-
-
-         //fprintf(stderr,"diff_box[%d:%d,%d:%d]\n",diff_box.lower(0),diff_box.upper(0),diff_box.lower(1),diff_box.upper(1));
-         //fprintf(stdout,"coarse_box[%d:%d,%d:%d]\n",coarse_box.lower(0),coarse_box.upper(0),coarse_box.lower(1),coarse_box.upper(1));
-         //fprintf(stderr,"cgbox[%d:%d,%d:%d]\n",cgbox.lower(0),cgbox.upper(0),cgbox.lower(1),cgbox.upper(1));
-
-         //std::cerr << "tmp_ghosts: " << tmp_ghosts << std::endl;
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
                                        directions, alloc_db->getTagAllocator());
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
-            //fprintf(stderr,"depth=%d\n",d);
             if ((dim == tbox::Dimension(1))) {
                if (directions(axis)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub1d, CARTCLINREFSIDEDOUB1D) (
@@ -243,19 +230,24 @@ CartesianSideDoubleConservativeLinearRefine::refine(
               if((axis == 0 && directions(0)) || (axis == 1 && directions(1))) {
                 SAMRAI::hier::Box fine_box_plus = fine_box;
                 SAMRAI::hier::Box diff_box = coarse_box;
-                // Iteration space is slightly different between the dimensions
+                SAMRAI::hier::Box slope_box = coarse_box;
+                // Iteration space is slightly different between the directions
                 if(axis == 0 && directions(0)) {
                   fine_box_plus.growUpper(0,1);
                   diff_box.grow(0,1);
                   diff_box.growUpper(1,1);
+                  slope_box.growUpper(0,1);
                 }
                 else {
                   fine_box_plus.growUpper(1,1);
                   diff_box.grow(1,1);
                   diff_box.growUpper(0,1);
+                  slope_box.growUpper(1,1);
                 }
 
                 pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+                pdat::SideData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
+                                       directions, alloc_db->getTagAllocator());
                 auto fine_array =  fdata->getView<2>(axis,d);
                 auto coarse_array = cdata->getConstView<2>(axis, d);
 
@@ -278,64 +270,56 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                   pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k /*slow */) {
                      diff0(j,k) = coarse_array(j+1,k) - coarse_array(j,k);
                      diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
-                     //fprintf(stdout,"axis0 diff0[%d,%d]=%f  diff1=%f\n",j,k,diff0(j,k),diff1(j,k));
                   });
                 }
                 else {
                   pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k /*slow */) {
                      diff0(j,k) = coarse_array(j,k) - coarse_array(j-1,k);
                      diff1(j,k) = coarse_array(j,k+1) - coarse_array(j,k);
-                     //fprintf(stdout,"axis1 diff0[%d,%d]=%f  diff1=%f\n",j,k,diff0(j,k),diff1(j,k));
                   });
                 }
 
 
                 if(axis == 0 && directions(0)) {
                   pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int j, int k) {
-                     //fprintf(stderr,"Raja diff0[%d,%d]=%f  diff1=%f\n",j,k,diff0(j,k),diff1(j,k));
                      const double coef2j = 0.5*(diff0(j-1,k)+diff0(j,k));
-                     const double boundj = 2.0*MIN(std::abs(diff0(j-1,k)),std::abs(diff0(j,k)));
+                     const double boundj = 2.0*MIN(fabs(diff0(j-1,k)),fabs(diff0(j,k)));
 
                      if (diff0(j,k)*diff0(j-1,k) > 0.0 && cdx0 != 0) {
-                        slope0(j,k) = COPYSIGN(MIN(std::abs(coef2j),boundj),coef2j)/cdx0;
-                        //fprintf(stderr,"slope0=%lf\n",slope0(j,k));
+                        slope0(j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx0;
                      } else {
                         slope0(j,k) = 0.0;
                      }
 
                      const double coef2k = 0.5*(diff1(j,k+1)+diff1(j,k));
-                     const double boundk = 2.0*MIN(std::abs(diff1(j,k+1)),std::abs(diff1(j,k)));
+                     const double boundk = 2.0*MIN(fabs(diff1(j,k+1)),fabs(diff1(j,k)));
 
                      if (diff1(j,k)*diff1(j,k+1) > 0.0 && cdx1 != 0) {
-                        slope1(j,k) = COPYSIGN(MIN(std::abs(coef2k),boundk),coef2k)/cdx1;
+                        slope1(j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx1;
                      } else {
                         slope1(j,k) = 0.0;
                      }
-                     //fprintf(stdout,"slope0(%d,%d) = %f cdx0=%f  coef2j=%f boundj=%f\n",j,k,slope0(j,k),cdx0,coef2j,boundj);
                   });
                 }
                 else {
                   pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int j, int k) {
-                     //fprintf(stderr,"Raja diff0[%d,%d]=%f  diff1=%f\n",j,k,diff0(j,k),diff1(j,k));
                      const double coef2j = 0.5*(diff0(j+1,k)+diff0(j,k));
-                     const double boundj = 2.0*MIN(std::abs(diff0(j+1,k)),std::abs(diff0(j,k)));
+                     const double boundj = 2.0*MIN(fabs(diff0(j+1,k)),fabs(diff0(j,k)));
 
                      if (diff0(j,k)*diff0(j-1,k) > 0.0 && cdx0 != 0) {
-                        slope0(j,k) = COPYSIGN(MIN(std::abs(coef2j),boundj),coef2j)/cdx0;
-                        //fprintf(stderr,"slope0=%lf\n",slope0(j,k));
+                        slope0(j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx0;
                      } else {
                         slope0(j,k) = 0.0;
                      }
 
                      const double coef2k = 0.5*(diff1(j,k-1)+diff1(j,k));
-                     const double boundk = 2.0*MIN(std::abs(diff1(j,k-1)),std::abs(diff1(j,k)));
+                     const double boundk = 2.0*MIN(fabs(diff1(j,k-1)),fabs(diff1(j,k)));
 
                      if (diff1(j,k)*diff1(j,k-1) > 0.0 && cdx1 != 0) {
-                        slope1(j,k) = COPYSIGN(MIN(std::abs(coef2k),boundk),coef2k)/cdx1;
+                        slope1(j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx1;
                      } else {
                         slope1(j,k) = 0.0;
                      }
-                     //fprintf(stderr,"slope0(%d,%d) = %f cdx0=%f  coef2j=%f boundj=%f\n",j,k,slope0(j,k),cdx0,coef2j,boundj);
                   });
                 }
 
@@ -359,8 +343,6 @@ CartesianSideDoubleConservativeLinearRefine::refine(
 
                    double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
                    fine_array(j,k) = fine_tmp;
-                   //fprintf(stdout,"axis=%d directions(0)=%d directions(1)=%d fine_array(%d,%d)=%f @ %p  coarse_array(%d,%d)=%f\n",axis,directions(0),directions(1),j,k,fine_tmp,&fine_array(j,k),ic0,ic1,coarse_array(ic0,ic1));
-                   //fprintf(stderr,"deltax0=%f deltax1=%f slope0=%f slope1=%f\n",deltax0,deltax1,slope0(ic0,ic1),slope1(ic0,ic1));
                 });
               }
 #else // Fortran Dimension 2
@@ -369,7 +351,6 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                                              directions, alloc_db->getTagAllocator());
 
                if (axis == 0 && directions(0)) {
-                  fprintf(stdout,"Fortran Side 2D0\n");
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -382,10 +363,8 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      fdata->getPointer(0, d),
                      &diff0_f[0], slope0_f.getPointer(0),
                      &diff1_f[0], slope1_f.getPointer(0));
-                   //exit(-1);
                }
                if (axis == 1 && directions(1)) {
-                  fprintf(stdout,"Fortran Side 2D1\n");
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d1, CARTCLINREFSIDEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
@@ -398,36 +377,40 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      fdata->getPointer(1, d),
                      &diff1_f[0], slope1_f.getPointer(1),
                      &diff0_f[0], slope0_f.getPointer(1));
-                  exit(-1);
                }
-               //exit(-1);
 #endif // test for RAJA
             } else if ((dim == tbox::Dimension(3))) {
 #if defined(HAVE_RAJA)
-#if 1
+
               if((axis == 0 && directions(0)) || (axis == 1 && directions(1)) || (axis == 2 && directions(2))) {
                 SAMRAI::hier::Box fine_box_plus = fine_box;
                 SAMRAI::hier::Box diff_box = coarse_box;
+                SAMRAI::hier::Box slope_box = coarse_box;
                 if(axis == 0 && directions(0)) {
                   fine_box_plus.growUpper(0,1);
                   diff_box.grow(0,1);
                   diff_box.growUpper(1,1);
                   diff_box.growUpper(2,1);
+                  slope_box.growUpper(0,1);
                 }
                 else if(axis == 1 && directions(1)){
                   fine_box_plus.growUpper(1,1);
                   diff_box.grow(1,1);
                   diff_box.growUpper(0,1);
                   diff_box.growUpper(2,1);
+                  slope_box.growUpper(1,1);
                 }
-                else {
+                else if(axis == 2 && directions(2)){
                   fine_box_plus.growUpper(2,1);
                   diff_box.grow(2,1);
                   diff_box.growUpper(0,1);
                   diff_box.growUpper(1,1);
+                  slope_box.growUpper(2,1);
                 }
                 pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
 
+                pdat::SideData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
+                                       directions, alloc_db->getTagAllocator());
 
                 auto fine_array =  fdata->getView<3>(axis,d);
                 auto coarse_array = cdata->getConstView<3>(axis, d);
@@ -478,28 +461,28 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                 if(axis == 0 && directions(0)) {
                   pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
                      const double coef2i = 0.5*(diff0(i-1,j,k)+diff0(i,j,k));
-                     const double boundi = 2.0*MIN(std::abs(diff0(i-1,j,k)),std::abs(diff0(i,j,k)));
+                     const double boundi = 2.0*MIN(fabs(diff0(i-1,j,k)),fabs(diff0(i,j,k)));
 
                      if (diff0(i,j,k)*diff0(i-1,j,k) > 0.0 && cdx0 != 0) {
-                        slope0(i,j,k) = COPYSIGN(MIN(std::abs(coef2i),boundi),coef2i)/cdx0;
+                        slope0(i,j,k) = COPYSIGN(MIN(fabs(coef2i),boundi),coef2i)/cdx0;
                      } else {
                         slope0(i,j,k) = 0.0;
                      }
 
                      const double coef2j = 0.5*(diff1(i,j+1,k)+diff1(i,j,k));
-                     const double boundj = 2.0*MIN(std::abs(diff1(i,j+1,k)),std::abs(diff1(i,j,k)));
+                     const double boundj = 2.0*MIN(fabs(diff1(i,j+1,k)),fabs(diff1(i,j,k)));
 
                      if (diff1(i,j,k)*diff1(i,j+1,k) > 0.0 && cdx1 != 0) {
-                        slope1(i,j,k) = COPYSIGN(MIN(std::abs(coef2j),boundj),coef2j)/cdx1;
+                        slope1(i,j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx1;
                      } else {
                         slope1(i,j,k) = 0.0;
                      }
 
                      const double coef2k = 0.5*(diff2(i,j,k+1)+diff2(i,j,k));
-                     const double boundk = 2.0*MIN(std::abs(diff2(i,j,k+1)),std::abs(diff2(i,j,k)));
+                     const double boundk = 2.0*MIN(fabs(diff2(i,j,k+1)),fabs(diff2(i,j,k)));
 
                      if (diff2(i,j,k)*diff2(i,j,k+1) > 0.0 && cdx2 != 0) {
-                        slope2(i,j,k) = COPYSIGN(MIN(std::abs(coef2k),boundk),coef2k)/cdx2;
+                        slope2(i,j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx2;
                      } else {
                         slope2(i,j,k) = 0.0;
                      }
@@ -508,28 +491,28 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                 else if(axis == 1 && directions(1)) {
                   pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
                      const double coef2i = 0.5*(diff0(i+1,j,k)+diff0(i,j,k));
-                     const double boundi = 2.0*MIN(std::abs(diff0(i+1,j,k)),std::abs(diff0(i,j,k)));
+                     const double boundi = 2.0*MIN(fabs(diff0(i+1,j,k)),fabs(diff0(i,j,k)));
 
                      if (diff0(i,j,k)*diff0(i+1,j,k) > 0.0 && cdx0 != 0) {
-                        slope0(i,j,k) = COPYSIGN(MIN(std::abs(coef2i),boundi),coef2i)/cdx0;
+                        slope0(i,j,k) = COPYSIGN(MIN(fabs(coef2i),boundi),coef2i)/cdx0;
                      } else {
                         slope0(i,j,k) = 0.0;
                      }
 
                      const double coef2j = 0.5*(diff1(i,j-1,k)+diff1(i,j,k));
-                     const double boundj = 2.0*MIN(std::abs(diff1(i,j-1,k)),std::abs(diff1(i,j,k)));
+                     const double boundj = 2.0*MIN(fabs(diff1(i,j-1,k)),fabs(diff1(i,j,k)));
 
                      if (diff1(i,j,k)*diff1(i,j-1,k) > 0.0 && cdx1 != 0) {
-                        slope1(i,j,k) = COPYSIGN(MIN(std::abs(coef2j),boundj),coef2j)/cdx1;
+                        slope1(i,j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx1;
                      } else {
                         slope1(i,j,k) = 0.0;
                      }
 
                      const double coef2k = 0.5*(diff2(i,j,k+1)+diff2(i,j,k));
-                     const double boundk = 2.0*MIN(std::abs(diff2(i,j,k+1)),std::abs(diff2(i,j,k)));
+                     const double boundk = 2.0*MIN(fabs(diff2(i,j,k+1)),fabs(diff2(i,j,k)));
 
                      if (diff2(i,j,k)*diff2(i,j,k+1) > 0.0 && cdx2 != 0) {
-                        slope2(i,j,k) = COPYSIGN(MIN(std::abs(coef2k),boundk),coef2k)/cdx2;
+                        slope2(i,j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx2;
                      } else {
                         slope2(i,j,k) = 0.0;
                      }
@@ -538,28 +521,28 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                 else if(axis == 2 && directions(2)) {
                   pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
                      const double coef2i = 0.5*(diff0(i+1,j,k)+diff0(i,j,k));
-                     const double boundi = 2.0*MIN(std::abs(diff0(i+1,j,k)),std::abs(diff0(i,j,k)));
+                     const double boundi = 2.0*MIN(fabs(diff0(i+1,j,k)),fabs(diff0(i,j,k)));
 
                      if (diff0(i,j,k)*diff0(i+1,j,k) > 0.0 && cdx0 != 0) {
-                        slope0(i,j,k) = COPYSIGN(MIN(std::abs(coef2i),boundi),coef2i)/cdx0;
+                        slope0(i,j,k) = COPYSIGN(MIN(fabs(coef2i),boundi),coef2i)/cdx0;
                      } else {
                         slope0(i,j,k) = 0.0;
                      }
 
                      const double coef2j = 0.5*(diff1(i,j+1,k)+diff1(i,j,k));
-                     const double boundj = 2.0*MIN(std::abs(diff1(i,j+1,k)),std::abs(diff1(i,j,k)));
+                     const double boundj = 2.0*MIN(fabs(diff1(i,j+1,k)),fabs(diff1(i,j,k)));
 
                      if (diff1(i,j,k)*diff1(i,j+1,k) > 0.0 && cdx1 != 0) {
-                        slope1(i,j,k) = COPYSIGN(MIN(std::abs(coef2j),boundj),coef2j)/cdx1;
+                        slope1(i,j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx1;
                      } else {
                         slope1(i,j,k) = 0.0;
                      }
 
                      const double coef2k = 0.5*(diff2(i,j,k-1)+diff2(i,j,k));
-                     const double boundk = 2.0*MIN(std::abs(diff2(i,j,k-1)),std::abs(diff2(i,j,k)));
+                     const double boundk = 2.0*MIN(fabs(diff2(i,j,k-1)),fabs(diff2(i,j,k)));
 
                      if (diff2(i,j,k)*diff2(i,j,k-1) > 0.0 && cdx2 != 0) {
-                        slope2(i,j,k) = COPYSIGN(MIN(std::abs(coef2k),boundk),coef2k)/cdx2;
+                        slope2(i,j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx2;
                      } else {
                         slope2(i,j,k) = 0.0;
                      }
@@ -597,13 +580,9 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                                    + slope1(ic0,ic1,ic2)*deltax1
                                    + slope2(ic0,ic1,ic2)*deltax2;
                    fine_array(i,j,k) = fine_tmp;
-                   //fprintf(stdout,"axis=%d directions(0)=%d directions(1)=%d fine_array(%d,%d)=%f @ %p  coarse_array(%d,%d)=%f\n",axis,directions(0),directions(1),j,k,fine_tmp,&fine_array(j,k),ic0,ic1,coarse_array(ic0,ic1));
-                   //fprintf(stderr,"deltax0=%f deltax1=%f slope0=%f slope1=%f\n",deltax0,deltax1,slope0(ic0,ic1),slope1(ic0,ic1));
                 });
               }
-#endif
-#endif
-//#else // Fortran Dimension 3
+#else // Fortran Dimension 3
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                                              directions, alloc_db->getTagAllocator());
@@ -669,6 +648,7 @@ CartesianSideDoubleConservativeLinearRefine::refine(
                      &diff0_f[0], slope0_f.getPointer(2),
                      &diff1_f[0], slope1_f.getPointer(2));
                }
+#endif               
             } else {
                TBOX_ERROR(
                   "CartesianSideDoubleConservativeLinearRefine error...\n"
