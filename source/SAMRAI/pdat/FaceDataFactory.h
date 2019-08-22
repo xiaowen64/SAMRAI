@@ -53,6 +53,14 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
 
+#if defined(HAVE_UMPIRE)
+  FaceDataFactory(int depth,
+                  const hier::IntVector& ghosts,
+                  bool fine_boundary_represents_var,
+                  umpire::Allocator allocator);
+
+#endif
+
    /**
     * Virtual destructor for the face data factory class.
     */
@@ -143,6 +151,10 @@ public:
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;
+#if defined(HAVE_UMPIRE)
+  umpire::Allocator d_allocator;
+  bool d_has_allocator;
+#endif
 
 };
 

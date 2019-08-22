@@ -15,7 +15,14 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceVariable.h"
+#include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#define MAX(a, b) (((b) > (a)) ? (b) : (a))
+#define MIN(a, b) (((b) < (a)) ? (b) : (a))
+#define ABS abs
+#define SQRT sqrt
+#define COPYSIGN copysign
 
 /*
  *************************************************************************
@@ -187,6 +194,8 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
 
          fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
+         tbox::AllocatorDatabase* alloc_db = tbox::AllocatorDatabase::getDatabase();
+
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
          const hier::Index& ifirstc = coarse_box.lower();
          const hier::Index& ilastc = coarse_box.upper();
@@ -194,8 +203,8 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
          const hier::Index& ilastf = fine_box.upper();
 
          const hier::IntVector tmp_ghosts(dim, 0);
-         std::vector<double> diff0(cgbox.numberCells(0) + 2);
-         pdat::FaceData<double> slope0(cgbox, 1, tmp_ghosts);
+         std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
+         pdat::FaceData<double> slope0_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -209,10 +218,153 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                   fgeom->getDx(),
                   cdata->getPointer(0, d),
                   fdata->getPointer(0, d),
-                  &diff0[0], slope0.getPointer(0));
+                  &diff0_f[0], slope0_f.getPointer(0));
             } else if ((dim == tbox::Dimension(2))) {
-               std::vector<double> diff1(cgbox.numberCells(1) + 2);
-               pdat::FaceData<double> slope1(cgbox, 1, tmp_ghosts);
+#if defined(HAVE_RAJA)
+              //fprintf(stdout,"axis=%d\n",axis);
+              SAMRAI::hier::Box fine_box_plus = fine_box;
+              SAMRAI::hier::Box diff_box = coarse_box; // come back later as diff boxes are 1d here
+
+              // Iteration space is slightly different between the directions
+
+              if(axis == 1) { // transpose boxes
+                fine_box_plus.setLower(0,fine_box.lower(1)); 
+                fine_box_plus.setLower(1,fine_box.lower(0)); 
+                fine_box_plus.setUpper(0,fine_box.upper(1)); 
+                fine_box_plus.setUpper(1,fine_box.upper(0)); 
+
+                diff_box.setLower(0,coarse_box.lower(1));
+                diff_box.setLower(1,coarse_box.lower(0));
+                diff_box.setUpper(0,coarse_box.upper(1));
+                diff_box.setUpper(1,coarse_box.upper(0));
+              }
+              SAMRAI::hier::Box slope_box = diff_box;
+
+              fine_box_plus.growUpper(0,1);
+              diff_box.grow(0,1);
+              diff_box.growUpper(1,1);
+
+              if(axis == 0) {
+                slope_box.growUpper(0,1);
+              }
+
+              pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+              pdat::FaceData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
+                                     alloc_db->getTagAllocator());
+              auto fine_array =  fdata->getView<2>(axis,d);
+              auto coarse_array = cdata->getConstView<2>(axis, d);
+
+              auto diff0 = diff.getView<2>(0);
+              auto diff1 = diff.getView<2>(1);
+
+              const double* fdx = fgeom->getDx();
+              const double* cdx = cgeom->getDx();
+              const double fdx0 = fdx[0];
+              const double fdx1 = fdx[1];
+              const double cdx0 = cdx[0];
+              const double cdx1 = cdx[1];
+
+              const int r0 = ratio[0];
+              const int r1 = ratio[1];
+              if(axis == 0 ) {
+                auto slope0 = slope.getView<2>(0,d);
+                auto slope1 = slope.getView<2>(1,d);
+                pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k /*slow */) {
+                   diff0(j,k) = coarse_array(j+1,k) - coarse_array(j,k);
+                   diff1(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
+                });
+
+                pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int j, int k) {
+                   const double coef2j = 0.5*(diff0(j-1,k)+diff0(j,k));
+                   const double boundj = 2.0*MIN(fabs(diff0(j-1,k)),fabs(diff0(j,k)));
+
+                   if (diff0(j,k)*diff0(j-1,k) > 0.0 && cdx0 != 0) {
+                      slope0(j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx0;
+                   } else {
+                      slope0(j,k) = 0.0;
+                   }
+
+                   const double coef2k = 0.5*(diff1(j,k+1)+diff1(j,k));
+                   const double boundk = 2.0*MIN(fabs(diff1(j,k+1)),fabs(diff1(j,k)));
+
+                   if (diff1(j,k)*diff1(j-1,k) > 0.0 && cdx1 != 0) {
+                      slope1(j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx1;
+                   } else {
+                      slope1(j,k) = 0.0;
+                   }
+                });
+
+                pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int j, int k) {
+                   const int ic1 = (k < 0) ? (k+1)/r1-1 : k/r1;
+                   const int ic0 = (j < 0) ? (j+1)/r0-1 : j/r0;
+
+                   const int ir0 = j - ic0*r0;
+                   const int ir1 = k - ic1*r1;
+                   double deltax0, deltax1;
+
+                   deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+                   deltax0 = static_cast<double>(ir0)*fdx0;
+
+                   double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
+                   fine_array(j,k) = fine_tmp;
+                   //fprintf(stdout,"fine_array_axis0[%d,%d] = %f\n",j,k,fine_tmp);
+                });
+
+              } // axis == 0
+              else if(axis == 1) {
+                auto slope0 = slope.getView<2>(1,d);
+                auto slope1 = slope.getView<2>(0,d);
+                pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k /*slow */) {
+                   diff0(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
+                   diff1(j,k) = coarse_array(j+1,k) - coarse_array(j,k);
+                   //fprintf(stdout,"diff0[%d,%d]=%f diff1[%d,%d]=%f\n",j,k,diff0(j,k),j,k,diff1(j,k));
+                });
+
+                pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int j, int k) {
+                   const double coef2j = 0.5*(diff0(j,k+1)+diff0(j,k));
+                   const double boundj = 2.0*MIN(fabs(diff0(j,k+1)),fabs(diff0(j,k)));
+
+                   if (diff0(j,k)*diff0(j,k+1) > 0.0 && cdx0 != 0) {
+                      slope0(j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx0;
+                   } else {
+                      slope0(j,k) = 0.0;
+                   }
+
+                   const double coef2k = 0.5*(diff1(j-1,k)+diff1(j,k));
+                   const double boundk = 2.0*MIN(fabs(diff1(j-1,k)),fabs(diff1(j,k)));
+
+                   if (diff1(j,k)*diff1(j-1,k) > 0.0 && cdx1 != 0) {
+                      slope1(j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx1;
+                   } else {
+                      slope1(j,k) = 0.0;
+                   }
+
+                   //fprintf(stdout,"slope1[%d,%d]=%0.14lf \n",j,k,slope1(j,k));
+                });
+
+                pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int j, int k) {
+                   const int ic0 = (k < 0) ? (k+1)/r1-1 : k/r0;
+                   const int ic1 = (j < 0) ? (j+1)/r0-1 : j/r1;
+
+                   const int ir0 = k - ic0*r0;
+                   const int ir1 = j - ic1*r1;
+                   double deltax0, deltax1;
+
+                   deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
+                   deltax1 = static_cast<double>(ir1)*fdx1;
+
+                   double fine_tmp = coarse_array(ic1,ic0) + slope1(ic1, ic0)*deltax1 + slope0(ic1,ic0)*deltax0;
+                   fine_array(j,k) = fine_tmp;
+                   //fprintf(stdout,"fine_array_axis1[%d,%d] = %0.15lf\n",j,k,fine_tmp);
+                   //fprintf(stdout,"coarse_array[%d,%d]=%0.15f\n",ic1,ic0,coarse_array(ic1,ic0));
+                   //fprintf(stdout,"%0.15f %0.15f %d %d\n",slope1(ic1,ic0),slope0(ic1,ic0),ic1,ic0);
+                });
+
+              } // axis == 1
+
+#else // Fortran Dimension 2
+               std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0) (
@@ -225,8 +377,9 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     &diff0[0], slope0.getPointer(0),
-                     &diff1[0], slope1.getPointer(0));
+                     &diff0_f[0], slope0_f.getPointer(0),
+                     &diff1_f[0], slope1_f.getPointer(0));
+                     //exit(-1);
                } else if (axis == 1) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub2d1, CARTCLINREFFACEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
@@ -238,15 +391,131 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d),
-                     &diff1[0], slope1.getPointer(1),
-                     &diff0[0], slope0.getPointer(1));
+                     &diff1_f[0], slope1_f.getPointer(1),
+                     &diff0_f[0], slope0_f.getPointer(1));
+                     exit(-1);
                }
+#endif
             } else if ((dim == tbox::Dimension(3))) {
-               std::vector<double> diff1(cgbox.numberCells(1) + 2);
-               pdat::FaceData<double> slope1(cgbox, 1, tmp_ghosts);
+#if defined(HAVE_RAJA)
+              //fprintf(stdout,"axis=%d\n",axis);
+              SAMRAI::hier::Box fine_box_plus = fine_box;
+              fine_box_plus.growUpper(0,1);
 
-               std::vector<double> diff2(cgbox.numberCells(2) + 2);
-               pdat::FaceData<double> slope2(cgbox, 1, tmp_ghosts);
+              SAMRAI::hier::Box diff_box = coarse_box; // come back later as diff boxes are 1d here
+              diff_box.grow(0,1);
+              diff_box.growUpper(1,1);
+              diff_box.growUpper(2,1);
+
+
+              SAMRAI::hier::Box slope_box = coarse_box;
+              if(axis == 0) {
+                slope_box.growUpper(0,1);
+              }
+
+              pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+              pdat::FaceData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
+                                     alloc_db->getTagAllocator());
+              auto fine_array =  fdata->getView<3>(axis,d);
+              auto coarse_array = cdata->getConstView<3>(axis, d);
+
+              auto diff0 = diff.getView<3>(0);
+              auto diff1 = diff.getView<3>(1);
+              auto diff2 = diff.getView<3>(2);
+
+              const double* fdx = fgeom->getDx();
+              const double* cdx = cgeom->getDx();
+              const double fdx0 = fdx[0];
+              const double fdx1 = fdx[1];
+              const double fdx2 = fdx[2];
+              const double cdx0 = cdx[0];
+              const double cdx1 = cdx[1];
+              const double cdx2 = cdx[2];
+
+              const int r0 = ratio[0];
+              const int r1 = ratio[1];
+              const int r2 = ratio[2];
+
+              if(axis == 0 ) {
+                auto slope0 = slope.getView<3>(0,d);
+                auto slope1 = slope.getView<3>(1,d);
+                auto slope2 = slope.getView<3>(2,d);
+
+                pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k /*slow */) {
+                   diff0(i,j,k) = coarse_array(i+1,j,k) - coarse_array(i,j,k);
+                   diff1(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j-1,k);
+                   diff2(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j,k-1);
+                });
+
+                pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+                   const double coef2i = 0.5*(diff0(i-1,j,k)+diff0(i,j,k));
+                   const double boundi = 2.0*MIN(fabs(diff0(i-1,j,k)),fabs(diff0(i,j,k)));
+
+                   if (diff0(i,j,k)*diff0(i-1,j,k) > 0.0 && cdx0 != 0) {
+                      slope0(i,j,k) = COPYSIGN(MIN(fabs(coef2i),boundi),coef2i)/cdx0;
+                   } else {
+                      slope0(i,j,k) = 0.0;
+                   }
+
+                   const double coef2j = 0.5*(diff1(i,j+1,k)+diff1(i,j,k));
+                   const double boundj = 2.0*MIN(fabs(diff1(i,j+1,k)),fabs(diff1(i,j,k)));
+
+                   if (diff1(i,j,k)*diff1(i,j+1,k) > 0.0 && cdx1 != 0) {
+                      slope1(i,j,k) = COPYSIGN(MIN(fabs(coef2j),boundj),coef2j)/cdx1;
+                   } else {
+                      slope1(i,j,k) = 0.0;
+                   }
+
+                   const double coef2k = 0.5*(diff2(i,j,k+1)+diff2(i,j,k));
+                   const double boundk = 2.0*MIN(fabs(diff2(i,j,k+1)),fabs(diff2(i,j,k)));
+
+                   if (diff2(i,j,k)*diff2(i,j,k+1) > 0.0 && cdx2 != 0) {
+                      slope2(i,j,k) = COPYSIGN(MIN(fabs(coef2k),boundk),coef2k)/cdx2;
+                   } else {
+                      slope2(i,j,k) = 0.0;
+                   }
+
+                   fprintf(stdout,"slopebox slope2[%d,%d,%d]=%0.16f\n",i,j,k,slope2(i,j,k));
+                });
+
+                pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+                   const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
+                   const int ic1 = (j < 0) ? (j+1)/r1-1 : j/r1;
+                   const int ic2 = (k < 0) ? (k+1)/r2-1 : k/r2;
+
+                   const int ir0 = i - ic0*r0;
+                   const int ir1 = j - ic1*r1;
+                   const int ir2 = k - ic2*r2;
+
+                   double deltax0, deltax1, deltax2;
+                   deltax0 = static_cast<double>(ir0)*fdx0;
+                   deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
+                   deltax2 = (static_cast<double>(ir2)+0.5)*fdx2-cdx2*0.5;
+
+                   double fine_tmp = coarse_array(ic0,ic1,ic2) 
+                                     +slope0(ic0,ic1,ic2)*deltax0 
+                                     +slope1(ic0,ic1,ic2)*deltax1
+                                     +slope2(ic0,ic1,ic2)*deltax2;
+
+                   fine_array(i,j,k) = fine_tmp;
+                   fprintf(stdout,"fine_array_axis0[%d,%d,%d] = %0.15f\n",i,j,k,fine_array(i,j,k));
+                   //fprintf(stdout,"coarse_array[%d,%d,%d] = %0.15f\n",ic0,ic1,ic2,coarse_array(ic0,ic1,ic2));
+                   //fprintf(stdout,"slope0 = %0.15f deltax0=%f\n",slope0(ic0,ic1,ic2),deltax0);
+                   //fprintf(stdout,"slope1 = %0.15f deltax1=%f\n",slope1(ic0,ic1,ic2),deltax1);
+                   //fprintf(stdout,"slope2[%d,%d,%d] = %0.15f\n",ic0,ic1,ic2,slope2(ic0,ic1,ic2));
+                });
+
+              } // axis == 0
+              else if(axis == 1) {
+              } else if(axis == 2) {
+              }
+//#else // Fortran Dimension3 
+              // Iteration space is slightly different between the directions
+               std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
+
+               std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
+               pdat::FaceData<double> slope2_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0) (
@@ -263,9 +532,10 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d),
-                     &diff0[0], slope0.getPointer(0),
-                     &diff1[0], slope1.getPointer(0),
-                     &diff2[0], slope2.getPointer(0));
+                     &diff0_f[0], slope0_f.getPointer(0),
+                     &diff1_f[0], slope1_f.getPointer(0),
+                     &diff2_f[0], slope2_f.getPointer(0));
+                     exit(-1);
                } else if (axis == 1) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub3d1, CARTCLINREFFACEDOUB3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
@@ -281,9 +551,9 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d),
-                     &diff1[0], slope1.getPointer(1),
-                     &diff2[0], slope2.getPointer(1),
-                     &diff0[0], slope0.getPointer(1));
+                     &diff1_f[0], slope1_f.getPointer(1),
+                     &diff2_f[0], slope2_f.getPointer(1),
+                     &diff0_f[0], slope0_f.getPointer(1));
                } else if (axis == 2) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub3d2, CARTCLINREFFACEDOUB3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
@@ -299,19 +569,20 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                      fgeom->getDx(),
                      cdata->getPointer(2, d),
                      fdata->getPointer(2, d),
-                     &diff2[0], slope2.getPointer(2),
-                     &diff0[0], slope0.getPointer(2),
-                     &diff1[0], slope1.getPointer(2));
+                     &diff2_f[0], slope2_f.getPointer(2),
+                     &diff0_f[0], slope0_f.getPointer(2),
+                     &diff1_f[0], slope1_f.getPointer(2));
                }
-            } else {
+#endif // test if defined RAJA
+            } else { // Not dimension 3
                TBOX_ERROR(
                   "CartesianFaceDoubleConservativeLinearRefine error...\n"
                   << "dim > 3 not supported." << std::endl);
             }
-         }
-      }
-   }
-}
+         } // for depth
+      } // for boxes
+   } // for axis
+} // end refine call
 
-}
-}
+} // end namespace geom
+} // end namespace SAMRAI
