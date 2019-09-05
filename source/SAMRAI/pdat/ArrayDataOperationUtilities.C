@@ -103,21 +103,28 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
       case 1: {
          auto dest = get_view<1>(dst, d);
          auto source = get_const_view<1>(src, d);
+         //auto source = get_view<1>(src, d);
          const int shift_i = src_shift[0];
+
+         //source<1>.shift({{-shift_i}});
          
          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int i) {
             op(dest(i), source(i-shift_i));
+            //op(dest(i), source(i));
          });
       } break;
 
       case 2: {
          auto dest = get_view<2>(dst, d);
          auto source = get_const_view<2>(src, d);
+         auto s2 = get_const_view<2>(src,d);
          const int shift_i = src_shift[0];
          const int shift_j = src_shift[1];
-
+         auto s3 = s2.shift({{shift_i,shift_j}});
+         //fprintf(stderr,"shift[%d,%d] comparing address orig %p orig - manual shift %p and view shifted %p \n",0,1,&source(0,0),&s2(0,0),&s3(0,0));
          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int j, int i) {
-            op(dest(i, j), source(i-shift_i, j-shift_j));
+            //op(dest(i, j), source(i-shift_i, j-shift_j));
+            op(dest(i, j), s3(i, j));
          });
       } break;
 
@@ -127,8 +134,10 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
          const int shift_i = src_shift[0];
          const int shift_j = src_shift[1];
          const int shift_k = src_shift[2];
+         auto s2 = source.shift({{shift_i,shift_j,shift_k}});
          pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE (int k, int j, int i) {
-            op(dest(i,j,k), source(i-shift_i,j-shift_j,k-shift_k));
+            //op(dest(i,j,k), source(i-shift_i,j-shift_j,k-shift_k));
+            op(dest(i,j,k), s2(i,j,k));
          });
       } break;
 
