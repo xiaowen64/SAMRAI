@@ -188,9 +188,9 @@ struct for_all_x<3> {
    inline static void eval(const hier::Index& ifirst, const hier::Index& ilast, LoopBody body)
    {
       RAJA::kernel<Policy>(
-         RAJA::make_tuple(make_range(ifirst, ilast, 2),
+         RAJA::make_tuple(make_range(ifirst, ilast, 0),
                           make_range(ifirst, ilast, 1),
-                          make_range(ifirst, ilast, 0)),
+                          make_range(ifirst, ilast, 2)),
          body);
    }
 };
