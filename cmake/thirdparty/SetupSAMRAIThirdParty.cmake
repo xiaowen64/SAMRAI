@@ -26,11 +26,12 @@ endif ()
 
 
 #HAVE_HYPRE
-if (ENABLE_HYPRE)
+if (ENABLE_HYPRE OR HYPRE_DIR)
   find_package(HYPRE REQUIRED)
 
   if(HYPRE_FOUND)
     set (HAVE_HYPRE True)
+    set (ENABLE_HYPRE ON) 
 
     blt_register_library(
       NAME HYPRE
@@ -47,7 +48,7 @@ if (ENABLE_OPENMP)
 endif ()
 
 #HAVE_PETSC
-if (ENABLE_PETSC)
+if (ENABLE_PETSC OR PETSC_DIR)
   find_package(PETSc REQUIRED)
 
   if (PETSC_FOUND)
@@ -61,7 +62,7 @@ if (ENABLE_PETSC)
 endif()
 
 #HAVE_SILO
-if (ENABLE_SILO)
+if (ENABLE_SILO OR SILO_DIR)
   find_package(SILO REQUIRED)
 
   if (SILO_FOUND)
@@ -75,10 +76,11 @@ if (ENABLE_SILO)
 endif ()
 
 #HAVE_SUNDIALS
-if (ENABLE_SUNDIALS)
+if (ENABLE_SUNDIALS OR SUNDIALS_DIR)
   find_package(SUNDIALS REQUIRED)
   if (SUNDIALS_FOUND)
     set (HAVE_SUNDIALS True)
+    set (ENABLE_SUNDIALS ON)
 
     blt_register_library(
       NAME SUNDIALS
@@ -88,10 +90,11 @@ if (ENABLE_SUNDIALS)
 endif ()
 
 #HAVE_CONDUIT
-if (ENABLE_CONDUIT)
+if (ENABLE_CONDUIT OR CONDUIT_DIR)
   find_package(CONDUIT REQUIRED)
   if (CONDUIT_FOUND)
     set (HAVE_CONDUIT True)
+    set (ENABLE_CONDUIT ON)
 
     blt_register_library(
       NAME CONDUIT
