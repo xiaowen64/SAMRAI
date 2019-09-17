@@ -1186,7 +1186,8 @@ PatchHierarchy::makeBlueprintDatabase(
       makeNestingSets(blueprint_db, "mesh");
    }
 
-   makeAdjacencySets(blueprint_db, "mesh");
+   // AMR Adjacency sets not supported in current Conduit release
+   //makeAdjacencySets(blueprint_db, "mesh");
 
    bp_utils.putTopologyAndCoordinatesToDatabase(blueprint_db, *this, "mesh");
 }
