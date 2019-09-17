@@ -226,7 +226,7 @@
 #undef LACKS_CMATH_ISNAN
 
 /* conduit library is available so use it */
-#cmakedefine HAVE_CONDUIT
+#cmakedefine SAMRAI_HAVE_CONDUIT
 
 /* LACKS_CTIME */
 #undef LACKS_CTIME

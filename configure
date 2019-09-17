@@ -14032,7 +14032,7 @@ fi
   LIB_NAME="$conduit_LIB_NAME $LIB_NAME"
   INC_PATH="$conduit_INCLUDES $INC_PATH"
 
-$as_echo "#define HAVE_CONDUIT 1" >>confdefs.h
+$as_echo "#define SAMRAI_HAVE_CONDUIT 1" >>confdefs.h
 
 fi
 

@@ -131,7 +131,7 @@ public:
       int level_number,
       const std::vector<std::shared_ptr<hier::PatchData> >& bdry_data);
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    void addFields(
       conduit::Node& node,
       int domain_id,

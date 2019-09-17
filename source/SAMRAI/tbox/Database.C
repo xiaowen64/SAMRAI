@@ -1108,7 +1108,7 @@ Database::copyDatabase(const std::shared_ptr<Database>& database)
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void
 Database::toConduitNode(conduit::Node& node)
 {

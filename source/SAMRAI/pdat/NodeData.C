@@ -496,7 +496,7 @@ NodeData<TYPE>::fillAll(
    d_data->fillAll(t, NodeGeometry::toNodeBox(box));
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 template<class TYPE>
 void
 NodeData<TYPE>::putBlueprintField(

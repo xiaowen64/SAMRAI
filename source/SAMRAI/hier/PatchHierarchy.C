@@ -1121,7 +1121,7 @@ PatchHierarchy::putToRestart(
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void
 PatchHierarchy::makeBlueprintDatabase(
    const std::shared_ptr<tbox::Database>& blueprint_db,

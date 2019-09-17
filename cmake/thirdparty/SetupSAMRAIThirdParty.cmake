@@ -89,11 +89,11 @@ if (ENABLE_SUNDIALS OR SUNDIALS_DIR)
   endif ()
 endif ()
 
-#HAVE_CONDUIT
+#SAMRAI_HAVE_CONDUIT
 if (ENABLE_CONDUIT OR CONDUIT_DIR)
   find_package(CONDUIT REQUIRED)
   if (CONDUIT_FOUND)
-    set (HAVE_CONDUIT True)
+    set (SAMRAI_HAVE_CONDUIT True)
     set (ENABLE_CONDUIT ON)
 
     blt_register_library(

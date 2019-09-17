@@ -537,7 +537,7 @@ bool NodeDataTest::verifyResults(
 
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void NodeDataTest::addFields(
    conduit::Node& node,
    int domain_id,

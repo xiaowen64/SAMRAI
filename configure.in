@@ -1268,7 +1268,7 @@ if test "${conduit_PREFIX+set}" = set; then
   LIB_PATH="$conduit_LIB_PATH $LIB_PATH"
   LIB_NAME="$conduit_LIB_NAME $LIB_NAME"
   INC_PATH="$conduit_INCLUDES $INC_PATH"
-  AC_DEFINE([HAVE_CONDUIT],[1],[conduit library is available so use it])
+  AC_DEFINE([SAMRAI_HAVE_CONDUIT],[1],[conduit library is available so use it])
 fi
 CASC_AC_LOG_VAR(
 [conduit_INCLUDES INC_PATH conduit_LIB_PATH conduit_LIB_NAME LIB_PATH LIB_NAME])
