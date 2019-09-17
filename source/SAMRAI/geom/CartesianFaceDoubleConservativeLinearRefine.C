@@ -221,14 +221,13 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                   &diff0_f[0], slope0_f.getPointer(0));
             } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
-              //fprintf(stdout,"axis=%d\n",axis);
               SAMRAI::hier::Box fine_box_plus = fine_box;
-              SAMRAI::hier::Box diff_box = coarse_box; // come back later as diff boxes are 1d here
+              SAMRAI::hier::Box diff_box = coarse_box; 
 
               // Iteration space is slightly different between the directions
 
               if(axis == 1) { // transpose boxes
-                fine_box_plus.setLower(0,fine_box.lower(1)); 
+                fine_box_plus.setLower(0,fine_box.lower(1));
                 fine_box_plus.setLower(1,fine_box.lower(0)); 
                 fine_box_plus.setUpper(0,fine_box.upper(1)); 
                 fine_box_plus.setUpper(1,fine_box.upper(0)); 
@@ -248,8 +247,12 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                 slope_box.growUpper(0,1);
               }
 
-              pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
-              pdat::CellData<double> slope(slope_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+              // Array data setup for diff and slope uses dim as depth value and is not related to actual depth being processed
+              // so that we have for 2d two components with the same box extents namely diff0, diff1
+              // Lifetime of this Array data exits just for a given depth component being processed
+              // We may want to redo this approach to avoid alloc/dealloc redundancies 
+              pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());  
+              pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
 
               auto fine_array =  fdata->getView<2>(axis,d);
               auto coarse_array = cdata->getConstView<2>(axis, d);
@@ -308,7 +311,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
 
                    double fine_tmp = coarse_array(ic0,ic1) + slope0(ic0, ic1)*deltax0 + slope1(ic0,ic1)*deltax1;
                    fine_array(j,k) = fine_tmp;
-                   //fprintf(stdout,"fine_array_axis0[%d,%d] = %f\n",j,k,fine_tmp);
                 });
 
               } // axis == 0
@@ -316,7 +318,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                 pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int j /*fast*/, int k /*slow */) {
                    diff0(j,k) = coarse_array(j,k) - coarse_array(j,k-1);
                    diff1(j,k) = coarse_array(j+1,k) - coarse_array(j,k);
-                   //fprintf(stdout,"diff0[%d,%d]=%f diff1[%d,%d]=%f\n",j,k,diff0(j,k),j,k,diff1(j,k));
                 });
 
                 pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int j, int k) {
@@ -338,7 +339,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                       slope1(j,k) = 0.0;
                    }
 
-                   //fprintf(stdout,"slope1[%d,%d]=%0.14lf \n",j,k,slope1(j,k));
                 });
 
                 pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int j, int k) {
@@ -354,9 +354,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
 
                    double fine_tmp = coarse_array(ic1,ic0) + slope1(ic1, ic0)*deltax1 + slope0(ic1,ic0)*deltax0;
                    fine_array(j,k) = fine_tmp;
-                   //fprintf(stdout,"fine_array_axis1[%d,%d] = %0.15lf\n",j,k,fine_tmp);
-                   //fprintf(stdout,"coarse_array[%d,%d]=%0.15f\n",ic1,ic0,coarse_array(ic1,ic0));
-                   //fprintf(stdout,"%0.15f %0.15f %d %d\n",slope1(ic1,ic0),slope0(ic1,ic0),ic1,ic0);
                 });
 
               } // axis == 1
@@ -397,11 +394,8 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
 #endif
             } else if ((dim == tbox::Dimension(3))) {
 #if defined(HAVE_RAJA)
-              static int block=0;
-              //fprintf(stdout,"Block %d axis %d\n",block++,axis);
-              //if(block == 4) { exit(-1);}
               SAMRAI::hier::Box fine_box_plus = fine_box;
-              SAMRAI::hier::Box diff_box = coarse_box; // come back later as diff boxes are 1d here
+              SAMRAI::hier::Box diff_box = coarse_box; 
 
               if(axis == 1) { // transpose boxes <1,2,0>
                 fine_box_plus.setLower(0,fine_box.lower(1)); 
@@ -447,8 +441,8 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
               diff_box.growUpper(1,1);
               diff_box.growUpper(2,1);
 
-              pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
-              pdat::CellData<double> slope(slope_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
+              pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+              pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
 
               auto fine_array =  fdata->getView<3>(axis,d);
               auto coarse_array = cdata->getConstView<3>(axis, d);
@@ -480,7 +474,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                    diff0(i,j,k) = coarse_array(i+1,j,k) - coarse_array(i,j,k);
                    diff1(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j-1,k);
                    diff2(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j,k-1);
-                   //fprintf(stdout,"diffbox diff1[%d,%d,%d]=%0.16f\n",i,j,k,diff1(i,j,k));
                 });
 
                 pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
@@ -510,7 +503,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                    } else {
                       slope2(i,j,k) = 0.0;
                    }
-                   //fprintf(stdout,"slopebox slope1[%d,%d,%d]=%0.16f\n",i,j,k,slope1(i,j,k));
                 });
 
                 pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
@@ -533,35 +525,16 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                                      +slope2(ic0,ic1,ic2)*deltax2;
 
                    fine_array(i,j,k) = fine_tmp;
-                   //fprintf(stdout,"axis0=   %0.16f\n",fine_array(i,j,k));
-                   //fprintf(stdout,"slope0=   %0.16f\n",slope0(ic0,ic1,ic2));
-                   //fprintf(stdout,"slope1=   %0.16f\n",slope1(ic0,ic1,ic2));
-                   //fprintf(stdout,"slope2=   %0.16f\n",slope2(ic0,ic1,ic2));
-                   //fprintf(stdout,"fine_array_axis0[%d,%d,%d] = %0.15f\n",i,j,k,fine_array(i,j,k));
-                   //fprintf(stdout,"coarse_array[%d,%d,%d] = %0.15f\n",ic0,ic1,ic2,coarse_array(ic0,ic1,ic2));
-                   //fprintf(stdout,"slope0 = %0.15f deltax0=%f\n",slope0(ic0,ic1,ic2),deltax0);
-                   //fprintf(stdout,"slope1 = %0.15f deltax1=%f\n",slope1(ic0,ic1,ic2),deltax1);
-                   //fprintf(stdout,"slope2[%d,%d,%d] = %0.15f\n",ic0,ic1,ic2,slope2(ic0,ic1,ic2));
                 });
-                //fprintf(stdout,"\n");
 
               } // done axis == 0
               else if(axis == 1) { //1,2,0
-               // fprintf(stdout,"axis 1 diff box [%d,%d] [%d,%d] [%d,%d]\n",
-               //     diff_box.lower(0),diff_box.upper(0),
-               //     diff_box.lower(1),diff_box.upper(1),
-               //     diff_box.lower(2),diff_box.upper(2));
                 pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k /*slow */) {
                    diff1(i,j,k) = coarse_array(i+1,j,k) - coarse_array(i,j,k);
                    diff2(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j-1,k);
                    diff0(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j,k-1);
-                   //fprintf(stdout,"axis 1 [%d,%d,%d] diff0=%f diff1=%f diff2=%f\n",i,j,k,diff0(i,j,k),diff1(i,j,k),diff2(i,j,k));
                 });
 
-                //fprintf(stdout,"axis 1 slope box [%d,%d] [%d,%d] [%d,%d]\n",
-                //    slope_box.lower(0),slope_box.upper(0),
-                //    slope_box.lower(1),slope_box.upper(1),
-                //    slope_box.lower(2),slope_box.upper(2));
                 pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
                    const double coef2i = 0.5*(diff0(i,j,k+1)+diff0(i,j,k));
                    const double boundi = 2.0*MIN(fabs(diff0(i,j,k+1)),fabs(diff0(i,j,k)));
@@ -573,7 +546,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                    }
 
                    const double coef2j = 0.5*(diff1(i-1,j,k)+diff1(i,j,k));
-                   //fprintf(stderr,"coef2j calc: 0.5 * [%d,%d,%d] , %f , %f\n",i,j,k,diff1(i-1,j,k),diff1(i,j,k));
                    const double boundj = 2.0*MIN(fabs(diff1(i-1,j,k)),fabs(diff1(i,j,k)));
 
                    if (diff1(i,j,k)*diff1(i-1,j,k) > 0.0 && cdx1 != 0) {
@@ -590,16 +562,10 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                    } else {
                       slope2(i,j,k) = 0.0;
                    }
-
-                   //fprintf(stdout,"axis 1 slope0[%d,%d,%d]=%0.16f \n",i,j,k,slope0(i,j,k));
                 });
 
-               //fprintf(stdout,"axis 1 fine box plus [%d,%d] [%d,%d] [%d,%d]\n",
-               //     fine_box_plus.lower(0),fine_box_plus.upper(0),
-               //     fine_box_plus.lower(1),fine_box_plus.upper(1),
-               //     fine_box_plus.lower(2),fine_box_plus.upper(2));
                 pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
-                   // keep ic0 - ic2 consistent with i,j,k; just change ir0-ir2;  redo 2dim case  
+                   // keep ic0 - ic2 consistent with i,j,k; just change ir0-ir2;  TODO redo 2dim case  
                    const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
                    const int ic1 = (j < 0) ? (j+1)/r1-1 : j/r1;
                    const int ic2 = (k < 0) ? (k+1)/r2-1 : k/r2;
@@ -611,9 +577,7 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
 
                    double deltax0, deltax1, deltax2;
                    deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
-                   //fprintf(stdout,"ir1=%d j=%d ic1=%d r1=%d\n",ir1,j,ic1,r1);
                    deltax1 = static_cast<double>(ir1)*fdx1;
-                   //fprintf(stdout,"deltax1=%f\n",deltax1);
                    deltax2 = (static_cast<double>(ir2)+0.5)*fdx2-cdx2*0.5;
 
                    double fine_tmp = coarse_array(ic0,ic1,ic2) 
@@ -622,34 +586,18 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                                      +slope2(ic0,ic1,ic2)*deltax2;
 
                    fine_array(i,j,k) = fine_tmp;
-                   //fprintf(stdout,"axis1=   %0.16f\n",fine_array(i,j,k));
-                   //fprintf(stdout,"fine_array_axis1[%d,%d,%d] = %0.15f\n",i,j,k,fine_array(i,j,k));
-                   //fprintf(stdout,"coarse_array[%d,%d,%d] = %0.15f\n",ic0,ic1,ic2,coarse_array(ic0,ic1,ic2));
-                   //fprintf(stdout,"slope0 = %0.15f deltax0=%f\n",slope0(ic0,ic1,ic2),deltax0);
-                   //fprintf(stdout,"slope1 = %0.15f deltax1=%f\n",slope1(ic0,ic1,ic2),deltax1);
-                   //fprintf(stdout,"slope2[%d,%d,%d] = %0.15f deltax2=%f\n",ic0,ic1,ic2,slope2(ic0,ic1,ic2),deltax2);
                 });
-                //fprintf(stdout,"\n");
 
               } else if(axis == 2) { // 2,0,1
-                
-               // fprintf(stdout,"axis 1 diff box [%d,%d] [%d,%d] [%d,%d]\n",
-               //     diff_box.lower(0),diff_box.upper(0),
-               //     diff_box.lower(1),diff_box.upper(1),
-               //     diff_box.lower(2),diff_box.upper(2));
+
                 pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k /*slow */) {
                    diff2(i,j,k) = coarse_array(i+1,j,k) - coarse_array(i,j,k);
                    diff0(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j-1,k);
                    diff1(i,j,k) = coarse_array(i,j,k) - coarse_array(i,j,k-1);
-                   //fprintf(stdout,"axis 1 [%d,%d,%d] diff0=%f diff1=%f diff2=%f\n",i,j,k,diff0(i,j,k),diff1(i,j,k),diff2(i,j,k));
                 });
 
-                //fprintf(stdout,"axis 1 slope box [%d,%d] [%d,%d] [%d,%d]\n",
-                //    slope_box.lower(0),slope_box.upper(0),
-                //    slope_box.lower(1),slope_box.upper(1),
-                //    slope_box.lower(2),slope_box.upper(2));
                 pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
-                   // we should rename coef2 and bound to reflect index, do this for all of the axes 
+                   // TODO we should rename coef2 and bound to reflect index, do this for all of the axes 
                    const double coef2i = 0.5*(diff0(i,j+1,k)+diff0(i,j,k));
                    const double boundi = 2.0*MIN(fabs(diff0(i,j+1,k)),fabs(diff0(i,j,k)));
 
@@ -660,7 +608,6 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                    }
 
                    const double coef2j = 0.5*(diff1(i,j,k+1)+diff1(i,j,k));
-                   //fprintf(stderr,"coef2j calc: 0.5 * [%d,%d,%d] , %f , %f\n",i,j,k,diff1(i-1,j,k),diff1(i,j,k));
                    const double boundj = 2.0*MIN(fabs(diff1(i,j,k+1)),fabs(diff1(i,j,k)));
 
                    if (diff1(i,j,k)*diff1(i,j,k+1) > 0.0 && cdx1 != 0) {
@@ -678,13 +625,8 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                       slope2(i,j,k) = 0.0;
                    }
 
-                   //fprintf(stdout,"axis 2 slope0[%d,%d,%d]=%0.16f \n",i,j,k,slope0(i,j,k));
                 });
 
-               //fprintf(stdout,"axis 1 fine box plus [%d,%d] [%d,%d] [%d,%d]\n",
-               //     fine_box_plus.lower(0),fine_box_plus.upper(0),
-               //     fine_box_plus.lower(1),fine_box_plus.upper(1),
-               //     fine_box_plus.lower(2),fine_box_plus.upper(2));
                 pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
                    // keep ic0 - ic2 consistent with i,j,k; just change ir0-ir2;  redo 2dim case  
                    const int ic0 = (i < 0) ? (i+1)/r0-1 : i/r0;
@@ -698,9 +640,7 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
 
                    double deltax0, deltax1, deltax2;
                    deltax0 = (static_cast<double>(ir0)+0.5)*fdx0-cdx0*0.5;
-                   //fprintf(stdout,"ir1=%d j=%d ic1=%d r1=%d\n",ir1,j,ic1,r1);
                    deltax1 = (static_cast<double>(ir1)+0.5)*fdx1-cdx1*0.5;
-                   //fprintf(stdout,"deltax1=%f\n",deltax1);
                    deltax2 = static_cast<double>(ir2)*fdx2;
 
                    double fine_tmp = coarse_array(ic0,ic1,ic2) 
@@ -709,14 +649,7 @@ CartesianFaceDoubleConservativeLinearRefine::refine(
                                      +slope2(ic0,ic1,ic2)*deltax2;
 
                    fine_array(i,j,k) = fine_tmp;
-                   //fprintf(stdout,"axis2=   %0.16f\n",fine_array(i,j,k));
-                   //fprintf(stdout,"fine_array_axis2[%d,%d,%d] = %0.15f\n",i,j,k,fine_array(i,j,k));
-                   //fprintf(stdout,"coarse_array[%d,%d,%d] = %0.15f\n",ic0,ic1,ic2,coarse_array(ic0,ic1,ic2));
-                   //fprintf(stdout,"slope0 = %0.15f deltax0=%f\n",slope0(ic0,ic1,ic2),deltax0);
-                   //fprintf(stdout,"slope1 = %0.15f deltax1=%f\n",slope1(ic0,ic1,ic2),deltax1);
-                   //fprintf(stdout,"slope2[%d,%d,%d] = %0.15f deltax2=%f\n",ic0,ic1,ic2,slope2(ic0,ic1,ic2),deltax2);
                 });
-                //fprintf(stdout,"\n");
 
               }
             
