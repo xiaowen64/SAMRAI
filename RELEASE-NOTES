@@ -4,9 +4,14 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.14.0
+                     Release Notes for SAMRAI v3.14.1
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
+
+Version 3.14.1 is a bug-fix patch release.  This file preserves the content
+from the release notes for version 3.14.0, with notes specific to 3.14.1
+added and marked in the "Significant bug fixes" section.  Version 3.14.1
+does not change any of the C++ API. 
 
 *****************************************************************************
 
@@ -30,6 +35,14 @@ https://github.com/LLNL/SAMRAI
                 Significant bug fixes
 ----------------------------------------------------------------------------
 
+1) (v3.14.1) The CMake build system is fixed so that the -DCONDUIT_DIR flag
+works correctly.  -DCONDUIT_DIR=[path] is now sufficient to enable building
+with Conduit, assuming that [path] is the location of a valid Conduit
+installation.
+
+2) (v3.14.1) Internal fixes have been implemented to avoid a duplicate
+definition of a #define macro that was defined by SAMRAI's build system but
+also is common in users' application codes.
 
 *****************************************************************************
 
