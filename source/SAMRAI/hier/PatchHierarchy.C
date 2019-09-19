@@ -1121,7 +1121,7 @@ PatchHierarchy::putToRestart(
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void
 PatchHierarchy::makeBlueprintDatabase(
    const std::shared_ptr<tbox::Database>& blueprint_db,
@@ -1186,7 +1186,8 @@ PatchHierarchy::makeBlueprintDatabase(
       makeNestingSets(blueprint_db, "mesh");
    }
 
-   makeAdjacencySets(blueprint_db, "mesh");
+   // AMR Adjacency sets not supported in current Conduit release
+   //makeAdjacencySets(blueprint_db, "mesh");
 
    bp_utils.putTopologyAndCoordinatesToDatabase(blueprint_db, *this, "mesh");
 }

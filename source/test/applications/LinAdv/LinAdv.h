@@ -56,7 +56,7 @@
 using namespace SAMRAI;
 
 class LinAdv:
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    public hier::BlueprintUtilsStrategy,
 #endif
    public tbox::Serializable,
@@ -365,7 +365,7 @@ public:
       std::shared_ptr<tbox::Database>& coords_db,
       const hier::Patch& patch);
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    void addFields(
       conduit::Node& node,
       int domain_id,
