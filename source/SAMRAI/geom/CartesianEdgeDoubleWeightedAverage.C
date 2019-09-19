@@ -160,6 +160,61 @@ CartesianEdgeDoubleWeightedAverage::coarsen(
             fdata->getPointer(0, d),
             cdata->getPointer(0, d));
       } else if ((dim == tbox::Dimension(2))) {
+#if defined(HAVE_RAJA)
+         const double* fdx = fgeom->getDx();
+         const double* cdx = cgeom->getDx();
+
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
+
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
+
+         SAMRAI::hier::Box coarse_box_0 = coarse_box;
+         coarse_box_0.growUpper(1,1);
+
+         auto fine_array =  fdata->getConstView<2>(0,d);
+         auto coarse_array = cdata->getView<2>(0, d);
+
+         double lengthf = fdx0;
+         double lengthc = cdx0;
+
+         pdat::parallel_for_all_x(coarse_box_0, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+            double spv = 0.0;
+            int kf = k*r1;
+            for (int rx = 0; rx < r0; rx++) {
+               int jf = j*r0+rx;
+               spv += fine_array(jf,kf)*lengthf;
+               //fprintf(stdout,"fine_array[%d,%d]=%0.15E\n",jf,kf,fine_array(jf,kf));
+            }
+
+            coarse_array(j,k) = spv/lengthc;
+            //fprintf(stdout,"coarse_array[%d,%d]=%0.15E\n",j,k,coarse_array(j,k));
+         });
+
+         SAMRAI::hier::Box coarse_box_1 = coarse_box;
+         coarse_box_1.growUpper(0,1);
+         auto fine_array_1 =  fdata->getConstView<2>(1,d);
+         auto coarse_array_1 = cdata->getView<2>(1, d);
+
+         lengthf = fdx1;
+         lengthc = cdx1;
+
+         pdat::parallel_for_all_x(coarse_box_1, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+            double spv = 0.0;
+            int jf = j*r0; // careful here, ratios are also switched
+            for (int ry = 0; ry < r1; ry++) {
+               int kf = k*r1+ry;
+               spv += fine_array_1(jf,kf)*lengthf;
+               //fprintf(stdout,"fine_array_t[%d,%d]=%0.15E\n",jf,kf,fine_array_t(jf,kf));
+            }
+
+            coarse_array_1(j,k) = spv/lengthc;
+            //fprintf(stdout,"coarse_array_t[%d,%d]=%0.15f\n",j,k,coarse_array_t(j,k));
+         });
+#else // Fortran Dim 2
          SAMRAI_F77_FUNC(cartwgtavgedgedoub2d0, CARTWGTAVGEDGEDOUB2D0) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
@@ -178,7 +233,92 @@ CartesianEdgeDoubleWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(1, d),
             cdata->getPointer(1, d));
+#endif            
       } else if ((dim == tbox::Dimension(3))) {
+#if defined(HAVE_RAJA)
+         const double* fdx = fgeom->getDx();
+         const double* cdx = cgeom->getDx();
+
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double fdx2 = fdx[2];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
+         const double cdx2 = cdx[2];
+
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
+         const int r2 = ratio[2];
+
+         SAMRAI::hier::Box coarse_box_0 = coarse_box;
+         coarse_box_0.growUpper(1,1);
+         coarse_box_0.growUpper(2,1);
+
+         auto fine_array =  fdata->getConstView<3>(0,d);
+         auto coarse_array = cdata->getView<3>(0, d);
+
+         double lengthf = fdx0;
+         double lengthc = cdx0;
+
+         pdat::parallel_for_all_x(coarse_box_0, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+            double spv = 0.0;
+            int kk = k*r2;
+            int jj = j*r1;
+            for(int rx = 0; rx < r0; rx++) {
+               int ii = i*r0+rx;
+               spv += fine_array(ii,jj,kk)*lengthf;
+            }
+
+            coarse_array(i,j,k) = spv/lengthc;
+            //fprintf(stdout,"coarse_array[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array(i,j,k));
+         });
+
+
+         SAMRAI::hier::Box coarse_box_1 = coarse_box;
+         coarse_box_1.growUpper(0,1);
+         coarse_box_1.growUpper(2,1);
+         auto fine_array_1 =  fdata->getConstView<3>(1,d);
+         auto coarse_array_1 = cdata->getView<3>(1, d);
+
+         lengthf = fdx1;
+         lengthc = cdx1;
+         
+         pdat::parallel_for_all_x(coarse_box_1, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+            double spv = 0.0;
+            int ii = i*r0;
+            int kk = k*r2;
+            for(int ry = 0; ry < r1; ry++) {
+               int jj = j*r1+ry;
+               spv += fine_array_1(ii,jj,kk)*lengthf;
+            }
+
+            coarse_array_1(i,j,k) = spv/lengthc;
+            //fprintf(stdout,"coarse_array_t1[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array_t1(i,j,k));
+         });
+
+         SAMRAI::hier::Box coarse_box_2 = coarse_box;
+         coarse_box_2.growUpper(0,1);
+         coarse_box_2.growUpper(1,1);
+         auto fine_array_2 =  fdata->getConstView<3>(2,d);
+         auto coarse_array_2 = cdata->getView<3>(2, d);
+
+         lengthf = fdx2;
+         lengthc = cdx2;
+
+         pdat::parallel_for_all_x(coarse_box_2, [=] SAMRAI_HOST_DEVICE (int i, int j, int k) {
+            double spv = 0.0;
+            int jj = j*r1;
+            int ii = i*r0;
+            for (int rz = 0; rz < r2; rz++) {
+               int kk = k*r2+rz;
+               spv += fine_array_2(ii,jj,kk)*lengthf;
+            }
+
+            coarse_array_2(i,j,k) = spv/lengthc;
+            //fprintf(stdout,"coarse_array_t2[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array_t2(i,j,k));
+         });
+
+#else // Fortran dim 3         
          SAMRAI_F77_FUNC(cartwgtavgedgedoub3d0, CARTWGTAVGEDGEDOUB3D0) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
@@ -215,6 +355,7 @@ CartesianEdgeDoubleWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(2, d),
             cdata->getPointer(2, d));
+#endif
       } else {
          TBOX_ERROR("CartesianEdgeDoubleWeightedAverage error...\n"
             << "dim > 3 not supported." << std::endl);
