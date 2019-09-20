@@ -715,7 +715,7 @@ bool CellDataTest::verifyCompositeBoundaryData(
 
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shared_ptr<hier::Patch>& patch)
 {
 

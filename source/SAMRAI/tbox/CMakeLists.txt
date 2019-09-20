@@ -119,7 +119,7 @@ if (HAVE_SILO)
     list(APPEND tbox_depends_on SILO)
 endif ()
 
-if (HAVE_CONDUIT)
+if (SAMRAI_HAVE_CONDUIT)
     list(APPEND tbox_depends_on CONDUIT)
 endif ()
 

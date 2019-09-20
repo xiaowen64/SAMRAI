@@ -12,7 +12,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "SAMRAI/hier/BlueprintUtilsStrategy.h"
 #include "SAMRAI/tbox/Database.h"
 
@@ -113,6 +113,6 @@ private:
 }
 }
 
-#endif // HAVE_CONDUIT
+#endif // SAMRAI_HAVE_CONDUIT
 
 #endif  // included_hier_BlueprintUtils

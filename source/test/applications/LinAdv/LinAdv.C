@@ -2570,7 +2570,7 @@ void LinAdv::getFromInput(
 
    } // refine db entry exists
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    d_write_coord_values =
       input_db->getBoolWithDefault("write_coord_values", false);
 #endif
@@ -3228,7 +3228,7 @@ LinAdv::putCoordinatesToDatabase(
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void LinAdv::addFields(
    conduit::Node& node, int domain_id,
    const std::shared_ptr<hier::Patch>& patch)
