@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
+#include "SAMRAI/pdat/OuterfaceGeometry.h"
 #include "SAMRAI/pdat/FaceOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
@@ -50,14 +51,42 @@ OuterfaceData<TYPE>::OuterfaceData(
       const hier::Box& ghosts = getGhostBox();
       const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
       hier::Box outerfacebox = facebox;
+      //fprintf(stdout,"faceboxNoUmpire[%d,%d][%d,%d]\n",facebox.lower(0),facebox.upper(0),facebox.lower(1),facebox.upper(1));
       outerfacebox.setUpper(0, facebox.lower(0));
+      //fprintf(stdout,"outerfaceboxNoUmpireSide0[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
       d_data[d][0].reset(new ArrayData<TYPE>(outerfacebox, depth));
       outerfacebox.setLower(0, facebox.upper(0));
       outerfacebox.setUpper(0, facebox.upper(0));
+      //fprintf(stdout,"outerfaceboxNoUmpireSide1[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
       d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth));
    }
 }
 
+template<class TYPE>
+OuterfaceData<TYPE>::OuterfaceData(
+   const hier::Box& box,
+   int depth,
+   umpire::Allocator allocator):
+   hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
+   d_depth(depth)
+{
+
+   TBOX_ASSERT(depth > 0);
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      const hier::Box& ghosts = getGhostBox();
+      const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
+      hier::Box outerfacebox = facebox;
+      //fprintf(stdout,"faceboxUmpire[%d,%d][%d,%d]\n",facebox.lower(0),facebox.upper(0),facebox.lower(1),facebox.upper(1));
+      outerfacebox.setUpper(0, facebox.lower(0));
+      //fprintf(stdout,"outerfaceboxUmpireSide0[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
+      d_data[d][0].reset(new ArrayData<TYPE>(outerfacebox, depth,allocator));
+      outerfacebox.setLower(0, facebox.upper(0));
+      outerfacebox.setUpper(0, facebox.upper(0));
+      //fprintf(stdout,"outerfaceboxUmpireSide1[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
+      d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth,allocator));
+   }
+}
 template<class TYPE>
 OuterfaceData<TYPE>::~OuterfaceData()
 {
@@ -97,6 +126,63 @@ OuterfaceData<TYPE>::getPointer(
 
    return d_data[face_normal][side]->getPointer(d);
 }
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename OuterfaceData<TYPE>::template View<DIM> OuterfaceData<TYPE>::getView(
+    int face_normal,
+    int side,
+    int depth)
+{
+  const hier::Box& box = getGhostBox();
+  hier::Box outerfacebox = box;
+  //fprintf(stderr,"getView_outerface non-const: init_box[%d,%d][%d,%d]\n",box.lower(0),box.upper(0),box.lower(1),box.upper(1));
+  if(side == 0) {
+    outerfacebox.setUpper(0, box.lower(0));
+  }
+  else if (side == 1) {
+    if(face_normal == 0) {
+      outerfacebox.setLower(0, box.upper(0));
+      outerfacebox.setUpper(0, box.upper(0));
+    }
+    else if(face_normal == 1) {
+      outerfacebox.setLower(1, box.upper(1));
+      outerfacebox.setUpper(1, box.upper(1));
+    }
+  }
+  //fprintf(stderr,"getView_outerface non-const: box[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
+  return OuterfaceData<TYPE>::View<DIM>(getPointer(face_normal,side, depth), outerfacebox);
+}
+
+template <class TYPE>
+template <int DIM>
+typename OuterfaceData<TYPE>::template ConstView<DIM> OuterfaceData<TYPE>::getConstView(
+    int face_normal,
+    int side,
+    int depth) const
+{
+  const hier::Box& box = getGhostBox();
+  hier::Box outerfacebox = box;
+  //fprintf(stderr,"getView_outerface const: init_box[%d,%d][%d,%d]\n",box.lower(0),box.upper(0),box.lower(1),box.upper(1));
+  if(side == 0) {
+    outerfacebox.setUpper(0, box.lower(0));
+  }
+  else if (side == 1) {
+    if(face_normal == 0) {
+      outerfacebox.setLower(0, box.upper(0));
+      outerfacebox.setUpper(0, box.upper(0));
+    }
+    else if(face_normal == 1) {
+      outerfacebox.setLower(1, box.upper(1));
+      outerfacebox.setUpper(1, box.upper(1));
+    }
+  }
+  //fprintf(stderr,"getView_outerface const: box[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
+  return OuterfaceData<TYPE>::ConstView<DIM>(getPointer(face_normal, side, depth),
+                                        outerfacebox);
+}
+#endif
 
 template<class TYPE>
 ArrayData<TYPE>&
@@ -740,6 +826,23 @@ OuterfaceData<TYPE>::putToRestart(
       d_data[i][1]->putToRestart(array_database);
    }
 }
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OuterfaceData<TYPE>::template View<DIM> get_view(OuterfaceData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename OuterfaceData<TYPE>::template ConstView<DIM> get_const_view(
+    const OuterfaceData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }
