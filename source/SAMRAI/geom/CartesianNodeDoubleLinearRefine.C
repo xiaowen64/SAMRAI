@@ -10,8 +10,8 @@
  ************************************************************************/
 #include "SAMRAI/geom/CartesianNodeDoubleLinearRefine.h"
 
-#include <float.h>
-#include <math.h>
+#include <cfloat>
+#include <cmath>
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -212,7 +212,6 @@ CartesianNodeDoubleLinearRefine::refine(
             cdata->getPointer(d),
             fdata->getPointer(d));
 
-        //exit(-1);
 #endif // test for RAJA
 
       } else if ((dim == tbox::Dimension(3))) {
@@ -267,7 +266,6 @@ CartesianNodeDoubleLinearRefine::refine(
             fgeom->getDx(),
             cdata->getPointer(d),
             fdata->getPointer(d));
-         //exit(-1);
 #endif // test for RAJA
 
       } else {
