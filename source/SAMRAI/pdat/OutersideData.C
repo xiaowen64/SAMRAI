@@ -98,6 +98,121 @@ OutersideData<TYPE>::getPointer(
    return d_data[side_normal][side]->getPointer(depth);
 }
 
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename OutersideData<TYPE>::template View<DIM> OutersideData<TYPE>::getView(
+    int side_normal,
+    int side,
+    int depth)
+{
+  const hier::Box& box = getGhostBox();
+  hier::Box outersidebox = box;
+  // Note come back to this as we may not logic for 2 vs 3 dim
+  if(DIM < 3) { // we can get away with not transposing since the slices are 1d
+     if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side==1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+     } else if(side_normal == 1) {
+       if(side == 0 ) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }
+     } // else side_normal == 1
+  } else if(DIM == 3) {
+
+    if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side == 1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+    }
+    else if(side_normal == 1) {
+       if(side == 0) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }   
+    } else if(side_normal == 2) {
+       if(side == 0) {
+          outersidebox.setUpper(2, box.lower(2));
+       } else if (side == 1) {
+          outersidebox.setLower(2, box.upper(2));
+          outersidebox.setUpper(2, box.upper(2));
+       }
+    }
+    
+  } // if DIM == 3
+  return OutersideData<TYPE>::View<DIM>(getPointer(side_normal,side, depth), outersidebox);
+}
+
+template <class TYPE>
+template <int DIM>
+typename OutersideData<TYPE>::template ConstView<DIM> OutersideData<TYPE>::getConstView(
+    int side_normal,
+    int side,
+    int depth) const
+{
+  const hier::Box& box = getGhostBox();
+  hier::Box outersidebox = box;
+  // Note come back to this as we may not logic for 2 vs 3 dim
+  if(DIM < 3) { // we can get away with not transposing since the slices are 1d
+     if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side==1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+     } else if(side_normal == 1) {
+       if(side == 0 ) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }
+     } // else side_normal == 1
+  } else if(DIM == 3) {
+
+    if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side == 1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+    } else if(side_normal == 1) {
+       if(side == 0) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }   
+    } else if(side_normal == 2) {
+       if(side == 0) {
+          outersidebox.setUpper(2, box.lower(2));
+       } else if (side == 1) {
+          outersidebox.setLower(2, box.upper(2));
+          outersidebox.setUpper(2, box.upper(2));
+       }
+    }
+  } // if DIM == 3
+  return OutersideData<TYPE>::ConstView<DIM>(getPointer(side_normal, side, depth),
+                                        outersidebox);
+}
+#endif
+
+
 template<class TYPE>
 ArrayData<TYPE>&
 OutersideData<TYPE>::getArrayData(
@@ -693,6 +808,23 @@ OutersideData<TYPE>::putToRestart(
       d_data[i][1]->putToRestart(array_database);
    }
 }
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template View<DIM> get_view(OutersideData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template ConstView<DIM> get_const_view(
+    const OutersideData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

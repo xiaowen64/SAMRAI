@@ -51,13 +51,10 @@ OuterfaceData<TYPE>::OuterfaceData(
       const hier::Box& ghosts = getGhostBox();
       const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
       hier::Box outerfacebox = facebox;
-      //fprintf(stdout,"faceboxNoUmpire[%d,%d][%d,%d]\n",facebox.lower(0),facebox.upper(0),facebox.lower(1),facebox.upper(1));
       outerfacebox.setUpper(0, facebox.lower(0));
-      //fprintf(stdout,"outerfaceboxNoUmpireSide0[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
       d_data[d][0].reset(new ArrayData<TYPE>(outerfacebox, depth));
       outerfacebox.setLower(0, facebox.upper(0));
       outerfacebox.setUpper(0, facebox.upper(0));
-      //fprintf(stdout,"outerfaceboxNoUmpireSide1[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
       d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth));
    }
 }
@@ -77,13 +74,10 @@ OuterfaceData<TYPE>::OuterfaceData(
       const hier::Box& ghosts = getGhostBox();
       const hier::Box facebox = FaceGeometry::toFaceBox(ghosts, d);
       hier::Box outerfacebox = facebox;
-      //fprintf(stdout,"faceboxUmpire[%d,%d][%d,%d]\n",facebox.lower(0),facebox.upper(0),facebox.lower(1),facebox.upper(1));
       outerfacebox.setUpper(0, facebox.lower(0));
-      //fprintf(stdout,"outerfaceboxUmpireSide0[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
       d_data[d][0].reset(new ArrayData<TYPE>(outerfacebox, depth,allocator));
       outerfacebox.setLower(0, facebox.upper(0));
       outerfacebox.setUpper(0, facebox.upper(0));
-      //fprintf(stdout,"outerfaceboxUmpireSide1[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
       d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth,allocator));
    }
 }

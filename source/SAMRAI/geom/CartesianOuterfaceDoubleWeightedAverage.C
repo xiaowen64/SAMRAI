@@ -141,8 +141,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
    const hier::Index &cilo = cdata->getGhostBox().lower();
    const hier::Index &cihi = cdata->getGhostBox().upper();
 
-   //fprintf(stdout,"fdata[%d,%d][%d,%d]\n",filo[0],fihi[0],filo[1],fihi[1]);
-   //fprintf(stdout,"cdata[%d,%d][%d,%d]\n",cilo[0],cihi[0],cilo[1],cihi[1]);
 
    const std::shared_ptr<CartesianPatchGeometry> fgeom(
        SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
@@ -192,7 +190,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             SAMRAI::hier::Box coarse_box_fn0 = coarse_box;
             SAMRAI::hier::Box coarse_box_fn1 = coarse_box;
 
-            //fprintf(stdout,"coarse_box[%d,%d][%d,%d]\n",coarse_box.lower(0),coarse_box.upper(0),coarse_box.lower(1),coarse_box.upper(1));
             if (side == 0) {
                coarse_box_fn0.setLower(0, coarse_box.lower(0));
                coarse_box_fn0.setUpper(0, coarse_box.lower(0));
@@ -208,7 +205,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
                jf0bounds = fihi(0);
                kf1bounds = fihi(1);
             }
-            //fprintf(stdout,"coarse_box_fn0[%d,%d][%d,%d]\n",coarse_box_fn0.lower(0),coarse_box_fn0.upper(0),coarse_box_fn0.lower(1),coarse_box_fn0.upper(1));
 
             auto fine_array_0 = fdata->getConstView<2>(0, side, d);
             auto coarse_array_0 = cdata->getView<2>(0, side, d);
@@ -223,11 +219,9 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
                for (int ry = 0; ry < r1; ry++) {
                   int kf = k * r1 + ry;
                   spv += fine_array_0(jf, kf) * lengthf;
-                  //fprintf(stdout,"fine_array_0[%d,%d]=%0.16E @%p\n",jf,kf,fine_array_0(jf,kf),&fine_array_0(jf,kf));
                }
 
                coarse_array_0(j, k) = spv / lengthc;
-               //fprintf(stdout,"coarse_array_0[%d,%d]=%0.16E @%p\n",j,k,coarse_array_0(j,k),&coarse_array_0(j,k));
             });
 
             auto fine_array_1 = fdata->getConstView<2>(1, side, d);
@@ -236,17 +230,14 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             lengthf = fdx0;
             lengthc = cdx0;
 
-            //fprintf(stdout,"coarse_box_fn1[%d,%d][%d,%d]\n",coarse_box_fn1.lower(0),coarse_box_fn1.upper(0),coarse_box_fn1.lower(1),coarse_box_fn1.upper(1));
             pdat::parallel_for_all_x(coarse_box_fn1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int kf = kf1bounds;
                for (int rx = 0; rx < r0; rx++) {
                   int jf = j * r0 + rx;
                   spv += fine_array_1(jf, kf) * lengthf;
-                  //fprintf(stdout,"fine_array_1[%d,%d]=%0.16E @%p\n",jf,kf,fine_array_1(jf,kf),&fine_array_1(jf,kf));
                }
                coarse_array_1(j, k) = spv / lengthc;
-               //fprintf(stdout,"coarse_array_1[%d,%d]=%0.16E @%p @%p @%p\n",j,k,coarse_array_1(j,k),&coarse_array_1(j,k),&coarse_array_1(j+1,k),&coarse_array_1(j-1,k));
             });
 
 #else  // Fortran Dim 2
@@ -276,8 +267,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
          } else if ((dim == tbox::Dimension(3))) {
 #if defined(HAVE_RAJA)
 
-         //fprintf(stdout,"fdata[%d,%d][%d,%d][%d,%d]\n",filo[0],fihi[0],filo[1],fihi[1],filo[2],fihi[2]);
-         //fprintf(stdout,"cdata[%d,%d][%d,%d][%d,%d]\n",cilo[0],cihi[0],cilo[1],cihi[1],cilo[2],cihi[2]);
          const double *fdx = fgeom->getDx();
          const double *cdx = cgeom->getDx();
 
@@ -300,7 +289,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
          SAMRAI::hier::Box coarse_box_fn1 = coarse_box;
          SAMRAI::hier::Box coarse_box_fn2 = coarse_box;
 
-         //fprintf(stdout,"coarse_box[%d,%d][%d,%d][%d,%d]\n",coarse_box.lower(0),coarse_box.upper(0),coarse_box.lower(1),coarse_box.upper(1),coarse_box.lower(2),coarse_box.upper(2));
          if (side == 0) {
             coarse_box_fn0.setUpper(0, coarse_box.lower(0));
             if0bounds = filo(0);  // for face-normal 0
@@ -309,7 +297,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             coarse_box_fn0.setUpper(0, coarse_box.upper(0));
             if0bounds = fihi(0);
          }
-         //fprintf(stdout,"coarse_box_fn0[%d,%d][%d,%d]\n",coarse_box_fn0.lower(0),coarse_box_fn0.upper(0),coarse_box_fn0.lower(1),coarse_box_fn0.upper(1));
 
          auto fine_array_0 = fdata->getConstView<3>(0, side, d);
          auto coarse_array_0 = cdata->getView<3>(0, side, d);
@@ -329,7 +316,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             }
 
             coarse_array_0(i, j, k) = spv / areac;
-            //if (side==1) fprintf(stdout,"coarse_array_0[%d,%d,%d]=%0.16E @%p\n",i,j,k,coarse_array_0(i,j,k),&coarse_array_0(i,j,k));
          });
 
 
@@ -349,8 +335,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
            jf1bounds = fihi(1);
          }
 
-//         fprintf(stdout,"coarse_box_fn1[%d,%d][%d,%d][%d,%d]\n",coarse_box_fn1.lower(0),coarse_box_fn1.upper(0),coarse_box_fn1.lower(1),coarse_box_fn1.upper(1),coarse_box_fn1.lower(2),coarse_box_fn1.upper(2));
-
          auto fine_array_1 = fdata->getConstView<3>(1, side, d);
          auto coarse_array_1 = cdata->getView<3>(1, side, d);
 
@@ -365,12 +349,10 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
                   int ii = i * r2 + rz; 
                   int kk = k * r0 + rx;
                   spv += fine_array_1(ii, jj, kk) * areaf;
-//                  fprintf(stdout,"fine_array_1(%d,%d,%d)=%0.16E\n",ii,jj,kk,fine_array_1(ii,jj,kk));
                }
             }
 
             coarse_array_1(i, j, k) = spv / areac;
-            //if(side==1) fprintf(stdout,"coarse_array_1[%d,%d,%d]=%0.16E @%p\n",i,j,k,coarse_array_1(i,j,k),&coarse_array_1(i,j,k));
          });
 
          // no tranposes for face-normal 2
@@ -382,8 +364,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
            coarse_box_fn2.setUpper(2, coarse_box.upper(2));
            kf2bounds = fihi(2);
          }
-
-         //fprintf(stdout,"coarse_box_fn2[%d,%d][%d,%d][%d,%d]\n",coarse_box_fn2.lower(0),coarse_box_fn2.upper(0),coarse_box_fn2.lower(1),coarse_box_fn2.upper(1),coarse_box_fn2.lower(2),coarse_box_fn2.upper(2));
 
          auto fine_array_2 = fdata->getConstView<3>(2, side, d);
          auto coarse_array_2 = cdata->getView<3>(2, side, d);
@@ -399,12 +379,10 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
                   int ii = i * r0 + rx; 
                   int jj = j * r1 + ry;
                   spv += fine_array_2(ii, jj, kk) * areaf;
-//                  fprintf(stdout,"fine_array_1(%d,%d,%d)=%0.16E\n",ii,jj,kk,fine_array_1(ii,jj,kk));
                }
             }
 
             coarse_array_2(i, j, k) = spv / areac;
-            //fprintf(stdout,"coarse_array_2[%d,%d,%d]=%0.16E @%p\n",i,j,k,coarse_array_2(i,j,k),&coarse_array_2(i,j,k));
          });
 
 #else // Fortran Dim 3
@@ -421,7 +399,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cgeom->getDx(),
              fdata->getPointer(0, side, d),
              cdata->getPointer(0, side, d));
-            //if(side==1)exit(-1);
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d1,
                             CARTWGTAVGOUTFACEDOUB3D1)
             (ifirstc(0), ifirstc(1), ifirstc(2),
@@ -435,7 +412,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cgeom->getDx(),
              fdata->getPointer(1, side, d),
              cdata->getPointer(1, side, d));
-            if(side==1)exit(-1);
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d2,
                             CARTWGTAVGOUTFACEDOUB3D2)
             (ifirstc(0), ifirstc(1), ifirstc(2),
@@ -449,7 +425,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cgeom->getDx(),
              fdata->getPointer(2, side, d),
              cdata->getPointer(2, side, d));
-            //exit(-1);
 #endif
          } else {
             TBOX_ERROR("CartesianOuterfaceDoubleWeightedAverage error...\n"
