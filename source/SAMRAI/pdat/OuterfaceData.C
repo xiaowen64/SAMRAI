@@ -137,21 +137,54 @@ typename OuterfaceData<TYPE>::template View<DIM> OuterfaceData<TYPE>::getView(
 {
   const hier::Box& box = getGhostBox();
   hier::Box outerfacebox = box;
-  //fprintf(stderr,"getView_outerface non-const: init_box[%d,%d][%d,%d]\n",box.lower(0),box.upper(0),box.lower(1),box.upper(1));
-  if(side == 0) {
-    outerfacebox.setUpper(0, box.lower(0));
-  }
-  else if (side == 1) {
+  if(DIM < 3) { // we can get away with not transposing since the slices are 1d
+     if(face_normal == 0) {
+       if(side == 0) {
+          outerfacebox.setUpper(0, box.lower(0));
+       } else if (side==1) {
+          outerfacebox.setLower(0, box.upper(0));
+          outerfacebox.setUpper(0, box.upper(0));
+       }
+     } else if(face_normal == 1) {
+       if(side == 0 ) {
+          outerfacebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outerfacebox.setLower(1, box.upper(1));
+          outerfacebox.setUpper(1, box.upper(1));
+       }
+     } // else face_normal == 1
+  } else if(DIM == 3) {
+
     if(face_normal == 0) {
-      outerfacebox.setLower(0, box.upper(0));
-      outerfacebox.setUpper(0, box.upper(0));
+       if(side == 0) {
+          outerfacebox.setUpper(0, box.lower(0));
+       } else if (side == 1) {
+          outerfacebox.setLower(0, box.upper(0));
+          outerfacebox.setUpper(0, box.upper(0));
+       }
     }
     else if(face_normal == 1) {
-      outerfacebox.setLower(1, box.upper(1));
-      outerfacebox.setUpper(1, box.upper(1));
+       outerfacebox.setLower(0, box.lower(2));
+       outerfacebox.setLower(1, box.lower(1));
+       outerfacebox.setLower(2, box.lower(0));
+       outerfacebox.setUpper(0, box.upper(2));
+       outerfacebox.setUpper(1, box.upper(1));
+       outerfacebox.setUpper(2, box.upper(0));
+       if(side == 0) {
+          outerfacebox.setUpper(1, outerfacebox.lower(1));
+       } else if (side == 1) {
+          outerfacebox.setLower(1, outerfacebox.upper(1));
+       }   
+    } else if(face_normal == 2) {
+       if(side == 0) {
+          outerfacebox.setUpper(2, box.lower(2));
+       } else if (side == 1) {
+          outerfacebox.setLower(2, box.upper(2));
+          outerfacebox.setUpper(2, box.upper(2));
+       }
     }
-  }
-  //fprintf(stderr,"getView_outerface non-const: box[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
+    
+  } // if DIM == 3
   return OuterfaceData<TYPE>::View<DIM>(getPointer(face_normal,side, depth), outerfacebox);
 }
 
@@ -164,21 +197,52 @@ typename OuterfaceData<TYPE>::template ConstView<DIM> OuterfaceData<TYPE>::getCo
 {
   const hier::Box& box = getGhostBox();
   hier::Box outerfacebox = box;
-  //fprintf(stderr,"getView_outerface const: init_box[%d,%d][%d,%d]\n",box.lower(0),box.upper(0),box.lower(1),box.upper(1));
-  if(side == 0) {
-    outerfacebox.setUpper(0, box.lower(0));
-  }
-  else if (side == 1) {
+  if(DIM < 3) { // we can get away with not transposing since the slices are 1d
+     if(face_normal == 0) {
+       if(side == 0) {
+          outerfacebox.setUpper(0, box.lower(0));
+       } else if (side==1) {
+          outerfacebox.setLower(0, box.upper(0));
+          outerfacebox.setUpper(0, box.upper(0));
+       }
+     } else if(face_normal == 1) {
+       if(side == 0 ) {
+          outerfacebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outerfacebox.setLower(1, box.upper(1));
+          outerfacebox.setUpper(1, box.upper(1));
+       }
+     } // else face_normal == 1
+  } else if(DIM == 3) {
+
     if(face_normal == 0) {
-      outerfacebox.setLower(0, box.upper(0));
-      outerfacebox.setUpper(0, box.upper(0));
+       if(side == 0) {
+          outerfacebox.setUpper(0, box.lower(0));
+       } else if (side == 1) {
+          outerfacebox.setLower(0, box.upper(0));
+          outerfacebox.setUpper(0, box.upper(0));
+       }
+    } else if(face_normal == 1) {
+       outerfacebox.setLower(0, box.lower(2));
+       outerfacebox.setLower(1, box.lower(1));
+       outerfacebox.setLower(2, box.lower(0));
+       outerfacebox.setUpper(0, box.upper(2));
+       outerfacebox.setUpper(1, box.upper(1));
+       outerfacebox.setUpper(2, box.upper(0));
+       if(side == 0) {
+          outerfacebox.setUpper(1, outerfacebox.lower(1));
+       } else if (side == 1) {
+          outerfacebox.setLower(1, outerfacebox.upper(1));
+       }   
+    } else if(face_normal == 2) {
+       if(side == 0) {
+          outerfacebox.setUpper(2, box.lower(2));
+       } else if (side == 1) {
+          outerfacebox.setLower(2, box.upper(2));
+          outerfacebox.setUpper(2, box.upper(2));
+       }
     }
-    else if(face_normal == 1) {
-      outerfacebox.setLower(1, box.upper(1));
-      outerfacebox.setUpper(1, box.upper(1));
-    }
-  }
-  //fprintf(stderr,"getView_outerface const: box[%d,%d][%d,%d]\n",outerfacebox.lower(0),outerfacebox.upper(0),outerfacebox.lower(1),outerfacebox.upper(1));
+  } // if DIM == 3
   return OuterfaceData<TYPE>::ConstView<DIM>(getPointer(face_normal, side, depth),
                                         outerfacebox);
 }

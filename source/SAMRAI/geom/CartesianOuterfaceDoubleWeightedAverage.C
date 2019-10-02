@@ -196,7 +196,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             if (side == 0) {
                coarse_box_fn0.setLower(0, coarse_box.lower(0));
                coarse_box_fn0.setUpper(0, coarse_box.lower(0));
-
                coarse_box_fn1.setLower(1, coarse_box.lower(1));
                coarse_box_fn1.setUpper(1, coarse_box.lower(1));
                jf0bounds = filo(0);  // for face-normal 0
@@ -230,7 +229,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
                coarse_array_0(j, k) = spv / lengthc;
                //fprintf(stdout,"coarse_array_0[%d,%d]=%0.16E @%p\n",j,k,coarse_array_0(j,k),&coarse_array_0(j,k));
             });
-
 
             auto fine_array_1 = fdata->getConstView<2>(1, side, d);
             auto coarse_array_1 = cdata->getView<2>(1, side, d);
@@ -276,6 +274,140 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cdata->getPointer(1, side, d));
 #endif
          } else if ((dim == tbox::Dimension(3))) {
+#if defined(HAVE_RAJA)
+
+         //fprintf(stdout,"fdata[%d,%d][%d,%d][%d,%d]\n",filo[0],fihi[0],filo[1],fihi[1],filo[2],fihi[2]);
+         //fprintf(stdout,"cdata[%d,%d][%d,%d][%d,%d]\n",cilo[0],cihi[0],cilo[1],cihi[1],cilo[2],cihi[2]);
+         const double *fdx = fgeom->getDx();
+         const double *cdx = cgeom->getDx();
+
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double fdx2 = fdx[2];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
+         const double cdx2 = cdx[2];
+
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
+         const int r2 = ratio[2];
+         int if0bounds;  // setup capture variable representing fine lower/upper bounds depending on side for face-normal 0
+         int jf1bounds;  // and similarly for face-normal 1
+         int kf2bounds;  // and similarly for face-normal 2
+
+         // setup face-normal boxes
+         SAMRAI::hier::Box coarse_box_fn0 = coarse_box;
+         SAMRAI::hier::Box coarse_box_fn1 = coarse_box;
+         SAMRAI::hier::Box coarse_box_fn2 = coarse_box;
+
+         //fprintf(stdout,"coarse_box[%d,%d][%d,%d][%d,%d]\n",coarse_box.lower(0),coarse_box.upper(0),coarse_box.lower(1),coarse_box.upper(1),coarse_box.lower(2),coarse_box.upper(2));
+         if (side == 0) {
+            coarse_box_fn0.setUpper(0, coarse_box.lower(0));
+            if0bounds = filo(0);  // for face-normal 0
+         } else if (side == 1) {
+            coarse_box_fn0.setLower(0, coarse_box.upper(0));
+            coarse_box_fn0.setUpper(0, coarse_box.upper(0));
+            if0bounds = fihi(0);
+         }
+         //fprintf(stdout,"coarse_box_fn0[%d,%d][%d,%d]\n",coarse_box_fn0.lower(0),coarse_box_fn0.upper(0),coarse_box_fn0.lower(1),coarse_box_fn0.upper(1));
+
+         auto fine_array_0 = fdata->getConstView<3>(0, side, d);
+         auto coarse_array_0 = cdata->getView<3>(0, side, d);
+
+         double areaf = fdx1 * fdx2;
+         double areac = cdx1 * cdx2;
+         
+         pdat::parallel_for_all_x(coarse_box_fn0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            double spv = 0.0;
+            int ii = if0bounds;
+            for (int rz = 0; rz < r2; rz++) {
+               for (int ry = 0; ry < r1; ry++) {
+                  int kk = k * r2 + rz;
+                  int jj = j * r1 + ry;
+                  spv += fine_array_0(ii, jj, kk) * areaf;
+               }
+            }
+
+            coarse_array_0(i, j, k) = spv / areac;
+            //if (side==1) fprintf(stdout,"coarse_array_0[%d,%d,%d]=%0.16E @%p\n",i,j,k,coarse_array_0(i,j,k),&coarse_array_0(i,j,k));
+         });
+
+
+         //transpose to 2,1,0 
+         coarse_box_fn1.setLower(0, coarse_box.lower(2));
+         coarse_box_fn1.setLower(1, coarse_box.lower(1));
+         coarse_box_fn1.setLower(2, coarse_box.lower(0));
+         coarse_box_fn1.setUpper(0, coarse_box.upper(2));
+         coarse_box_fn1.setUpper(1, coarse_box.upper(1));
+         coarse_box_fn1.setUpper(2, coarse_box.upper(0));
+
+         if(side == 0) {
+           coarse_box_fn1.setUpper(1, coarse_box_fn1.lower(1));
+           jf1bounds = filo(1);  // for face-normal 1
+         } else if (side == 1) {
+           coarse_box_fn1.setLower(1, coarse_box_fn1.upper(1));
+           jf1bounds = fihi(1);
+         }
+
+//         fprintf(stdout,"coarse_box_fn1[%d,%d][%d,%d][%d,%d]\n",coarse_box_fn1.lower(0),coarse_box_fn1.upper(0),coarse_box_fn1.lower(1),coarse_box_fn1.upper(1),coarse_box_fn1.lower(2),coarse_box_fn1.upper(2));
+
+         auto fine_array_1 = fdata->getConstView<3>(1, side, d);
+         auto coarse_array_1 = cdata->getView<3>(1, side, d);
+
+         areaf = fdx2 * fdx0;
+         areac = cdx2 * cdx0;
+
+         pdat::parallel_for_all_x(coarse_box_fn1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            double spv = 0.0;
+            int jj = jf1bounds;
+            for (int rx = 0; rx < r0; rx++) {
+               for (int rz = 0; rz < r2; rz++) {
+                  int ii = i * r2 + rz; 
+                  int kk = k * r0 + rx;
+                  spv += fine_array_1(ii, jj, kk) * areaf;
+//                  fprintf(stdout,"fine_array_1(%d,%d,%d)=%0.16E\n",ii,jj,kk,fine_array_1(ii,jj,kk));
+               }
+            }
+
+            coarse_array_1(i, j, k) = spv / areac;
+            //if(side==1) fprintf(stdout,"coarse_array_1[%d,%d,%d]=%0.16E @%p\n",i,j,k,coarse_array_1(i,j,k),&coarse_array_1(i,j,k));
+         });
+
+         // no tranposes for face-normal 2
+         if(side == 0) {
+           coarse_box_fn2.setUpper(2, coarse_box.lower(2));
+           kf2bounds = filo(2);  // for face-normal 2
+         } else if (side == 1) {
+           coarse_box_fn2.setLower(2, coarse_box.upper(2));
+           coarse_box_fn2.setUpper(2, coarse_box.upper(2));
+           kf2bounds = fihi(2);
+         }
+
+         //fprintf(stdout,"coarse_box_fn2[%d,%d][%d,%d][%d,%d]\n",coarse_box_fn2.lower(0),coarse_box_fn2.upper(0),coarse_box_fn2.lower(1),coarse_box_fn2.upper(1),coarse_box_fn2.lower(2),coarse_box_fn2.upper(2));
+
+         auto fine_array_2 = fdata->getConstView<3>(2, side, d);
+         auto coarse_array_2 = cdata->getView<3>(2, side, d);
+
+         areaf = fdx0 * fdx1;
+         areac = cdx0 * cdx1;
+
+         pdat::parallel_for_all_x(coarse_box_fn2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            double spv = 0.0;
+            int kk = kf2bounds;
+            for (int ry = 0; ry< r1; ry++) {
+               for (int rx = 0; rx < r0; rx++) {
+                  int ii = i * r0 + rx; 
+                  int jj = j * r1 + ry;
+                  spv += fine_array_2(ii, jj, kk) * areaf;
+//                  fprintf(stdout,"fine_array_1(%d,%d,%d)=%0.16E\n",ii,jj,kk,fine_array_1(ii,jj,kk));
+               }
+            }
+
+            coarse_array_2(i, j, k) = spv / areac;
+            //fprintf(stdout,"coarse_array_2[%d,%d,%d]=%0.16E @%p\n",i,j,k,coarse_array_2(i,j,k),&coarse_array_2(i,j,k));
+         });
+
+#else // Fortran Dim 3
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d0,
                             CARTWGTAVGOUTFACEDOUB3D0)
             (ifirstc(0), ifirstc(1), ifirstc(2),
@@ -289,6 +421,7 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cgeom->getDx(),
              fdata->getPointer(0, side, d),
              cdata->getPointer(0, side, d));
+            //if(side==1)exit(-1);
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d1,
                             CARTWGTAVGOUTFACEDOUB3D1)
             (ifirstc(0), ifirstc(1), ifirstc(2),
@@ -302,6 +435,7 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cgeom->getDx(),
              fdata->getPointer(1, side, d),
              cdata->getPointer(1, side, d));
+            if(side==1)exit(-1);
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d2,
                             CARTWGTAVGOUTFACEDOUB3D2)
             (ifirstc(0), ifirstc(1), ifirstc(2),
@@ -315,6 +449,8 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
              cgeom->getDx(),
              fdata->getPointer(2, side, d),
              cdata->getPointer(2, side, d));
+            //exit(-1);
+#endif
          } else {
             TBOX_ERROR("CartesianOuterfaceDoubleWeightedAverage error...\n"
                        << "dim > 3 not supported." << std::endl);
