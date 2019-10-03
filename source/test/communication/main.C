@@ -525,8 +525,12 @@ int main(
       std::shared_ptr<tbox::ConduitDatabase> conduit_db(
          new tbox::ConduitDatabase("conduit_hierarchy"));
 
+      std::shared_ptr<tbox::ConduitDatabase> flat_db(
+         new tbox::ConduitDatabase("flat_hierarchy"));
+
       hier::BlueprintUtils bp_utils(comm_tester.get());
       patch_hierarchy->makeBlueprintDatabase(conduit_db, bp_utils);
+      patch_hierarchy->makeFlattenedBlueprintDatabase(flat_db, bp_utils);
 
       conduit::Node n;
       conduit_db->toConduitNode(n);

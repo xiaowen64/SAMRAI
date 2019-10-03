@@ -980,6 +980,10 @@ public:
    makeBlueprintDatabase(
       const std::shared_ptr<tbox::Database>& blueprint_db,
       const BlueprintUtils& bp_utils) const; 
+   void
+   makeFlattenedBlueprintDatabase(
+      const std::shared_ptr<tbox::Database>& blueprint_db,
+      const BlueprintUtils& bp_utils) const; 
 #endif
 
    /*!
@@ -995,6 +999,10 @@ public:
    makeNestingSets(
       const std::shared_ptr<tbox::Database>& blueprint_db,
       const std::string& topology_name) const;
+
+   void
+   makeVisibleDomainsBlueprint(
+      const std::shared_ptr<tbox::Database>& blueprint_db) const;
 
    /*!
     * @brief Add Conduit blueprint's "adjsets" data to a database.
@@ -1109,6 +1117,17 @@ private:
     */
    void
    computeRequiredConnectorWidths() const;
+
+   void setAdjacencyNeighbor(
+   std::shared_ptr<tbox::Database>& domain_db,
+   const std::string& topology_name,
+   int nbr_id) const;
+
+void setAdjacencyOverlaps(
+   std::shared_ptr<tbox::Database>& domain_db,
+   int nbr_id,
+   const Box& overlap,
+   const Box& nbr_overlap) const;
 
    /*!
     * @brief Read input data from specified database and initialize

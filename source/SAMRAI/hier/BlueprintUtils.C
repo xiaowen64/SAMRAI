@@ -109,6 +109,21 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
             origin_db->putInteger("k0", patch_box.lower(2));
          }
 
+         std::shared_ptr<tbox::Database> dims_db(
+            elem_db->putDatabase("dims"));
+
+         const tbox::Dimension& dim = patch->getDim();
+         dims_db->putInteger("i", patch->getBox().numberCells(0));
+         if (dim.getValue() > 1) {
+            dims_db->putInteger("j", patch->getBox().numberCells(1));
+         }
+         if (dim.getValue() > 2) {
+            dims_db->putInteger("k", patch->getBox().numberCells(2));
+         }
+
+
+
+
          if (d_strategy) {
             d_strategy->putCoordinatesToDatabase(
                coords_db, *patch);
@@ -118,29 +133,6 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
 
          std::string coords_type = coords_db->getString("type");
          if (coords_type == "explicit") {
-            std::shared_ptr<tbox::Database> elements_db;
-            if (topo_db->isDatabase("elements")) {
-               elements_db = topo_db->getDatabase("elements");
-            } else {
-               elements_db = topo_db->putDatabase("elements");
-            }
-
-            std::shared_ptr<tbox::Database> dims_db;
-            if (elements_db->isDatabase("dims")) {
-               dims_db = elements_db->getDatabase("dims");
-            } else {
-               dims_db = elements_db->putDatabase("dims");
-            }
-
-            const tbox::Dimension& dim = patch->getDim();
-            dims_db->putInteger("i", patch->getBox().numberCells(0));
-            if (dim.getValue() > 1) { 
-               dims_db->putInteger("j", patch->getBox().numberCells(1));
-            }
-            if (dim.getValue() > 2) { 
-               dims_db->putInteger("k", patch->getBox().numberCells(2));
-            }
-
             topo_db->putString("type", "structured");
          } else {
             topo_db->putString("type", coords_type);
