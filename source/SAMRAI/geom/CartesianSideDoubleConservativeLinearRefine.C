@@ -208,6 +208,59 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
                                          directions, alloc_db->getTagAllocator());
 
+#define HOIST_INTERMEDIATES 1
+//#undef HOIST_INTERMEDIATES
+#if defined(HAVE_RAJA)
+
+#if defined(HOIST_INTERMEDIATES)
+
+         SAMRAI::hier::Box fine_box_plus = fine_box;
+         SAMRAI::hier::Box diff_box = coarse_box;
+         SAMRAI::hier::Box slope_box = coarse_box;
+         if(dim == tbox::Dimension(2)) {
+           if ((axis == 0 && directions(0)) || (axis == 1 && directions(1))) {
+             // Iteration space is slightly different between the directions
+             if (axis == 0 && directions(0)) {
+                fine_box_plus.growUpper(0, 1);
+                diff_box.grow(0, 1);
+                diff_box.growUpper(1, 1);
+                slope_box.growUpper(0, 1);
+             } else {
+                fine_box_plus.growUpper(1, 1);
+                diff_box.grow(1, 1);
+                diff_box.growUpper(0, 1);
+                slope_box.growUpper(1, 1);
+             }
+           }
+         } else if(dim == tbox::Dimension(3)) {
+             if ((axis == 0 && directions(0)) || (axis == 1 && directions(1)) || (axis == 2 && directions(2))) {
+                if (axis == 0 && directions(0)) {
+                   fine_box_plus.growUpper(0, 1);
+                   diff_box.grow(0, 1);
+                   diff_box.growUpper(1, 1);
+                   diff_box.growUpper(2, 1);
+                   slope_box.growUpper(0, 1);
+                } else if (axis == 1 && directions(1)) {
+                   fine_box_plus.growUpper(1, 1);
+                   diff_box.grow(1, 1);
+                   diff_box.growUpper(0, 1);
+                   diff_box.growUpper(2, 1);
+                   slope_box.growUpper(1, 1);
+                } else if (axis == 2 && directions(2)) {
+                   fine_box_plus.growUpper(2, 1);
+                   diff_box.grow(2, 1);
+                   diff_box.growUpper(0, 1);
+                   diff_box.growUpper(1, 1);
+                   slope_box.growUpper(2, 1);
+                }
+             } // test for axis and directions
+         } // end if DIM 3
+         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+         pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+         fprintf(stdout,"RAJA Noisting axis=%d directions(0)=%d directions(1)=%d directions(2)=%d\n",axis,directions(0),directions(1),directions(2));
+#endif // Hoisting 
+#endif // HAVE_RAJA
+
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
                if (directions(axis)) {
@@ -227,6 +280,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
             } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
                if ((axis == 0 && directions(0)) || (axis == 1 && directions(1))) {
+#if !defined(HOIST_INTERMEDIATES)
                   SAMRAI::hier::Box fine_box_plus = fine_box;
                   SAMRAI::hier::Box diff_box = coarse_box;
                   SAMRAI::hier::Box slope_box = coarse_box;
@@ -243,17 +297,17 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      slope_box.growUpper(1, 1);
                   }
 
-                  pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
-                  pdat::SideData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
-                                               directions, alloc_db->getTagAllocator());
+                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+#endif
                   auto fine_array = fdata->getView<2>(axis, d);
                   auto coarse_array = cdata->getConstView<2>(axis, d);
 
                   auto diff0 = diff.getView<2>(0);
                   auto diff1 = diff.getView<2>(1);
 
-                  auto slope0 = slope.getView<2>(axis, 0);
-                  auto slope1 = slope.getView<2>(axis, 1);
+                  auto slope0 = slope.getView<2>(0);
+                  auto slope1 = slope.getView<2>(1);
 
                   const double *fdx = fgeom->getDx();
                   const double *cdx = cgeom->getDx();
@@ -380,6 +434,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
 #if defined(HAVE_RAJA)
 
                if ((axis == 0 && directions(0)) || (axis == 1 && directions(1)) || (axis == 2 && directions(2))) {
+#if !defined(HOIST_INTERMEDIATES)
                   SAMRAI::hier::Box fine_box_plus = fine_box;
                   SAMRAI::hier::Box diff_box = coarse_box;
                   SAMRAI::hier::Box slope_box = coarse_box;
@@ -402,11 +457,11 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      diff_box.growUpper(1, 1);
                      slope_box.growUpper(2, 1);
                   }
-                  pdat::CellData<double> diff(diff_box, dim.getValue(), tmp_ghosts, alloc_db->getTagAllocator());
 
-                  pdat::SideData<double> slope(slope_box, dim.getValue(), tmp_ghosts,
-                                               directions, alloc_db->getTagAllocator());
+                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
 
+#endif         
                   auto fine_array = fdata->getView<3>(axis, d);
                   auto coarse_array = cdata->getConstView<3>(axis, d);
 
@@ -414,9 +469,9 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   auto diff1 = diff.getView<3>(1);
                   auto diff2 = diff.getView<3>(2);
 
-                  auto slope0 = slope.getView<3>(axis, 0);
-                  auto slope1 = slope.getView<3>(axis, 1);
-                  auto slope2 = slope.getView<3>(axis, 2);
+                  auto slope0 = slope.getView<3>(0);
+                  auto slope1 = slope.getView<3>(1);
+                  auto slope2 = slope.getView<3>(2);
 
                   const double *fdx = fgeom->getDx();
                   const double *cdx = cgeom->getDx();
@@ -643,10 +698,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                    "CartesianSideDoubleConservativeLinearRefine error...\n"
                    << "dim > 3 not supported." << std::endl);
             }
-         }
-      }
-   }
-}
+         } // depth
+      } // boxes
+   } // axis
+} // procedure
 
 }  // namespace geom
 }  // namespace SAMRAI
