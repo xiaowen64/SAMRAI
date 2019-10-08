@@ -39,10 +39,13 @@ process_m4(NAME fortran/trace1d3d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTING=1") 
+
 blt_add_executable(
   NAME euler
   SOURCES ${euler_sources}
   DEPENDS_ON
+    testlib
     SAMRAI_algs
     SAMRAI_appu
     SAMRAI_geom
@@ -59,6 +62,10 @@ target_include_directories( euler
 set_target_properties(euler PROPERTIES LINKER_LANGUAGE CXX)
 
 file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+file (GLOB test_baselines ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*boxes*)
+
+execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
+execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 
 samrai_add_tests(
   NAME euler

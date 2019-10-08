@@ -391,10 +391,6 @@ int main(
                     << std::endl;
       }
 
-      if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  Multiblock tree search" << std::endl;
-      }
-
       input_db.reset();
       main_db.reset();
 
@@ -405,6 +401,11 @@ int main(
 
    }
 #endif
+
+   if (fail_count == 0) {
+      tbox::pout << "\nPASSED:  Multiblock tree search" << std::endl;
+   }
+
    /*
     * Shut down.
     */
