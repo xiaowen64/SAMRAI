@@ -29,7 +29,7 @@ AutoTester {
    write_patch_boxes = FALSE
 
    // if true will read correct patch boxes--set to FALSE to rebaseline
-   read_patch_boxes = TRUE
+   read_patch_boxes = FALSE
 
    // time steps for which correctness of patch boxes will be checked
    test_patch_boxes_at_steps = 0, 5, 10
@@ -213,7 +213,7 @@ Main {
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry{
-   domain_boxes	= [ (0,0,0) , (29,19,19) ]
+   domain_boxes	= [ (0,0,0) , (14,9,9) ]
 
    x_lo = 0.e0 , 0.e0 , 0.e0    // lower end of computational domain.
    x_up = 30.e0 , 20.e0 , 20.e0 // upper end of computational domain.
