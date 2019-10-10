@@ -15,6 +15,7 @@
 #include "SAMRAI/pdat/NodeIntegerInjection.h"
 #include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 #include "SAMRAI/pdat/CellComplexConstantRefine.h"
+#include "SAMRAI/pdat/CellConstantRefine.h"
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellFloatConstantRefine.h"
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
@@ -264,11 +265,15 @@ GridGeometry::buildOperators()
       typeid(pdat::CellVariable<dcomplex>).name(),
       std::make_shared<pdat::CellComplexConstantRefine>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<double>).name(),
+      //std::make_shared<pdat::CellDoubleConstantRefine>());
       typeid(pdat::CellVariable<double>).name(),
-      std::make_shared<pdat::CellDoubleConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<double>>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<float>).name(),
+      //std::make_shared<pdat::CellFloatConstantRefine>());
       typeid(pdat::CellVariable<float>).name(),
-      std::make_shared<pdat::CellFloatConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<float>>());
    addRefineOperator(
       typeid(pdat::CellVariable<int>).name(),
       std::make_shared<pdat::CellIntegerConstantRefine>());

@@ -7,6 +7,7 @@ set (pdat_headers
   ArrayDataOperationUtilities.C
   ArrayDataOperationUtilities.h
   ArrayView.h
+  CellConstantRefine.h
   CellComplexConstantRefine.h
   CellComplexLinearTimeInterpolateOp.h
   CellData.C
@@ -203,6 +204,7 @@ set_source_files_properties(
 
 set (pdat_sources
   ArrayDataIterator.C
+  CellConstantRefine.C
   CellComplexConstantRefine.C
   CellComplexLinearTimeInterpolateOp.C
   CellDoubleConstantRefine.C
