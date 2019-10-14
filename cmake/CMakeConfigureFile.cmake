@@ -17,6 +17,12 @@ if (${ENABLE_BOX_COUNTING})
   set (BOX_TELEMETRY On)
 endif()
 
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+  set (DEBUG_INITIALIZE_UNDEFINED On)
+  set (DEBUG_CHECK_ASSERTIONS On)
+  set (DEBUG_CHECK_DIM_ASSERTIONS On)
+endif()
+
 #HAVE_CMATH
 check_include_files("math.h" HAVE_CMATH)
 
