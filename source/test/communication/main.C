@@ -534,6 +534,8 @@ int main(
 
       conduit::Node n;
       conduit_db->toConduitNode(n);
+      conduit::Node flatn;
+      flat_db->toConduitNode(flatn);
 
       std::vector<int> first_patch_id;
       first_patch_id.push_back(0);
@@ -581,6 +583,7 @@ int main(
 
       conduit::Node info;
       TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
+      TBOX_ASSERT(conduit::blueprint::verify("mesh", flatn, info));
 #endif
 
       bool test1_passed = comm_tester->verifyCommunicationResults();

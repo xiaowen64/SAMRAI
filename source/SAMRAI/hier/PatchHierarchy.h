@@ -1127,7 +1127,8 @@ void setAdjacencyOverlaps(
    std::shared_ptr<tbox::Database>& domain_db,
    int nbr_id,
    const Box& overlap,
-   const Box& nbr_overlap) const;
+   const Box& nbr_overlap,
+   const IntVector& ratio) const;
 
    /*!
     * @brief Read input data from specified database and initialize

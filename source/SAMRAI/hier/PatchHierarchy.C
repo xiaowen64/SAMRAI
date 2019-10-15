@@ -1422,7 +1422,8 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                if (d_number_blocks > 1) {
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, node_ovlp, tnode_ovlp);
+                     domain_db, nbr_id, node_ovlp, tnode_ovlp,
+                     IntVector::getOne(d_dim));
                }
             }
          }
@@ -1448,8 +1449,9 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                continue;
             }
 
+            const IntVector& nbr_ratio = getRatioToCoarserLevel(i+1);
             Box node_ref_pbox(pbox);
-            node_ref_pbox.refine(getRatioToCoarserLevel(i+1));
+            node_ref_pbox.refine(nbr_ratio);
             node_ref_pbox.setUpper(node_ref_pbox.upper()+
                                    IntVector::getOne(d_dim));
 
@@ -1495,14 +1497,14 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                   node_pbox.setUpper(node_pbox.upper()+IntVector::getOne(d_dim));
 
                   Box node_crs_nbox(nbr_box);
-                  node_crs_nbox.coarsen(getRatioToCoarserLevel(i+1));
+                  node_crs_nbox.coarsen(nbr_ratio);
                   node_crs_nbox.setUpper(node_crs_nbox.upper()+
                                          IntVector::getOne(d_dim));
 
                   Box cnode_ovlp(node_pbox * node_crs_nbox);
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, cnode_ovlp, fnode_ovlp);
+                     domain_db, nbr_id, cnode_ovlp, fnode_ovlp, nbr_ratio);
 
                }
             }
@@ -1529,8 +1531,9 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                continue;
             }
 
+            const IntVector& nbr_ratio = getRatioToCoarserLevel(i);
             Box node_crs_pbox(pbox);
-            node_crs_pbox.coarsen(getRatioToCoarserLevel(i));
+            node_crs_pbox.coarsen(nbr_ratio);
             node_crs_pbox.setUpper(node_crs_pbox.upper()+
                                    IntVector::getOne(d_dim));
 
@@ -1577,14 +1580,14 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                   node_pbox.setUpper(node_pbox.upper()+IntVector::getOne(d_dim));
 
                   Box node_fine_nbox(nbr_box);
-                  node_fine_nbox.refine(getRatioToCoarserLevel(i));
+                  node_fine_nbox.refine(nbr_ratio);
                   node_fine_nbox.setUpper(node_fine_nbox.upper()+
                                           IntVector::getOne(d_dim));
 
                   Box fnode_ovlp(node_pbox * node_fine_nbox);
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, fnode_ovlp, cnode_ovlp);
+                     domain_db, nbr_id, fnode_ovlp, cnode_ovlp, nbr_ratio);
                }
             }
          }
@@ -1985,7 +1988,8 @@ PatchHierarchy::makeAdjacencySets(
                if (d_number_blocks > 1) {
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, node_ovlp, tnode_ovlp);
+                     domain_db, nbr_id, node_ovlp, tnode_ovlp,
+                     IntVector::getOne(d_dim));
                }
             }
          }
@@ -2045,7 +2049,8 @@ void PatchHierarchy::setAdjacencyOverlaps(
    std::shared_ptr<tbox::Database>& domain_db,
    int nbr_id,
    const Box& overlap,
-   const Box& nbr_overlap) const
+   const Box& nbr_overlap,
+   const IntVector& ratio) const
 {
    std::string group_name =
       "group_" + tbox::Utilities::intToString(nbr_id, 6);
@@ -2094,8 +2099,8 @@ void PatchHierarchy::setAdjacencyOverlaps(
       width_b_db->putInteger("j", b_width[1]);
    }
    if (d_dim.getValue() > 2) {
-      origin_a_db->putInteger("j", overlap.lower(2));
-      width_a_db->putInteger("j", a_width[2]);
+      origin_a_db->putInteger("k", overlap.lower(2));
+      width_a_db->putInteger("k", a_width[2]);
       origin_b_db->putInteger("k", nbr_overlap.lower(2));
       width_b_db->putInteger("k", b_width[2]);
    }
@@ -2109,6 +2114,15 @@ void PatchHierarchy::setAdjacencyOverlaps(
          orientation, rotation);
 
       group_db->putIntegerVector("orientation", orientation);
+
+      IntVector ratio_a(ratio.getBlockVector(overlap.getBlockId()));
+      IntVector ratio_b(ratio.getBlockVector(nbr_overlap.getBlockId()));
+      window_a_db->putIntegerArray("ratio", &(ratio_a[0]), d_dim.getValue());
+      window_b_db->putIntegerArray("ratio", &(ratio_b[0]), d_dim.getValue());
+   } else {
+      IntVector blk_ratio(ratio.getBlockVector(overlap.getBlockId()));
+      window_a_db->putIntegerArray("ratio", &(blk_ratio[0]), d_dim.getValue()); 
+      window_b_db->putIntegerArray("ratio", &(blk_ratio[0]), d_dim.getValue()); 
    }
 }
 
