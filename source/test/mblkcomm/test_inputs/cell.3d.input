@@ -152,5 +152,11 @@ StandardTaggingAndInitializer {
       block_0 {
          boxes = [ (5,5,5) , (6,7,7) ]
       }
+      block_1 {
+         boxes = [ (5,5,5) , (6,7,7) ]
+      }
+      block_2 {
+         boxes = [ (5,5,5) , (6,7,7) ]
+      }
    }
 }

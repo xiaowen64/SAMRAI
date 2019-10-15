@@ -100,6 +100,21 @@ CellConstantRefine<TCELL>::refine(
 
 #endif // test for RAJA
       } else if (fine.getDim() == tbox::Dimension(3)) {
+#if defined(HAVE_RAJA)
+      auto fine_array = fdata-> template getView<3>(d);
+      auto coarse_array = cdata-> template getView<3>(d);
+      const int r0 = ratio[0];
+      const int r1 = ratio[1];
+      const int r2 = ratio[2];
+
+      pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
+         const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
+         const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
+
+         fine_array(i, j, k) = coarse_array(ic0, ic1, ic2);
+      });
+#else // Fortran Dimension 3
          std::cout << "Generic Call3dFortran<" << typeid(TCELL).name() << ">" << std::endl;
          Call3dFortran<TCELL> (ifirstc(0), ifirstc(1),
             ifirstc(2),
@@ -113,7 +128,7 @@ CellConstantRefine<TCELL>::refine(
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-
+#endif // test for RAJA
       } else {
          TBOX_ERROR(
             "CellConstantRefine::refine dimension > 3 not supported"
