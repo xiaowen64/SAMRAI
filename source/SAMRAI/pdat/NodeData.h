@@ -430,7 +430,7 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    /*!
     * @brief Put data into a conduit node for the blueprint format
     *

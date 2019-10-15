@@ -121,7 +121,7 @@ public:
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    void addFields(
       conduit::Node& node,
       int domain_id,

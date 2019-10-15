@@ -598,7 +598,7 @@ CellData<TYPE>::fillAll(
    d_data->fillAll(t, box);
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 template<class TYPE>
 void
 CellData<TYPE>::putBlueprintField(

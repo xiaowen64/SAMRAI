@@ -22,7 +22,7 @@
 #include <string>
 #include <iostream>
 #include <memory>
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "conduit.hpp"
 #endif
 
@@ -1630,7 +1630,7 @@ public:
     */
    virtual void copyDatabase(const std::shared_ptr<Database>& database);
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    /*!
     * @brief Write data held in this database to a Conduit Node
     *

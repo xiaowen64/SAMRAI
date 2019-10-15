@@ -44,7 +44,7 @@
 //#include "MultiVariableDataTest.h"
 
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "conduit_blueprint.hpp"
 #include "conduit_relay.hpp"
 #endif
@@ -516,7 +516,7 @@ int main(
          }
       }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
       std::shared_ptr<tbox::MemoryDatabase> memory_db(
          new tbox::MemoryDatabase("mem_hierarchy"));
 

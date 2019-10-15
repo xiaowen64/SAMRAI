@@ -9,7 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/hier/BlueprintUtils.h"
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 #include "conduit_blueprint.hpp"
@@ -186,4 +186,4 @@ void BlueprintUtils::writeBlueprintMesh(
 }
 }
 
-#endif // HAVE_CONDUIT
+#endif // SAMRAI_HAVE_CONDUIT

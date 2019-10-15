@@ -961,7 +961,7 @@ public:
    putToRestart(
       const std::shared_ptr<tbox::Database>& restart_db) const;
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    /*!
     * @brief Make a database holding a description of the hierarchy in the Conduit blueprint
     * format.
