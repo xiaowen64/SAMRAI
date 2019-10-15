@@ -11,6 +11,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/pdat/CellConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -560,7 +561,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    /*
     * Refine tags from coarser level to level.
     */
-   pdat::CellIntegerConstantRefine copytags;
+   //pdat::CellIntegerConstantRefine copytags;
+   pdat::CellConstantRefine<int> copytags;
    for (hier::PatchLevel::iterator ip(coarser_level->begin());
         ip != coarser_level->end(); ++ip) {
 

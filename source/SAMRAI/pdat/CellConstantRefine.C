@@ -20,6 +20,7 @@
 
 #include <float.h>
 #include <math.h>
+#include <complex>
 
 
 namespace SAMRAI {
@@ -35,6 +36,7 @@ CellConstantRefine<TCELL>::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
+   fprintf(stdout,"Processing variant %s\n",typeid(TCELL).name());
    std::shared_ptr<CellData<TCELL> > cdata(
       SAMRAI_SHARED_PTR_CAST<CellData<TCELL>, hier::PatchData>(
          coarse.getPatchData(src_component)));
@@ -71,7 +73,21 @@ CellConstantRefine<TCELL>::refine(
             fdata->getPointer(d));
 
       } else if (fine.getDim() == tbox::Dimension(2)) {
+#if defined(HAVE_RAJA)
+         auto fine_array = fdata-> template getView<2>(d);
+         auto coarse_array = cdata-> template getView<2>(d);
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
 
+         pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+            const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
+            const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
+
+            fine_array(j, k) = coarse_array(ic0, ic1);
+            //fprintf(stdout,"fine_array(%d,%d) =%0.16E coarse(%d,%d)\n",j,k,fine_array(j,k),ic0,ic1);
+            //std::cout << "fine_array(" << j << "," << k << ")= real:" << std::real(fine_array(j,k)) << " imag:" << std::imag(fine_array(j,k)) << std::endl;
+         });
+#else // Fortran Dimension 2
          std::cout << "Generic Call2dFortran<" << typeid(TCELL).name() << ">" << std::endl;
          Call2dFortran<TCELL>(ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
@@ -82,7 +98,7 @@ CellConstantRefine<TCELL>::refine(
             cdata->getPointer(d),
             fdata->getPointer(d));
 
-
+#endif // test for RAJA
       } else if (fine.getDim() == tbox::Dimension(3)) {
          std::cout << "Generic Call3dFortran<" << typeid(TCELL).name() << ">" << std::endl;
          Call3dFortran<TCELL> (ifirstc(0), ifirstc(1),

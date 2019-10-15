@@ -19,6 +19,7 @@
 #include "SAMRAI/math/PatchCellDataBasicOps.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/pdat/CellConstantRefine.h"
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 #include "SAMRAI/tbox/Collectives.h"
@@ -221,7 +222,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_fill_saved_tags->registerRefine(d_saved_tag_indx,
       d_user_tag_indx,
       d_saved_tag_indx,
-      std::shared_ptr<hier::RefineOperator>(new pdat::CellIntegerConstantRefine()),
+      //std::shared_ptr<hier::RefineOperator>(new pdat::CellIntegerConstantRefine()),
+      std::shared_ptr<hier::RefineOperator>(new pdat::CellConstantRefine<int>()),
       std::shared_ptr<xfer::VariableFillPattern>(new xfer::PatchInteriorVariableFillPattern(dim)));
 
    d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());

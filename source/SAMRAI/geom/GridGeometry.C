@@ -262,8 +262,10 @@ GridGeometry::buildOperators()
 
    // Refinement Operators
    addRefineOperator(
+      //typeid(pdat::CellVariable<dcomplex>).name(),
+      //std::make_shared<pdat::CellComplexConstantRefine>());
       typeid(pdat::CellVariable<dcomplex>).name(),
-      std::make_shared<pdat::CellComplexConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<dcomplex>>());
    addRefineOperator(
       //typeid(pdat::CellVariable<double>).name(),
       //std::make_shared<pdat::CellDoubleConstantRefine>());
@@ -275,8 +277,10 @@ GridGeometry::buildOperators()
       typeid(pdat::CellVariable<float>).name(),
       std::make_shared<pdat::CellConstantRefine<float>>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<int>).name(),
+      //std::make_shared<pdat::CellIntegerConstantRefine>());
       typeid(pdat::CellVariable<int>).name(),
-      std::make_shared<pdat::CellIntegerConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<int>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<dcomplex>).name(),
       std::make_shared<pdat::EdgeComplexConstantRefine>());
