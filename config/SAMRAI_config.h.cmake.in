@@ -32,7 +32,7 @@
 #cmakedefine DEBUG_CHECK_DIM_ASSERTIONS
 
 /* Initialize new memory to undefined values in debug mode */
-#undef DEBUG_INITIALIZE_UNDEFINED
+#cmakedefine DEBUG_INITIALIZE_UNDEFINED
 
 /* ENABLE_SAMRAI_TIMERS */
 #cmakedefine ENABLE_SAMRAI_TIMERS
