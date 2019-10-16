@@ -4,13 +4,13 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
- * Description:   Constant refine operator for edge-centered double data on
+ * Description:   Constant refine operator for face-centered double data on
  *                a  mesh.
  *
  ************************************************************************/
 
-#ifndef included_pdat_EdgeConstantRefine
-#define included_pdat_EdgeConstantRefine
+#ifndef included_pdat_FaceConstantRefine
+#define included_pdat_FaceConstantRefine
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/pdat/InvokeOne.h"
@@ -29,25 +29,25 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void SAMRAI_F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacedoub1d, CONREFFACEDOUB1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgeflot1d, CONREFEDGEFLOT1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const float *, float *);
-void SAMRAI_F77_FUNC(conrefedgecplx1d, CONREFEDGECPLX1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacecplx1d, CONREFFACECPLX1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(conrefedgeintg1d, CONREFEDGEINTG1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceintg1d, CONREFFACEINTG1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -56,28 +56,28 @@ void SAMRAI_F77_FUNC(conrefedgeintg1d, CONREFEDGEINTG1D) (const int&, const int&
 
 // in conrefine2d.f:
 // 2d0
-void SAMRAI_F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacedoub2d0, CONREFFACEDOUB2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgeflot2d0, CONREFEDGEFLOT2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void SAMRAI_F77_FUNC(conrefedgecplx2d0, CONREFEDGECPLX2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacecplx2d0, CONREFFACECPLX2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(conrefedgeintg2d0, CONREFEDGEINTG2D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceintg2d0, CONREFFACEINTG2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -86,28 +86,28 @@ void SAMRAI_F77_FUNC(conrefedgeintg2d0, CONREFEDGEINTG2D0) (const int&, const in
    const int *, int *);
 
 //2d1
-void SAMRAI_F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacedoub2d1, CONREFFACEDOUB2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgeflot2d1, CONREFEDGEFLOT2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void SAMRAI_F77_FUNC(conrefedgecplx2d1, CONREFEDGECPLX2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacecplx2d1, CONREFFACECPLX2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(conrefedgeintg2d1, CONREFEDGEINTG2D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceintg2d1, CONREFFACEINTG2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -116,7 +116,7 @@ void SAMRAI_F77_FUNC(conrefedgeintg2d1, CONREFEDGEINTG2D1) (const int&, const in
    const int *, int *);
 // in conrefine3d.f:
 // 3d0
-void SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacedoub3d0, CONREFFACEDOUB3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -127,7 +127,7 @@ void SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgeflot3d0, CONREFEDGEflot3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d0, CONREFFACEflot3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -138,7 +138,7 @@ void SAMRAI_F77_FUNC(conrefedgeflot3d0, CONREFEDGEflot3D0) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void SAMRAI_F77_FUNC(conrefedgecplx3d0, CONREFEDGECPLX3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacecplx3d0, CONREFFACECPLX3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -149,7 +149,7 @@ void SAMRAI_F77_FUNC(conrefedgecplx3d0, CONREFEDGECPLX3D0) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(conrefedgeintg3d0, CONREFEDGEINTG3D0) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceintg3d0, CONREFFACEINTG3D0) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -162,7 +162,7 @@ void SAMRAI_F77_FUNC(conrefedgeintg3d0, CONREFEDGEINTG3D0) (const int&, const in
    const int *, int *);
 
 //3d1
-void SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacedoub3d1, CONREFFACEDOUB3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -173,7 +173,7 @@ void SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgeflot3d1, CONREFEDGEFLOT3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -184,7 +184,7 @@ void SAMRAI_F77_FUNC(conrefedgeflot3d1, CONREFEDGEFLOT3D1) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void SAMRAI_F77_FUNC(conrefedgecplx3d1, CONREFEDGECPLX3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacecplx3d1, CONREFFACECPLX3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -195,7 +195,7 @@ void SAMRAI_F77_FUNC(conrefedgecplx3d1, CONREFEDGECPLX3D1) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(conrefedgeintg3d1, CONREFEDGEINTG3D1) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceintg3d1, CONREFFACEINTG3D1) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -208,7 +208,7 @@ void SAMRAI_F77_FUNC(conrefedgeintg3d1, CONREFEDGEINTG3D1) (const int&, const in
    const int *, int *);
 
 //3d2
-void SAMRAI_F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacedoub3d2, CONREFFACEDOUB3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -219,7 +219,7 @@ void SAMRAI_F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const double *, double *);
-void SAMRAI_F77_FUNC(conrefedgeflot3d2, CONREFEDGEFLOT3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -230,7 +230,7 @@ void SAMRAI_F77_FUNC(conrefedgeflot3d2, CONREFEDGEFLOT3D2) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const float *, float *);
-void SAMRAI_F77_FUNC(conrefedgecplx3d2, CONREFEDGECPLX3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffacecplx3d2, CONREFFACECPLX3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -241,7 +241,7 @@ void SAMRAI_F77_FUNC(conrefedgecplx3d2, CONREFEDGECPLX3D2) (const int&, const in
    const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
-void SAMRAI_F77_FUNC(conrefedgeintg3d2, CONREFEDGEINTG3D2) (const int&, const int&,
+void SAMRAI_F77_FUNC(conreffaceintg3d2, CONREFFACEINTG3D2) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -259,17 +259,17 @@ namespace pdat {
 
 
 template<typename T>
-void Call1dFortranEdge(const int& ifirstc, const int& ilastc,
+void Call1dFortranFace(const int& ifirstc, const int& ilastc,
    const int& ifirstf, const int& ilastf,
    const int& cilo, const int& cihi,
    const int& filo, const int& fihi,
    const int *ratio,
    const T *arrayc, T *arrayf)
 {
-   invokeOneOfFour(SAMRAI_F77_FUNC(conrefedgedoub1d, CONREFEDGEDOUB1D),
-              SAMRAI_F77_FUNC(conrefedgeflot1d, CONREFEDGEFLOT1D), 
-              SAMRAI_F77_FUNC(conrefedgecplx1d, CONREFEDGECPLX1D),
-              SAMRAI_F77_FUNC(conrefedgeintg1d, CONREFEDGEINTG1D),
+   invokeOneOfFour(SAMRAI_F77_FUNC(conreffacedoub1d, CONREFFACEDOUB1D),
+              SAMRAI_F77_FUNC(conreffaceflot1d, CONREFFACEFLOT1D), 
+              SAMRAI_F77_FUNC(conreffacecplx1d, CONREFFACECPLX1D),
+              SAMRAI_F77_FUNC(conreffaceintg1d, CONREFFACEINTG1D),
          ifirstc, ilastc, ifirstf, ilastf,
          cilo, cihi,filo, fihi,
          ratio,
@@ -278,7 +278,7 @@ void Call1dFortranEdge(const int& ifirstc, const int& ilastc,
 }
 
 template<typename T>
-void Call2dFortranEdge_d0(const int& ifirstc0, const int& ifirstc1,
+void Call2dFortranFace_d0(const int& ifirstc0, const int& ifirstc1,
    const int& ilastc0, const int& ilastc1,
    const int& ifirstf0, const int& ifirstf1, const int& ilastf0, const int& ilastf1,
    const int& cilo0, const int& cilo1, const int& cihi0, const int& cihi1,
@@ -286,10 +286,10 @@ void Call2dFortranEdge_d0(const int& ifirstc0, const int& ifirstc1,
    const int *ratio,
    const T *arrayc, T *arrayf)
 {
-    invokeOneOfFour(SAMRAI_F77_FUNC(conrefedgedoub2d0, CONREFEDGEDOUB2D0),
-              SAMRAI_F77_FUNC(conrefedgeflot2d0, CONREFEDGEFLOT2D0), 
-              SAMRAI_F77_FUNC(conrefedgecplx2d0, CONREFEDGECPLX2D0),
-              SAMRAI_F77_FUNC(conrefedgeintg2d0, CONREFEDGEINTG2D0),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conreffacedoub2d0, CONREFFACEDOUB2D0),
+              SAMRAI_F77_FUNC(conreffaceflot2d0, CONREFFACEFLOT2D0), 
+              SAMRAI_F77_FUNC(conreffacecplx2d0, CONREFFACECPLX2D0),
+              SAMRAI_F77_FUNC(conreffaceintg2d0, CONREFFACEINTG2D0),
          ifirstc0,ifirstc1,
          ilastc0,ilastc1,
          ifirstf0,ifirstf1,
@@ -300,7 +300,7 @@ void Call2dFortranEdge_d0(const int& ifirstc0, const int& ifirstc1,
          arrayc,arrayf);
 }
 template<typename T>
-void Call2dFortranEdge_d1(const int& ifirstc0, const int& ifirstc1,
+void Call2dFortranFace_d1(const int& ifirstc0, const int& ifirstc1,
    const int& ilastc0, const int& ilastc1,
    const int& ifirstf0, const int& ifirstf1, const int& ilastf0, const int& ilastf1,
    const int& cilo0, const int& cilo1, const int& cihi0, const int& cihi1,
@@ -308,10 +308,10 @@ void Call2dFortranEdge_d1(const int& ifirstc0, const int& ifirstc1,
    const int *ratio,
    const T *arrayc, T *arrayf)
 {
-    invokeOneOfFour(SAMRAI_F77_FUNC(conrefedgedoub2d1, CONREFEDGEDOUB2D1),
-              SAMRAI_F77_FUNC(conrefedgeflot2d1, CONREFEDGEFLOT2D1), 
-              SAMRAI_F77_FUNC(conrefedgecplx2d1, CONREFEDGECPLX2D1),
-              SAMRAI_F77_FUNC(conrefedgeintg2d1, CONREFEDGEINTG2D1),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conreffacedoub2d1, CONREFFACEDOUB2D1),
+              SAMRAI_F77_FUNC(conreffaceflot2d1, CONREFFACEFLOT2D1), 
+              SAMRAI_F77_FUNC(conreffacecplx2d1, CONREFFACECPLX2D1),
+              SAMRAI_F77_FUNC(conreffaceintg2d1, CONREFFACEINTG2D1),
          ifirstc0,ifirstc1,
          ilastc0,ilastc1,
          ifirstf0,ifirstf1,
@@ -323,7 +323,7 @@ void Call2dFortranEdge_d1(const int& ifirstc0, const int& ifirstc1,
 }
 
 template<typename T>
-void Call3dFortranEdge_d0(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
+void Call3dFortranFace_d0(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
    const int& ilastc0, const int& ilastc1, const int& ilastc2,
    const int& ifirstf0, const int& ifirstf1, const int& ifirstf2,
    const int& ilastf0, const int& ilastf1, const int& ilastf2,
@@ -335,10 +335,10 @@ void Call3dFortranEdge_d0(const int& ifirstc0, const int& ifirstc1, const int& i
    const T *arrayc, T *arrayf)
 {
 
-    invokeOneOfFour(SAMRAI_F77_FUNC(conrefedgedoub3d0, CONREFEDGEDOUB3D0),
-              SAMRAI_F77_FUNC(conrefedgeflot3d0, CONREFEDGEFLOT3D0), 
-              SAMRAI_F77_FUNC(conrefedgecplx3d0, CONREFEDGECPLX3D0),
-              SAMRAI_F77_FUNC(conrefedgeintg3d0, CONREFEDGEINTG3D0),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conreffacedoub3d0, CONREFFACEDOUB3D0),
+              SAMRAI_F77_FUNC(conreffaceflot3d0, CONREFFACEFLOT3D0), 
+              SAMRAI_F77_FUNC(conreffacecplx3d0, CONREFFACECPLX3D0),
+              SAMRAI_F77_FUNC(conreffaceintg3d0, CONREFFACEINTG3D0),
          ifirstc0,ifirstc1,ifirstc2,
          ilastc0,ilastc1,ilastc2,
          ifirstf0,ifirstf1,ifirstf2,
@@ -350,7 +350,7 @@ void Call3dFortranEdge_d0(const int& ifirstc0, const int& ifirstc1, const int& i
 }
 
 template<typename T>
-void Call3dFortranEdge_d1(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
+void Call3dFortranFace_d1(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
    const int& ilastc0, const int& ilastc1, const int& ilastc2,
    const int& ifirstf0, const int& ifirstf1, const int& ifirstf2,
    const int& ilastf0, const int& ilastf1, const int& ilastf2,
@@ -362,10 +362,10 @@ void Call3dFortranEdge_d1(const int& ifirstc0, const int& ifirstc1, const int& i
    const T *arrayc, T *arrayf)
 {
 
-    invokeOneOfFour(SAMRAI_F77_FUNC(conrefedgedoub3d1, CONREFEDGEDOUB3D1),
-              SAMRAI_F77_FUNC(conrefedgeflot3d1, CONREFEDGEFLOT3D1), 
-              SAMRAI_F77_FUNC(conrefedgecplx3d1, CONREFEDGECPLX3D1),
-              SAMRAI_F77_FUNC(conrefedgeintg3d1, CONREFEDGEINTG3D1),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conreffacedoub3d1, CONREFFACEDOUB3D1),
+              SAMRAI_F77_FUNC(conreffaceflot3d1, CONREFFACEFLOT3D1), 
+              SAMRAI_F77_FUNC(conreffacecplx3d1, CONREFFACECPLX3D1),
+              SAMRAI_F77_FUNC(conreffaceintg3d1, CONREFFACEINTG3D1),
          ifirstc0,ifirstc1,ifirstc2,
          ilastc0,ilastc1,ilastc2,
          ifirstf0,ifirstf1,ifirstf2,
@@ -377,7 +377,7 @@ void Call3dFortranEdge_d1(const int& ifirstc0, const int& ifirstc1, const int& i
 }
 
 template<typename T>
-void Call3dFortranEdge_d2(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
+void Call3dFortranFace_d2(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
    const int& ilastc0, const int& ilastc1, const int& ilastc2,
    const int& ifirstf0, const int& ifirstf1, const int& ifirstf2,
    const int& ilastf0, const int& ilastf1, const int& ilastf2,
@@ -389,10 +389,10 @@ void Call3dFortranEdge_d2(const int& ifirstc0, const int& ifirstc1, const int& i
    const T *arrayc, T *arrayf)
 {
 
-    invokeOneOfFour(SAMRAI_F77_FUNC(conrefedgedoub3d2, CONREFEDGEDOUB3D2),
-              SAMRAI_F77_FUNC(conrefedgeflot3d2, CONREFEDGEFLOT3D2), 
-              SAMRAI_F77_FUNC(conrefedgecplx3d2, CONREFEDGECPLX3D2),
-              SAMRAI_F77_FUNC(conrefedgeintg3d2, CONREFEDGEINTG3D2),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conreffacedoub3d2, CONREFFACEDOUB3D2),
+              SAMRAI_F77_FUNC(conreffaceflot3d2, CONREFFACEFLOT3D2), 
+              SAMRAI_F77_FUNC(conreffacecplx3d2, CONREFFACECPLX3D2),
+              SAMRAI_F77_FUNC(conreffaceintg3d2, CONREFFACEINTG3D2),
          ifirstc0,ifirstc1,ifirstc2,
          ilastc0,ilastc1,ilastc2,
          ifirstf0,ifirstf1,ifirstf2,
@@ -404,58 +404,63 @@ void Call3dFortranEdge_d2(const int& ifirstc0, const int& ifirstc1, const int& i
 }
 
 /**
- * Class EdgeConstantRefine implements constant
- * interpolation for edge-centered double patch data defined over a
+ * Class FaceConstantRefine implements constant
+ * interpolation for face-centered double patch data defined over a
  * mesh.  It is derived from the hier::RefineOperator base class.
  * The numerical operations for interpolation use FORTRAN numerical routines.
  *
  * @see hier::RefineOperator
  */
+
 template<typename TCELL> // one of double,float,dcomplex,int
-class EdgeConstantRefine:
+class FaceConstantRefine:
    public hier::RefineOperator
 {
 public:
    /**
     * Uninteresting default constructor.
     */
-   EdgeConstantRefine():
+   FaceConstantRefine():
       hier::RefineOperator("CONSTANT_REFINE")
    {
    }
 
-
    /**
     * Uninteresting destructor.
     */
-   ~EdgeConstantRefine()
+   ~FaceConstantRefine()
    {
    }
 
    /**
-    * The priority of edge-centered double constant interpolation is 0.
+    * The priority of face-centered double constant interpolation is 0.
     * It will be performed before any user-defined interpolation operations.
     */
    int
-   getOperatorPriority() const;
+   getOperatorPriority() const
+   {
+      return 0;
+   }
 
    /**
     * The stencil width of the constant interpolation operator is the vector
     * of zeros.  That is, its stencil does not extend outside the fine box.
     */
    hier::IntVector
-   getStencilWidth(
-      const tbox::Dimension& dim) const;
+   getStencilWidth(const tbox::Dimension& dim) const
+   {
+      return hier::IntVector::getZero(dim);
+   }
 
    /**
     * Refine the source component on the coarse patch to the destination
-    * component on the fine patch using the edge-centered double constant
+    * component on the fine patch using the face-centered double constant
     * interpolation operator.  Interpolation is performed on the intersection
     * of the destination patch and the boxes contained in fine_overlap.
     * It is assumed that the coarse patch contains sufficient data for the
     * stencil width of the refinement operator.
     *
-    * @pre dynamic_cast<const EdgeOverlap *>(&fine_overlap) != 0
+    * @pre dynamic_cast<const FaceOverlap *>(&fine_overlap) != 0
     */
    void
    refine(
@@ -467,7 +472,7 @@ public:
       const hier::IntVector& ratio) const;
 };
 
-} // namespace pdat
-} // namespace SAMRAI
-#include "SAMRAI/pdat/EdgeConstantRefine.C"
+}
+}
+#include "SAMRAI/pdat/FaceConstantRefine.C"
 #endif

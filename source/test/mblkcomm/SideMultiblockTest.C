@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/SideDoubleConstantRefine.h"
+#include "SAMRAI/pdat/SideConstantRefine.h"
 #include "SAMRAI/pdat/SideVariable.h"
 
 #include "MultiblockTester.h"
@@ -21,6 +22,8 @@
 #include <vector>
 
 using namespace SAMRAI;
+
+using KERNEL_TYPE = dcomplex;
 
 SideMultiblockTest::SideMultiblockTest(
    const std::string& object_name,
@@ -89,7 +92,7 @@ void SideMultiblockTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::SideVariable<double>(
+         new pdat::SideVariable<KERNEL_TYPE>(
             d_dim,
             d_variable_src_name[i],
             hier::IntVector::getOne(d_dim),
@@ -122,14 +125,14 @@ void SideMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::SideData<double> > side_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<KERNEL_TYPE> > side_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(side_data);
 
          hier::Box dbox = side_data->getGhostBox();
 
-         side_data->fillAll((double)block_id.getBlockValue());
+         side_data->fillAll((KERNEL_TYPE)block_id.getBlockValue());
 
       }
    }
@@ -176,8 +179,8 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::SideData<double> > side_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<KERNEL_TYPE> > side_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
 
@@ -200,7 +203,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                   if (!patch_side_box.contains(*ni)) {
                      for (int d = 0; d < side_data->getDepth(); ++d) {
                         (*side_data)(*ni, d) =
-                           (double)(node_bdry[nb].getLocationIndex() + 100);
+                           (KERNEL_TYPE)(node_bdry[nb].getLocationIndex() + 100);
                      }
                   }
                }
@@ -244,7 +247,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                         if (use_index) {
                            for (int d = 0; d < side_data->getDepth(); ++d) {
                               (*side_data)(*ni, d) =
-                                 (double)(edge_bdry[eb].getLocationIndex()
+                                 (KERNEL_TYPE)(edge_bdry[eb].getLocationIndex()
                                           + 100);
                            }
                         }
@@ -291,7 +294,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
                         if (use_index) {
                            for (int d = 0; d < side_data->getDepth(); ++d) {
                               (*side_data)(*ni, d) =
-                                 (double)(face_bdry[fb].getLocationIndex()
+                                 (KERNEL_TYPE)(face_bdry[fb].getLocationIndex()
                                           + 100);
                            }
                         }
@@ -321,8 +324,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::SideData<double> > side_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<KERNEL_TYPE> > side_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
 
@@ -406,8 +409,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  std::shared_ptr<pdat::SideData<double> > sing_data(
-                     SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::SideData<KERNEL_TYPE> > sing_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::SideData<KERNEL_TYPE>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -510,7 +513,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                if (use_index) {
                   for (int d = 0; d < depth; ++d) {
                      (*side_data)(*ci, d) =
-                        (double)bbox.getLocationIndex() + 200.0;
+                        (KERNEL_TYPE)bbox.getLocationIndex() + 200.0;
                   }
                }
             }
@@ -545,8 +548,8 @@ bool SideMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   std::shared_ptr<pdat::SideData<double> > solution(
-      new pdat::SideData<double>(pbox, 1, tgcw));
+   std::shared_ptr<pdat::SideData<KERNEL_TYPE> > solution(
+      new pdat::SideData<KERNEL_TYPE>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
@@ -566,10 +569,10 @@ bool SideMultiblockTest::verifyResults(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      double correct = (double)block_id.getBlockValue();
+      KERNEL_TYPE correct = (KERNEL_TYPE)block_id.getBlockValue();
 
-      std::shared_ptr<pdat::SideData<double> > side_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<KERNEL_TYPE> > side_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
       int depth = side_data->getDepth();
@@ -582,9 +585,9 @@ bool SideMultiblockTest::verifyResults(
          for (pdat::SideIterator ci(pdat::SideGeometry::begin(interior_box, axis));
               ci != ciend; ++ci) {
             for (int d = 0; d < depth; ++d) {
-               double result = (*side_data)(*ci, d);
+               KERNEL_TYPE result = (*side_data)(*ci, d);
 
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : side index = " << *ci << std::endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
@@ -641,9 +644,9 @@ bool SideMultiblockTest::verifyResults(
                   si.setAxis(axis);
                   if (!patch_side_box.contains(si)) {
                      for (int d = 0; d < depth; ++d) {
-                        double result = (*side_data)(si, d);
+                        KERNEL_TYPE result = (*side_data)(si, d);
 
-                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                        if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
                                       << " : side index = " << si << std::endl;
@@ -696,16 +699,16 @@ bool SideMultiblockTest::verifyResults(
 
                if (num_sing_neighbors == 0) {
 
-                  correct = (double)bdry[k].getLocationIndex() + 200.0;
+                  correct = (KERNEL_TYPE)bdry[k].getLocationIndex() + 200.0;
 
                } else {
 
-                  correct /= (double)num_sing_neighbors;
+                  correct /= (KERNEL_TYPE)num_sing_neighbors;
 
                }
 
             } else {
-               correct = (double)(bdry[k].getLocationIndex() + 100);
+               correct = (KERNEL_TYPE)(bdry[k].getLocationIndex() + 100);
             }
 
             for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
@@ -732,9 +735,9 @@ bool SideMultiblockTest::verifyResults(
 
                      if (use_index) {
                         for (int d = 0; d < depth; ++d) {
-                           double result = (*side_data)(*ci, d);
+                           KERNEL_TYPE result = (*side_data)(*ci, d);
 
-                           if (!tbox::MathUtilities<double>::equalEps(correct,
+                           if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct,
                                   result)) {
                               tbox::perr << "Test FAILED: ...."
                                          << " : side index = " << *ci << std::endl;
