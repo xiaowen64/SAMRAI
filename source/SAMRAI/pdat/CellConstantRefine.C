@@ -36,7 +36,6 @@ CellConstantRefine<TCELL>::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   fprintf(stdout,"Processing variant %s\n",typeid(TCELL).name());
    std::shared_ptr<CellData<TCELL> > cdata(
       SAMRAI_SHARED_PTR_CAST<CellData<TCELL>, hier::PatchData>(
          coarse.getPatchData(src_component)));
@@ -64,7 +63,7 @@ CellConstantRefine<TCELL>::refine(
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
-         Call1dFortran<TCELL>(ifirstc(0), ilastc(0),
+         Call1dFortranCell<TCELL>(ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
             filo(0), fihi(0),
@@ -84,12 +83,9 @@ CellConstantRefine<TCELL>::refine(
             const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
             fine_array(j, k) = coarse_array(ic0, ic1);
-            //fprintf(stdout,"fine_array(%d,%d) =%0.16E coarse(%d,%d)\n",j,k,fine_array(j,k),ic0,ic1);
-            //std::cout << "fine_array(" << j << "," << k << ")= real:" << std::real(fine_array(j,k)) << " imag:" << std::imag(fine_array(j,k)) << std::endl;
          });
 #else // Fortran Dimension 2
-         std::cout << "Generic Call2dFortran<" << typeid(TCELL).name() << ">" << std::endl;
-         Call2dFortran<TCELL>(ifirstc(0), ifirstc(1),
+         Call2dFortranCell<TCELL>(ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -115,8 +111,7 @@ CellConstantRefine<TCELL>::refine(
          fine_array(i, j, k) = coarse_array(ic0, ic1, ic2);
       });
 #else // Fortran Dimension 3
-         std::cout << "Generic Call3dFortran<" << typeid(TCELL).name() << ">" << std::endl;
-         Call3dFortran<TCELL> (ifirstc(0), ifirstc(1),
+         Call3dFortranCell<TCELL> (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

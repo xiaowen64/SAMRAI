@@ -259,7 +259,6 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                   pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                      diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
                      diff1(j, k) = coarse_array(j, k + 1) - coarse_array(j, k);
-                     //fprintf(stdout,"diff1(%d,%d)=%0.15E\n",j,k,diff1(j,k));
                   });
 
                   pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
@@ -280,7 +279,6 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                      } else {
                         slope1(j, k) = 0.0;
                      }
-                     //fprintf(stdout,"slope1(%d,%d)=%0.16E\n",j,k,slope1(j,k));
                   });
 
                   pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
@@ -296,7 +294,6 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
 
                      double fine_tmp = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
                      fine_array(j, k) = fine_tmp;
-                     //fprintf(stdout,"fine_array(%d,%d)=%0.16E\n",j,k,fine_array(j,k));
                   });
 
                }  // axis == 0
@@ -324,7 +321,6 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                      } else {
                         slope1(j, k) = 0.0;
                      }
-                     //fprintf(stdout,"axis1 slope1(%d,%d)=%0.16E\n",j,k,slope1(j,k));
                   });
 
                   pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
@@ -340,8 +336,6 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
 
                      double fine_tmp = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
                      fine_array(j, k) = fine_tmp;
-
-                     //fprintf(stdout,"axis 1 fine_array(%d,%d)=%0.16E\n",j,k,fine_array(j,k));
                   });
                }  // axis == 1
 

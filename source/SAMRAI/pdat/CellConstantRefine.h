@@ -14,6 +14,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/pdat/InvokeOne.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -152,39 +153,16 @@ void SAMRAI_F77_FUNC(conrefcellintg3d, CONREFCELLINTG3D) (const int&, const int&
 namespace SAMRAI {
 namespace pdat {
 
-template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOne(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f1(args...))
-{
-    return f1(args...);
-}
-
-template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOne(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f2(args...))
-{
-    return f2(args...);
-}
-
-template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOne(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f3(args...))
-{
-    return f3(args...);
-}
-
-template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOne(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f4(args...))
-{
-    return f4(args...);
-}
 
 template<typename T>
-void Call1dFortran(const int& ifirstc, const int& ilastc,
+void Call1dFortranCell(const int& ifirstc, const int& ilastc,
    const int& ifirstf, const int& ilastf,
    const int& cilo, const int& cihi,
    const int& filo, const int& fihi,
    const int *ratio,
    const T *arrayc, T *arrayf)
 {
-   invokeOne(SAMRAI_F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D),
+   invokeOneOfFour(SAMRAI_F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D),
               SAMRAI_F77_FUNC(conrefcellflot1d, CONREFCELLFLOT1D), 
               SAMRAI_F77_FUNC(conrefcellcplx1d, CONREFCELLCPLX1D),
               SAMRAI_F77_FUNC(conrefcellintg1d, CONREFCELLINTG1D),
@@ -196,7 +174,7 @@ void Call1dFortran(const int& ifirstc, const int& ilastc,
 }
 
 template<typename T>
-void Call2dFortran(const int& ifirstc0, const int& ifirstc1,
+void Call2dFortranCell(const int& ifirstc0, const int& ifirstc1,
    const int& ilastc0, const int& ilastc1,
    const int& ifirstf0, const int& ifirstf1, const int& ilastf0, const int& ilastf1,
    const int& cilo0, const int& cilo1, const int& cihi0, const int& cihi1,
@@ -204,7 +182,7 @@ void Call2dFortran(const int& ifirstc0, const int& ifirstc1,
    const int *ratio,
    const T *arrayc, T *arrayf)
 {
-    invokeOne(SAMRAI_F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D),
               SAMRAI_F77_FUNC(conrefcellflot2d, CONREFCELLFLOT2D), 
               SAMRAI_F77_FUNC(conrefcellcplx2d, CONREFCELLCPLX2D),
               SAMRAI_F77_FUNC(conrefcellintg2d, CONREFCELLINTG2D),
@@ -219,7 +197,7 @@ void Call2dFortran(const int& ifirstc0, const int& ifirstc1,
 }
 
 template<typename T>
-void Call3dFortran(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
+void Call3dFortranCell(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2,
    const int& ilastc0, const int& ilastc1, const int& ilastc2,
    const int& ifirstf0, const int& ifirstf1, const int& ifirstf2,
    const int& ilastf0, const int& ilastf1, const int& ilastf2,
@@ -231,7 +209,7 @@ void Call3dFortran(const int& ifirstc0, const int& ifirstc1, const int& ifirstc2
    const T *arrayc, T *arrayf)
 {
 
-    invokeOne(SAMRAI_F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D),
+    invokeOneOfFour(SAMRAI_F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D),
               SAMRAI_F77_FUNC(conrefcellflot3d, CONREFCELLFLOT3D), 
               SAMRAI_F77_FUNC(conrefcellcplx3d, CONREFCELLCPLX3D),
               SAMRAI_F77_FUNC(conrefcellintg3d, CONREFCELLINTG3D),
@@ -262,8 +240,6 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   //CellConstantRefine();
-
    CellConstantRefine():
    hier::RefineOperator("CONSTANT_REFINE")
    {
@@ -272,7 +248,6 @@ public:
    /**
     * Uninteresting destructor.
     */
-
    ~CellConstantRefine()
    {
    }

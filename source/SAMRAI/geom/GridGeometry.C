@@ -19,6 +19,7 @@
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellFloatConstantRefine.h"
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/pdat/EdgeConstantRefine.h"
 #include "SAMRAI/pdat/EdgeComplexConstantRefine.h"
 #include "SAMRAI/pdat/EdgeDoubleConstantRefine.h"
 #include "SAMRAI/pdat/EdgeFloatConstantRefine.h"
@@ -262,37 +263,29 @@ GridGeometry::buildOperators()
 
    // Refinement Operators
    addRefineOperator(
-      //typeid(pdat::CellVariable<dcomplex>).name(),
-      //std::make_shared<pdat::CellComplexConstantRefine>());
       typeid(pdat::CellVariable<dcomplex>).name(),
       std::make_shared<pdat::CellConstantRefine<dcomplex>>());
    addRefineOperator(
-      //typeid(pdat::CellVariable<double>).name(),
-      //std::make_shared<pdat::CellDoubleConstantRefine>());
       typeid(pdat::CellVariable<double>).name(),
       std::make_shared<pdat::CellConstantRefine<double>>());
    addRefineOperator(
-      //typeid(pdat::CellVariable<float>).name(),
-      //std::make_shared<pdat::CellFloatConstantRefine>());
       typeid(pdat::CellVariable<float>).name(),
       std::make_shared<pdat::CellConstantRefine<float>>());
    addRefineOperator(
-      //typeid(pdat::CellVariable<int>).name(),
-      //std::make_shared<pdat::CellIntegerConstantRefine>());
       typeid(pdat::CellVariable<int>).name(),
       std::make_shared<pdat::CellConstantRefine<int>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<dcomplex>).name(),
-      std::make_shared<pdat::EdgeComplexConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<dcomplex>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      std::make_shared<pdat::EdgeDoubleConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<double>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      std::make_shared<pdat::EdgeFloatConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<float>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<int>).name(),
-      std::make_shared<pdat::EdgeIntegerConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<int>>());
    addRefineOperator(
       typeid(pdat::FaceVariable<dcomplex>).name(),
       std::make_shared<pdat::FaceComplexConstantRefine>());
