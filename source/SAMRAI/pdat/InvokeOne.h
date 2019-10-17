@@ -12,44 +12,44 @@
 #define included_pdat_InvokeOne
 
 template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOneOfFour(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f1(args...))
+auto invokeOneOfFour(F1 f1, F2 /*f2*/, F3 /*f3*/, F4 /*f4*/, Args && ... args) -> decltype(f1(args...))
 {
     return f1(args...);
 }
 
 template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOneOfFour(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f2(args...))
+auto invokeOneOfFour(F1 /*f1*/, F2 f2, F3 /*f3*/, F4 /*f4*/, Args && ... args) -> decltype(f2(args...))
 {
     return f2(args...);
 }
 
 template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOneOfFour(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f3(args...))
+auto invokeOneOfFour(F1 /*f1*/, F2 /*f2*/, F3 f3, F4 /*f4*/, Args && ... args) -> decltype(f3(args...))
 {
     return f3(args...);
 }
 
 template<typename F1, typename F2, typename F3, typename F4, typename ... Args>
-auto invokeOneOfFour(F1 f1, F2 f2, F3 f3, F4 f4, Args && ... args) -> decltype(f4(args...))
+auto invokeOneOfFour(F1 /*f1*/, F2 /*f2*/, F3 /*f3*/, F4 f4, Args && ... args) -> decltype(f4(args...))
 {
     return f4(args...);
 }
 
 
 template<typename F1, typename F2, typename F3, typename ... Args>
-auto invokeOneOfThree(F1 f1, F2 f2, F3 f3, Args && ... args) -> decltype(f1(args...))
+auto invokeOneOfThree(F1 f1, F2 /*f2*/, F3 /*f3*/, Args && ... args) -> decltype(f1(args...))
 {
     return f1(args...);
 }
 
 template<typename F1, typename F2, typename F3, typename ... Args>
-auto invokeOneOfThree(F1 f1, F2 f2, F3 f3, Args && ... args) -> decltype(f2(args...))
+auto invokeOneOfThree(F1 /*f1*/, F2 f2, F3 /*f3*/, Args && ... args) -> decltype(f2(args...))
 {
     return f2(args...);
 }
 
 template<typename F1, typename F2, typename F3, typename ... Args>
-auto invokeOneOfThree(F1 f1, F2 f2, F3 f3, Args && ... args) -> decltype(f3(args...))
+auto invokeOneOfThree(F1 /*f1*/, F2 /*f2*/, F3 f3, Args && ... args) -> decltype(f3(args...))
 {
     return f3(args...);
 }

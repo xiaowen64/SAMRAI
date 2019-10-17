@@ -8,7 +8,9 @@
  *                a  mesh.
  *
  ************************************************************************/
-#include "SAMRAI/pdat/NodeDoubleInjection.h"
+#ifndef included_pdat_NodeInjection_C
+#define included_pdat_NodeInjection_C
+#include "SAMRAI/pdat/NodeInjection.h"
 
 #include <float.h>
 #include <math.h>
@@ -17,70 +19,13 @@
 #include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/pdat/NodeVariable.h"
 
-/*
- *************************************************************************
- *
- * External declarations for FORTRAN  routines.
- *
- *************************************************************************
- */
-extern "C" {
-
-#ifdef __INTEL_COMPILER
-#pragma warning (disable:1419)
-#endif
-
-// in concoarsen1d.f:
-void SAMRAI_F77_FUNC(conavgnodedoub1d, CONAVGNODEDOUB1D) (const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int *,
-   const double *, double *);
-// in concoarsen2d.f:
-void SAMRAI_F77_FUNC(conavgnodedoub2d, CONAVGNODEDOUB2D) (const int&, const int&,
-   const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-// in concoarsen3d.f:
-void SAMRAI_F77_FUNC(conavgnodedoub3d, CONAVGNODEDOUB3D) (const int&, const int&,
-   const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-}
 
 namespace SAMRAI {
 namespace pdat {
 
-NodeDoubleInjection::NodeDoubleInjection():
-   hier::CoarsenOperator("CONSTANT_COARSEN")
-{
-}
-
-NodeDoubleInjection::~NodeDoubleInjection()
-{
-}
-
-int
-NodeDoubleInjection::getOperatorPriority() const
-{
-   return 0;
-}
-
-hier::IntVector
-NodeDoubleInjection::getStencilWidth(const tbox::Dimension& dim) const
-{
-   return hier::IntVector::getZero(dim);
-}
-
+template<typename T>   
 void
-NodeDoubleInjection::coarsen(
+NodeInjection<T>::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,
@@ -88,11 +33,11 @@ NodeDoubleInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   std::shared_ptr<NodeData<double> > fdata(
-      SAMRAI_SHARED_PTR_CAST<NodeData<double>, hier::PatchData>(
+   std::shared_ptr<NodeData<T> > fdata(
+      SAMRAI_SHARED_PTR_CAST<NodeData<T>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   std::shared_ptr<NodeData<double> > cdata(
-      SAMRAI_SHARED_PTR_CAST<NodeData<double>, hier::PatchData>(
+   std::shared_ptr<NodeData<T> > cdata(
+      SAMRAI_SHARED_PTR_CAST<NodeData<T>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);
@@ -110,7 +55,7 @@ NodeDoubleInjection::coarsen(
 
    for (int d = 0; d < cdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
-         SAMRAI_F77_FUNC(conavgnodedoub1d, CONAVGNODEDOUB1D) (ifirstc(0), ilastc(0),
+         Call1dFortranNode(ifirstc(0), ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
             &ratio[0],
@@ -118,8 +63,8 @@ NodeDoubleInjection::coarsen(
             cdata->getPointer(d));
       } else if (fine.getDim() == tbox::Dimension(2)) {
 #if defined(HAVE_RAJA)
-         auto fine_array = fdata->getView<2>(d);
-         auto coarse_array = cdata->getView<2>(d);
+         auto fine_array = fdata-> template getView<2>(d);
+         auto coarse_array = cdata-> template getView<2>(d);
          
          SAMRAI::hier::Box coarse_box_plus = coarse_box;
          coarse_box_plus.setUpper(0, cihi(0)+1);
@@ -134,7 +79,7 @@ NodeDoubleInjection::coarsen(
             coarse_array(j,k) = fine_array(if0,if1);
          });
 #else
-         SAMRAI_F77_FUNC(conavgnodedoub2d, CONAVGNODEDOUB2D) (ifirstc(0), ifirstc(1),
+         Call2dFortranNode(ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -144,8 +89,8 @@ NodeDoubleInjection::coarsen(
 #endif
       } else if (fine.getDim() == tbox::Dimension(3)) {
 #if defined(HAVE_RAJA)
-         auto fine_array = fdata->getView<3>(d);
-         auto coarse_array = cdata->getView<3>(d);
+         auto fine_array = fdata-> template getView<3>(d);
+         auto coarse_array = cdata-> template getView<3>(d);
          
          SAMRAI::hier::Box coarse_box_plus = coarse_box;
          coarse_box_plus.setUpper(0, cihi(0)+1);
@@ -163,7 +108,7 @@ NodeDoubleInjection::coarsen(
             coarse_array(i,j,k) = fine_array(if0,if1,if2);
          });
 #else
-         SAMRAI_F77_FUNC(conavgnodedoub3d, CONAVGNODEDOUB3D) (ifirstc(0), ifirstc(1),
+         Call3dFortranNode(ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),
@@ -176,11 +121,21 @@ NodeDoubleInjection::coarsen(
 #endif
       } else {
          TBOX_ERROR(
-            "NodeDoubleConstantRefine::coarsen dimension > 3 not supported"
+            "NodeConstantRefine::coarsen dimension > 3 not supported"
             << std::endl);
       }
    }
 }
 
-}
-}
+} // namespace pdat
+} // namespace SAMRAI 
+
+#if !defined(__BGL_FAMILY__) && defined(__xlC__)
+/*
+ * Suppress XLC warnings
+ */
+#pragma report(enable, CPPC5334)
+#pragma report(enable, CPPC5328)
+#endif
+
+#endif

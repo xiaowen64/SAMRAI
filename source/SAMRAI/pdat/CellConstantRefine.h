@@ -232,7 +232,7 @@ void Call3dFortranCell(const int& ifirstc0, const int& ifirstc1, const int& ifir
  *
  * @see hier::RefineOperator
  */
-template<typename TCELL>  // one of double,float,dcomplex,int  
+template<typename T>  // one of double,float,dcomplex,int  
 class CellConstantRefine:
    public hier::RefineOperator
 {
@@ -248,7 +248,7 @@ public:
    /**
     * Uninteresting destructor.
     */
-   ~CellConstantRefine()
+   virtual ~CellConstantRefine()
    {
    }
 

@@ -225,11 +225,9 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
             for (int ry = 0; ry < r1; ry++) {
                int kf = k * r1 + ry;
                spv += fine_array(jf, kf) * lengthf;
-               //fprintf(stdout,"fine_array[%d,%d]=%0.15E\n",jf,kf,fine_array(jf,kf));
             }
 
             coarse_array(j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array[%d,%d]=%0.15E\n",j,k,coarse_array(j,k));
          });
 
          auto fine_array_t = fdata->getConstView<2>(1, d);
@@ -251,11 +249,9 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
             for (int ry = 0; ry < r0; ry++) {
                int kf = k * r0 + ry;
                spv += fine_array_t(jf, kf) * lengthf;
-               //fprintf(stdout,"fine_array_t[%d,%d]=%0.15E\n",jf,kf,fine_array_t(jf,kf));
             }
 
             coarse_array_t(j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array_t[%d,%d]=%0.15f\n",j,k,coarse_array_t(j,k));
          });
 #else  // Fortran Dim 2
          SAMRAI_F77_FUNC(cartwgtavgfacedoub2d0, CARTWGTAVGFACEDOUB2D0)
@@ -317,7 +313,6 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
             }
 
             coarse_array(i, j, k) = spv / areac;
-            //fprintf(stdout,"coarse_array[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array(i,j,k));
          });
 
          //transpose to 1,2,0
@@ -349,7 +344,6 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
             }
 
             coarse_array_t1(i, j, k) = spv / areac;
-            //fprintf(stdout,"coarse_array_t1[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array_t1(i,j,k));
          });
 
          //transpose to 2,0,1
@@ -380,7 +374,6 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
             }
 
             coarse_array_t2(i, j, k) = spv / areac;
-            //fprintf(stdout,"coarse_array_t2[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array_t2(i,j,k));
          });
 
 #else  // Fortran dim 3

@@ -26,9 +26,9 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<typename TCELL>   
+template<typename T>   
 void
-CellConstantRefine<TCELL>::refine(
+CellConstantRefine<T>::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -36,11 +36,11 @@ CellConstantRefine<TCELL>::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   std::shared_ptr<CellData<TCELL> > cdata(
-      SAMRAI_SHARED_PTR_CAST<CellData<TCELL>, hier::PatchData>(
+   std::shared_ptr<CellData<T> > cdata(
+      SAMRAI_SHARED_PTR_CAST<CellData<T>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   std::shared_ptr<CellData<TCELL> > fdata(
-      SAMRAI_SHARED_PTR_CAST<CellData<TCELL>, hier::PatchData>(
+   std::shared_ptr<CellData<T> > fdata(
+      SAMRAI_SHARED_PTR_CAST<CellData<T>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);
@@ -63,7 +63,7 @@ CellConstantRefine<TCELL>::refine(
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
-         Call1dFortranCell<TCELL>(ifirstc(0), ilastc(0),
+         Call1dFortranCell<T>(ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
             filo(0), fihi(0),
@@ -85,7 +85,7 @@ CellConstantRefine<TCELL>::refine(
             fine_array(j, k) = coarse_array(ic0, ic1);
          });
 #else // Fortran Dimension 2
-         Call2dFortranCell<TCELL>(ifirstc(0), ifirstc(1),
+         Call2dFortranCell<T>(ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -111,7 +111,7 @@ CellConstantRefine<TCELL>::refine(
          fine_array(i, j, k) = coarse_array(ic0, ic1, ic2);
       });
 #else // Fortran Dimension 3
-         Call3dFortranCell<TCELL> (ifirstc(0), ifirstc(1),
+         Call3dFortranCell<T> (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

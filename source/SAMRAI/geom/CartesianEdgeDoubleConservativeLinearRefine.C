@@ -292,8 +292,7 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                      deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
                      deltax1 = static_cast<double>(ir1) * fdx1;
 
-                     double fine_tmp = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
-                     fine_array(j, k) = fine_tmp;
+                     fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
                   });
 
                }  // axis == 0
@@ -334,8 +333,7 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                      deltax0 = static_cast<double>(ir0) * fdx0;
                      deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
 
-                     double fine_tmp = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
-                     fine_array(j, k) = fine_tmp;
+                     fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
                   });
                }  // axis == 1
 
@@ -469,33 +467,25 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                          }
                       });
 
-                  pdat::parallel_for_all_x(fine_box_plus,
-                                           [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-                                              const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
-                                              const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
-                                              const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
+                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
+                     const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
+                     const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
 
-                                              const int ir0 = i - ic0 * r0;
-                                              const int ir1 = j - ic1 * r1;
-                                              const int ir2 = k - ic2 * r2;
-                                              double deltax0, deltax1, deltax2;
+                     const int ir0 = i - ic0 * r0;
+                     const int ir1 = j - ic1 * r1;
+                     const int ir2 = k - ic2 * r2;
+                     double deltax0, deltax1, deltax2;
 
-                                              deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
-                                              deltax1 = static_cast<double>(ir1) * fdx1;
-                                              deltax2 = static_cast<double>(ir2) * fdx2;
+                     deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+                     deltax1 = static_cast<double>(ir1) * fdx1;
+                     deltax2 = static_cast<double>(ir2) * fdx2;
 
-                                              double fine_tmp = coarse_array(ic0, ic1, ic2) +
-                                                                slope0(ic0, ic1, ic2) * deltax0 +
-                                                                slope1(ic0, ic1, ic2) * deltax1 +
-                                                                slope2(ic0, ic1, ic2) * deltax2;
-                                              fine_array(i, j, k) = fine_tmp;
-                                              //fprintf(stdout,
-                                              //   "fine_array0(%d,%d,%d)=%0.16E\n",
-                                              //   i,
-                                              //   j,
-                                              //   k,
-                                              //   fine_array(i, j, k));
-                                           });
+                     fine_array(i, j, k) = coarse_array(ic0, ic1, ic2) +
+                                           slope0(ic0, ic1, ic2) * deltax0 +
+                                           slope1(ic0, ic1, ic2) * deltax1 +
+                                           slope2(ic0, ic1, ic2) * deltax2;
+                  });
                } else if (axis == 1) {
                   pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                      diff0(i, j, k) = coarse_array(i + 1, j, k) - coarse_array(i, j, k);
@@ -533,33 +523,25 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                          }
                       });
 
-                  pdat::parallel_for_all_x(fine_box_plus,
-                                           [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-                                              const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
-                                              const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
-                                              const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
+                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
+                     const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
+                     const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
 
-                                              const int ir0 = i - ic0 * r0;
-                                              const int ir1 = j - ic1 * r1;
-                                              const int ir2 = k - ic2 * r2;
-                                              double deltax0, deltax1, deltax2;
+                     const int ir0 = i - ic0 * r0;
+                     const int ir1 = j - ic1 * r1;
+                     const int ir2 = k - ic2 * r2;
+                     double deltax0, deltax1, deltax2;
 
-                                              deltax0 = static_cast<double>(ir0) * fdx0;
-                                              deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
-                                              deltax2 = static_cast<double>(ir2) * fdx2;
+                     deltax0 = static_cast<double>(ir0) * fdx0;
+                     deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
+                     deltax2 = static_cast<double>(ir2) * fdx2;
 
-                                              double fine_tmp = coarse_array(ic0, ic1, ic2) +
-                                                                slope0(ic0, ic1, ic2) * deltax0 +
-                                                                slope1(ic0, ic1, ic2) * deltax1 +
-                                                                slope2(ic0, ic1, ic2) * deltax2;
-                                              fine_array(i, j, k) = fine_tmp;
-                                              //  fprintf(stdout,
-                                              //      "fine_array1(%d,%d,%d)=%0.16E\n",
-                                              //      i,
-                                              //      j,
-                                              //      k,
-                                              //      fine_array(i, j, k));
-                                           });
+                     fine_array(i, j, k) = coarse_array(ic0, ic1, ic2) +
+                                           slope0(ic0, ic1, ic2) * deltax0 +
+                                           slope1(ic0, ic1, ic2) * deltax1 +
+                                           slope2(ic0, ic1, ic2) * deltax2;
+                  });
 
                } else if (axis == 2) {
                   pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
@@ -598,33 +580,25 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                          }
                       });
 
-                  pdat::parallel_for_all_x(fine_box_plus,
-                                           [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-                                              const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
-                                              const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
-                                              const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
+                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
+                     const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
+                     const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
 
-                                              const int ir0 = i - ic0 * r0;
-                                              const int ir1 = j - ic1 * r1;
-                                              const int ir2 = k - ic2 * r2;
-                                              double deltax0, deltax1, deltax2;
+                     const int ir0 = i - ic0 * r0;
+                     const int ir1 = j - ic1 * r1;
+                     const int ir2 = k - ic2 * r2;
+                     double deltax0, deltax1, deltax2;
 
-                                              deltax0 = static_cast<double>(ir0) * fdx0;
-                                              deltax1 = static_cast<double>(ir1) * fdx1;
-                                              deltax2 = (static_cast<double>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
+                     deltax0 = static_cast<double>(ir0) * fdx0;
+                     deltax1 = static_cast<double>(ir1) * fdx1;
+                     deltax2 = (static_cast<double>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
 
-                                              double fine_tmp = coarse_array(ic0, ic1, ic2) +
-                                                                slope0(ic0, ic1, ic2) * deltax0 +
-                                                                slope1(ic0, ic1, ic2) * deltax1 +
-                                                                slope2(ic0, ic1, ic2) * deltax2;
-                                              fine_array(i, j, k) = fine_tmp;
-                                              //  fprintf(stdout,
-                                              //      "fine_array2(%d,%d,%d)=%0.16E\n",
-                                              //      i,
-                                              //      j,
-                                              //      k,
-                                              //      fine_array(i, j, k));
-                                           });
+                     fine_array(i, j, k) = coarse_array(ic0, ic1, ic2) +
+                                           slope0(ic0, ic1, ic2) * deltax0 +
+                                           slope1(ic0, ic1, ic2) * deltax1 +
+                                           slope2(ic0, ic1, ic2) * deltax2;
+                  });
                }
 
 #else

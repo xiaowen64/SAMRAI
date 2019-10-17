@@ -29,23 +29,23 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<typename TCELL>   
+template<typename T>   
 int
-EdgeConstantRefine<TCELL>::getOperatorPriority() const
+EdgeConstantRefine<T>::getOperatorPriority() const
 {
    return 0;
 }
 
-template<typename TCELL>   
+template<typename T>   
 hier::IntVector
-EdgeConstantRefine<TCELL>::getStencilWidth(const tbox::Dimension& dim) const
+EdgeConstantRefine<T>::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
 
-template<typename TCELL>   
+template<typename T>   
 void
-EdgeConstantRefine<TCELL>::refine(
+EdgeConstantRefine<T>::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -55,11 +55,11 @@ EdgeConstantRefine<TCELL>::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   std::shared_ptr<EdgeData<TCELL> > cdata(
-      SAMRAI_SHARED_PTR_CAST<EdgeData<TCELL>, hier::PatchData>(
+   std::shared_ptr<EdgeData<T> > cdata(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<T>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   std::shared_ptr<EdgeData<TCELL> > fdata(
-      SAMRAI_SHARED_PTR_CAST<EdgeData<TCELL>, hier::PatchData>(
+   std::shared_ptr<EdgeData<T> > fdata(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<T>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);
@@ -101,7 +101,7 @@ EdgeConstantRefine<TCELL>::refine(
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if (dim == tbox::Dimension(1)) {
-               Call1dFortranEdge<TCELL> (
+               Call1dFortranEdge<T> (
                   ifirstc(0), ilastc(0),
                   ifirstf(0), ilastf(0),
                   cilo(0), cihi(0),
@@ -134,7 +134,7 @@ EdgeConstantRefine<TCELL>::refine(
                });
 #else // Fortran Dimension 2
                if (axis == 0) {
-                  Call2dFortranEdge_d0<TCELL> (
+                  Call2dFortranEdge_d0<T> (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -143,7 +143,7 @@ EdgeConstantRefine<TCELL>::refine(
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d));
                } else if (axis == 1) {
-                  Call2dFortranEdge_d1<TCELL> (
+                  Call2dFortranEdge_d1<T> (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -184,7 +184,7 @@ EdgeConstantRefine<TCELL>::refine(
                });
 #else // Fortran Dimension 3
                if (axis == 0) {
-                  Call3dFortranEdge_d0<TCELL> (
+                  Call3dFortranEdge_d0<T> (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -197,7 +197,7 @@ EdgeConstantRefine<TCELL>::refine(
                      cdata->getPointer(0, d),
                      fdata->getPointer(0, d));
                } else if (axis == 1) {
-                  Call3dFortranEdge_d1<TCELL> (
+                  Call3dFortranEdge_d1<T> (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -210,7 +210,7 @@ EdgeConstantRefine<TCELL>::refine(
                      cdata->getPointer(1, d),
                      fdata->getPointer(1, d));
                } else if (axis == 2) {
-                  Call3dFortranEdge_d2<TCELL> (
+                  Call3dFortranEdge_d2<T> (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -226,7 +226,7 @@ EdgeConstantRefine<TCELL>::refine(
 #endif // Test for RAJA
             } else {
                TBOX_ERROR(
-                  "EdgeDoubleConstantRefine::refine dimension > 3 not supported"
+                  "EdgeConstantRefine::refine dimension > 3 not supported"
                   << std::endl);
             }
          }

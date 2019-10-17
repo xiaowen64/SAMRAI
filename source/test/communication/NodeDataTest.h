@@ -59,6 +59,7 @@ class CommTester;
  * refinement input data description.
  */
 
+using KERNEL_TYPE = double; // can only support double for now; need to change pgeom too
 class NodeDataTest:public PatchDataTestStrategy
 {
 public:
@@ -141,7 +142,7 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::NodeData<double> > data,
+      std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -151,13 +152,13 @@ private:
     */
    void
    setPeriodicData(
-      std::shared_ptr<pdat::NodeData<double> > data,
+      std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::NodeData<double> >& data,
+      const std::shared_ptr<pdat::NodeData<KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const hier::Patch& patch) const;
 
@@ -176,10 +177,10 @@ private:
    /*
     * Data members specific to this node data test.
     */
-   double d_Acoef;
-   double d_Bcoef;
-   double d_Ccoef;
-   double d_Dcoef;
+   KERNEL_TYPE d_Acoef;
+   KERNEL_TYPE d_Bcoef;
+   KERNEL_TYPE d_Ccoef;
+   KERNEL_TYPE d_Dcoef;
 
    bool d_do_refine;
    bool d_do_coarsen;

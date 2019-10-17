@@ -20,84 +20,13 @@
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/SideVariable.h"
 
-/*
- *************************************************************************
- *
- * External declarations for FORTRAN  routines.
- *
- *************************************************************************
- */
-extern "C" {
-
-#ifdef __INTEL_COMPILER
-#pragma warning (disable:1419)
-#endif
-
-// in conrefine1d.f:
-void SAMRAI_F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int *,
-   const double *, double *);
-// in conrefine2d.f:
-void SAMRAI_F77_FUNC(conrefsidedoub2d0, CONREFSIDEDOUB2D0) (const int&, const int&,
-   const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-void SAMRAI_F77_FUNC(conrefsidedoub2d1, CONREFSIDEDOUB2D1) (const int&, const int&,
-   const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int&, const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-// in conrefine3d.f:
-void SAMRAI_F77_FUNC(conrefsidedoub3d0, CONREFSIDEDOUB3D0) (const int&, const int&,
-   const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-void SAMRAI_F77_FUNC(conrefsidedoub3d1, CONREFSIDEDOUB3D1) (const int&, const int&,
-   const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-void SAMRAI_F77_FUNC(conrefsidedoub3d2, CONREFSIDEDOUB3D2) (const int&, const int&,
-   const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int *,
-   const double *, double *);
-}
 
 namespace SAMRAI {
 namespace pdat {
 
-   
-template<typename TCELL>   
+template<typename T>   
 void
-SideConstantRefine<TCELL>::refine(
+SideConstantRefine<T>::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -107,11 +36,11 @@ SideConstantRefine<TCELL>::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   std::shared_ptr<SideData<TCELL> > cdata(
-      SAMRAI_SHARED_PTR_CAST<SideData<TCELL>, hier::PatchData>(
+   std::shared_ptr<SideData<T> > cdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<T>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   std::shared_ptr<SideData<TCELL> > fdata(
-      SAMRAI_SHARED_PTR_CAST<SideData<TCELL>, hier::PatchData>(
+   std::shared_ptr<SideData<T> > fdata(
+      SAMRAI_SHARED_PTR_CAST<SideData<T>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap =
@@ -283,7 +212,7 @@ SideConstantRefine<TCELL>::refine(
 #endif
             } else {
                TBOX_ERROR(
-                  "SideDoubleConstantRefine::refine dimension > 3 not supported"
+                  "SideConstantRefine::refine dimension > 3 not supported"
                   << std::endl);
             }
          } // depth

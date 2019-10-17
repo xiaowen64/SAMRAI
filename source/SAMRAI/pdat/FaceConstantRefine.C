@@ -22,9 +22,9 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<typename TCELL>   
+template<typename T>   
 void
-FaceConstantRefine<TCELL>::refine(
+FaceConstantRefine<T>::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -34,11 +34,11 @@ FaceConstantRefine<TCELL>::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   std::shared_ptr<FaceData<TCELL> > cdata(
-      SAMRAI_SHARED_PTR_CAST<FaceData<TCELL>, hier::PatchData>(
+   std::shared_ptr<FaceData<T> > cdata(
+      SAMRAI_SHARED_PTR_CAST<FaceData<T>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   std::shared_ptr<FaceData<TCELL> > fdata(
-      SAMRAI_SHARED_PTR_CAST<FaceData<TCELL>, hier::PatchData>(
+   std::shared_ptr<FaceData<T> > fdata(
+      SAMRAI_SHARED_PTR_CAST<FaceData<T>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap =
@@ -223,7 +223,7 @@ FaceConstantRefine<TCELL>::refine(
 #endif // Test for RAJA
             } else {
                TBOX_ERROR(
-                  "FaceDoubleConstantRefine::refine() dimension > 3 not supported"
+                  "FaceConstantRefine::refine() dimension > 3 not supported"
                   << std::endl);
             }
          }

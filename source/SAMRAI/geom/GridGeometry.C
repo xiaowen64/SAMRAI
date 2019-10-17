@@ -9,6 +9,7 @@
  ************************************************************************/
 #include "SAMRAI/geom/GridGeometry.h"
 
+#include "SAMRAI/pdat/NodeInjection.h"
 #include "SAMRAI/pdat/NodeComplexInjection.h"
 #include "SAMRAI/pdat/NodeDoubleInjection.h"
 #include "SAMRAI/pdat/NodeFloatInjection.h"
@@ -248,17 +249,25 @@ GridGeometry::buildOperators()
 {
    // Coarsening Operators
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<dcomplex>).name(),
+      //std::make_shared<pdat::NodeComplexInjection>());
       typeid(pdat::NodeVariable<dcomplex>).name(),
-      std::make_shared<pdat::NodeComplexInjection>());
+      std::make_shared<pdat::NodeInjection<dcomplex>>());
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<double>).name(),
+      //std::make_shared<pdat::NodeDoubleInjection>());
       typeid(pdat::NodeVariable<double>).name(),
-      std::make_shared<pdat::NodeDoubleInjection>());
+      std::make_shared<pdat::NodeInjection<double>>());
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<float>).name(),
+      //std::make_shared<pdat::NodeFloatInjection>());
       typeid(pdat::NodeVariable<float>).name(),
-      std::make_shared<pdat::NodeFloatInjection>());
+      std::make_shared<pdat::NodeInjection<float>>());
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<int>).name(),
+      //std::make_shared<pdat::NodeIntegerInjection>());
       typeid(pdat::NodeVariable<int>).name(),
-      std::make_shared<pdat::NodeIntegerInjection>());
+      std::make_shared<pdat::NodeInjection<int>>());
    addCoarsenOperator(
       typeid(pdat::OuternodeVariable<double>).name(),
       std::make_shared<pdat::OuternodeDoubleInjection>());
