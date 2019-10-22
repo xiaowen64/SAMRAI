@@ -126,7 +126,7 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
 
          if (d_strategy) {
             d_strategy->putCoordinatesToDatabase(
-               coords_db, *patch);
+               coords_db, *patch, patch->getBox());
          }
 
          topo_db->putString("coordset", "coords");
@@ -139,6 +139,28 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
          }
       }
    }
+}
+
+void BlueprintUtils::setFlattenedCoordset(
+   std::shared_ptr<tbox::Database>& coords_db,
+   const std::shared_ptr<tbox::Database>& topo_db,
+   const Patch& patch,
+   const Box& box) const
+{
+         if (d_strategy) {
+            d_strategy->putCoordinatesToDatabase(
+               coords_db, patch, box);
+         }
+
+         topo_db->putString("coordset", "coords");
+
+         std::string coords_type = coords_db->getString("type");
+         if (coords_type == "explicit") {
+            topo_db->putString("type", "structured");
+         } else {
+            topo_db->putString("type", coords_type);
+         }
+
 }
 
 /*

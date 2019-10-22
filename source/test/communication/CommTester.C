@@ -737,7 +737,8 @@ void CommTester::setupHierarchy(
 void
 CommTester::putCoordinatesToDatabase(
    std::shared_ptr<tbox::Database>& coords_db,
-   const hier::Patch& patch)
+   const hier::Patch& patch,
+   const hier::Box& box)
 {
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
@@ -750,15 +751,15 @@ CommTester::putCoordinatesToDatabase(
 */
    const tbox::Dimension& dim(patch.getDim());
 
-   pdat::NodeData<double> coords(patch.getBox(), dim.getValue(),
+   pdat::NodeData<double> coords(box, dim.getValue(),
                                  hier::IntVector::getZero(dim));
 
    const hier::Index& box_lo = patch.getBox().lower();
    const double* x_lo = pgeom->getXLower();
    const double* dx = pgeom->getDx();
    
-   pdat::NodeIterator nend = pdat::NodeGeometry::end(patch.getBox());
-   for (pdat::NodeIterator itr(pdat::NodeGeometry::begin(patch.getBox())); itr != nend; ++itr) {
+   pdat::NodeIterator nend = pdat::NodeGeometry::end(box);
+   for (pdat::NodeIterator itr(pdat::NodeGeometry::begin(box)); itr != nend; ++itr) {
       const pdat::NodeIndex& ni = *itr;
       for (int d = 0; d < dim.getValue(); ++d) {
          coords(ni, d) = x_lo[d] + (ni(d)-box_lo(d))*dx[d];

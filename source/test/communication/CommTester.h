@@ -276,7 +276,8 @@ public:
    void
    putCoordinatesToDatabase(
       std::shared_ptr<tbox::Database>& coords_db,
-      const hier::Patch& patch);
+      const hier::Patch& patch,
+      const hier::Box& box);
 
    /*!
     * @brief Return the dimension of this object.

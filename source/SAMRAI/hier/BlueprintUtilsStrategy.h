@@ -57,7 +57,8 @@ public:
     */
    virtual void putCoordinatesToDatabase(
       std::shared_ptr<tbox::Database>& coords_db,
-      const Patch& patch) = 0;
+      const Patch& patch,
+      const Box& box) = 0;
 
 private:
 

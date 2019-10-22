@@ -73,6 +73,13 @@ public:
       const PatchHierarchy& hierarchy,
       const std::string& topology_name) const;
 
+   void setFlattenedCoordset(
+      std::shared_ptr<tbox::Database>& coords_db,
+      const std::shared_ptr<tbox::Database>& topo_db,
+      const Patch& patch,
+      const Box& box) const;
+
+
    /*!
     * @brief Write blueprint to files.
     *

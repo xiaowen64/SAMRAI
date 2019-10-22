@@ -363,7 +363,8 @@ public:
    void
    putCoordinatesToDatabase(
       std::shared_ptr<tbox::Database>& coords_db,
-      const hier::Patch& patch);
+      const hier::Patch& patch,
+      const hier::Box& box);
 
 #ifdef SAMRAI_HAVE_CONDUIT
    void addFields(
