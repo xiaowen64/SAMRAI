@@ -1,5 +1,5 @@
 message(STATUS "Processing requested test directories")
-#add_subdirectory(applications)
+add_subdirectory(applications)
 # add_subdirectory(assumed_partition)
 # add_subdirectory(async_comm)
 # add_subdirectory(boundary)
