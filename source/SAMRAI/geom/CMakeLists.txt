@@ -1,4 +1,5 @@
 set (geom_headers
+        CartesianCellConservativeLinearRefine.h
         CartesianCellComplexConservativeLinearRefine.h
         CartesianCellComplexLinearRefine.h
         CartesianCellComplexWeightedAverage.h
@@ -35,6 +36,7 @@ set (geom_headers
         GridGeometry.h)
 
 set (geom_sources
+  CartesianCellConservativeLinearRefine.C
   CartesianCellComplexConservativeLinearRefine.C
   CartesianCellComplexLinearRefine.C
   CartesianCellComplexWeightedAverage.C

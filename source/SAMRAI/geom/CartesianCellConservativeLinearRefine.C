@@ -8,7 +8,7 @@
  *                double data on a Cartesian mesh.
  *
  ************************************************************************/
-#include "SAMRAI/geom/CartesianCellDoubleConservativeLinearRefine.h"
+#include "SAMRAI/geom/CartesianCellConservativeLinearRefine.h"
 #include <cfloat>
 #include <cmath>
 #include <memory>
@@ -27,89 +27,26 @@
 #define SQRT sqrt
 #define COPYSIGN copysign
 
-/*
- *************************************************************************
- *
- * External declarations for FORTRAN  routines.
- *
- *************************************************************************
- */
-
-extern "C" {
-
-#ifdef __INTEL_COMPILER
-#pragma warning(disable : 1419)
-#endif
-
-// in cartrefine1d.f:
-void SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D)(const int &,
-                                                                   const int &,
-                                                                   const int &, const int &,
-                                                                   const int &, const int &,
-                                                                   const int &, const int &,
-                                                                   const int *, const double *, const double *,
-                                                                   const double *, double *,
-                                                                   double *, double *);
-// in cartrefine2d.f:
-void SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D)(const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &, const int &,
-                                                                   const int *, const double *, const double *,
-                                                                   const double *, double *,
-                                                                   double *, double *, double *, double *);
-// in cartrefine3d.f:
-void SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D)(const int &,
-                                                                   const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int &, const int &, const int &,
-                                                                   const int *, const double *, const double *,
-                                                                   const double *, double *,
-                                                                   double *, double *, double *,
-                                                                   double *, double *, double *);
-}
-
-#if !defined(__BGL_FAMILY__) && defined(__xlC__)
-/*
- * Suppress XLC warnings
- */
-#pragma report(disable, CPPC5334)
-#pragma report(disable, CPPC5328)
-#endif
-
 namespace SAMRAI
 {
 namespace geom
 {
 
-
-CartesianCellDoubleConservativeLinearRefine::
-    CartesianCellDoubleConservativeLinearRefine() : hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
-{
-}
-
-CartesianCellDoubleConservativeLinearRefine::~CartesianCellDoubleConservativeLinearRefine()
-{
-}
-
-int CartesianCellDoubleConservativeLinearRefine::getOperatorPriority() const
+template<typename T> 
+int CartesianCellConservativeLinearRefine<T>::getOperatorPriority() const
 {
    return 0;
 }
 
+template<typename T> 
 hier::IntVector
-CartesianCellDoubleConservativeLinearRefine::getStencilWidth(const tbox::Dimension &dim) const
+CartesianCellConservativeLinearRefine<T>::getStencilWidth(const tbox::Dimension &dim) const
 {
    return hier::IntVector::getOne(dim);
 }
 
-void CartesianCellDoubleConservativeLinearRefine::refine(
+template<typename T> 
+void CartesianCellConservativeLinearRefine<T>::refine(
     hier::Patch &fine,
     const hier::Patch &coarse,
     const int dst_component,
@@ -134,7 +71,8 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
    }
 }
 
-void CartesianCellDoubleConservativeLinearRefine::refine(
+template<typename T> 
+void CartesianCellConservativeLinearRefine<T>::refine(
     hier::Patch &fine,
     const hier::Patch &coarse,
     const int dst_component,
@@ -144,14 +82,16 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
 {
    RANGE_PUSH("ConservativeLinearRefine::refine", 3);
 
+   fprintf(stdout,"GenericCellConservativeLinearRefine<%s>\n",typeid(T).name());
+
    const tbox::Dimension &dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
-   std::shared_ptr<pdat::CellData<double> > cdata(
-       SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<T> > cdata(
+       SAMRAI_SHARED_PTR_CAST<pdat::CellData<T>, hier::PatchData>(
            coarse.getPatchData(src_component)));
-   std::shared_ptr<pdat::CellData<double> > fdata(
-       SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<T> > fdata(
+       SAMRAI_SHARED_PTR_CAST<pdat::CellData<T>, hier::PatchData>(
            fine.getPatchData(dst_component)));
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -181,15 +121,20 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index &ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(dim, 0);
+
+   SAMRAI::hier::Box diff_box = coarse_box;
+   diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
+
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 
    // change to alloc_db->getDevicePool or other generic pool allocator for gpu policies
-   pdat::ArrayData<double> slope(cgbox, dim.getValue(), alloc_db->getTagAllocator());
+   pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getTagAllocator());
+
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
-         std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
-         SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D)
-         (ifirstc(0),
+         std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
+         Call1dFortranCellLinearRefine(
+          ifirstc(0),
           ilastc(0),
           ifirstf(0), ilastf(0),
           cilo(0), cihi(0),
@@ -201,19 +146,20 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
           fdata->getPointer(d),
           &diff0_f[0], slope.getPointer());
       } else if ((dim == tbox::Dimension(2))) {
+
 #if defined(HAVE_RAJA)
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0,1);
          diff_box.growUpper(1,1);
-         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-         auto fine_array = fdata->getView<2>(d);
-         auto coarse_array = cdata->getView<2>(d);
+         pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+         auto fine_array = fdata-> template getView<2>(d);
+         auto coarse_array = cdata-> template getView<2>(d);
 
-         auto diff0 = diff.getView<2>(0);
-         auto diff1 = diff.getView<2>(1);
+         auto diff0 = diff. template getView<2>(0);
+         auto diff1 = diff. template getView<2>(1);
 
-         auto slope0 = slope.getView<2>(0);
-         auto slope1 = slope.getView<2>(1);
+         auto slope0 = slope. template getView<2>(0);
+         auto slope1 = slope. template getView<2>(1);
 
          const double *fdx = fgeom->getDx();
          const double *cdx = cgeom->getDx();
@@ -259,14 +205,15 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
 
             const double deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
             const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+
             fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
          });
 #else  // Fortran Dimension 2
-         std::vector<double> diff1_f(cgbox.numberCells(1) + 1);
-         std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
+         std::vector<T> diff1_f(cgbox.numberCells(1) + 1);
+         std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
 
-         SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D)
-         (ifirstc(0),
+         Call2dFortranCellLinearRefine(
+          ifirstc(0),
           ifirstc(1), ilastc(0), ilastc(1),
           ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
           cilo(0), cilo(1), cihi(0), cihi(1),
@@ -278,7 +225,7 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
           fdata->getPointer(d),
           &diff0_f[0], slope.getPointer(0),
           &diff1_f[0], slope.getPointer(1));
-          exit(-1);
+
 
 #endif  // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
@@ -288,18 +235,18 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
          diff_box.growUpper(0,1);
          diff_box.growUpper(1,1);
          diff_box.growUpper(2,1);
-         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+         pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
 
-         auto fine_array = fdata->getView<3>(d);
-         auto coarse_array = cdata->getView<3>(d);
+         auto fine_array = fdata-> template getView<3>(d);
+         auto coarse_array = cdata-> template getView<3>(d);
 
-         auto diff0 = diff.getView<3>(0);
-         auto diff1 = diff.getView<3>(1);
-         auto diff2 = diff.getView<3>(2);
+         auto diff0 = diff. template getView<3>(0);
+         auto diff1 = diff. template getView<3>(1);
+         auto diff2 = diff. template getView<3>(2);
 
-         auto slope0 = slope.getView<3>(0);
-         auto slope1 = slope.getView<3>(1);
-         auto slope2 = slope.getView<3>(2);
+         auto slope0 = slope. template getView<3>(0);
+         auto slope1 = slope. template getView<3>(1);
+         auto slope2 = slope. template getView<3>(2);
 
          const double *fdx = fgeom->getDx();
          const double *cdx = cgeom->getDx();
@@ -356,19 +303,18 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
             const int ir1 = j - ic1 * r1;
             const int ir2 = k - ic2 * r2;
 
-            const double deltax2 = (static_cast<double>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
-            const double deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
-            const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+            const double deltax2 = (static_cast<T>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
+            const double deltax1 = (static_cast<T>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
+            const double deltax0 = (static_cast<T>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
 
             fine_array(i, j, k) = coarse_array(ic0, ic1, ic2) + slope0(ic0, ic1, ic2) * deltax0 + slope1(ic0, ic1, ic2) * deltax1 + slope2(ic0, ic1, ic2) * deltax2;
          });
 #else
-         std::vector<double> diff0_f(cgbox.numberCells(0) + 1);
-         std::vector<double> diff1_f(cgbox.numberCells(1) + 1);
-         std::vector<double> diff2_f(cgbox.numberCells(2) + 1);
-
-         SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D)
-         (ifirstc(0),
+         std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
+         std::vector<T> diff1_f(cgbox.numberCells(1) + 1);
+         std::vector<T> diff2_f(cgbox.numberCells(2) + 1);
+         Call3dFortranCellLinearRefine(
+          ifirstc(0),
           ifirstc(1), ifirstc(2),
           ilastc(0), ilastc(1), ilastc(2),
           ifirstf(0), ifirstf(1), ifirstf(2),

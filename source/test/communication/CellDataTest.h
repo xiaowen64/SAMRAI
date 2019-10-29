@@ -28,6 +28,7 @@
 #include <memory>
 
 
+using KERNEL_TYPE = float;
 namespace SAMRAI {
 
 class CommTester;
@@ -151,7 +152,7 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::CellData<double> > data,
+      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -160,7 +161,7 @@ private:
     */
    void
    setConservativeData(
-      std::shared_ptr<pdat::CellData<double> > data,
+      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch,
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -172,13 +173,13 @@ private:
     */
    void
    setPeriodicData(
-      std::shared_ptr<pdat::CellData<double> > data,
+      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::CellData<double> >& data,
+      const std::shared_ptr<pdat::CellData<KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const hier::Patch& patch) const;
 

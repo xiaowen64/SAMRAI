@@ -23,6 +23,7 @@
 #include "SAMRAI/geom/CartesianCellDoubleLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatLinearRefine.h"
+#include "SAMRAI/geom/CartesianCellConservativeLinearRefine.h"
 
 // Edge data coarsen operators
 #include "SAMRAI/geom/CartesianEdgeComplexWeightedAverage.h"
@@ -452,11 +453,15 @@ CartesianGridGeometry::buildOperators()
       typeid(pdat::CellVariable<dcomplex>).name(),
       std::make_shared<CartesianCellComplexConservativeLinearRefine>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<double>).name(),
+      //std::make_shared<CartesianCellDoubleConservativeLinearRefine>());
       typeid(pdat::CellVariable<double>).name(),
-      std::make_shared<CartesianCellDoubleConservativeLinearRefine>());
+      std::make_shared<CartesianCellConservativeLinearRefine<double>>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<float>).name(),
+      //std::make_shared<CartesianCellFloatConservativeLinearRefine>());
       typeid(pdat::CellVariable<float>).name(),
-      std::make_shared<CartesianCellFloatConservativeLinearRefine>());
+      std::make_shared<CartesianCellConservativeLinearRefine<float>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
       std::make_shared<CartesianEdgeDoubleConservativeLinearRefine>());
