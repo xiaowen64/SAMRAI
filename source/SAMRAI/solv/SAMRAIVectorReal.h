@@ -655,6 +655,13 @@ public:
    maxPointwiseDivide(
       const std::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const;
 
+   /*!
+    * @brief Get the length of this vector
+    *
+    * @param interior_only   If true, only count the elements in interior
+    *                        of patches.
+    * @return The length (number of elements in the underlying data)
+    */
    int64_t getLength(const bool interior_only = true) const;
 
    //@}

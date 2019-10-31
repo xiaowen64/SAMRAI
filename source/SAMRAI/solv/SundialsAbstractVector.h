@@ -237,6 +237,11 @@ public:
    testReciprocal(
       const SundialsAbstractVector* x) = 0;
 
+   /*!
+    * @brief Get the length of this vector.
+    *
+    * @return The length (number of elements in the underlying data)
+    */
    virtual sunindextype getLength() const = 0;
 
    /**
