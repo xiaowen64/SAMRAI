@@ -300,6 +300,8 @@ private:
    testReciprocal(
       const SundialsAbstractVector* x);
 
+   sunindextype getLength() const;
+
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */

@@ -655,6 +655,8 @@ public:
    maxPointwiseDivide(
       const std::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const;
 
+   int64_t getLength(const bool interior_only = true) const;
+
    //@}
 
 private:

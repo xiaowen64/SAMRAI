@@ -237,6 +237,8 @@ public:
    testReciprocal(
       const SundialsAbstractVector* x) = 0;
 
+   virtual sunindextype getLength() const = 0;
+
    /**
     * Return the wrapped Sundials N_Vector.
     */
@@ -435,6 +437,13 @@ private:
    N_VMinQuotient_SAMRAI(
       N_Vector num,
       N_Vector denom);
+
+   static sunindextype
+   N_VGetLength_SAMRAI(N_Vector x)
+   {
+      return SABSVEC_CAST(x)->getLength();
+   }
+
 };
 
 }

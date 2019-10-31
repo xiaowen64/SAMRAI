@@ -464,6 +464,10 @@ public:
       const int denom_id,
       bool local_only = false) const = 0;
 
+   virtual int64_t getLength(
+      const int data_id,
+      const bool interior_only = true) const = 0;
+
 private:
    // The following are not implemented
    HierarchyDataOpsReal(

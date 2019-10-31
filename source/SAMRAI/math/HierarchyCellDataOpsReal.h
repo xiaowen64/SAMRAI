@@ -622,6 +622,10 @@ public:
       const int denom_id,
       bool local_only = false) const;
 
+   int64_t getLength(
+      const int data_id,
+      const bool interior_only = true) const;
+
 private:
    // The following are not implemented
    HierarchyCellDataOpsReal(
