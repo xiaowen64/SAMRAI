@@ -81,12 +81,12 @@ HierarchySideDataOpsReal<TYPE>::resetLevels(
       && (finest_level >= coarsest_level)
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
 
-   int dimVal = d_hierarchy->getDim().getValue();
+   int dim_val = d_hierarchy->getDim().getValue();
 
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dimVal; ++d) {
+   for (int d = 0; d < dim_val; ++d) {
       d_nonoverlapping_side_boxes[d].resize(d_finest_level + 1);
    }
 
@@ -95,7 +95,7 @@ HierarchySideDataOpsReal<TYPE>::resetLevels(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer side_boxes;
 
-      for (tbox::Dimension::dir_t nd = 0; nd < dimVal; ++nd) {
+      for (tbox::Dimension::dir_t nd = 0; nd < dim_val; ++nd) {
          side_boxes = level->getBoxes();
          for (hier::BoxContainer::iterator i = side_boxes.begin();
               i != side_boxes.end(); ++i) {
@@ -763,7 +763,7 @@ HierarchySideDataOpsReal<TYPE>::numberOfEntries(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
-   int dimVal = d_hierarchy->getDim().getValue();
+   int dim_val = d_hierarchy->getDim().getValue();
 
    size_t entries = 0;
 
@@ -782,12 +782,12 @@ HierarchySideDataOpsReal<TYPE>::numberOfEntries(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int dc = 0; dc < dimVal; ++dc) {
+         for (int dc = 0; dc < dim_val; ++dc) {
             TBOX_ASSERT(npatches == static_cast<int>(d_nonoverlapping_side_boxes[dc][ln].size()));
          }
 #endif
          for (int il = 0; il < npatches; ++il) {
-            for (int eb = 0; eb < dimVal; ++eb) {
+            for (int eb = 0; eb < dim_val; ++eb) {
                if (directions(eb)) {
                   hier::BoxContainer::const_iterator lb =
                      ((d_nonoverlapping_side_boxes[eb][ln])[il]).begin();
@@ -1534,6 +1534,52 @@ HierarchySideDataOpsReal<TYPE>::max(
    }
    return global_max;
 }
+
+template<class TYPE>
+int64_t HierarchySideDataOpsReal<TYPE>::getLength(
+   const int data_id,
+   const bool interior_only) const
+{
+   TBOX_ASSERT(d_hierarchy);
+   TBOX_ASSERT((d_coarsest_level >= 0)
+      && (d_finest_level >= d_coarsest_level)
+      && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
+
+   int64_t length = 0;
+   tbox::Dimension::dir_t dim_val = d_hierarchy->getDim().getValue();
+   hier::Box data_box(d_hierarchy->getDim());
+
+   for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
+      std::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const std::shared_ptr<hier::Patch>& p = *ip;
+
+         std::shared_ptr<pdat::SideData<TYPE> > data(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+               p->getPatchData(data_id)));
+
+         const hier::IntVector& directions = data->getDirectionVector();
+
+         TBOX_ASSERT(data);
+
+         for (tbox::Dimension::dir_t d = 0; d < dim_val; ++d) {
+            if (directions[d]) {
+               if (interior_only) {
+                  data_box = pdat::SideGeometry::toSideBox(data->getBox(), d);
+               } else {
+                  data_box = data->getArrayData(d).getBox();
+               }
+               length += static_cast<int64_t>(data_box.size()*data->getDepth());
+            }
+         }
+      }
+   }
+
+   return length;
+}
+
 
 }
 }

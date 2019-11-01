@@ -1517,6 +1517,45 @@ HierarchyNodeDataOpsReal<TYPE>::max(
    return global_max;
 }
 
+template<class TYPE>
+int64_t HierarchyNodeDataOpsReal<TYPE>::getLength(
+   const int data_id,
+   const bool interior_only) const
+{
+   TBOX_ASSERT(d_hierarchy);
+   TBOX_ASSERT((d_coarsest_level >= 0)
+      && (d_finest_level >= d_coarsest_level)
+      && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
+
+   int64_t length = 0;
+   hier::Box data_box(d_hierarchy->getDim());
+
+   for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
+      std::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const std::shared_ptr<hier::Patch>& p = *ip;
+
+         std::shared_ptr<pdat::NodeData<TYPE> > data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<TYPE>, hier::PatchData>(
+               p->getPatchData(data_id)));
+
+         TBOX_ASSERT(data);
+
+         if (interior_only) {
+            data_box = pdat::NodeGeometry::toNodeBox(data->getBox());
+         } else {
+            data_box = data->getArrayData().getBox();
+         }
+         length += static_cast<int64_t>(data_box.size() * data->getDepth());
+      }
+   }
+
+   return length;
+}
+
+
 }
 }
 #endif

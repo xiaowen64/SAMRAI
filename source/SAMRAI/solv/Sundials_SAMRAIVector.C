@@ -245,6 +245,12 @@ Sundials_SAMRAIVector::testReciprocal(
    return d_samrai_vector->testReciprocal(SKVEC_CAST(x)->getSAMRAIVector());
 }
 
+sunindextype
+Sundials_SAMRAIVector::getLength() const
+{
+   return static_cast<sunindextype>(d_samrai_vector->getLength());
+}
+
 }
 }
 
