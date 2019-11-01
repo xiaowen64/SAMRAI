@@ -53,6 +53,7 @@ if (ENABLE_PETSC OR PETSC_DIR)
 
   if (PETSC_FOUND)
     set (HAVE_PETSC True)
+    set (ENABLE_PETSC ON)
 
     blt_register_library(
       NAME PETSc

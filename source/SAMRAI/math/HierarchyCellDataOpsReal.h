@@ -622,6 +622,18 @@ public:
       const int denom_id,
       bool local_only = false) const;
 
+   /*!
+    * @brief Get the length of the data with the given ID
+    *
+    * @param data_id         Patch data ID
+    * @param interior_only   If true, only count the elements in interior
+    *                        of patches.
+    * @return The length (number of elements in the underlying data)
+    */
+   int64_t getLength(
+      const int data_id,
+      const bool interior_only = true) const;
+
 private:
    // The following are not implemented
    HierarchyCellDataOpsReal(

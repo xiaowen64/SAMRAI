@@ -300,6 +300,13 @@ private:
    testReciprocal(
       const SundialsAbstractVector* x);
 
+   /*!
+    * @brief Get the length of this vector.
+    *
+    * @return The length (number of elements in the underlying data)
+    */
+   sunindextype getLength() const;
+
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */

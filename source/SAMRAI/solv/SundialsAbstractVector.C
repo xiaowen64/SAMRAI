@@ -74,6 +74,7 @@ SundialsAbstractVector::createVectorOps()
    ops->nvl1norm = N_VL1Norm_SAMRAI;
    ops->nvcompare = N_VCompare_SAMRAI;
    ops->nvinvtest = N_VInvTest_SAMRAI;
+   ops->nvgetlength = N_VGetLength_SAMRAI;
 //   ops->nvconstrmask      = N_VConstrMask_SAMRAI;
 //   ops->nvminquotient     = N_VMinQuotient_SAMRAI;
 

@@ -1016,6 +1016,22 @@ SAMRAIVectorReal<TYPE>::max(
 }
 
 template<class TYPE>
+int64_t
+SAMRAIVectorReal<TYPE>::getLength(
+   const bool interior_only) const
+{
+   int64_t length = 0;
+
+   for (int i = 0; i < d_number_components; ++i) {
+      d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
+      length += d_component_operations[i]->getLength(d_component_data_id[i],
+                                                     interior_only);
+   }
+
+   return length;
+}
+
+template<class TYPE>
 void
 SAMRAIVectorReal<TYPE>::setOutputStream(
    std::ostream& s)
