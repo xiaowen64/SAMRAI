@@ -4494,7 +4494,7 @@ VisItDataWriter::HDFputBoundaryTypeArray(
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(num_patches > 0);
-   TBOX_ASSERT(2*num_patches*VISIT_FIXED_DIM == data.size());
+   TBOX_ASSERT(static_cast<size_t>(2*num_patches*VISIT_FIXED_DIM) == data.size());
 
    herr_t errf;
    if (num_patches > 0) {
