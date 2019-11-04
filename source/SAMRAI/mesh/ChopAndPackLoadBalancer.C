@@ -567,10 +567,10 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    int my_rank = mpi.getRank();
    std::vector<int> mapping_vec = mapping.getProcessorMapping(); 
-   int global_num_boxes = mapping_vec.size();
+   size_t global_num_boxes = mapping_vec.size();
    double load = 0.0;
    TBOX_ASSERT(workloads.size() == global_num_boxes);
-   for (int b = 0; b < global_num_boxes; ++b) {
+   for (size_t b = 0; b < global_num_boxes; ++b) {
       if (mapping_vec[b] == my_rank) {
          load += workloads[b];
       } else if (mapping_vec[b] > my_rank) {

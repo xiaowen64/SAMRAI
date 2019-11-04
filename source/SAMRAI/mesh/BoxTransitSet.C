@@ -63,7 +63,6 @@ BoxTransitSet::BoxTransitSet(
    d_print_edge_steps(false),
    d_object_timers(0)
 {
-   TBOX_ASSERT(&pparams != 0);
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
    d_box_breaker.setPrintBreakSteps(d_print_break_steps);
