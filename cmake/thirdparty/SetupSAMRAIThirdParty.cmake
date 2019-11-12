@@ -68,6 +68,7 @@ if (ENABLE_SILO OR SILO_DIR)
 
   if (SILO_FOUND)
     set (HAVE_SILO True)
+    set (ENABLE_SILO ON)
 
     blt_register_library(
       NAME silo
