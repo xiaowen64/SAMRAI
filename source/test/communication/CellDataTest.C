@@ -26,7 +26,6 @@
 #include <vector>
 #include <iostream>
 
-using KERNEL_TYPE = float;
 
 namespace SAMRAI {
 
@@ -606,9 +605,9 @@ bool CellDataTest::verifyResults(
          pdat::CellIterator ciend(pdat::CellGeometry::end(dbox));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
               ci != ciend; ++ci) {
-            double correct = (*solution)(*ci);
+            KERNEL_TYPE correct = (*solution)(*ci);
             for (int d = 0; d < depth; ++d) {
-               double result = (*cell_data)(*ci, d);
+               KERNEL_TYPE result = (*cell_data)(*ci, d);
                if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : cell index = " << *ci
@@ -624,7 +623,6 @@ bool CellDataTest::verifyResults(
                }
             }
          }
-
       }
       if (!test_failed) {
          tbox::plog << "CellDataTest Successful!" << std::endl;
@@ -694,9 +692,9 @@ bool CellDataTest::verifyCompositeBoundaryData(
          pdat::CellIterator ciend(pdat::CellGeometry::end(dbox));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
               ci != ciend; ++ci) {
-            double correct = (*solution)(*ci);
+            KERNEL_TYPE correct = (*solution)(*ci);
             for (int d = 0; d < depth; ++d) {
-               double result = (*cell_bdry_data)(*ci, d);
+               KERNEL_TYPE result = (*cell_bdry_data)(*ci, d);
                if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : cell index = " << *ci

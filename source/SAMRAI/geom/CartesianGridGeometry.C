@@ -450,8 +450,10 @@ CartesianGridGeometry::buildOperators()
 
    // CartesianGridGeometry specific Refinement Operators
    addRefineOperator(
+      //typeid(pdat::CellVariable<dcomplex>).name(),
+      //std::make_shared<CartesianCellComplexConservativeLinearRefine>());
       typeid(pdat::CellVariable<dcomplex>).name(),
-      std::make_shared<CartesianCellComplexConservativeLinearRefine>());
+      std::make_shared<CartesianCellConservativeLinearRefine<dcomplex>>());
    addRefineOperator(
       //typeid(pdat::CellVariable<double>).name(),
       //std::make_shared<CartesianCellDoubleConservativeLinearRefine>());

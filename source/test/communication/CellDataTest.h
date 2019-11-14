@@ -28,7 +28,7 @@
 #include <memory>
 
 
-using KERNEL_TYPE = float;
+using KERNEL_TYPE = dcomplex;
 namespace SAMRAI {
 
 class CommTester;

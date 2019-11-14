@@ -128,6 +128,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
+   fprintf(stderr,"Non-generic complex conservative linear refine\n");
    const tbox::Dimension& dim(fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);

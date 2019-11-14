@@ -12,6 +12,7 @@
 #include <cfloat>
 #include <cmath>
 #include <memory>
+#include <typeinfo>
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/ForAll.h"
@@ -170,44 +171,138 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 
          const int r0 = ratio[0];
          const int r1 = ratio[1];
+         if(typeid(T) != typeid(dcomplex)) {
+            pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+               diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
+               diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
+            });
 
-         pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
-            diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
-            diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
-         });
+            pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+               double diff0_0_real = reinterpret_cast<double(&)[2]>(diff0(j,k))[0];
+               double diff0_1_real = reinterpret_cast<double(&)[2]>(diff0(j+1,k))[0];
 
-         pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
-            const double coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
-            const double boundj = 2.0 * MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
+               const double coef2jreal = 0.5 * (diff0_1_real + diff0_0_real);
+               const double boundjreal = 2.0 * MIN(fabs(diff0_1_real), fabs(diff0_0_real));
 
-            if (diff0(j, k) * diff0(j + 1, k) > 0.0 && cdx0 != 0) {
-               slope0(j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx0;
-            } else {
-               slope0(j, k) = 0.0;
-            }
+               double &slope0_real = reinterpret_cast<double(&)[2]>(slope0(j,k))[0];
 
-            const double coef2k = 0.5 * (diff1(j, k + 1) + diff1(j, k));
-            const double boundk = 2.0 * MIN(fabs(diff1(j, k + 1)), fabs(diff1(j, k)));
+               if (diff0_0_real * diff0_1_real > 0.0 && cdx0 != 0) {
+                  slope0_real = COPYSIGN(MIN(fabs(coef2jreal), boundjreal), coef2jreal) / cdx0;
+               } else {
+                  slope0_real = 0.0;
+               }
 
-            if (diff1(j, k) * diff1(j, k + 1) > 0.0 && cdx1 != 0) {
-               slope1(j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx1;
-            } else {
-               slope1(j, k) = 0.0;
-            }
-         });
+               double diff1_0_real = reinterpret_cast<double(&)[2]>(diff1(j,k))[0];
+               double diff1_1_real = reinterpret_cast<double(&)[2]>(diff1(j+1,k))[0];
 
-         pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
-            const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
-            const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
+               const double coef2kreal = 0.5 * (diff1_1_real + diff1_0_real);
+               const double boundkreal = 2.0 * MIN(fabs(diff1_1_real), fabs(diff1_0_real));
+               double &slope1_real = reinterpret_cast<double(&)[2]>(slope1(j,k))[0];
 
-            const int ir0 = j - ic0 * r0;
-            const int ir1 = k - ic1 * r1;
+               if (diff1_0_real * diff1_1_real > 0.0 && cdx1 != 0) {
+                  slope1_real = COPYSIGN(MIN(fabs(coef2kreal), boundkreal), coef2kreal) / cdx1;
+               } else {
+                  slope1_real = 0.0;
+               }
+               
+            });
 
-            const double deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
-            const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+            pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+               const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
+               const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
-            fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
-         });
+               const int ir0 = j - ic0 * r0;
+               const int ir1 = k - ic1 * r1;
+
+               const double deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
+               const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+
+               fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
+            });
+         } else { // we neeed to specialize a bit for complex type
+            // this kernel is the same
+            //
+            fprintf(stderr,"processing complex\n");
+            pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+               diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
+               diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
+            });
+
+            // fill in slope arrays
+            pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+               double diff0_0_real = reinterpret_cast<double(&)[2]>(diff0(j,k))[0];
+               double diff0_0_imag = reinterpret_cast<double(&)[2]>(diff0(j,k))[1]; 
+
+               double diff0_1_real = reinterpret_cast<double(&)[2]>(diff0(j+1,k))[0];
+               double diff0_1_imag = reinterpret_cast<double(&)[2]>(diff0(j+1,k))[1]; 
+                 
+               const double coef2jreal = 0.5 * (diff0_1_real + diff0_0_real);
+               const double coef2jimag = 0.5 * (diff0_1_imag + diff0_0_imag);
+
+               const double boundjreal = 2.0 * MIN(fabs(diff0_1_real), fabs(diff0_0_real));
+               const double boundjimag = 2.0 * MIN(fabs(diff0_1_imag), fabs(diff0_0_imag));
+
+               double &slope0_real = reinterpret_cast<double(&)[2]>(slope0(j,k))[0];
+               double &slope0_imag = reinterpret_cast<double(&)[2]>(slope0(j,k))[1];
+
+
+               if (diff0_0_real * diff0_1_real > 0.0 && cdx0 != 0) {
+                  slope0_real = COPYSIGN(MIN(fabs(coef2jreal), boundjreal), coef2jreal) / cdx0;
+               } else {
+                  slope0_real = 0.0;
+               }
+               //fprintf(stderr,"Intermediate slope0_real=%0.16E\n",slope0_real);
+
+               if (diff0_0_imag * diff0_1_imag > 0.0 && cdx0 != 0) {
+                  slope0_imag = COPYSIGN(MIN(fabs(coef2jimag), boundjimag), coef2jimag) / cdx0;
+               } else {
+                  slope0_imag = 0.0;
+               }
+
+               double diff1_0_real = reinterpret_cast<double(&)[2]>(diff1(j,k))[0];
+               double diff1_0_imag = reinterpret_cast<double(&)[2]>(diff1(j,k))[1]; 
+
+               double diff1_1_real = reinterpret_cast<double(&)[2]>(diff1(j+1,k))[0];
+               double diff1_1_imag = reinterpret_cast<double(&)[2]>(diff1(j+1,k))[1]; 
+
+               const double coef2kreal = 0.5 * (diff1_1_real + diff1_0_real);
+               const double coef2kimag = 0.5 * (diff1_1_imag + diff1_0_imag);
+
+               const double boundkreal = 2.0 * MIN(fabs(diff1_1_real), fabs(diff1_0_real));
+               const double boundkimag = 2.0 * MIN(fabs(diff1_1_imag), fabs(diff1_0_imag));
+
+               double &slope1_real = reinterpret_cast<double(&)[2]>(slope1(j,k))[0];
+               double &slope1_imag = reinterpret_cast<double(&)[2]>(slope1(j,k))[1];
+
+               if (diff1_0_real * diff1_1_real > 0.0 && cdx1 != 0) {
+                  slope1_real = COPYSIGN(MIN(fabs(coef2kreal), boundkreal), coef2kreal) / cdx1;
+               } else {
+                  slope1_real = 0.0;
+               }
+
+               if (diff1_0_imag * diff1_1_imag > 0.0 && cdx1 != 0) {
+                  slope1_imag = COPYSIGN(MIN(fabs(coef2kimag), boundkimag), coef2kimag) / cdx1;
+               } else {
+                  slope1_imag = 0.0;
+               }
+            });
+
+            // this kernel is the same
+            pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+               const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
+               const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
+
+               const int ir0 = j - ic0 * r0;
+               const int ir1 = k - ic1 * r1;
+
+               const double deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
+               const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+               //dcomplex temp = slope0(ic0,ic1);
+               //fprintf(stderr,"slope0(%d,%d)=(%0.16E,%0.16E)\n",ic0,ic1,temp.real(),temp.imag());
+               fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
+            });
+
+         }
 #else  // Fortran Dimension 2
          std::vector<T> diff1_f(cgbox.numberCells(1) + 1);
          std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
@@ -225,12 +320,12 @@ void CartesianCellConservativeLinearRefine<T>::refine(
           fdata->getPointer(d),
           &diff0_f[0], slope.getPointer(0),
           &diff1_f[0], slope.getPointer(1));
-
+          exit(-1);
 
 #endif  // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
-
 #if defined(HAVE_RAJA)
+#if 0
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0,1);
          diff_box.growUpper(1,1);
@@ -303,13 +398,15 @@ void CartesianCellConservativeLinearRefine<T>::refine(
             const int ir1 = j - ic1 * r1;
             const int ir2 = k - ic2 * r2;
 
-            const double deltax2 = (static_cast<T>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
-            const double deltax1 = (static_cast<T>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
-            const double deltax0 = (static_cast<T>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
+            const double deltax2 = (static_cast<double>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
+            const double deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
+            const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
 
             fine_array(i, j, k) = coarse_array(ic0, ic1, ic2) + slope0(ic0, ic1, ic2) * deltax0 + slope1(ic0, ic1, ic2) * deltax1 + slope2(ic0, ic1, ic2) * deltax2;
          });
-#else
+#endif
+//#else
+
          std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
          std::vector<T> diff1_f(cgbox.numberCells(1) + 1);
          std::vector<T> diff2_f(cgbox.numberCells(2) + 1);
