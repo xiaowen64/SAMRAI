@@ -738,17 +738,19 @@ void
 CommTester::putCoordinatesToDatabase(
    std::shared_ptr<tbox::Database>& coords_db,
    const hier::Patch& patch,
-   const hier::Box& box)
+   const hier::Box& box,
+   bool do_uniform)
 {
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
-/*
-   if (pgeom) {
+
+   if (pgeom && do_uniform) {
       pgeom->putBlueprintCoords(coords_db, patch.getBox());
+      return;
    }
-*/
+
    const tbox::Dimension& dim(patch.getDim());
 
    pdat::NodeData<double> coords(box, dim.getValue(),

@@ -71,18 +71,18 @@ CartesianPatchGeometry::putBlueprintCoords(
 
    hier::IntVector box_size(box.numberCells());
 
-   dims_db->putInteger("i", box_size[0]);
+   dims_db->putInteger("i", box_size[0]+1);
    origin_db->putDouble("x", d_x_lo[0]);
    spacing_db->putDouble("dx", d_dx[0]);
 
    if (dim.getValue() > 1) {
-      dims_db->putInteger("j", box_size[1]);
+      dims_db->putInteger("j", box_size[1]+1);
       origin_db->putDouble("y", d_x_lo[1]);
       spacing_db->putDouble("dy", d_dx[1]);
    }
 
    if (dim.getValue() > 2) {
-      dims_db->putInteger("k", box_size[2]);
+      dims_db->putInteger("k", box_size[2]+1);
       origin_db->putDouble("z", d_x_lo[2]);
       spacing_db->putDouble("dz", d_dx[2]);
    }

@@ -3180,7 +3180,8 @@ void
 LinAdv::putCoordinatesToDatabase(
    std::shared_ptr<tbox::Database>& coords_db,
    const hier::Patch& patch,
-   const hier::Box& box)
+   const hier::Box& box,
+   bool do_uniform)
 {
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
@@ -3188,7 +3189,7 @@ LinAdv::putCoordinatesToDatabase(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
-   if (!d_write_coord_values) {
+   if (!d_write_coord_values || do_uniform) {
 
       pgeom->putBlueprintCoords(coords_db, patch.getBox());
 

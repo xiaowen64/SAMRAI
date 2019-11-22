@@ -536,7 +536,7 @@ int main(
                   std::shared_ptr<tbox::ConduitDatabase> conduit_db(
                      new tbox::ConduitDatabase("conduit_hierarchy"));
  
-                  hier::BlueprintUtils bp_utils(linear_advection_model);
+                  hier::BlueprintUtils bp_utils(linear_advection_model, false);
                   patch_hierarchy->makeBlueprintDatabase(conduit_db, bp_utils);
 
                   conduit::Node bp_node;

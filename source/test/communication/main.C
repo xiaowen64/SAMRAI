@@ -55,6 +55,7 @@
 
 using namespace SAMRAI;
 
+void transformToPolyhedral(conduit::Node& out, const conduit::Node& in, const std::string& name);
 /*
  ************************************************************************
  *
@@ -528,7 +529,7 @@ int main(
       std::shared_ptr<tbox::ConduitDatabase> flat_db(
          new tbox::ConduitDatabase("flat_hierarchy"));
 
-      hier::BlueprintUtils bp_utils(comm_tester.get());
+      hier::BlueprintUtils bp_utils(comm_tester.get(), true);
       patch_hierarchy->makeBlueprintDatabase(conduit_db, bp_utils);
       patch_hierarchy->makeFlattenedBlueprintDatabase(flat_db, bp_utils);
 
@@ -581,9 +582,79 @@ int main(
          "bpindex.root",
          "json");
 
+      bp_utils.writeBlueprintMesh(
+         flatn,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         num_hier_patches,
+         "flat_mesh",
+         "flat",
+         "flat.root",
+         "json");
+
       conduit::Node info;
       TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
       TBOX_ASSERT(conduit::blueprint::verify("mesh", flatn, info));
+
+      conduit::Node poly;
+      transformToPolyhedral(poly, flatn, "mesh");
+      TBOX_ASSERT(conduit::blueprint::verify("mesh", poly, info));
+
+      bp_utils.writeBlueprintMesh(
+         poly,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         num_hier_patches,
+         "mesh",
+         "polyhedral",
+         "poly.root",
+         "json");
+
+      // poly = polygonal/polyhedral with explicit coords
+      // polyuni = polygonal/polyhedral with original uniform coords
+      // polystruct = polyuni transformed back to structured
+
+      conduit::Node polyuni = poly;
+
+      conduit::NodeConstIterator itr = poly.children();
+
+      while(itr.has_next())
+      {
+         itr.next();
+         std::string domain_name = itr.name();
+
+         polyuni[domain_name]["coordsets/coords"].reset();
+         polyuni[domain_name]["coordsets/coords"] = n[domain_name]["coordsets/coords"];
+      }
+
+      conduit::Node polystruct = polyuni;
+
+      itr = polyuni.children();
+      while(itr.has_next())
+      {
+         itr.next();
+         std::string domain_name = itr.name();
+
+         conduit::Node dest; 
+         conduit::Node cdest; 
+         conduit::blueprint::mesh::topology::uniform::to_structured(
+            polyuni[domain_name]["topologies/mesh"], dest, cdest);
+
+         polystruct[domain_name]["coordsets/coords"].reset();
+         polystruct[domain_name]["coordsets/coords"] = cdest;
+         polystruct[domain_name]["topologies/mesh"].reset();
+         polystruct[domain_name]["topologies/mesh"] = dest;
+         polystruct[domain_name]["topologies/mesh/coordset"] = "coords";
+      }
+
+      TBOX_ASSERT(conduit::blueprint::verify("mesh", polystruct, info));
+
+      bp_utils.writeBlueprintMesh(
+         polystruct,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         num_hier_patches,
+         "mesh",
+         "polystruct",
+         "polystruct.root",
+         "json");
 #endif
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
@@ -665,4 +736,92 @@ int main(
 
    // 0 if passed, 1 otherwise
    return return_val;
+}
+
+void transformToPolyhedral(conduit::Node& out, const conduit::Node& in, const std::string& name)
+{
+   conduit::NodeConstIterator itr = in.children();
+
+   while(itr.has_next())
+   {
+      const conduit::Node& child = itr.next();
+      std::string domain_name = itr.name();
+      out[domain_name]["state"] = child["state"];
+      conduit::Node& out_coords = out[domain_name]["coordsets/coords"];
+      const conduit::Node& in_coords = child["coordsets/coords"];
+
+      if (in_coords["type"].as_string() == "uniform") {
+         conduit::blueprint::mesh::coordset::uniform::to_explicit(in_coords, out_coords);
+      } else {
+         out_coords["type"] = in_coords["type"];
+         conduit::Node& out_values = out_coords["values"];
+         const conduit::Node& in_values = in_coords["values"];
+         out_values = in_values;
+      }
+/*
+      if (child.has_child("adjsets/adjset/association"))  {
+         conduit::Node& out_adjset = out[domain_name]["adjsets/adjset"];
+         const conduit::Node& in_adjset = child["adjsets/adjset"];
+         out_adjset["association"] = in_adjset["association"];
+         out_adjset["topology"] = name;
+
+         if (in_adjset.has_child("groups") {
+            conduit::NodeConstIterator win_itr = in_adjset["groups"].children();
+            while(win_itr.has_next())
+            {
+               const conduit::Node& win_child = win_itr.next();
+               std::string win_name = win_itr.name();
+
+               if (win_child.has_child("neighbors") {
+                  out_adjset["groups"][win_name]["neighbors"] =
+                     win_child["neighbors"]
+               }
+            }
+         }
+      }
+*/
+
+      std::string coords =
+         child["topologies"][name]["coordset"].as_string(); 
+      out[domain_name]["topologies"][name]["coordset"] = coords;
+
+      const conduit::Node& in_topo = child["topologies"][name];
+      conduit::Node& topo = out[domain_name]["topologies"][name];
+
+      topo["type"] = "unstructured";
+      topo["elements/shape"] = "polygonal";
+
+      int64_t iwidth = in_topo["elements/dims/i"].as_int64();
+      int64_t jwidth = in_topo["elements/dims/j"].as_int64();
+
+      int64_t elemsize = (iwidth)*(jwidth);
+ 
+      std::vector<int64_t> connect;
+      for (int elem = 0; elem < elemsize; ++elem) {
+         int64_t i = elem % iwidth;
+         int64_t j = elem / iwidth;
+         int64_t LLi = i;
+         int64_t LRi = i + 1;
+         int64_t ULi = i;
+         int64_t URi = i + 1;
+         int64_t LLj = j;
+         int64_t LRj = j;
+         int64_t ULj = j + 1;
+         int64_t URj = j + 1;
+
+         int64_t LL = (iwidth+1)*LLj + LLi;
+         int64_t LR = (iwidth+1)*LRj + LRi;
+         int64_t UL = (iwidth+1)*ULj + ULi;
+         int64_t UR = (iwidth+1)*URj + URi;
+
+         connect.push_back(4);
+         connect.push_back(LL);
+         connect.push_back(LR);
+         connect.push_back(UR);
+         connect.push_back(UL);
+      }
+
+      topo["elements/connectivity"].set(connect);
+
+   }
 }

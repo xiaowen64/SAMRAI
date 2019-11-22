@@ -48,7 +48,7 @@ public:
     *
     * @param strategy    Strategy pointer for callback to application code.
     */
-   BlueprintUtils(BlueprintUtilsStrategy* strategy);
+   BlueprintUtils(BlueprintUtilsStrategy* strategy, bool do_uniform);
 
    /*!
     * @brief Destructor
@@ -114,6 +114,7 @@ public:
 private:
 
    BlueprintUtilsStrategy* d_strategy;
+   bool d_do_uniform;
 
 };
 

@@ -22,8 +22,9 @@ namespace hier {
  * Constructor does nothing because the objects are stateless.
  */
 
-BlueprintUtils::BlueprintUtils(BlueprintUtilsStrategy* strategy)
-: d_strategy(strategy)
+BlueprintUtils::BlueprintUtils(BlueprintUtilsStrategy* strategy, bool do_uniform)
+: d_strategy(strategy),
+  d_do_uniform(do_uniform)
 {
 }
 
@@ -126,7 +127,7 @@ void BlueprintUtils::putTopologyAndCoordinatesToDatabase(
 
          if (d_strategy) {
             d_strategy->putCoordinatesToDatabase(
-               coords_db, *patch, patch->getBox());
+               coords_db, *patch, patch->getBox(), d_do_uniform);
          }
 
          topo_db->putString("coordset", "coords");
@@ -149,7 +150,7 @@ void BlueprintUtils::setFlattenedCoordset(
 {
          if (d_strategy) {
             d_strategy->putCoordinatesToDatabase(
-               coords_db, patch, box);
+               coords_db, patch, box, d_do_uniform);
          }
 
          topo_db->putString("coordset", "coords");
