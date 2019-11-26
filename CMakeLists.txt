@@ -37,6 +37,7 @@ set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
 set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
+set(BLT_CXX_STD "c++11" CACHE STRING "Version of C++ standard")
 
 # Third party libraries
 option(ENABLE_CONDUIT "Enable CONDUIT" Off)
