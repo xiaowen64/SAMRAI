@@ -205,8 +205,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          const hier::IntVector tmp_ghosts(dim, 0);
 
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
+         //pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
+         //                                directions, alloc_db->getTagAllocator());
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
-                                         directions, alloc_db->getTagAllocator());
+                                         directions, alloc_db->getDevicePool());
 
 #define HOIST_INTERMEDIATES 1
 //#undef HOIST_INTERMEDIATES
@@ -255,9 +257,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                 }
              } // test for axis and directions
          } // end if DIM 3
-         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-         pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
-         fprintf(stdout,"RAJA Noisting axis=%d directions(0)=%d directions(1)=%d directions(2)=%d\n",axis,directions(0),directions(1),directions(2));
+         //pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
+         //pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+         pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 #endif // Hoisting 
 #endif // HAVE_RAJA
 
@@ -372,7 +375,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   }
-
+                  
+                  // we can't use directions i.e IntVector on the device so make it more generic
+                  const bool directions0 = directions(0);
+                  const bool directions1 = directions(1);
                   pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
                      const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
@@ -381,12 +387,12 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      const int ir1 = k - ic1 * r1;
                      double deltax0, deltax1;
 
-                     if (axis == 0 && directions(0)) {
+                     if (axis == 0 && directions0) {
                         deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
                         deltax0 = static_cast<double>(ir0) * fdx0;
                      }
 
-                     if (axis == 1 && directions(1)) {
+                     if (axis == 1 && directions1) {
                         deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
                         deltax1 = static_cast<double>(ir1) * fdx1;
                      }
@@ -396,8 +402,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
 #else   // Fortran Dimension 2
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
+               //pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
+               //                                directions, alloc_db->getTagAllocator());
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
-                                               directions, alloc_db->getTagAllocator());
+                                               directions, alloc_db->getDevicePool());
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0)
@@ -596,6 +604,9 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      });
                   }
 
+                  const bool directions0 = directions(0);
+                  const bool directions1 = directions(1);
+                  const bool directions2 = directions(2);
                   pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
@@ -606,15 +617,15 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      const int ir2 = k - ic2 * r2;
                      double deltax0, deltax1, deltax2;
 
-                     if (axis == 0 && directions(0)) {
+                     if (axis == 0 && directions0) {
                         deltax0 = static_cast<double>(ir0) * fdx0;
                         deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
                         deltax2 = (static_cast<double>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
-                     } else if (axis == 1 && directions(1)) {
+                     } else if (axis == 1 && directions1) {
                         deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
                         deltax1 = static_cast<double>(ir1) * fdx1;
                         deltax2 = (static_cast<double>(ir2) + 0.5) * fdx2 - cdx2 * 0.5;
-                     } else if (axis == 2 && directions(2)) {
+                     } else if (axis == 2 && directions2) {
                         deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
                         deltax1 = (static_cast<double>(ir1) + 0.5) * fdx1 - cdx1 * 0.5;
                         deltax2 = static_cast<double>(ir2) * fdx2;
