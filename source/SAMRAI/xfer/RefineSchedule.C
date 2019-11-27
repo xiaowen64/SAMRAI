@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -1630,7 +1630,6 @@ RefineSchedule::createCoarseInterpPatchLevel(
       *hiercoarse_level->getBoxLevel());
 
    const hier::IntVector& zero_vec(hier::IntVector::getZero(dim));
-   const hier::IntVector& one_vec(hier::IntVector::getOne(dim));
 
    /*
     * To compute coarse_interp<==>hiercoarse, we will perform this bridge:

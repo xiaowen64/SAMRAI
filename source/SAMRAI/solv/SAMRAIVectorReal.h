@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Vector class for real data on SAMRAI hierarchy.
  *
  ************************************************************************/
@@ -654,6 +654,15 @@ public:
    TYPE
    maxPointwiseDivide(
       const std::shared_ptr<SAMRAIVectorReal<TYPE> >& denom) const;
+
+   /*!
+    * @brief Get the length of this vector
+    *
+    * @param interior_only   If true, only count the elements in interior
+    *                        of patches.
+    * @return The length (number of elements in the underlying data)
+    */
+   int64_t getLength(const bool interior_only = true) const;
 
    //@}
 

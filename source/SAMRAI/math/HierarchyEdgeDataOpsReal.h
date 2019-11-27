@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real edge data on multiple levels.
  *
  ************************************************************************/
@@ -622,6 +622,18 @@ public:
       const int numer_id,
       const int denom_id,
       bool local_only = false) const;
+
+   /*!
+    * @brief Get the length of the data with the given ID
+    *
+    * @param data_id         Patch data ID
+    * @param interior_only   If true, only count the elements in interior
+    *                        of patches.
+    * @return The length (number of elements in the underlying data)
+    */
+   int64_t getLength(
+      const int data_id,
+      const bool interior_only = true) const;
 
 private:
    // The following are not implemented

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -1121,7 +1121,7 @@ PatchHierarchy::putToRestart(
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void
 PatchHierarchy::makeBlueprintDatabase(
    const std::shared_ptr<tbox::Database>& blueprint_db,
@@ -1186,7 +1186,8 @@ PatchHierarchy::makeBlueprintDatabase(
       makeNestingSets(blueprint_db, "mesh");
    }
 
-   makeAdjacencySets(blueprint_db, "mesh");
+   // AMR Adjacency sets not supported in current Conduit release
+   //makeAdjacencySets(blueprint_db, "mesh");
 
    bp_utils.putTopologyAndCoordinatesToDatabase(blueprint_db, *this, "mesh");
 }
@@ -1523,7 +1524,6 @@ PatchHierarchy::makeAdjacencySets(
 
          std::shared_ptr<tbox::Database> adjsets_db;
 
-         int ncount = 0;
          Connector::ConstNeighborhoodIterator nbh =
             self_to_self.findLocal(box_id);
          if (nbh == self_to_self.end())  {

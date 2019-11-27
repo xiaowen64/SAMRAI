@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Utilities class to access common POSIX constants and math ops
  *
  ************************************************************************/
@@ -305,13 +305,19 @@ private:
    operator = (
       const MathUtilities& rhs);
 
-   static TYPE s_zero;
-   static TYPE s_one;
 };
 
 /*
  * Template specializations.
  */
+template<>
+dcomplex
+MathUtilities<dcomplex>::getZero();
+
+template<>
+dcomplex
+MathUtilities<dcomplex>::getOne();
+
 template<>
 bool
 MathUtilities<float>::isNaN(

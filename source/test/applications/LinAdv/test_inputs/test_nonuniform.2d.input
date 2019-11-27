@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Input file for SAMRAI LinAdv example problem
  *
  ************************************************************************/
@@ -28,7 +28,7 @@ AutoTester {
 
    // if true will read correct patch boxes--set to FALSE to rebaseline
    // Default is FALSE.
-   read_patch_boxes = TRUE
+   read_patch_boxes = FALSE
 
    // time steps for which correctness of patch boxes will be checked
    // Required if one of write_patch_boxes or read_patch_boxes is true.

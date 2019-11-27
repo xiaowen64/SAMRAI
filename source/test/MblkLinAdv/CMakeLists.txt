@@ -6,12 +6,15 @@ set (mblklinadv_sources
 
 set (mblklinadv_depends_on
     testlib
-    SAMRAI_hier
+    SAMRAI_appu
+    SAMRAI_algs
+    SAMRAI_solv
     SAMRAI_geom
     SAMRAI_mesh
+    SAMRAI_math
     SAMRAI_pdat
-    SAMRAI_algs
-    SAMRAI_appu
+    SAMRAI_xfer
+    SAMRAI_hier
     SAMRAI_tbox)
 
 blt_add_executable(

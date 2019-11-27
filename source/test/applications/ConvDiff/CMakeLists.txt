@@ -30,6 +30,7 @@ endif ()
 if (ENABLE_CUDA)
   set(convdiff_depends ${convdiff_depends} cuda)
 endif ()
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTING=1") 
 
 blt_add_executable(
   NAME convdiff
@@ -43,6 +44,10 @@ target_include_directories(
 set_target_properties(convdiff PROPERTIES LINKER_LANGUAGE CXX)
 
 file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+file (GLOB test_baselines ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*boxes*)
+
+execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
+execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 
 samrai_add_tests(
   NAME convdiff

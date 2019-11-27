@@ -3,13 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Blueprint utilities
  *
  ************************************************************************/
 #include "SAMRAI/hier/BlueprintUtils.h"
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 #include "conduit_blueprint.hpp"
@@ -194,4 +194,4 @@ void BlueprintUtils::writeBlueprintMesh(
 }
 }
 
-#endif // HAVE_CONDUIT
+#endif // SAMRAI_HAVE_CONDUIT

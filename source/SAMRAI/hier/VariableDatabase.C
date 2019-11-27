@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Manager class for variables used in a SAMRAI application.
  *
  ************************************************************************/
@@ -294,12 +294,13 @@ VariableDatabase::registerClonedPatchDataIndex(
 
    } else {
 
+      auto& pdf = *(d_patch_descriptor->getPatchDataFactory(old_id));
+
       TBOX_ERROR("hier::VariableDatabase::registerClonedPatchDataIndex()"
          << "  error...\n"
          << "Variable with name " << variable->getName()
          << "\n does not match type at descriptor index = " << old_id
-         << "\n That type is " << typeid(
-            *(d_patch_descriptor->getPatchDataFactory(old_id))).name()
+         << "\n That type is " << typeid(pdf).name()
          << std::endl);
    }
 
@@ -353,12 +354,12 @@ VariableDatabase::registerPatchDataIndex(
 
       } else {
 
+         auto& pdf = *(d_patch_descriptor->getPatchDataFactory(data_id));
          TBOX_ERROR("hier::VariableDatabase::registerPatchDataIndex()"
             << "  error...\n"
             << "Variable with name " << variable->getName()
             << "\n does not match type at patch data index = " << new_id
-            << "\n That type is " << typeid(
-               *(d_patch_descriptor->getPatchDataFactory(data_id))).name()
+            << "\n That type is " << typeid(pdf).name()
             << std::endl);
 
       }
@@ -481,8 +482,9 @@ VariableDatabase::checkVariablePatchDataIndexType(
       std::shared_ptr<PatchDataFactory> dfact(
          d_patch_descriptor->getPatchDataFactory(data_id));
 
-      if (dfact &&
-          (typeid(*(variable->getPatchDataFactory())) == typeid(*dfact))) {
+      auto& pdf = *(variable->getPatchDataFactory());
+      auto& df  = *dfact;
+      if (dfact && (typeid(pdf) == typeid(df))) {
          ret_value = true;
       }
 
@@ -662,8 +664,9 @@ VariableDatabase::printClassData(
          if (!print_only_user_defined_variables ||
              (print_only_user_defined_variables &&
               d_is_user_variable[i])) {
+            auto& v = *(d_variables[i]);
             os << "   Variable name = " << d_variables[i]->getName();
-            os << "\n   Variable type = " << typeid(*(d_variables[i])).name();
+            os << "\n   Variable type = " << typeid(v).name();
          } else {
             os << "   internal SAMRAI variable";
          }

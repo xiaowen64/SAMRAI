@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using a "cascade" algorithm.
  *
  ************************************************************************/
@@ -67,8 +67,8 @@ CascadePartitioner::CascadePartitioner(
    d_object_name(name),
    d_mpi(tbox::SAMRAI_MPI::commNull),
    d_mpi_is_dupe(false),
-   d_master_workload_data_id(s_default_data_id),
    d_workload_data_id(0),
+   d_master_workload_data_id(s_default_data_id),
    d_tile_size(dim, 1),
    d_max_spread_procs(500),
    d_limit_supply_to_surplus(true),

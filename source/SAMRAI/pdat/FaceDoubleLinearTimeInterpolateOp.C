@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for face-centered double patch data.
  *
  ************************************************************************/
@@ -181,6 +181,37 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
       } else if (dim == tbox::Dimension(2)) {
+#if defined(HAVE_RAJA)
+         {
+            SAMRAI::hier::Box d0_box = where;
+            d0_box.growUpper(0,1);
+            auto old_array = old_dat->getConstView<2>(0,d);
+            auto new_array = new_dat->getConstView<2>(0,d);
+            auto dst_array = dst_dat->getView<2>(0,d);
+            
+            pdat::parallel_for_all_x(d0_box, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+               const double oldfrac = 1.0-tfrac;
+               dst_array(j,k) = old_array(j,k)*oldfrac + new_array(j,k)*tfrac;
+            });
+         }
+         {
+            SAMRAI::hier::Box d1_box = where;
+            // transpose box
+            d1_box.setLower(0, where.lower(1));
+            d1_box.setLower(1, where.lower(0));
+            d1_box.setUpper(0, where.upper(1));
+            d1_box.setUpper(1, where.upper(0));
+            d1_box.growUpper(0,1);
+            auto old_array = old_dat->getConstView<2>(1,d);
+            auto new_array = new_dat->getConstView<2>(1,d);
+            auto dst_array = dst_dat->getView<2>(1,d);
+            
+            pdat::parallel_for_all_x(d1_box, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+               const double oldfrac = 1.0-tfrac;
+               dst_array(j,k) = old_array(j,k)*oldfrac + new_array(j,k)*tfrac;
+            });
+         }
+#else
          SAMRAI_F77_FUNC(lintimeintfacedoub2d0, LINTIMEINTFACEDOUB2D0) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -199,7 +230,60 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(1, d),
             new_dat->getPointer(1, d),
             dst_dat->getPointer(1, d));
+#endif // test for RAJA
       } else if (dim == tbox::Dimension(3)) {
+#if defined(HAVE_RAJA)
+         {
+            SAMRAI::hier::Box d0_box = where;
+            d0_box.growUpper(0,1);
+            auto old_array = old_dat->getConstView<3>(0,d);
+            auto new_array = new_dat->getConstView<3>(0,d);
+            auto dst_array = dst_dat->getView<3>(0,d);
+            
+            pdat::parallel_for_all_x(d0_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
+               const double oldfrac = 1.0-tfrac;
+               dst_array(i,j,k) = old_array(i,j,k)*oldfrac + new_array(i,j,k)*tfrac;
+            });
+         }
+         {
+            SAMRAI::hier::Box d1_box = where;
+            // transpose 1,2,0
+            d1_box.setLower(0, where.lower(1));
+            d1_box.setLower(1, where.lower(2));
+            d1_box.setLower(2, where.lower(0));
+            d1_box.setUpper(0, where.upper(1));
+            d1_box.setUpper(1, where.upper(2));
+            d1_box.setUpper(2, where.upper(0));
+            d1_box.growUpper(0,1);
+            auto old_array = old_dat->getConstView<3>(1,d);
+            auto new_array = new_dat->getConstView<3>(1,d);
+            auto dst_array = dst_dat->getView<3>(1,d);
+            
+            pdat::parallel_for_all_x(d1_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
+               const double oldfrac = 1.0-tfrac;
+               dst_array(i,j,k) = old_array(i,j,k)*oldfrac + new_array(i,j,k)*tfrac;
+            });
+         }
+         {
+            SAMRAI::hier::Box d2_box = where;
+            // transpose 2,0,1
+            d2_box.setLower(0, where.lower(2));
+            d2_box.setLower(1, where.lower(0));
+            d2_box.setLower(2, where.lower(1));
+            d2_box.setUpper(0, where.upper(2));
+            d2_box.setUpper(1, where.upper(0));
+            d2_box.setUpper(2, where.upper(1));
+            d2_box.growUpper(0,1);
+            auto old_array = old_dat->getConstView<3>(2,d);
+            auto new_array = new_dat->getConstView<3>(2,d);
+            auto dst_array = dst_dat->getView<3>(2,d);
+            
+            pdat::parallel_for_all_x(d2_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
+               const double oldfrac = 1.0-tfrac;
+               dst_array(i,j,k) = old_array(i,j,k)*oldfrac + new_array(i,j,k)*tfrac;
+            });
+         }
+#else
          SAMRAI_F77_FUNC(lintimeintfacedoub3d0, LINTIMEINTFACEDOUB3D0) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
@@ -239,6 +323,7 @@ FaceDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(2, d),
             new_dat->getPointer(2, d),
             dst_dat->getPointer(2, d));
+#endif // test for RAJA
       } else {
          TBOX_ERROR(
             "FaceDoubleLinearTimeInterpolateOp::TimeInterpolate dim > 3 not supported"

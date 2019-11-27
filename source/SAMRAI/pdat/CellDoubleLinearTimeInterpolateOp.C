@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for cell-centered double patch data.
  *
  ************************************************************************/
@@ -150,7 +150,7 @@ CellDoubleLinearTimeInterpolateOp::timeInterpolate(
          auto dst_array = dst_dat->getView<2>(d);
          
          pdat::parallel_for_all_x(where, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
-            double oldfrac = 1.0-tfrac;
+            const double oldfrac = 1.0-tfrac;
             dst_array(j,k) = old_array(j,k)*oldfrac + new_array(j,k)*tfrac;
          });
 #else
@@ -171,7 +171,7 @@ CellDoubleLinearTimeInterpolateOp::timeInterpolate(
          auto dst_array = dst_dat->getView<3>(d);
          
          pdat::parallel_for_all_x(where, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
-            double oldfrac = 1.0-tfrac;
+            const double oldfrac = 1.0-tfrac;
             dst_array(i,j,k) = old_array(i,j,k)*oldfrac + new_array(i,j,k)*tfrac;
          });
 #else

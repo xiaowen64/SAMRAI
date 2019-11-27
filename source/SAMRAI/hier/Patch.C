@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -367,7 +367,8 @@ operator << (
       if (!patch.d_patch_data[i]) {
          s << "NULL\n";
       } else {
-         s << typeid(*patch.d_patch_data[i]).name()
+         auto& p = *patch.d_patch_data[i];
+         s << typeid(p).name()
          << " [GCW=" << patch.d_patch_data[i]->getGhostCellWidth() << "]\n";
       }
    }

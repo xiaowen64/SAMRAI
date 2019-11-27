@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Utilities class to access common POSIX constants and math ops
  *
  ************************************************************************/
@@ -136,14 +136,14 @@ template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getZero()
 {
-   return s_zero;
+   return static_cast< TYPE >( 0 );
 }
 
 template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getOne()
 {
-   return s_one;
+   return static_cast< TYPE >( 1 );
 }
 
 template<class TYPE>

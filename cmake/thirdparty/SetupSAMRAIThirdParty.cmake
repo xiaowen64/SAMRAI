@@ -93,55 +93,53 @@ if (ENABLE_HDF5)
   endif ()
 endif ()
 
-# HYPRE
-if (ENABLE_HYPRE)
+
+#HAVE_HYPRE
+if (ENABLE_HYPRE OR HYPRE_DIR)
   find_package(HYPRE REQUIRED)
   # TODO: Ensure this is set in SAMRAI_config.h...
 
   if(HYPRE_FOUND)
-    set (HAVE_HPYRE True)
+    set (HAVE_HYPRE True)
+    set (ENABLE_HYPRE ON) 
 
     blt_register_library(
-      NAME hypre
+      NAME HYPRE
       INCLUDES ${HYPRE_INCLUDE_DIRS}
       LIBRARIES ${HYPRE_LIBRARIES})
   endif ()
 endif ()
 
-# PETSC
-if (ENABLE_PETSC)
+# OpenMP
+if (ENABLE_OPENMP)
+  if (OPENMP_FOUND)
+    set(HAVE_OPENMP True)
+  endif ()
+endif ()
+
+#HAVE_PETSC
+if (ENABLE_PETSC OR PETSC_DIR)
   find_package(PETSc REQUIRED)
 
   if (PETSC_FOUND)
     set (HAVE_PETSC True)
+    set (ENABLE_PETSC ON)
 
     blt_register_library(
       NAME PETSc
-      INCLUDES ${PETSC_INCLUDES}
+      INCLUDES ${PETSC_INCLUDE_DIRS}
       LIBRARIES ${PETSC_LIBRARIES})
   endif ()
 endif()
 
-# PTSCOTCH
-if (ENABLE_PTSCOTCH)
-  find_package(Scotch REQUIRED)
 
-  if (Scotch_FOUND)
-    set (HAVE_SCOTCH True)
-
-    blt_register_library(
-      NAME Scotch
-      INCLUDES ${SCOTCH_INCLUDES}
-      LIBRARIES ${SCOTCH_LIBRARIES})
-  endif ()
-endif ()
-
-# SILO
-if (ENABLE_SILO)
+#HAVE_SILO
+if (ENABLE_SILO OR SILO_DIR)
   find_package(SILO REQUIRED)
 
   if (SILO_FOUND)
     set (HAVE_SILO True)
+    set (ENABLE_SILO ON)
 
     blt_register_library(
       NAME silo
@@ -150,23 +148,32 @@ if (ENABLE_SILO)
   endif ()
 endif ()
 
-# SUNDIALS
-if (ENABLE_SUNDIALS)
+
+#HAVE_SUNDIALS
+if (ENABLE_SUNDIALS OR SUNDIALS_DIR)
   find_package(SUNDIALS REQUIRED)
   if (SUNDIALS_FOUND)
     set (HAVE_SUNDIALS True)
+    set (ENABLE_SUNDIALS ON)
 
     blt_register_library(
       NAME SUNDIALS
-      INCLUDES ${SUNDIALS_INCLUDES}
+      INCLUDES ${SUNDIALS_INCLUDE_DIRS}
       LIBRARIES ${SUNDIALS_LIBRARIES})
   endif ()
 endif ()
 
-# CONDUIT
-if (ENABLE_CONDUIT)
+
+#SAMRAI_HAVE_CONDUIT
+if (ENABLE_CONDUIT OR CONDUIT_DIR)
   find_package(CONDUIT REQUIRED)
   if (CONDUIT_FOUND)
-    set (HAVE_CONDUIT True)
+    set (SAMRAI_HAVE_CONDUIT True)
+    set (ENABLE_CONDUIT ON)
+
+    blt_register_library(
+      NAME CONDUIT
+      INCLUDES ${CONDUIT_INCLUDE_DIRS}
+      LIBRARIES ${CONDUIT_LIBRARIES})
   endif ()
 endif ()
