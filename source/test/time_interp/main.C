@@ -134,6 +134,10 @@ int main(
 
       cell_op.timeInterpolate(cell_dst, ghost_box, cell_old, cell_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
+
       for (int dd = 0; dd < data_depth; ++dd) {
          for (auto cell_itr(pdat::CellGeometry::begin(ghost_box));
               cell_itr != cell_end; ++cell_itr) {
@@ -188,6 +192,9 @@ int main(
       pdat::NodeDoubleLinearTimeInterpolateOp node_op;
 
       node_op.timeInterpolate(node_dst, ghost_box, node_old, node_new);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       for (int dd = 0; dd < data_depth; ++dd) {
          for (auto node_itr(pdat::NodeGeometry::begin(ghost_box));
@@ -248,6 +255,9 @@ int main(
 
       face_op.timeInterpolate(face_dst, ghost_box, face_old, face_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          auto face_end(pdat::FaceGeometry::end(ghost_box, axis));
          for (int dd = 0; dd < data_depth; ++dd) {
@@ -287,6 +297,9 @@ int main(
 
       oface_op.timeInterpolate(oface_dst, box, oface_old, oface_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          for (int face = 0; face < 2; ++face) {
             const hier::Box& databox =
@@ -357,6 +370,9 @@ int main(
 
       side_op.timeInterpolate(side_dst, ghost_box, side_old, side_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          auto side_end(pdat::SideGeometry::end(ghost_box, axis));
          for (int dd = 0; dd < data_depth; ++dd) {
@@ -395,6 +411,9 @@ int main(
       pdat::OutersideDoubleLinearTimeInterpolateOp oside_op;
 
       oside_op.timeInterpolate(oside_dst, box, oside_old, oside_new);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          for (int side = 0; side < 2; ++side) {
@@ -465,6 +484,9 @@ int main(
 
       edge_op.timeInterpolate(edge_dst, ghost_box, edge_old, edge_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          auto edge_end(pdat::EdgeGeometry::end(ghost_box, axis));
          for (int dd = 0; dd < data_depth; ++dd) {
