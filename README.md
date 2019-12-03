@@ -12,9 +12,7 @@ simplifies the exploration of SAMR methods in new application domains.
 
 ## New Release
 
-SAMRAI v. 2.13.0 is now available! The major change is that we no longer use
-the Boost library. This affects many interfaces in the API that used
-boost::shared_ptr, which has been replaced by std::shared_ptr.
+The current release is SAMRAI v. 3.14.1.
 
 ## Get Involved
 
@@ -46,7 +44,7 @@ We maintain a list of publications
 
 ## Release
 
-Copyright (c) 1997-2018, Lawrence Livermore National Security, LLC.
+Copyright (c) 1997-2019, Lawrence Livermore National Security, LLC.
 
 Produced at the Lawrence Livermore National Laboratory.
 

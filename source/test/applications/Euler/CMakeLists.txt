@@ -39,6 +39,8 @@ process_m4(NAME fortran/trace1d3d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTING=1")
+
 set(euler_depends ${SAMRAI_LIBRARIES})
 
 # TODO CMake should resolve this dependency for us...
@@ -55,12 +57,17 @@ blt_add_executable(
   SOURCES ${euler_sources}
   DEPENDS_ON ${euler_depends})
 
+
 target_include_directories( euler
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/applications/Euler)
 
 set_target_properties(euler PROPERTIES LINKER_LANGUAGE CXX)
 
 file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+file (GLOB test_baselines ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*boxes*)
+
+execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
+execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 
 samrai_add_tests(
   NAME euler

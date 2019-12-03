@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for the SAMRAI database objects
  *
  ************************************************************************/
@@ -1108,7 +1108,7 @@ Database::copyDatabase(const std::shared_ptr<Database>& database)
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void
 Database::toConduitNode(conduit::Node& node)
 {

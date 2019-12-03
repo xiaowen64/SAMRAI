@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
@@ -271,8 +271,9 @@ CoarsenClasses::itemsAreEquivalent(
    equivalent &= (!data1.d_var_fill_pattern ==
                   !data2.d_var_fill_pattern);
    if (equivalent && data1.d_var_fill_pattern) {
-      equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
-                     typeid(*(data2.d_var_fill_pattern)));
+      auto& d1 = *(data1.d_var_fill_pattern);
+      auto& d2 = *(data2.d_var_fill_pattern);
+      equivalent &= (typeid(d1) == typeid(d2));
    }
 
    return equivalent;
@@ -331,8 +332,9 @@ CoarsenClasses::printCoarsenItem(
    if (!data.d_opcoarsen) {
       stream << "NULL coarsening operator" << std::endl;
    } else {
+      auto& d = *data.d_opcoarsen;
       stream << "coarsen operator name:          "
-             << typeid(*data.d_opcoarsen).name()
+             << typeid(d).name()
              << std::endl;
       stream << "operator priority:      "
              << data.d_opcoarsen->getOperatorPriority()
@@ -370,7 +372,9 @@ CoarsenClasses::patchDataMatch(
       std::shared_ptr<hier::PatchDataFactory> pdf2(
          pd->getPatchDataFactory(item_id2));
 
-      items_match = (typeid(*pdf1) == typeid(*pdf2));
+      auto& p1 = *pdf1;
+      auto& p2 = *pdf2;
+      items_match = (typeid(p1) == typeid(p2));
 
       if (items_match) {
          items_match = (pdf1->getGhostCellWidth() ==

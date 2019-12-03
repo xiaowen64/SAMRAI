@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright
 ## information, see COPYRIGHT and LICENSE.
 ##
-## Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
 ## Description:   Test program for performance of load balancers.
 ##
 #########################################################################
@@ -23,15 +23,15 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -DTESTING=1
 
-NUM_TESTS = 34
+NUM_TESTS = 28
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 CXX_OBJS      = main-lbcorrectness.o
 
-INPUTS2D = box.2d.tilecap.input box.2d.cascade.input box.2d.tilecascade.input lss.2d.cascade.input lss.2d.tilecascade.input box.2d.treelb.input box.2d.tilelb.input box.2d.graphlb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input lss.2d.graphlb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input front.2d.graphlb.input
-INPUTS3D = box.3d.cascade.input box.3d.tilecascade.input lss.3d.cascade.input lss.3d.tilecascade.input box.3d.treelb.input box.3d.tilelb.input box.3d.graphlb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input lss.3d.graphlb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input front.3d.graphlb.input int_overflow.3d.cascade.input
+INPUTS2D = box.2d.tilecap.input box.2d.cascade.input box.2d.tilecascade.input lss.2d.cascade.input lss.2d.tilecascade.input box.2d.treelb.input box.2d.tilelb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input
+INPUTS3D = box.3d.cascade.input box.3d.tilecascade.input lss.3d.cascade.input lss.3d.tilecascade.input box.3d.treelb.input box.3d.tilelb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input int_overflow.3d.cascade.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
 	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1

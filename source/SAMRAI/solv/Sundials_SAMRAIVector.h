@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between Sundials vector interface and SAMRAI vectors.
  *
  ************************************************************************/
@@ -299,6 +299,13 @@ private:
    int
    testReciprocal(
       const SundialsAbstractVector* x);
+
+   /*!
+    * @brief Get the length of this vector.
+    *
+    * @return The length (number of elements in the underlying data)
+    */
+   sunindextype getLength() const;
 
    /*
     * Vector data is maintained in SAMRAI vector structure.

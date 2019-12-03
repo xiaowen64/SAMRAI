@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:  Manages data on stencils at coarse-fine boundaries
  *
  ************************************************************************/
@@ -34,9 +34,9 @@ CompositeBoundarySchedule::CompositeBoundarySchedule(
    int stencil_width,
    const std::set<int>& data_ids)
 : d_hierarchy(hierarchy),
-  d_coarse_level_num(coarse_level_num),
   d_stencil_width(stencil_width),
-  d_data_ids(data_ids)
+  d_data_ids(data_ids),
+  d_coarse_level_num(coarse_level_num)
 {
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(coarse_level_num <= hierarchy->getFinestLevelNumber());
@@ -114,7 +114,7 @@ CompositeBoundarySchedule::createStencilForLevel()
          d_hierarchy->getRequiredConnectorWidth(level_num+1, level_num));
       s_to_c_width.max(stencil_vec);
 
-      int num_blocks = d_hierarchy->getNumberBlocks();
+      unsigned int num_blocks = d_hierarchy->getNumberBlocks();
       for (hier::BlockId::block_t blk = 0; blk < num_blocks; ++blk) {
          for (unsigned int i = 0; i < dim.getValue(); ++i) {
             while (s_to_c_width(blk,i) % ratio(blk,i) != 0) {

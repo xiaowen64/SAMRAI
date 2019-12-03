@@ -13488,72 +13488,6 @@ done
 
 
 
-# Defines ptscotch_PREFIX ptscotch_INCLUDES and ptscotch_LIBS.
-
-# Check whether --with-ptscotch was given.
-if test "${with_ptscotch+set}" = set; then :
-  withval=$with_ptscotch;
-else
-  with_ptscotch=no
-fi
-
-
-case "$with_ptscotch" in
-  no)
-    : Do nothing
-  ;;
-  yes)
-    # PT-SCOTCH install path was not specified.
-    # Look in a couple of standard locations to probe if
-    # PT-SCOTCH header files are there.
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PT-SCOTCH installation" >&5
-$as_echo_n "checking for PT-SCOTCH installation... " >&6; }
-    for dir in /usr /usr/local; do
-      if test -f ${dir}/ptscotch/include/ptscotch.h; then
-        ptscotch_PREFIX=${dir}
-        break
-      fi
-    done
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ptscotch_PREFIX" >&5
-$as_echo "$ptscotch_PREFIX" >&6; }
-  ;;
-  *)
-    # PT-SCOTCH install path was specified.
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking for PT-SCOTCH installation" >&5
-$as_echo_n "checking for PT-SCOTCH installation... " >&6; }
-
-    if test -f ${with_ptscotch}/include/ptscotch.h; then
-        ptscotch_PREFIX=$with_ptscotch
-        ptscotch_INCLUDES="-I${ptscotch_PREFIX}/include"
-        ptscotch_LIBS="-L${ptscotch_PREFIX}/lib -lptscotch -lptscotcherr -lscotch -lscotcherr"
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ptscotch_PREFIX" >&5
-$as_echo "$ptscotch_PREFIX" >&6; }
-    else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ptscotch_PREFIX" >&5
-$as_echo "$ptscotch_PREFIX" >&6; }
-        as_fn_error $? "PT-SCOTCH not found in $with_ptscotch" "$LINENO" 5
-    fi
-  ;;
-esac
-if test "${ptscotch_PREFIX+set}" = set; then
-
-# Split ptscotch_LIBS into the LIB_PATH part (ptscotch_LIB_PATH) and the LIB_NAME part (ptscotch_LIB_NAME)
-if test -n "${ptscotch_LIBS}"; then
-  for i in ${ptscotch_LIBS}; do
-    case "$i" in
-    -L*) ptscotch_LIB_PATH="${ptscotch_LIB_PATH} $i" ;;
-    *) ptscotch_LIB_NAME="${ptscotch_LIB_NAME} $i" ;;
-    esac
-  done
-fi
-
-   LIB_PATH="$ptscotch_LIB_PATH $LIB_PATH"
-   LIB_NAME="$ptscotch_LIB_NAME $LIB_NAME"
-   INC_PATH="$ptscotch_INCLUDES $INC_PATH"
-
-$as_echo "#define HAVE_PTSCOTCH 1" >>confdefs.h
-
-fi
 
 
 btng_log_vars="ptscotch_INCLUDES INC_PATH ptscotch_LIBS LIB_PATH LIB_NAME"
@@ -14098,7 +14032,7 @@ fi
   LIB_NAME="$conduit_LIB_NAME $LIB_NAME"
   INC_PATH="$conduit_INCLUDES $INC_PATH"
 
-$as_echo "#define HAVE_CONDUIT 1" >>confdefs.h
+$as_echo "#define SAMRAI_HAVE_CONDUIT 1" >>confdefs.h
 
 fi
 

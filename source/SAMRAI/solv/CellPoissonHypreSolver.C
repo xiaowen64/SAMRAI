@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -793,8 +793,6 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       const double* h = pg->getDx();
 
       const hier::Box patch_box = patch.getBox();
-      const hier::Index& patch_lo = patch_box.lower();
-      const hier::Index& patch_up = patch_box.upper();
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
          C_data = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -822,9 +820,6 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        * for ghost cells onto the diagonal.
        */
       diagonal.fillAll(0.0);
-
-      const hier::Index& ifirst = patch_box.lower();
-      const hier::Index& ilast = patch_box.upper();
 
       /*
        * Storage for off-diagonal entries,

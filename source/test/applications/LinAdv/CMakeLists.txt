@@ -29,6 +29,8 @@ process_m4(NAME fortran/trace1d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTING=1")
+
 set(linadv_depends ${SAMRAI_LIBRARIES})
 
 # TODO CMake should resolve this dependency for us...
@@ -51,6 +53,10 @@ target_include_directories( linadv
 set_target_properties(linadv PROPERTIES LINKER_LANGUAGE CXX)
 
 file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+file (GLOB test_baselines ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*boxes*)
+
+execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
+execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 
 samrai_add_tests(
   NAME linadv

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
@@ -44,7 +44,7 @@
 //#include "MultiVariableDataTest.h"
 
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "conduit_blueprint.hpp"
 #include "conduit_relay.hpp"
 #endif
@@ -516,7 +516,7 @@ int main(
          }
       }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
       std::shared_ptr<tbox::MemoryDatabase> memory_db(
          new tbox::MemoryDatabase("mem_hierarchy"));
 

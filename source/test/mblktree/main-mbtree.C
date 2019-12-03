@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -391,10 +391,6 @@ int main(
                     << std::endl;
       }
 
-      if (fail_count == 0) {
-         tbox::pout << "\nPASSED:  Multiblock tree search" << std::endl;
-      }
-
       input_db.reset();
       main_db.reset();
 
@@ -405,6 +401,11 @@ int main(
 
    }
 #endif
+
+   if (fail_count == 0) {
+      tbox::pout << "\nPASSED:  Multiblock tree search" << std::endl;
+   }
+
    /*
     * Shut down.
     */

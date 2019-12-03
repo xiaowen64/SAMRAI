@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Main program for testing Sundials/SAMRAI interface.
  *
  ************************************************************************/
@@ -140,7 +140,6 @@ int main(
 
       double relative_tolerance = main_db->getDouble("relative_tolerance");
       double absolute_tolerance = main_db->getDouble("absolute_tolerance");
-      bool uses_newton = main_db->getBool("uses_newton");
       int stepping_method = main_db->getInteger("stepping_method");
       bool uses_preconditioning =
          main_db->getBoolWithDefault("uses_preconditioning", false);

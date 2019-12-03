@@ -1,7 +1,7 @@
 dnl
 dnl  File:           $HeadURL$
 dnl  Package:        SAMRAI
-dnl  Copyright:      (c) 1997-2018 Lawrence Livermore National Security, LLC
+dnl  Copyright:      (c) 1997-2019 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
 dnl  Description:    Macro to control whether timers are compile into or
