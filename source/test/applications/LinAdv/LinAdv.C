@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -2570,7 +2570,7 @@ void LinAdv::getFromInput(
 
    } // refine db entry exists
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    d_write_coord_values =
       input_db->getBoolWithDefault("write_coord_values", false);
 #endif
@@ -2668,7 +2668,6 @@ void LinAdv::getFromInput(
                                      << "`front_position' input required for "
                                      << d_data_problem << " problem." << std::endl);
          }
-
          d_number_of_intervals =
             tbox::MathUtilities<int>::Min(static_cast<int>(d_front_position.size()) + 1,
                static_cast<int>(init_data_keys.size()) - 1);
@@ -3228,7 +3227,7 @@ LinAdv::putCoordinatesToDatabase(
    }
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 void LinAdv::addFields(
    conduit::Node& node, int domain_id,
    const std::shared_ptr<hier::Patch>& patch)

@@ -70,11 +70,14 @@ AllocatorDatabase::initialize()
   if (!rm.isAllocator("samrai::data_allocator")) {
 #if defined(HAVE_CUDA)
     // Internal pool for allocations
+#if 1
     auto allocator = rm.makeAllocator<umpire::strategy::AllocationAdvisor>(
         "internal::samrai::um_allocation_advisor",
         rm.getAllocator(umpire::resource::Unified),
         // Set preferred location to GPU
         "PREFERRED_LOCATION");
+#endif
+    //auto allocator = rm.getAllocator(umpire::resource::Pinned);
 #else
     auto allocator = rm.getAllocator(umpire::resource::Host);
 #endif
@@ -100,6 +103,7 @@ AllocatorDatabase::initialize()
   if (!rm.isAllocator("samrai::temporary_data_allocator")) {
 #if defined(HAVE_CUDA)
     auto allocator = rm.getAllocator(umpire::resource::Device);
+    //auto allocator = rm.getAllocator(umpire::resource::Pinned);
 #else
     auto allocator = rm.getAllocator(umpire::resource::Host);
 #endif

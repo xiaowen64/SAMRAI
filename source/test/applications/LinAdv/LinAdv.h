@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -56,7 +56,7 @@
 using namespace SAMRAI;
 
 class LinAdv:
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    public hier::BlueprintUtilsStrategy,
 #endif
    public tbox::Serializable,
@@ -365,7 +365,7 @@ public:
       std::shared_ptr<tbox::Database>& coords_db,
       const hier::Patch& patch);
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
    void addFields(
       conduit::Node& node,
       int domain_id,

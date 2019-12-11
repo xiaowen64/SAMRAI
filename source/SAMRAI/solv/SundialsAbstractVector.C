@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Interface to C++ vector implementation for Sundials package.
  *
  ************************************************************************/
@@ -74,6 +74,7 @@ SundialsAbstractVector::createVectorOps()
    ops->nvl1norm = N_VL1Norm_SAMRAI;
    ops->nvcompare = N_VCompare_SAMRAI;
    ops->nvinvtest = N_VInvTest_SAMRAI;
+   ops->nvgetlength = N_VGetLength_SAMRAI;
 //   ops->nvconstrmask      = N_VConstrMask_SAMRAI;
 //   ops->nvminquotient     = N_VMinQuotient_SAMRAI;
 

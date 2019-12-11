@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer side data on multiple levels.
  *
  ************************************************************************/
@@ -277,10 +277,9 @@ HierarchySideDataOpsInteger::printData(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
+   auto& pdf = *d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id);
    s << "Patch descriptor id = " << data_id << std::endl;
-   s << "Factory = " << typeid(*d_hierarchy->getPatchDescriptor()->
-                               getPatchDataFactory(data_id)).name()
-     << std::endl;
+   s << "Factory = " << typeid(pdf).name()  << std::endl;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       s << "Level number = " << ln << std::endl;

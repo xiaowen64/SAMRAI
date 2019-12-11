@@ -120,6 +120,14 @@ if (ENABLE_HDF5)
   set(tbox_depends ${tbox_depends} hdf5)
 endif ()
 
+if (HAVE_SILO)
+    list(APPEND tbox_depends_on SILO)
+endif ()
+
+if (SAMRAI_HAVE_CONDUIT)
+    list(APPEND tbox_depends_on CONDUIT)
+endif ()
+
 if (ENABLE_MPI)
   set(tbox_depends ${tbox_depends} mpi)
 endif ()

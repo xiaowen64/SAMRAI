@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                omplex data on a Cartesian mesh.
  *
@@ -128,6 +128,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
+   fprintf(stderr,"Non-generic complex conservative linear refine\n");
    const tbox::Dimension& dim(fine.getDim());
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);

@@ -3,25 +3,29 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
 #include "SAMRAI/geom/GridGeometry.h"
 
+#include "SAMRAI/pdat/NodeInjection.h"
 #include "SAMRAI/pdat/NodeComplexInjection.h"
 #include "SAMRAI/pdat/NodeDoubleInjection.h"
 #include "SAMRAI/pdat/NodeFloatInjection.h"
 #include "SAMRAI/pdat/NodeIntegerInjection.h"
 #include "SAMRAI/pdat/OuternodeDoubleInjection.h"
 #include "SAMRAI/pdat/CellComplexConstantRefine.h"
+#include "SAMRAI/pdat/CellConstantRefine.h"
 #include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellFloatConstantRefine.h"
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/pdat/EdgeConstantRefine.h"
 #include "SAMRAI/pdat/EdgeComplexConstantRefine.h"
 #include "SAMRAI/pdat/EdgeDoubleConstantRefine.h"
 #include "SAMRAI/pdat/EdgeFloatConstantRefine.h"
 #include "SAMRAI/pdat/EdgeIntegerConstantRefine.h"
+#include "SAMRAI/pdat/FaceConstantRefine.h"
 #include "SAMRAI/pdat/FaceComplexConstantRefine.h"
 #include "SAMRAI/pdat/FaceDoubleConstantRefine.h"
 #include "SAMRAI/pdat/FaceFloatConstantRefine.h"
@@ -30,6 +34,7 @@
 #include "SAMRAI/pdat/OuterfaceDoubleConstantRefine.h"
 #include "SAMRAI/pdat/OuterfaceFloatConstantRefine.h"
 #include "SAMRAI/pdat/OuterfaceIntegerConstantRefine.h"
+#include "SAMRAI/pdat/SideConstantRefine.h"
 #include "SAMRAI/pdat/SideComplexConstantRefine.h"
 #include "SAMRAI/pdat/SideDoubleConstantRefine.h"
 #include "SAMRAI/pdat/SideFloatConstantRefine.h"
@@ -244,17 +249,25 @@ GridGeometry::buildOperators()
 {
    // Coarsening Operators
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<dcomplex>).name(),
+      //std::make_shared<pdat::NodeComplexInjection>());
       typeid(pdat::NodeVariable<dcomplex>).name(),
-      std::make_shared<pdat::NodeComplexInjection>());
+      std::make_shared<pdat::NodeInjection<dcomplex>>());
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<double>).name(),
+      //std::make_shared<pdat::NodeDoubleInjection>());
       typeid(pdat::NodeVariable<double>).name(),
-      std::make_shared<pdat::NodeDoubleInjection>());
+      std::make_shared<pdat::NodeInjection<double>>());
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<float>).name(),
+      //std::make_shared<pdat::NodeFloatInjection>());
       typeid(pdat::NodeVariable<float>).name(),
-      std::make_shared<pdat::NodeFloatInjection>());
+      std::make_shared<pdat::NodeInjection<float>>());
    addCoarsenOperator(
+      //typeid(pdat::NodeVariable<int>).name(),
+      //std::make_shared<pdat::NodeIntegerInjection>());
       typeid(pdat::NodeVariable<int>).name(),
-      std::make_shared<pdat::NodeIntegerInjection>());
+      std::make_shared<pdat::NodeInjection<int>>());
    addCoarsenOperator(
       typeid(pdat::OuternodeVariable<double>).name(),
       std::make_shared<pdat::OuternodeDoubleInjection>());
@@ -262,40 +275,40 @@ GridGeometry::buildOperators()
    // Refinement Operators
    addRefineOperator(
       typeid(pdat::CellVariable<dcomplex>).name(),
-      std::make_shared<pdat::CellComplexConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<dcomplex>>());
    addRefineOperator(
       typeid(pdat::CellVariable<double>).name(),
-      std::make_shared<pdat::CellDoubleConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<double>>());
    addRefineOperator(
       typeid(pdat::CellVariable<float>).name(),
-      std::make_shared<pdat::CellFloatConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<float>>());
    addRefineOperator(
       typeid(pdat::CellVariable<int>).name(),
-      std::make_shared<pdat::CellIntegerConstantRefine>());
+      std::make_shared<pdat::CellConstantRefine<int>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<dcomplex>).name(),
-      std::make_shared<pdat::EdgeComplexConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<dcomplex>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
-      std::make_shared<pdat::EdgeDoubleConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<double>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<float>).name(),
-      std::make_shared<pdat::EdgeFloatConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<float>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<int>).name(),
-      std::make_shared<pdat::EdgeIntegerConstantRefine>());
+      std::make_shared<pdat::EdgeConstantRefine<int>>());
    addRefineOperator(
       typeid(pdat::FaceVariable<dcomplex>).name(),
-      std::make_shared<pdat::FaceComplexConstantRefine>());
+      std::make_shared<pdat::FaceConstantRefine<dcomplex>>());
    addRefineOperator(
       typeid(pdat::FaceVariable<double>).name(),
-      std::make_shared<pdat::FaceDoubleConstantRefine>());
+      std::make_shared<pdat::FaceConstantRefine<double>>());
    addRefineOperator(
       typeid(pdat::FaceVariable<float>).name(),
-      std::make_shared<pdat::FaceFloatConstantRefine>());
+      std::make_shared<pdat::FaceConstantRefine<float>>());
    addRefineOperator(
       typeid(pdat::FaceVariable<int>).name(),
-      std::make_shared<pdat::FaceIntegerConstantRefine>());
+      std::make_shared<pdat::FaceConstantRefine<int>>());
    addRefineOperator(
       typeid(pdat::OuterfaceVariable<dcomplex>).name(),
       std::make_shared<pdat::OuterfaceComplexConstantRefine>());
@@ -310,16 +323,16 @@ GridGeometry::buildOperators()
       std::make_shared<pdat::OuterfaceIntegerConstantRefine>());
    addRefineOperator(
       typeid(pdat::SideVariable<dcomplex>).name(),
-      std::make_shared<pdat::SideComplexConstantRefine>());
+      std::make_shared<pdat::SideConstantRefine<dcomplex>>());
    addRefineOperator(
       typeid(pdat::SideVariable<double>).name(),
-      std::make_shared<pdat::SideDoubleConstantRefine>());
+      std::make_shared<pdat::SideConstantRefine<double>>());
    addRefineOperator(
       typeid(pdat::SideVariable<float>).name(),
-      std::make_shared<pdat::SideFloatConstantRefine>());
+      std::make_shared<pdat::SideConstantRefine<float>>());
    addRefineOperator(
       typeid(pdat::SideVariable<int>).name(),
-      std::make_shared<pdat::SideIntegerConstantRefine>());
+      std::make_shared<pdat::SideConstantRefine<int>>());
 
    // Time Interpolation Operators
    addTimeInterpolateOperator(

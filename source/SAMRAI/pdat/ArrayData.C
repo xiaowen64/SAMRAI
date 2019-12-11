@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
@@ -196,7 +196,7 @@ ArrayData<TYPE>::getPointer(
 #if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
-ArrayData<TYPE>::View<DIM>
+typename ArrayData<TYPE>::template View<DIM>
 ArrayData<TYPE>::getView(
         int depth)
 {
@@ -205,7 +205,7 @@ ArrayData<TYPE>::getView(
 
 template<class TYPE>
 template<int DIM>
-ArrayData<TYPE>::ConstView<DIM>
+typename ArrayData<TYPE>::template ConstView<DIM>
 ArrayData<TYPE>::getConstView(
         int depth) const
 {

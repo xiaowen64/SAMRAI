@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -43,8 +43,9 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-// Classes for run-time plotting and autotesting.
 
+// Classes for run-time plotting and autotesting.
+//#define TESTING 1
 #if (TESTING == 1)
 #include "test/testlib/AutoTester.h"
 #endif
@@ -54,7 +55,7 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 #include "conduit_blueprint.hpp"
 #endif
 
@@ -287,7 +288,7 @@ int main(
          const bool viz_dump_data = (viz_dump_interval > 0);
 
          bool write_blueprint = false;
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
          write_blueprint =
             main_db->getBoolWithDefault("write_blueprint", false);
 #endif
@@ -436,6 +437,7 @@ int main(
           * not get used.
           */
          AutoTester autotester("AutoTester", dim, input_db);
+         std::cerr << "autotesting object initialized!!" << std::endl;
 #endif
 
          /*
@@ -453,7 +455,6 @@ int main(
 
          tbox::plog << "\nCheck Linear Advection data... " << std::endl;
          linear_advection_model->printClassData(tbox::plog);
-
          if (viz_dump_data &&
              time_integrator->getIntegratorStep() % viz_dump_interval == 0) {
 #ifdef HAVE_HDF5
@@ -519,7 +520,6 @@ int main(
             /*
              * At specified intervals, write out data files for plotting.
              */
-
             if (viz_dump_data) {
                if ((iteration_num % viz_dump_interval) == 0) {
 #ifdef HAVE_HDF5
@@ -529,10 +529,9 @@ int main(
 #endif
                }
             }
-
             if (write_blueprint && viz_dump_interval) {
                if ((iteration_num % viz_dump_interval) == 0) {
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
                   std::shared_ptr<tbox::ConduitDatabase> conduit_db(
                      new tbox::ConduitDatabase("conduit_hierarchy"));
  
@@ -612,7 +611,6 @@ int main(
          /*
           * At conclusion of simulation, deallocate objects.
           */
-
 #ifdef HAVE_HDF5
          visit_data_writer.reset();
 #endif

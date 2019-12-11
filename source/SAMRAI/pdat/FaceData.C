@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated face centered patch data type
  *
  ************************************************************************/
@@ -54,6 +54,23 @@ FaceData<TYPE>::FaceData(
    }
 }
 
+template <class TYPE>
+FaceData<TYPE>::FaceData(const hier::Box& box,
+                         int depth,
+                         const hier::IntVector& ghosts,
+                         umpire::Allocator allocator)
+    : hier::PatchData(box, ghosts), d_depth(depth)
+{
+  TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+  TBOX_ASSERT(depth > 0);
+  TBOX_ASSERT(ghosts.min() >= 0);
+
+  for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+    const hier::Box face = FaceGeometry::toFaceBox(getGhostBox(), d);
+    d_data[d].reset(new ArrayData<TYPE>(face, depth, allocator));
+  }
+}
+
 template<class TYPE>
 FaceData<TYPE>::~FaceData()
 {
@@ -89,6 +106,31 @@ FaceData<TYPE>::getPointer(
 
    return d_data[face_normal]->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename FaceData<TYPE>::template View<DIM> FaceData<TYPE>::getView(
+    int face_normal,
+    int depth)
+{
+  const hier::Box face_box =
+      FaceGeometry::toFaceBox(getGhostBox(), face_normal);
+  return FaceData<TYPE>::View<DIM>(getPointer(face_normal, depth), face_box);
+}
+
+template <class TYPE>
+template <int DIM>
+typename FaceData<TYPE>::template ConstView<DIM> FaceData<TYPE>::getConstView(
+    int face_normal,
+    int depth) const
+{
+  const hier::Box face_box =
+      FaceGeometry::toFaceBox(getGhostBox(), face_normal);
+  return FaceData<TYPE>::ConstView<DIM>(getPointer(face_normal, depth),
+                                        face_box);
+}
+#endif
 
 template<class TYPE>
 TYPE&
@@ -797,6 +839,23 @@ FaceData<TYPE>::putToRestart(
       d_data[i]->putToRestart(array_database);
    }
 }
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename FaceData<TYPE>::template View<DIM> get_view(FaceData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename FaceData<TYPE>::template ConstView<DIM> get_const_view(
+    const FaceData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

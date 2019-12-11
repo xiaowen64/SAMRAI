@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Implementation of TreeLoadBalancer.
  *
  ************************************************************************/
@@ -63,7 +63,6 @@ BoxTransitSet::BoxTransitSet(
    d_print_edge_steps(false),
    d_object_timers(0)
 {
-   TBOX_ASSERT(&pparams != 0);
    getFromInput();
    setTimerPrefix(s_default_timer_prefix);
    d_box_breaker.setPrintBreakSteps(d_print_break_steps);

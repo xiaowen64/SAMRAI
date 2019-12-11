@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for face-centered patch data
  *
  ************************************************************************/
@@ -14,6 +14,7 @@
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/FaceDoubleConstantRefine.h"
+#include "SAMRAI/pdat/FaceConstantRefine.h"
 #include "SAMRAI/pdat/FaceVariable.h"
 
 #include "MultiblockTester.h"
@@ -21,6 +22,8 @@
 #include <vector>
 
 using namespace SAMRAI;
+
+using KERNEL_TYPE = dcomplex;
 
 FaceMultiblockTest::FaceMultiblockTest(
    const std::string& object_name,
@@ -90,7 +93,7 @@ void FaceMultiblockTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::FaceVariable<double>(d_dim,
+         new pdat::FaceVariable<KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
@@ -121,14 +124,14 @@ void FaceMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::FaceData<double> > face_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<KERNEL_TYPE> > face_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
          hier::Box dbox = face_data->getGhostBox();
 
-         face_data->fillAll((double)block_id.getBlockValue());
+         face_data->fillAll((KERNEL_TYPE)block_id.getBlockValue());
 
       }
    }
@@ -175,8 +178,8 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::FaceData<double> > face_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<KERNEL_TYPE> > face_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -199,7 +202,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
                   if (!patch_face_box.contains(*ni)) {
                      for (int d = 0; d < face_data->getDepth(); ++d) {
                         (*face_data)(*ni, d) =
-                           (double)(node_bdry[nb].getLocationIndex() + 100);
+                           (KERNEL_TYPE)(node_bdry[nb].getLocationIndex() + 100);
                      }
                   }
                }
@@ -243,7 +246,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
                         if (use_index) {
                            for (int d = 0; d < face_data->getDepth(); ++d) {
                               (*face_data)(*ni, d) =
-                                 (double)(edge_bdry[eb].getLocationIndex()
+                                 (KERNEL_TYPE)(edge_bdry[eb].getLocationIndex()
                                           + 100);
                            }
                         }
@@ -290,7 +293,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
                         if (use_index) {
                            for (int d = 0; d < face_data->getDepth(); ++d) {
                               (*face_data)(*ni, d) =
-                                 (double)(face_bdry[fb].getLocationIndex()
+                                 (KERNEL_TYPE)(face_bdry[fb].getLocationIndex()
                                           + 100);
                            }
                         }
@@ -320,8 +323,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::FaceData<double> > face_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<KERNEL_TYPE> > face_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -405,8 +408,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  std::shared_ptr<pdat::FaceData<double> > sing_data(
-                     SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::FaceData<KERNEL_TYPE> > sing_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::FaceData<KERNEL_TYPE>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -509,7 +512,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                if (use_index) {
                   for (int d = 0; d < depth; ++d) {
                      (*face_data)(*ci, d) =
-                        (double)bbox.getLocationIndex() + 200.0;
+                        (KERNEL_TYPE)bbox.getLocationIndex() + 200.0;
                   }
                }
             }
@@ -544,8 +547,8 @@ bool FaceMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   std::shared_ptr<pdat::FaceData<double> > solution(
-      new pdat::FaceData<double>(pbox, 1, tgcw));
+   std::shared_ptr<pdat::FaceData<KERNEL_TYPE> > solution(
+      new pdat::FaceData<KERNEL_TYPE>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
@@ -565,10 +568,10 @@ bool FaceMultiblockTest::verifyResults(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      double correct = (double)block_id.getBlockValue();
+      KERNEL_TYPE correct = (KERNEL_TYPE)block_id.getBlockValue();
 
-      std::shared_ptr<pdat::FaceData<double> > face_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<KERNEL_TYPE> > face_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
       int depth = face_data->getDepth();
@@ -581,9 +584,9 @@ bool FaceMultiblockTest::verifyResults(
          for (pdat::FaceIterator ci(pdat::FaceGeometry::begin(interior_box, axis));
               ci != ciend; ++ci) {
             for (int d = 0; d < depth; ++d) {
-               double result = (*face_data)(*ci, d);
+               KERNEL_TYPE result = (*face_data)(*ci, d);
 
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : face index = " << *ci << std::endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
@@ -640,9 +643,9 @@ bool FaceMultiblockTest::verifyResults(
                   fi.setAxis(axis);
                   if (!patch_face_box.contains(fi)) {
                      for (int d = 0; d < depth; ++d) {
-                        double result = (*face_data)(fi, d);
+                        KERNEL_TYPE result = (*face_data)(fi, d);
 
-                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                        if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
                                       << " : face index = " << fi << std::endl;
@@ -695,16 +698,16 @@ bool FaceMultiblockTest::verifyResults(
 
                if (num_sing_neighbors == 0) {
 
-                  correct = (double)bdry[k].getLocationIndex() + 200.0;
+                  correct = (KERNEL_TYPE)bdry[k].getLocationIndex() + 200.0;
 
                } else {
 
-                  correct /= (double)num_sing_neighbors;
+                  correct /= (KERNEL_TYPE)num_sing_neighbors;
 
                }
 
             } else {
-               correct = (double)(bdry[k].getLocationIndex() + 100);
+               correct = (KERNEL_TYPE)(bdry[k].getLocationIndex() + 100);
             }
 
             for (tbox::Dimension::dir_t axis = 0; axis < d_dim.getValue(); ++axis) {
@@ -731,9 +734,9 @@ bool FaceMultiblockTest::verifyResults(
 
                      if (use_index) {
                         for (int d = 0; d < depth; ++d) {
-                           double result = (*face_data)(*ci, d);
+                           KERNEL_TYPE result = (*face_data)(*ci, d);
 
-                           if (!tbox::MathUtilities<double>::equalEps(correct,
+                           if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct,
                                   result)) {
                               tbox::perr << "Test FAILED: ...."
                                          << " : face index = " << *ci << std::endl;

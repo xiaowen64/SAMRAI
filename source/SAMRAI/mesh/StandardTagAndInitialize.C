@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Routines for performing cell-tagging and initializing
  *                a new level.
  *
@@ -11,6 +11,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/pdat/CellConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
@@ -560,7 +561,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
    /*
     * Refine tags from coarser level to level.
     */
-   pdat::CellIntegerConstantRefine copytags;
+   //pdat::CellIntegerConstantRefine copytags;
+   pdat::CellConstantRefine<int> copytags;
    for (hier::PatchLevel::iterator ip(coarser_level->begin());
         ip != coarser_level->end(); ++ip) {
 

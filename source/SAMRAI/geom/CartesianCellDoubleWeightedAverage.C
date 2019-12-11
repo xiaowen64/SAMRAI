@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for cell-centered double data on
  *                a Cartesian mesh.
  *
@@ -19,6 +19,7 @@
 
 #include <float.h>
 #include <math.h>
+#include <stdio.h>
 
 /*
  *************************************************************************
@@ -166,7 +167,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
          const double dVf = fdx0*fdx1;
          const double dVc = cdx0*cdx1;
 
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
             double spv = 0.0;
 
             for (int rx = 0; rx < r0; rx++) {
@@ -192,6 +193,44 @@ CartesianCellDoubleWeightedAverage::coarsen(
 #endif
 
       } else if ((dim == tbox::Dimension(3))) {
+#if defined(HAVE_RAJA)
+         auto fine_array = fdata->getView<3>(d);
+         auto coarse_array = cdata->getView<3>(d);
+
+         const double* fdx = fgeom->getDx();
+         const double* cdx = cgeom->getDx();
+
+         const double fdx0 = fdx[0];
+         const double fdx1 = fdx[1];
+         const double fdx2 = fdx[2];
+         const double cdx0 = cdx[0];
+         const double cdx1 = cdx[1];
+         const double cdx2 = cdx[2];
+
+         const int r0 = ratio[0];
+         const int r1 = ratio[1];
+         const int r2 = ratio[2];
+
+         const double dVf = fdx0*fdx1*fdx2;
+         const double dVc = cdx0*cdx1*cdx2;
+
+         pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
+            double spv = 0.0;
+
+            for (int rx = 0; rx < r0; rx++) {
+               for (int ry = 0; ry < r1; ry++) {
+                  for(int rz = 0; rz < r2; rz++) {
+                    const int ii = i*r0+rx;
+                    const int jj = j*r1+ry;
+                    const int kk = k*r2+rz;
+                    spv += fine_array(ii,jj,kk)*dVf;
+                  }
+               }
+            }
+
+            coarse_array(i,j,k) = spv/dVc;
+         });
+#else
          SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
@@ -204,6 +243,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
             cgeom->getDx(),
             fdata->getPointer(d),
             cdata->getPointer(d));
+#endif
       } else if ((dim == tbox::Dimension(4))) {
          SAMRAI_F77_FUNC(cartwgtavgcelldoub4d, CARTWGTAVGCELLDOUB4D) (ifirstc(0),
             ifirstc(1), ifirstc(2), ifirstc(3),

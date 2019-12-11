@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for node-centered double patch data.
  *
  ************************************************************************/
@@ -143,6 +143,19 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
       } else if (dim == tbox::Dimension(2)) {
+#if defined(HAVE_RAJA)
+         SAMRAI::hier::Box dest_box = where;
+         dest_box.growUpper(0,1);
+         dest_box.growUpper(1,1);
+         auto old_array = old_dat->getConstView<2>(d);
+         auto new_array = new_dat->getConstView<2>(d);
+         auto dst_array = dst_dat->getView<2>(d);
+         
+         pdat::parallel_for_all_x(dest_box, [=] SAMRAI_HOST_DEVICE (int j /*fastest*/, int k) {
+            const double oldfrac = 1.0-tfrac;
+            dst_array(j,k) = old_array(j,k)*oldfrac + new_array(j,k)*tfrac;
+         });
+#else
          SAMRAI_F77_FUNC(lintimeintnodedoub2d, LINTIMEINTNODEDOUB2D) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -152,7 +165,22 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(d),
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
+#endif // test for RAJA
       } else if (dim == tbox::Dimension(3)) {
+#if defined(HAVE_RAJA)
+         SAMRAI::hier::Box dest_box = where;
+         dest_box.growUpper(0,1);
+         dest_box.growUpper(1,1);
+         dest_box.growUpper(2,1);
+         auto old_array = old_dat->getConstView<3>(d);
+         auto new_array = new_dat->getConstView<3>(d);
+         auto dst_array = dst_dat->getView<3>(d);
+         
+         pdat::parallel_for_all_x(dest_box, [=] SAMRAI_HOST_DEVICE (int i /*fastest*/, int j, int k) {
+            const double oldfrac = 1.0-tfrac;
+            dst_array(i,j,k) = old_array(i,j,k)*oldfrac + new_array(i,j,k)*tfrac;
+         });
+#else
          SAMRAI_F77_FUNC(lintimeintnodedoub3d, LINTIMEINTNODEDOUB3D) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
@@ -166,6 +194,7 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(d),
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
+#endif
       } else {
          TBOX_ERROR(
             "NodeDoubleLinearTimeInterpolateOp::TimeInterpolate dim > 3 not supported"

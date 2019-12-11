@@ -1,4 +1,5 @@
 set (facadaptive_sources
+  AdaptivePoisson.C
   GaussianFcn.C
   PoissonGaussianDiffcoefSolution.C
   PoissonGaussianSolution.C

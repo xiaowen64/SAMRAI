@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -23,6 +23,7 @@
 #include "SAMRAI/geom/CartesianCellDoubleLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatLinearRefine.h"
+#include "SAMRAI/geom/CartesianCellConservativeLinearRefine.h"
 
 // Edge data coarsen operators
 #include "SAMRAI/geom/CartesianEdgeComplexWeightedAverage.h"
@@ -449,14 +450,20 @@ CartesianGridGeometry::buildOperators()
 
    // CartesianGridGeometry specific Refinement Operators
    addRefineOperator(
+      //typeid(pdat::CellVariable<dcomplex>).name(),
+      //std::make_shared<CartesianCellComplexConservativeLinearRefine>());
       typeid(pdat::CellVariable<dcomplex>).name(),
-      std::make_shared<CartesianCellComplexConservativeLinearRefine>());
+      std::make_shared<CartesianCellConservativeLinearRefine<dcomplex>>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<double>).name(),
+      //std::make_shared<CartesianCellDoubleConservativeLinearRefine>());
       typeid(pdat::CellVariable<double>).name(),
-      std::make_shared<CartesianCellDoubleConservativeLinearRefine>());
+      std::make_shared<CartesianCellConservativeLinearRefine<double>>());
    addRefineOperator(
+      //typeid(pdat::CellVariable<float>).name(),
+      //std::make_shared<CartesianCellFloatConservativeLinearRefine>());
       typeid(pdat::CellVariable<float>).name(),
-      std::make_shared<CartesianCellFloatConservativeLinearRefine>());
+      std::make_shared<CartesianCellConservativeLinearRefine<float>>());
    addRefineOperator(
       typeid(pdat::EdgeVariable<double>).name(),
       std::make_shared<CartesianEdgeDoubleConservativeLinearRefine>());

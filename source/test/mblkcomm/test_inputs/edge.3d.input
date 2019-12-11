@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and LICENSE. 
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   input file for testing communication of SAMRAI edge data. 
  *
  ************************************************************************/
@@ -61,7 +61,7 @@ EdgeMultiblockTest {
    //    Optional input:  depth              (default = 1)
    //                     src_ghosts         (default = 0,0,0)
    //                     dst_ghosts         (default = 0,0,0)
-   //                     refine_operator    (default = "NO_REFINE")
+   //                     refine_operator    (default = "CONSTANT_REFINE")
    //
    VariableData {
 
@@ -71,7 +71,7 @@ EdgeMultiblockTest {
          depth = 1
          src_ghosts = 0,0,0
          dst_ghosts = 1,1,1
-         refine_operator = "NO_REFINE"
+         refine_operator = "CONSTANT_REFINE"
       }
    }
 
@@ -148,6 +148,12 @@ StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
    level_0 {
       block_0 {
+         boxes = [ (5,5,5) , (6,7,7) ]
+      }
+      block_1 {
+         boxes = [ (5,5,5) , (6,7,7) ]
+      }
+      block_2 {
          boxes = [ (5,5,5) , (6,7,7) ]
       }
    }

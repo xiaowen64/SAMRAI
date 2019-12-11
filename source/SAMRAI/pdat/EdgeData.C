@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated edge centered patch data type
  *
  ************************************************************************/
@@ -55,6 +55,27 @@ EdgeData<TYPE>::EdgeData(
 }
 
 template<class TYPE>
+EdgeData<TYPE>::EdgeData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+
+   for (int d = 0; d < getDim().getValue(); ++d) {
+      const hier::Box edge_box =
+         EdgeGeometry::toEdgeBox(getGhostBox(), d);
+      d_data[d].reset(new ArrayData<TYPE>(edge_box, depth, allocator));
+   }
+}
+
+template<class TYPE>
 EdgeData<TYPE>::~EdgeData()
 {
 }
@@ -89,6 +110,31 @@ EdgeData<TYPE>::getPointer(
 
    return d_data[axis]->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename EdgeData<TYPE>::template View<DIM> EdgeData<TYPE>::getView(
+    int axis,
+    int depth)
+{
+  const hier::Box edge_box =
+      EdgeGeometry::toEdgeBox(getGhostBox(), axis);
+  return EdgeData<TYPE>::View<DIM>(getPointer(axis, depth), edge_box);
+}
+
+template <class TYPE>
+template <int DIM>
+typename EdgeData<TYPE>::template ConstView<DIM> EdgeData<TYPE>::getConstView(
+    int axis,
+    int depth) const
+{
+  const hier::Box edge_box =
+      EdgeGeometry::toEdgeBox(getGhostBox(), axis);
+  return EdgeData<TYPE>::ConstView<DIM>(getPointer(axis, depth),
+                                        edge_box);
+}
+#endif
 
 template<class TYPE>
 TYPE&
@@ -746,6 +792,24 @@ EdgeData<TYPE>::putToRestart(
       d_data[i]->putToRestart(array_database);
    }
 }
+
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename EdgeData<TYPE>::template View<DIM> get_view(EdgeData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename EdgeData<TYPE>::template ConstView<DIM> get_const_view(
+    const EdgeData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

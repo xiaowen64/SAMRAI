@@ -3,19 +3,34 @@ cmake_minimum_required(VERSION 3.1)
 project(SAMRAI C CXX Fortran)
 
 set(SAMRAI_VERSION_MAJOR 3)
-set(SAMRAI_VERSION_MINOR 11)
+set(SAMRAI_VERSION_MINOR 14)
 set(SAMRAI_VERSION_PATCHLEVEL 1)
 set(SAMRAI_VERSION
   "${SAMRAI_VERSION_MAJOR}.${SAMRAI_VERSION_MINOR}.${SAMRAI_VERSION_PATCHLEVEL}")
 
-cmake_policy(SET CMP0057 NEW)
 
-if (NOT EXISTS ${PROJECT_SOURCE_DIR}/blt/SetupBLT.cmake)
-  message(FATAL_ERROR "The BLT submodule is not present. \
-If in the git repository, please run the following commands:\n \
-git submodule init\n \
-git submodule update")
-endif ()
+#------------------------------------------------------------------------------
+# Initialize BLT build system
+#------------------------------------------------------------------------------
+if (DEFINED BLT_SOURCE_DIR)
+
+    # Support a shared BLT outside of the repository if given a BLT_SOURCE_DIR
+    if (NOT EXISTS ${BLT_SOURCE_DIR}/SetupBLT.cmake)
+        message(FATAL_ERROR "Cannot find SetupBLT.cmake in [${BLT_SOURCE_DIR}]")
+    endif()
+
+else()
+
+    # Use internal 'blt' submodule path if BLT_SOURCE_DIR not provided
+    set(BLT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/blt" CACHE PATH "")
+    if (NOT EXISTS ${BLT_SOURCE_DIR}/SetupBLT.cmake)
+         message(FATAL_ERROR "The BLT submodule is not present. \
+                  If in the git repository, please run the following commands:\n \
+                  git submodule init\n \
+                  git submodule update")
+    endif()
+
+endif()
 
 # BLT Options need to be set in the CACHE
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
@@ -24,6 +39,10 @@ set(ENABLE_CUDA Off CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
 set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
+set(BLT_CXX_STD "c++11" CACHE STRING "Version of C++ standard")
+
+
+message(STATUS "Enable Test Flag Top: ${ENABLE_TESTS} " )
 
 # Third party libraries
 option(ENABLE_UMPIRE "Enable UMPIRE memory management" On)
@@ -32,27 +51,29 @@ option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
 option(ENABLE_PETSC "Enable PETSc" Off)
-option(ENABLE_PTSCOTCH "Enable Scotch" Off)
 option(ENABLE_SILO "Enable Silo" Off)
 option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
 
 # SAMRAI options
+option(ENABLE_SAMRAI_TESTS "Enable SAMRAI Test Programs" On)
 option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)
 option(ENABLE_BOX_COUNTING "Turns on box telemetry." Off)
 option(ENABLE_DEPRECATED "Build with deprecated features." On)
 option(ENABLE_TIMERS "Enable SAMRAI timers." On)
+option(ENABLE_TOOLS "Turns on building of executable tools." Off)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 option(ENABLE_NVTX_REGIONS "Enable NVTX regions with push/pop for NVVP." Off)
-set(CUDA_ARCH "sm_35" CACHE STRING "Compute architecture to pass to CUDA builds")
+set(CUDA_ARCH "sm_60" CACHE STRING "Compute architecture to pass to CUDA builds")
 set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
 set(CMAKE_INSTALL_LIBDIR lib)
+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH Off CACHE Bool "Rpath uses Link path")
 
 include(GNUInstallDirs)
 
-include(blt/SetupBLT.cmake)
+include(${BLT_SOURCE_DIR}/SetupBLT.cmake)
 
 include_directories(${CMAKE_BINARY_DIR}/include)
 
@@ -63,7 +84,10 @@ set(SAMRAI_LIBRARIES SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
     SAMRAI_xfer)
 
 add_subdirectory(source)
-add_subdirectory(tools)
+if (ENABLE_TOOLS)
+  add_subdirectory(tools)
+endif()
+
 if (ENABLE_DOCS)
   add_subdirectory(docs)
 endif()

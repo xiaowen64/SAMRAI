@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated node centered patch data type
  *
  ************************************************************************/
@@ -100,7 +100,7 @@ NodeData<TYPE>::getPointer(
 #if defined(HAVE_RAJA)
 template<class TYPE>
 template<int DIM>
-NodeData<TYPE>::View<DIM>
+typename NodeData<TYPE>::template View<DIM>
 NodeData<TYPE>::getView(int depth)
 {
    const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
@@ -109,7 +109,7 @@ NodeData<TYPE>::getView(int depth)
 
 template<class TYPE>
 template<int DIM>
-NodeData<TYPE>::ConstView<DIM>
+typename NodeData<TYPE>::template ConstView<DIM>
 NodeData<TYPE>::getConstView(int depth) const
 {
    const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
@@ -516,7 +516,7 @@ NodeData<TYPE>::fillAll(
    d_data->fillAll(t, NodeGeometry::toNodeBox(box));
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 template<class TYPE>
 void
 NodeData<TYPE>::putBlueprintField(

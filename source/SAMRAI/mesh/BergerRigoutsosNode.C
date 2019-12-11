@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -1219,8 +1219,9 @@ BergerRigoutsosNode::makeLocalTagHistogram()
             TBOX_ASSERT(tag_data_);
 
             pdat::CellData<int>& tag_data = *tag_data_;
-
+#if defined(HAVE_RAJA)
             tbox::parallel_synchronize();
+#endif
 
             pdat::CellIterator ciend(pdat::CellGeometry::end(intersection));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(intersection));

@@ -103,6 +103,7 @@ struct ArrayView<2, const TYPE> : public RAJA::View<const TYPE, detail::layout_t
             RAJA::as_array<RAJA::PERM_JI>::get())){}
 };
 
+
 template<class TYPE>
 struct ArrayView<3, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout3d>
 {

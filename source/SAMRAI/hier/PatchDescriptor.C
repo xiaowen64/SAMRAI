@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -90,7 +90,7 @@ PatchDescriptor::definePatchDataComponent(
          d_free_indices.push_back(i);
       }
       tbox::SAMRAIManager::setMaxNumberPatchDataEntries(new_size);
-   } 
+   }
 
    int ret_index = d_free_indices.front();
    d_free_indices.pop_front();
@@ -196,10 +196,11 @@ PatchDescriptor::printClassData(
    for (int i = 0; i < d_max_number_registered_components; ++i) {
       stream << "Patch Data Index=" << i << std::endl;
       if (d_factories[i]) {
+         auto& f = *d_factories[i];
          stream << "   Patch Data Factory Name = "
                 << d_names[i] << std::endl;
          stream << "   Patch Data Factory = "
-                << typeid(*d_factories[i]).name() << std::endl;
+                << typeid(f).name() << std::endl;
       } else {
          stream << "   Patch Data Factory = NULL" << std::endl;
       }

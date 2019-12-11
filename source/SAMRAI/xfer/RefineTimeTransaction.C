@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
@@ -196,7 +196,7 @@ RefineTimeTransaction::copyLocalData()
    } else {
 
       hier::Box temporary_box(d_box.getDim());
-      temporary_box.initialize(d_box, 
+      temporary_box.initialize(d_box,
                                d_src_patch->getBox().getLocalId(),
                                tbox::SAMRAI_MPI::getInvalidRank());
 
@@ -272,6 +272,7 @@ RefineTimeTransaction::printClassData(
    stream << "   time interpolation box:  " << d_box << std::endl;
    stream << "   refine item id :  " << d_item_id << std::endl;
    if (d_refine_data) {
+      auto& optime = *d_refine_data[d_item_id]->d_optime;
       stream << "   destination patch data id:  "
              << d_refine_data[d_item_id]->d_scratch << std::endl;
       stream << "   source (old) patch data id: "
@@ -279,7 +280,7 @@ RefineTimeTransaction::printClassData(
       stream << "   source (new) patch data id: "
              << d_refine_data[d_item_id]->d_src_tnew << std::endl;
       stream << "   time interpolation name id: "
-             << typeid(*d_refine_data[d_item_id]->d_optime).name() << std::endl;
+             << typeid(optime).name() << std::endl;
    }
    stream << "   incoming bytes:          " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:          " << d_outgoing_bytes << std::endl;

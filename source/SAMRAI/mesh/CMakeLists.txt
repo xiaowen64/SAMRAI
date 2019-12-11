@@ -9,7 +9,6 @@ set (mesh_headers
   CascadePartitioner.h
   CascadePartitionerTree.h
   ChopAndPackLoadBalancer.h
-  GraphLoadBalancer.h
   GriddingAlgorithm.h
   GriddingAlgorithmConnectorWidthRequestor.h
   GriddingAlgorithmStrategy.h
@@ -36,7 +35,6 @@ set (mesh_sources
   CascadePartitioner.C
   CascadePartitionerTree.C
   ChopAndPackLoadBalancer.C
-  GraphLoadBalancer.C
   GriddingAlgorithm.C
   GriddingAlgorithmConnectorWidthRequestor.C
   GriddingAlgorithmStrategy.C

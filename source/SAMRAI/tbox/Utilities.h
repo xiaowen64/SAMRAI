@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Utility functions for error reporting, file manipulation, etc.
  *
  ************************************************************************/
@@ -44,13 +44,17 @@ typedef int mode_t;
 #endif
 
 /*!
+ * A null use of a parameter to a function, use to avoid compiler warnings
+ * about unused parameters in a function.
+ */
+#define NULL_USE_PARAM(variable)
+
+/*!
  * A null use of a variable, use to avoid GNU compiler
  * warnings about unused variables.
  */
 #define NULL_USE(variable)                               \
-   do {                                                  \
-      if (0) { char* temp = (char *)&variable; ++temp; } \
-   } while (0)
+   static_cast< void >( variable )
 
 /*!
  * Throw an error assertion from within any C++ source code.  The

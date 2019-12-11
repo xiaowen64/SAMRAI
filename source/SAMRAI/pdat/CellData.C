@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -142,7 +142,7 @@ CellData<TYPE>::getPointer(
 
 template<class TYPE>
 template<int DIM>
-CellData<TYPE>::View<DIM>
+typename CellData<TYPE>::template View<DIM>
 CellData<TYPE>::getView(int depth)
 {
    return CellData<TYPE>::View<DIM>(getPointer(depth), getGhostBox());
@@ -150,7 +150,7 @@ CellData<TYPE>::getView(int depth)
 
 template<class TYPE>
 template<int DIM>
-CellData<TYPE>::ConstView<DIM>
+typename CellData<TYPE>::template ConstView<DIM>
 CellData<TYPE>::getConstView(int depth) const
 {
    return CellData<TYPE>::ConstView<DIM>(getPointer(depth), getGhostBox());
@@ -637,7 +637,7 @@ CellData<TYPE>::fillAll(
    d_data->fillAll(t, box);
 }
 
-#ifdef HAVE_CONDUIT
+#ifdef SAMRAI_HAVE_CONDUIT
 template<class TYPE>
 void
 CellData<TYPE>::putBlueprintField(

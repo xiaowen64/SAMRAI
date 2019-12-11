@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Templated side centered patch data type
  *
  ************************************************************************/
@@ -150,6 +150,14 @@ public:
       const hier::IntVector& ghosts,
       const hier::IntVector& directions);
 
+#if defined(HAVE_UMPIRE)
+   SideData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      const hier::IntVector& directions,
+      umpire::Allocator allocator);
+#endif
    /*!
     * @brief Same as previous constructor but with directions
     * vector of 1's.
@@ -164,6 +172,14 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
+   SideData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+#endif
+      
    /*!
     * @brief The virtual destructor for a side data object.
     */

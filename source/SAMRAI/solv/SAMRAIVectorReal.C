@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2018 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
  * Description:   Vector class for data on SAMRAI hierarchy.
  *
  ************************************************************************/
@@ -1013,6 +1013,22 @@ SAMRAIVectorReal<TYPE>::max(
    }
 
    return maxval;
+}
+
+template<class TYPE>
+int64_t
+SAMRAIVectorReal<TYPE>::getLength(
+   const bool interior_only) const
+{
+   int64_t length = 0;
+
+   for (int i = 0; i < d_number_components; ++i) {
+      d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
+      length += d_component_operations[i]->getLength(d_component_data_id[i],
+                                                     interior_only);
+   }
+
+   return length;
 }
 
 template<class TYPE>
