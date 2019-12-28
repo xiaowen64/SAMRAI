@@ -104,11 +104,21 @@ ParallelBuffer::setActive(
 void
 ParallelBuffer::outputString(
    const std::string& text,
-   const int length)
+   const int length,
+   const bool recursive)
 {
+#ifndef HAVE_OPENMP
+   NULL_USE(recursive);
+#endif
+
    if ((length > 0) && d_active) {
 
-      TBOX_omp_set_lock(&l_buffer);
+#ifdef HAVE_OPENMP 
+      if (!recursive) {
+         TBOX_omp_set_lock(&l_buffer);
+      }
+#endif
+
       /*
        * If we need to allocate the internal buffer, then do so
        */
@@ -151,11 +161,16 @@ ParallelBuffer::outputString(
          copyToBuffer(text, ncopy);
          outputBuffer();
          if (ncopy < length) {
-            outputString(text.substr(ncopy), length - ncopy);
+            outputString(text.substr(ncopy), length - ncopy, true);
          }
       }
 
-      TBOX_omp_unset_lock(&l_buffer);
+#ifdef HAVE_OPENMP
+      if (!recursive) {
+         TBOX_omp_unset_lock(&l_buffer);
+      }
+#endif
+
    }
 }
 
