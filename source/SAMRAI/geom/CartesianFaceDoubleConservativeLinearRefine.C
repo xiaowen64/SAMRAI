@@ -272,12 +272,12 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                const int r0 = ratio[0];
                const int r1 = ratio[1];
                if (axis == 0) {
-                  pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+                  pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                      diff0(j, k) = coarse_array(j + 1, k) - coarse_array(j, k);
                      diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
                   });
 
-                  pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                  pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const double coef2j = 0.5 * (diff0(j - 1, k) + diff0(j, k));
                      const double boundj = 2.0 * MIN(fabs(diff0(j - 1, k)), fabs(diff0(j, k)));
 
@@ -297,7 +297,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                      }
                   });
 
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
                      const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -313,12 +313,12 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
                }  // axis == 0
                else if (axis == 1) {
-                  pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+                  pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                      diff0(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
                      diff1(j, k) = coarse_array(j + 1, k) - coarse_array(j, k);
                   });
 
-                  pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                  pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const double coef2j = 0.5 * (diff0(j, k + 1) + diff0(j, k));
                      const double boundj = 2.0 * MIN(fabs(diff0(j, k + 1)), fabs(diff0(j, k)));
 
@@ -338,7 +338,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                      }
                   });
 
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const int ic0 = (k < 0) ? (k + 1) / r1 - 1 : k / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r0 - 1 : j / r1;
 
@@ -465,13 +465,13 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
                if (axis == 0) {
 
-                  pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k /*slow */) {
+                  pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k /*slow */) {
                      diff0(i, j, k) = coarse_array(i + 1, j, k) - coarse_array(i, j, k);
                      diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                      diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                   });
 
-                  pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      const double coef2i = 0.5 * (diff0(i - 1, j, k) + diff0(i, j, k));
                      const double boundi = 2.0 * MIN(fabs(diff0(i - 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -500,7 +500,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                      }
                   });
 
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
                      const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
@@ -519,13 +519,13 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
                }                      // done axis == 0
                else if (axis == 1) {  //1,2,0
-                  pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k /*slow */) {
+                  pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k /*slow */) {
                      diff1(i, j, k) = coarse_array(i + 1, j, k) - coarse_array(i, j, k);
                      diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                      diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                   });
 
-                  pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      const double coef2i = 0.5 * (diff0(i, j, k + 1) + diff0(i, j, k));
                      const double boundi = 2.0 * MIN(fabs(diff0(i, j, k + 1)), fabs(diff0(i, j, k)));
 
@@ -554,7 +554,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                      }
                   });
 
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      // keep ic0 - ic2 consistent with i,j,k; just change ir0-ir2;  TODO redo 2dim case
                      const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
@@ -575,13 +575,13 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
                } else if (axis == 2) {  // 2,0,1
 
-                  pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k /*slow */) {
+                  pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k /*slow */) {
                      diff2(i, j, k) = coarse_array(i + 1, j, k) - coarse_array(i, j, k);
                      diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                      diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                   });
 
-                  pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      // TODO we should rename coef2 and bound to reflect index, do this for all of the axes
                      const double coef2i = 0.5 * (diff0(i, j + 1, k) + diff0(i, j, k));
                      const double boundi = 2.0 * MIN(fabs(diff0(i, j + 1, k)), fabs(diff0(i, j, k)));
@@ -611,7 +611,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                      }
                   });
 
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      // keep ic0 - ic2 consistent with i,j,k; just change ir0-ir2;  redo 2dim case
                      const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;

@@ -213,7 +213,7 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             double lengthc = cdx1;
 
 
-            pdat::parallel_for_all_x(coarse_box_fn0, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            pdat::parallel_for_all(coarse_box_fn0, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int jf = jf0bounds;
                for (int ry = 0; ry < r1; ry++) {
@@ -230,7 +230,7 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
             lengthf = fdx0;
             lengthc = cdx0;
 
-            pdat::parallel_for_all_x(coarse_box_fn1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            pdat::parallel_for_all(coarse_box_fn1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int kf = kf1bounds;
                for (int rx = 0; rx < r0; rx++) {
@@ -267,125 +267,125 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
          } else if ((dim == tbox::Dimension(3))) {
 #if defined(HAVE_RAJA)
 
-         const double *fdx = fgeom->getDx();
-         const double *cdx = cgeom->getDx();
+            const double *fdx = fgeom->getDx();
+            const double *cdx = cgeom->getDx();
 
-         const double fdx0 = fdx[0];
-         const double fdx1 = fdx[1];
-         const double fdx2 = fdx[2];
-         const double cdx0 = cdx[0];
-         const double cdx1 = cdx[1];
-         const double cdx2 = cdx[2];
+            const double fdx0 = fdx[0];
+            const double fdx1 = fdx[1];
+            const double fdx2 = fdx[2];
+            const double cdx0 = cdx[0];
+            const double cdx1 = cdx[1];
+            const double cdx2 = cdx[2];
 
-         const int r0 = ratio[0];
-         const int r1 = ratio[1];
-         const int r2 = ratio[2];
-         int if0bounds;  // setup capture variable representing fine lower/upper bounds depending on side for face-normal 0
-         int jf1bounds;  // and similarly for face-normal 1
-         int kf2bounds;  // and similarly for face-normal 2
+            const int r0 = ratio[0];
+            const int r1 = ratio[1];
+            const int r2 = ratio[2];
+            int if0bounds;  // setup capture variable representing fine lower/upper bounds depending on side for face-normal 0
+            int jf1bounds;  // and similarly for face-normal 1
+            int kf2bounds;  // and similarly for face-normal 2
 
-         // setup face-normal boxes
-         SAMRAI::hier::Box coarse_box_fn0 = coarse_box;
-         SAMRAI::hier::Box coarse_box_fn1 = coarse_box;
-         SAMRAI::hier::Box coarse_box_fn2 = coarse_box;
+            // setup face-normal boxes
+            SAMRAI::hier::Box coarse_box_fn0 = coarse_box;
+            SAMRAI::hier::Box coarse_box_fn1 = coarse_box;
+            SAMRAI::hier::Box coarse_box_fn2 = coarse_box;
 
-         if (side == 0) {
-            coarse_box_fn0.setUpper(0, coarse_box.lower(0));
-            if0bounds = filo(0);  // for face-normal 0
-         } else if (side == 1) {
-            coarse_box_fn0.setLower(0, coarse_box.upper(0));
-            coarse_box_fn0.setUpper(0, coarse_box.upper(0));
-            if0bounds = fihi(0);
-         }
-
-         auto fine_array_0 = fdata->getConstView<3>(0, side, d);
-         auto coarse_array_0 = cdata->getView<3>(0, side, d);
-
-         double areaf = fdx1 * fdx2;
-         double areac = cdx1 * cdx2;
-         
-         pdat::parallel_for_all_x(coarse_box_fn0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-            double spv = 0.0;
-            int ii = if0bounds;
-            for (int rz = 0; rz < r2; rz++) {
-               for (int ry = 0; ry < r1; ry++) {
-                  int kk = k * r2 + rz;
-                  int jj = j * r1 + ry;
-                  spv += fine_array_0(ii, jj, kk) * areaf;
-               }
+            if (side == 0) {
+               coarse_box_fn0.setUpper(0, coarse_box.lower(0));
+               if0bounds = filo(0);  // for face-normal 0
+            } else if (side == 1) {
+               coarse_box_fn0.setLower(0, coarse_box.upper(0));
+               coarse_box_fn0.setUpper(0, coarse_box.upper(0));
+               if0bounds = fihi(0);
             }
 
-            coarse_array_0(i, j, k) = spv / areac;
-         });
+            auto fine_array_0 = fdata->getConstView<3>(0, side, d);
+            auto coarse_array_0 = cdata->getView<3>(0, side, d);
 
+            double areaf = fdx1 * fdx2;
+            double areac = cdx1 * cdx2;
 
-         //transpose to 2,1,0 
-         coarse_box_fn1.setLower(0, coarse_box.lower(2));
-         coarse_box_fn1.setLower(1, coarse_box.lower(1));
-         coarse_box_fn1.setLower(2, coarse_box.lower(0));
-         coarse_box_fn1.setUpper(0, coarse_box.upper(2));
-         coarse_box_fn1.setUpper(1, coarse_box.upper(1));
-         coarse_box_fn1.setUpper(2, coarse_box.upper(0));
-
-         if(side == 0) {
-           coarse_box_fn1.setUpper(1, coarse_box_fn1.lower(1));
-           jf1bounds = filo(1);  // for face-normal 1
-         } else if (side == 1) {
-           coarse_box_fn1.setLower(1, coarse_box_fn1.upper(1));
-           jf1bounds = fihi(1);
-         }
-
-         auto fine_array_1 = fdata->getConstView<3>(1, side, d);
-         auto coarse_array_1 = cdata->getView<3>(1, side, d);
-
-         areaf = fdx2 * fdx0;
-         areac = cdx2 * cdx0;
-
-         pdat::parallel_for_all_x(coarse_box_fn1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-            double spv = 0.0;
-            int jj = jf1bounds;
-            for (int rx = 0; rx < r0; rx++) {
+            pdat::parallel_for_all(coarse_box_fn0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+               double spv = 0.0;
+               int ii = if0bounds;
                for (int rz = 0; rz < r2; rz++) {
-                  int ii = i * r2 + rz; 
-                  int kk = k * r0 + rx;
-                  spv += fine_array_1(ii, jj, kk) * areaf;
+                  for (int ry = 0; ry < r1; ry++) {
+                     int kk = k * r2 + rz;
+                     int jj = j * r1 + ry;
+                     spv += fine_array_0(ii, jj, kk) * areaf;
+                  }
                }
+
+               coarse_array_0(i, j, k) = spv / areac;
+            });
+
+
+            //transpose to 2,1,0
+            coarse_box_fn1.setLower(0, coarse_box.lower(2));
+            coarse_box_fn1.setLower(1, coarse_box.lower(1));
+            coarse_box_fn1.setLower(2, coarse_box.lower(0));
+            coarse_box_fn1.setUpper(0, coarse_box.upper(2));
+            coarse_box_fn1.setUpper(1, coarse_box.upper(1));
+            coarse_box_fn1.setUpper(2, coarse_box.upper(0));
+
+            if (side == 0) {
+               coarse_box_fn1.setUpper(1, coarse_box_fn1.lower(1));
+               jf1bounds = filo(1);  // for face-normal 1
+            } else if (side == 1) {
+               coarse_box_fn1.setLower(1, coarse_box_fn1.upper(1));
+               jf1bounds = fihi(1);
             }
 
-            coarse_array_1(i, j, k) = spv / areac;
-         });
+            auto fine_array_1 = fdata->getConstView<3>(1, side, d);
+            auto coarse_array_1 = cdata->getView<3>(1, side, d);
 
-         // no tranposes for face-normal 2
-         if(side == 0) {
-           coarse_box_fn2.setUpper(2, coarse_box.lower(2));
-           kf2bounds = filo(2);  // for face-normal 2
-         } else if (side == 1) {
-           coarse_box_fn2.setLower(2, coarse_box.upper(2));
-           coarse_box_fn2.setUpper(2, coarse_box.upper(2));
-           kf2bounds = fihi(2);
-         }
+            areaf = fdx2 * fdx0;
+            areac = cdx2 * cdx0;
 
-         auto fine_array_2 = fdata->getConstView<3>(2, side, d);
-         auto coarse_array_2 = cdata->getView<3>(2, side, d);
-
-         areaf = fdx0 * fdx1;
-         areac = cdx0 * cdx1;
-
-         pdat::parallel_for_all_x(coarse_box_fn2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-            double spv = 0.0;
-            int kk = kf2bounds;
-            for (int ry = 0; ry< r1; ry++) {
+            pdat::parallel_for_all(coarse_box_fn1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+               double spv = 0.0;
+               int jj = jf1bounds;
                for (int rx = 0; rx < r0; rx++) {
-                  int ii = i * r0 + rx; 
-                  int jj = j * r1 + ry;
-                  spv += fine_array_2(ii, jj, kk) * areaf;
+                  for (int rz = 0; rz < r2; rz++) {
+                     int ii = i * r2 + rz;
+                     int kk = k * r0 + rx;
+                     spv += fine_array_1(ii, jj, kk) * areaf;
+                  }
                }
+
+               coarse_array_1(i, j, k) = spv / areac;
+            });
+
+            // no tranposes for face-normal 2
+            if (side == 0) {
+               coarse_box_fn2.setUpper(2, coarse_box.lower(2));
+               kf2bounds = filo(2);  // for face-normal 2
+            } else if (side == 1) {
+               coarse_box_fn2.setLower(2, coarse_box.upper(2));
+               coarse_box_fn2.setUpper(2, coarse_box.upper(2));
+               kf2bounds = fihi(2);
             }
 
-            coarse_array_2(i, j, k) = spv / areac;
-         });
+            auto fine_array_2 = fdata->getConstView<3>(2, side, d);
+            auto coarse_array_2 = cdata->getView<3>(2, side, d);
 
-#else // Fortran Dim 3
+            areaf = fdx0 * fdx1;
+            areac = cdx0 * cdx1;
+
+            pdat::parallel_for_all(coarse_box_fn2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+               double spv = 0.0;
+               int kk = kf2bounds;
+               for (int ry = 0; ry < r1; ry++) {
+                  for (int rx = 0; rx < r0; rx++) {
+                     int ii = i * r0 + rx;
+                     int jj = j * r1 + ry;
+                     spv += fine_array_2(ii, jj, kk) * areaf;
+                  }
+               }
+
+               coarse_array_2(i, j, k) = spv / areac;
+            });
+
+#else  // Fortran Dim 3
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub3d0,
                             CARTWGTAVGOUTFACEDOUB3D0)
             (ifirstc(0), ifirstc(1), ifirstc(2),

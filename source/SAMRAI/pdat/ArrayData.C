@@ -942,14 +942,14 @@ void ArrayData<TYPE>::fill(
          case 2: {
             auto data = getView<2>(d);
 
-            pdat::parallel_for_all_x(ispace, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+            pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                data(j, k) = t;
             });
             break;
          }
          case 3: {
             auto data = getView<3>(d);
-            pdat::parallel_for_all_x(ispace, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                data(i, j, k) = t;
             });
             break;

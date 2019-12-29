@@ -203,8 +203,8 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
       } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
          SAMRAI::hier::Box diff_box = coarse_box;
-         diff_box.growUpper(0,1);
-         diff_box.growUpper(1,1);
+         diff_box.growUpper(0, 1);
+         diff_box.growUpper(1, 1);
          pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
          auto fine_array = fdata->getView<2>(d);
          auto coarse_array = cdata->getView<2>(d);
@@ -225,12 +225,12 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
          const int r0 = ratio[0];
          const int r1 = ratio[1];
 
-         pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+         pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
             diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
             diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
          });
 
-         pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const double coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
             const double boundj = 2.0 * MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
 
@@ -250,7 +250,7 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
             }
          });
 
-         pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
             const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -278,16 +278,16 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
           fdata->getPointer(d),
           &diff0_f[0], slope.getPointer(0),
           &diff1_f[0], slope.getPointer(1));
-          exit(-1);
+         exit(-1);
 
 #endif  // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
 
 #if defined(HAVE_RAJA)
          SAMRAI::hier::Box diff_box = coarse_box;
-         diff_box.growUpper(0,1);
-         diff_box.growUpper(1,1);
-         diff_box.growUpper(2,1);
+         diff_box.growUpper(0, 1);
+         diff_box.growUpper(1, 1);
+         diff_box.growUpper(2, 1);
          pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
 
          auto fine_array = fdata->getView<3>(d);
@@ -315,13 +315,13 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+         pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
             diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i - 1, j, k);
             diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
             diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
          });
 
-         pdat::parallel_for_all_x(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
             const double boundi = 2.0 * MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
             if (diff0(i, j, k) * diff0(i + 1, j, k) > 0.0 && cdx0 != 0) {
@@ -347,7 +347,7 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
             }
          });
 
-         pdat::parallel_for_all_x(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
             const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
             const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;

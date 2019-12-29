@@ -192,7 +192,7 @@ void CartesianSideDoubleWeightedAverage::coarsen(
             const double lengthf = fdx1;
             const double lengthc = cdx1;
 
-            pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int jf = j * r0;
                for (int ry = 0; ry < r1; ry++) {
@@ -213,7 +213,7 @@ void CartesianSideDoubleWeightedAverage::coarsen(
             const double lengthf = fdx0;
             const double lengthc = cdx0;
 
-            pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int kf = k * r1;
                for (int rx = 0; rx < r0; rx++) {
@@ -280,7 +280,7 @@ void CartesianSideDoubleWeightedAverage::coarsen(
             const double areaf = fdx1 * fdx2;
             const double areac = cdx1 * cdx2;
 
-            pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                double spv = 0.0;
                int ii = i * r0;
                for (int rz = 0; rz < r2; rz++) {
@@ -304,7 +304,7 @@ void CartesianSideDoubleWeightedAverage::coarsen(
             const double areaf = fdx0 * fdx2;
             const double areac = cdx0 * cdx2;
 
-            pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                double spv = 0.0;
                int jj = j * r1;
                for (int rz = 0; rz < r2; rz++) {
@@ -328,7 +328,7 @@ void CartesianSideDoubleWeightedAverage::coarsen(
             const double areaf = fdx0 * fdx1;
             const double areac = cdx0 * cdx1;
 
-            pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                double spv = 0.0;
                int kk = k * r2;
                for (int ry = 0; ry < r1; ry++) {

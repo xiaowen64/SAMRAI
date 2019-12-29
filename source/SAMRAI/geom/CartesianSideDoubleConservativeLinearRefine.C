@@ -219,50 +219,50 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          SAMRAI::hier::Box fine_box_plus = fine_box;
          SAMRAI::hier::Box diff_box = coarse_box;
          SAMRAI::hier::Box slope_box = coarse_box;
-         if(dim == tbox::Dimension(2)) {
-           if ((axis == 0 && directions(0)) || (axis == 1 && directions(1))) {
-             // Iteration space is slightly different between the directions
-             if (axis == 0 && directions(0)) {
-                fine_box_plus.growUpper(0, 1);
-                diff_box.grow(0, 1);
-                diff_box.growUpper(1, 1);
-                slope_box.growUpper(0, 1);
-             } else {
-                fine_box_plus.growUpper(1, 1);
-                diff_box.grow(1, 1);
-                diff_box.growUpper(0, 1);
-                slope_box.growUpper(1, 1);
-             }
-           }
-         } else if(dim == tbox::Dimension(3)) {
-             if ((axis == 0 && directions(0)) || (axis == 1 && directions(1)) || (axis == 2 && directions(2))) {
-                if (axis == 0 && directions(0)) {
-                   fine_box_plus.growUpper(0, 1);
-                   diff_box.grow(0, 1);
-                   diff_box.growUpper(1, 1);
-                   diff_box.growUpper(2, 1);
-                   slope_box.growUpper(0, 1);
-                } else if (axis == 1 && directions(1)) {
-                   fine_box_plus.growUpper(1, 1);
-                   diff_box.grow(1, 1);
-                   diff_box.growUpper(0, 1);
-                   diff_box.growUpper(2, 1);
-                   slope_box.growUpper(1, 1);
-                } else if (axis == 2 && directions(2)) {
-                   fine_box_plus.growUpper(2, 1);
-                   diff_box.grow(2, 1);
-                   diff_box.growUpper(0, 1);
-                   diff_box.growUpper(1, 1);
-                   slope_box.growUpper(2, 1);
-                }
-             } // test for axis and directions
-         } // end if DIM 3
+         if (dim == tbox::Dimension(2)) {
+            if ((axis == 0 && directions(0)) || (axis == 1 && directions(1))) {
+               // Iteration space is slightly different between the directions
+               if (axis == 0 && directions(0)) {
+                  fine_box_plus.growUpper(0, 1);
+                  diff_box.grow(0, 1);
+                  diff_box.growUpper(1, 1);
+                  slope_box.growUpper(0, 1);
+               } else {
+                  fine_box_plus.growUpper(1, 1);
+                  diff_box.grow(1, 1);
+                  diff_box.growUpper(0, 1);
+                  slope_box.growUpper(1, 1);
+               }
+            }
+         } else if (dim == tbox::Dimension(3)) {
+            if ((axis == 0 && directions(0)) || (axis == 1 && directions(1)) || (axis == 2 && directions(2))) {
+               if (axis == 0 && directions(0)) {
+                  fine_box_plus.growUpper(0, 1);
+                  diff_box.grow(0, 1);
+                  diff_box.growUpper(1, 1);
+                  diff_box.growUpper(2, 1);
+                  slope_box.growUpper(0, 1);
+               } else if (axis == 1 && directions(1)) {
+                  fine_box_plus.growUpper(1, 1);
+                  diff_box.grow(1, 1);
+                  diff_box.growUpper(0, 1);
+                  diff_box.growUpper(2, 1);
+                  slope_box.growUpper(1, 1);
+               } else if (axis == 2 && directions(2)) {
+                  fine_box_plus.growUpper(2, 1);
+                  diff_box.grow(2, 1);
+                  diff_box.growUpper(0, 1);
+                  diff_box.growUpper(1, 1);
+                  slope_box.growUpper(2, 1);
+               }
+            }  // test for axis and directions
+         }     // end if DIM 3
          //pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
          //pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
          pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
-#endif // Hoisting 
-#endif // HAVE_RAJA
+#endif  // Hoisting
+#endif  // HAVE_RAJA
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -322,12 +322,12 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   const int r0 = ratio[0];
                   const int r1 = ratio[1];
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                         diff0(j, k) = coarse_array(j + 1, k) - coarse_array(j, k);
                         diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
                      });
                   } else {
-                     pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                         diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
                         diff1(j, k) = coarse_array(j, k + 1) - coarse_array(j, k);
                      });
@@ -335,7 +335,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
 
 
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                         const double coef2j = 0.5 * (diff0(j - 1, k) + diff0(j, k));
                         const double boundj = 2.0 * MIN(fabs(diff0(j - 1, k)), fabs(diff0(j, k)));
 
@@ -355,7 +355,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   } else {
-                     pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                         const double coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
                         const double boundj = 2.0 * MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
 
@@ -375,11 +375,11 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   }
-                  
+
                   // we can't use directions i.e IntVector on the device so make it more generic
                   const bool directions0 = directions(0);
                   const bool directions1 = directions(1);
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
                      const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -469,7 +469,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
                   pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
 
-#endif         
+#endif
                   auto fine_array = fdata->getView<3>(axis, d);
                   auto coarse_array = cdata->getConstView<3>(axis, d);
 
@@ -495,19 +495,19 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   const int r2 = ratio[2];
 
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
+                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                         diff0(i, j, k) = coarse_array(i + 1, j, k) - coarse_array(i, j, k);
                         diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                         diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                      });
                   } else if (axis == 1 && directions(1)) {
-                     pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
+                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                         diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i - 1, j, k);
                         diff1(i, j, k) = coarse_array(i, j + 1, k) - coarse_array(i, j, k);
                         diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                      });
                   } else if (axis == 2 && directions(2)) {
-                     pdat::parallel_for_all_x(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
+                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                         diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i - 1, j, k);
                         diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                         diff2(i, j, k) = coarse_array(i, j, k + 1) - coarse_array(i, j, k);
@@ -516,7 +516,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
 
 
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i - 1, j, k) + diff0(i, j, k));
                         const double boundi = 2.0 * MIN(fabs(diff0(i - 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -545,7 +545,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   } else if (axis == 1 && directions(1)) {
-                     pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
                         const double boundi = 2.0 * MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -574,7 +574,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   } else if (axis == 2 && directions(2)) {
-                     pdat::parallel_for_all_x(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
                         const double boundi = 2.0 * MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -607,7 +607,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   const bool directions0 = directions(0);
                   const bool directions1 = directions(1);
                   const bool directions2 = directions(2);
-                  pdat::parallel_for_all_x(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
                      const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
@@ -709,10 +709,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                    "CartesianSideDoubleConservativeLinearRefine error...\n"
                    << "dim > 3 not supported." << std::endl);
             }
-         } // depth
-      } // boxes
-   } // axis
-} // procedure
+         }  // depth
+      }     // boxes
+   }        // axis
+}  // procedure
 
 }  // namespace geom
 }  // namespace SAMRAI

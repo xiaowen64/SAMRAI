@@ -116,7 +116,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
             const int shift_i = src_shift[0];
             const int shift_j = src_shift[1];
             auto s2 = source.shift({{shift_i, shift_j}});
-            pdat::parallel_for_all_x(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j) {
+            pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j) {
                op(dest(i, j), s2(i, j));
             });
          } break;
@@ -128,7 +128,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
             const int shift_j = src_shift[1];
             const int shift_k = src_shift[2];
             auto s2 = source.shift({{shift_i, shift_j, shift_k}});
-            pdat::parallel_for_all_x(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                op(dest(i, j, k), s2(i, j, k));
             });
          } break;
@@ -298,7 +298,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
          case 2: {
             typename pdat::ArrayData<TYPE>::template View<2> dest(dst_ptr + dst_offset, dst_box);
             typename pdat::ArrayData<TYPE>::template ConstView<2> source(src_ptr + src_offset, src_box);
-            pdat::parallel_for_all_x(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j) {
+            pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j) {
                op(dest(i, j), source(i, j));
             });
          } break;
@@ -306,7 +306,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
          case 3: {
             typename pdat::ArrayData<TYPE>::template View<3> dest(dst_ptr + dst_offset, dst_box);
             typename pdat::ArrayData<TYPE>::template ConstView<3> source(src_ptr + src_offset, src_box);
-            pdat::parallel_for_all_x(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            pdat::parallel_for_all(opbox, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                op(dest(i, j, k), source(i, j, k));
             });
          } break;
