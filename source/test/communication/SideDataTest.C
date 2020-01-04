@@ -461,6 +461,9 @@ void SideDataTest::setPhysicalBoundaryConditions(
       TBOX_ASSERT(side_data);
 
       hier::Box patch_interior = side_data->getBox();
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       checkPatchInteriorData(side_data, patch_interior, patch);
 
       /*

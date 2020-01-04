@@ -149,10 +149,19 @@ if (ENABLE_CUDA)
   set_source_files_properties(${cuda_sources} PROPERTIES LANGUAGE CUDA)
 
   if (ENABLE_NVTX_REGIONS)
+    find_package(CUDA REQUIRED)
+
+    find_library(NVTX_LIBRARY
+       NAME libnvToolsExt.so
+       PATHS ${CUDA_TOOLKIT_ROOT_DIR}/lib64 ${CUDA_TOOLKIT_ROOT_DIR}/lib)
+
+    message(STATUS "NVidia tools extension library found in " ${NVTX_LIBRARY})
     blt_register_library(
-      NAME nvToolsExt
-      LIBRARIES nvToolsExt)
+     NAME nvToolsExt
+     LIBRARIES ${NVTX_LIBRARY})
+
     set(tbox_depends ${tbox_depends} nvToolsExt)
+    message(STATUS "Enable NVTX Regions Detected")
   endif ()
 endif ()
 
@@ -165,6 +174,7 @@ target_include_directories( SAMRAI_tbox
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/source>
   $<INSTALL_INTERFACE:include>)
+
 
 install(TARGETS SAMRAI_tbox
   EXPORT SAMRAITargets

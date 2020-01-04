@@ -388,6 +388,9 @@ void CommTester::performRefineOperations(
           level_number < static_cast<int>(d_fill_source_schedule.size()) - 1) {
          d_data_test_strategy->setDataContext(d_source);
          d_fill_source_schedule[level_number]->fillData(d_fake_time);
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
       }
       if (d_is_reset) {
          d_data_test_strategy->setDataContext(d_reset_refine_scratch);
@@ -396,6 +399,9 @@ void CommTester::performRefineOperations(
       }
       if (d_refine_schedule[level_number]) {
          d_refine_schedule[level_number]->fillData(d_fake_time);
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
       }
       d_data_test_strategy->clearDataContext();
    }
@@ -412,6 +418,9 @@ void CommTester::performCoarsenOperations(
       }
       if (d_coarsen_schedule[level_number]) {
          d_coarsen_schedule[level_number]->coarsenData();
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
       }
       d_data_test_strategy->clearDataContext();
    }
@@ -434,6 +443,9 @@ bool CommTester::performCompositeBoundaryComm(
       std::shared_ptr<SAMRAI::xfer::CompositeBoundarySchedule> cbsched =
          cba.createSchedule(level_number);
       cbsched->fillData(d_fake_time);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       std::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(level_number));

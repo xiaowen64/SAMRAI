@@ -28,11 +28,12 @@
 #include <memory>
 
 
-using KERNEL_TYPE = dcomplex;
+
 namespace SAMRAI {
 
 class CommTester;
 
+using CELL_KERNEL_TYPE = dcomplex;
 /**
  * Class CellDataTest provides routines to test communication operations
  * for cell-centered patch data on an AMR patch hierarchy.
@@ -152,7 +153,7 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > data,
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -161,7 +162,7 @@ private:
     */
    void
    setConservativeData(
-      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > data,
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch,
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -173,13 +174,13 @@ private:
     */
    void
    setPeriodicData(
-      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > data,
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::CellData<KERNEL_TYPE> >& data,
+      const std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const hier::Patch& patch) const;
 
@@ -211,6 +212,5 @@ private:
    std::vector<std::shared_ptr<hier::Variable> > d_variables;
 
 };
-
-}
+} // Namespace SAMRAI
 #endif

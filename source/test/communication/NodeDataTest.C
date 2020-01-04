@@ -27,7 +27,6 @@
 
 namespace SAMRAI {
 
-using KERNEL_TYPE = double; // can only support double for now; need to change pgeom too
 NodeDataTest::NodeDataTest(
    const std::string& object_name,
    const tbox::Dimension& dim,
@@ -128,7 +127,7 @@ void NodeDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::NodeVariable<KERNEL_TYPE>(d_dim,
+         new pdat::NodeVariable<NODE_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
@@ -153,7 +152,7 @@ void NodeDataTest::registerVariables(
 }
 
 void NodeDataTest::setLinearData(
-   std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > data,
+   std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -165,9 +164,9 @@ void NodeDataTest::setLinearData(
    TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
-   const KERNEL_TYPE* dx = pgeom->getDx();
-   const KERNEL_TYPE* lowerx = pgeom->getXLower();
-   KERNEL_TYPE x, y, z;
+   const double* dx = pgeom->getDx();
+   const double* lowerx = pgeom->getXLower();
+   NODE_KERNEL_TYPE x, y, z;
 
    const int depth = data->getDepth();
 
@@ -200,7 +199,7 @@ void NodeDataTest::setLinearData(
 }
 
 void NodeDataTest::setPeriodicData(
-   std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > data,
+   std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -208,9 +207,9 @@ void NodeDataTest::setPeriodicData(
 
    NULL_USE(patch);
 
-   const KERNEL_TYPE* xlo = d_cart_grid_geometry->getXLower();
-   const KERNEL_TYPE* xup = d_cart_grid_geometry->getXUpper();
-   std::vector<KERNEL_TYPE> domain_len(d_dim.getValue());
+   const double* xlo = d_cart_grid_geometry->getXLower();
+   const double* xup = d_cart_grid_geometry->getXUpper();
+   std::vector<double> domain_len(d_dim.getValue());
    for (int d = 0; d < d_dim.getValue(); ++d) {
       domain_len[d] = xup[d] - xlo[d];
    }
@@ -219,7 +218,7 @@ void NodeDataTest::setPeriodicData(
       SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
-   const KERNEL_TYPE* dx = patch_geom->getDx();
+   const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
 
@@ -229,9 +228,9 @@ void NodeDataTest::setPeriodicData(
    for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(sbox));
         ni != niend; ++ni) {
 
-      KERNEL_TYPE val = 1.0;
+      NODE_KERNEL_TYPE val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         KERNEL_TYPE tmpf = dx[d] * (*ni)(d) / domain_len[d];
+         double tmpf = dx[d] * (*ni)(d) / domain_len[d];
          tmpf = sin(2 * M_PI * tmpf);
          val *= tmpf;
       }
@@ -262,8 +261,8 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > node_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<KERNEL_TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > node_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
 
@@ -281,8 +280,8 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > node_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<KERNEL_TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > node_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
 
@@ -301,7 +300,7 @@ void NodeDataTest::initializeDataOnPatch(
 }
 
 void NodeDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::NodeData<KERNEL_TYPE> >& data,
+   const std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
@@ -313,8 +312,8 @@ void NodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > correct_data(
-      new pdat::NodeData<KERNEL_TYPE>(
+   std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > correct_data(
+      new pdat::NodeData<NODE_KERNEL_TYPE>(
          data->getBox(),
          depth,
          data->getGhostCellWidth()));
@@ -328,7 +327,7 @@ void NodeDataTest::checkPatchInteriorData(
    for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(interior));
         ni != niend; ++ni) {
       for (int d = 0; d < depth; ++d) {
-         if (!(tbox::MathUtilities<KERNEL_TYPE>::equalEps((*data)(*ni, d),
+         if (!(tbox::MathUtilities<NODE_KERNEL_TYPE>::equalEps((*data)(*ni, d),
                   (*correct_data)(*ni, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << std::endl;
@@ -371,12 +370,15 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > node_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<KERNEL_TYPE>, hier::PatchData>(
+      std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > node_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
       hier::Box patch_interior = node_data->getBox();
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       checkPatchInteriorData(node_data, patch_interior, patch);
 
       /*
@@ -469,8 +471,8 @@ bool NodeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > solution(
-         new pdat::NodeData<KERNEL_TYPE>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > solution(
+         new pdat::NodeData<NODE_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box gbox(pbox);
       gbox.grow(tgcw);
@@ -491,8 +493,8 @@ bool NodeDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > node_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<KERNEL_TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > node_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();
@@ -501,10 +503,10 @@ bool NodeDataTest::verifyResults(
          pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
               ci != ciend; ++ci) {
-            KERNEL_TYPE correct = (*solution)(*ci);
+            NODE_KERNEL_TYPE correct = (*solution)(*ci);
             for (int d = 0; d < depth; ++d) {
-               KERNEL_TYPE result = (*node_data)(*ci, d);
-               if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct, result)) {
+               NODE_KERNEL_TYPE result = (*node_data)(*ci, d);
+               if (!tbox::MathUtilities<NODE_KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : node index = " << *ci
                              << " of L" << level_number
@@ -547,8 +549,8 @@ void NodeDataTest::addFields(
    std::shared_ptr<hier::VariableContext> source =
       hier::VariableDatabase::getDatabase()->getContext("SOURCE");
 
-   std::shared_ptr<pdat::NodeData<KERNEL_TYPE> > node_data(
-      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<KERNEL_TYPE>, hier::PatchData>(
+   std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > node_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_KERNEL_TYPE>, hier::PatchData>(
          patch->getPatchData(d_variables[0], source)));
 
    size_t data_size = node_data->getGhostBox().size();

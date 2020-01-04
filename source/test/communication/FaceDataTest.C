@@ -443,6 +443,9 @@ void FaceDataTest::setPhysicalBoundaryConditions(
       TBOX_ASSERT(face_data);
 
       hier::Box patch_interior = face_data->getBox();
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       checkPatchInteriorData(face_data, patch_interior, pgeom);
 
       /*

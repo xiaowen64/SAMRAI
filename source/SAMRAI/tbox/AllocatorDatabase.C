@@ -102,8 +102,8 @@ AllocatorDatabase::initialize()
 
   if (!rm.isAllocator("samrai::temporary_data_allocator")) {
 #if defined(HAVE_CUDA)
-    auto allocator = rm.getAllocator(umpire::resource::Device);
-    //auto allocator = rm.getAllocator(umpire::resource::Pinned);
+    //auto allocator = rm.getAllocator(umpire::resource::Device);
+    auto allocator = rm.getAllocator(umpire::resource::Pinned);
 #else
     auto allocator = rm.getAllocator(umpire::resource::Host);
 #endif

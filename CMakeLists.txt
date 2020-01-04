@@ -40,7 +40,7 @@ set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
 set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
 set(BLT_CXX_STD "c++11" CACHE STRING "Version of C++ standard")
-
+set(gtest_disable_pthreads ON CACHE BOOL "")
 
 message(STATUS "Enable Test Flag Top: ${ENABLE_TESTS} " )
 
@@ -56,7 +56,7 @@ option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
 
 # SAMRAI options
 option(ENABLE_SAMRAI_TESTS "Enable SAMRAI Test Programs" On)
-option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)
+option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." On)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)
 option(ENABLE_BOX_COUNTING "Turns on box telemetry." Off)
@@ -66,7 +66,7 @@ option(ENABLE_TOOLS "Turns on building of executable tools." Off)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 option(ENABLE_NVTX_REGIONS "Enable NVTX regions with push/pop for NVVP." Off)
-set(CUDA_ARCH "sm_60" CACHE STRING "Compute architecture to pass to CUDA builds")
+set(CUDA_ARCH "sm_70" CACHE STRING "Compute architecture to pass to CUDA builds")
 set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
 set(CMAKE_INSTALL_LIBDIR lib)
 #set(CMAKE_INSTALL_RPATH_USE_LINK_PATH Off CACHE Bool "Rpath uses Link path")

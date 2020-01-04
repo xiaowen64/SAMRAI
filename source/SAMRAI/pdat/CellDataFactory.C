@@ -47,7 +47,8 @@ CellDataFactory<TYPE>::CellDataFactory(
    , d_has_allocator(false)
 #endif
 {
-   TBOX_ASSERT(depth > 0);
+   if(depth == 0) d_depth = 1;
+   //TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -62,7 +63,8 @@ CellDataFactory<TYPE>::CellDataFactory(
    d_allocator(allocator),
    d_has_allocator(true)
 {
-   TBOX_ASSERT(depth > 0);
+   if(depth == 0) d_depth = 1;
+   //TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 #endif

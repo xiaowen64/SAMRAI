@@ -11,7 +11,7 @@
 #ifndef included_tbox_NVTXUtilities
 #define included_tbox_NVTXUtilities
 
-#if defined(ENABLE_NVTX_REGIONS) && defined(ENABLE_CUDA)
+#if defined(ENABLE_NVTX_REGIONS) && defined(HAVE_CUDA)
 
 #include "cuda_runtime.h"
 #include "nvToolsExt.h"
@@ -30,20 +30,41 @@ const int num_colors = sizeof(colors)/sizeof(uint32_t);
    eventAttrib.color = colors[color_id]; \
    eventAttrib.messageType = NVTX_MESSAGE_TYPE_ASCII; \
    eventAttrib.message.ascii = name; \
-   cudaDeviceSynchronize();\
    nvtxRangePushEx(&eventAttrib); \
 }
 
 #define RANGE_POP { \
-   cudaDeviceSynchronize(); \
    nvtxRangePop(); \
 }
 
+#define RANGE_PUSH_SYNC(name,cid) { \
+   int color_id = cid; \
+   color_id = color_id%num_colors;\
+   nvtxEventAttributes_t eventAttrib = {0}; \
+   eventAttrib.version = NVTX_VERSION; \
+   eventAttrib.size = NVTX_EVENT_ATTRIB_STRUCT_SIZE; \
+   eventAttrib.colorType = NVTX_COLOR_ARGB; \
+   eventAttrib.color = colors[color_id]; \
+   eventAttrib.messageType = NVTX_MESSAGE_TYPE_ASCII; \
+   eventAttrib.message.ascii = name; \
+   cudaDeviceSynchronize();\
+   nvtxRangePushEx(&eventAttrib); \
+}
+
+
+#define RANGE_POP_SYNC { \
+   cudaDeviceSynchronize(); \
+   nvtxRangePop(); \
+}
 #else
 
 #define RANGE_PUSH(name,cid)
 
+#define RANGE_PUSH_SYNC(name,cid)
+
 #define RANGE_POP
+
+#define RANGE_POP_SYNC
 
 #endif // ENABLE_NVTX_REGIONS
 
