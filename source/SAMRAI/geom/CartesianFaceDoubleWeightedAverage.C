@@ -219,7 +219,7 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
          double lengthf = fdx1;
          double lengthc = cdx1;
 
-         pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+         pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
             double spv = 0.0;
             int jf = j * r0;
             for (int ry = 0; ry < r1; ry++) {
@@ -243,7 +243,7 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
          lengthf = fdx0;
          lengthc = cdx0;
 
-         pdat::parallel_for_all_x(coarse_box_transpose, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+         pdat::parallel_for_all(coarse_box_transpose, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
             double spv = 0.0;
             int jf = j * r1;  // careful here, ratios are also switched
             for (int ry = 0; ry < r0; ry++) {
@@ -301,7 +301,7 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
          double areaf = fdx1 * fdx2;
          double areac = cdx1 * cdx2;
 
-         pdat::parallel_for_all_x(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double spv = 0.0;
             int ii = i * r0;
             for (int rz = 0; rz < r2; rz++) {
@@ -332,7 +332,7 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
          areac = cdx2 * cdx0;
 
 
-         pdat::parallel_for_all_x(coarse_box_t1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         pdat::parallel_for_all(coarse_box_t1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double spv = 0.0;
             int ii = i * r1;
             for (int rz = 0; rz < r0; rz++) {
@@ -362,7 +362,7 @@ void CartesianFaceDoubleWeightedAverage::coarsen(
          areaf = fdx0 * fdx1;
          areac = cdx0 * cdx1;
 
-         pdat::parallel_for_all_x(coarse_box_t2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         pdat::parallel_for_all(coarse_box_t2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double spv = 0.0;
             int ii = i * r2;
             for (int rz = 0; rz < r1; rz++) {
