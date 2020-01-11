@@ -388,9 +388,7 @@ void CommTester::performRefineOperations(
           level_number < static_cast<int>(d_fill_source_schedule.size()) - 1) {
          d_data_test_strategy->setDataContext(d_source);
          d_fill_source_schedule[level_number]->fillData(d_fake_time);
-#if defined(HAVE_CUDA)
-         cudaDeviceSynchronize();
-#endif
+         // synchronize is covered by RefineSchedule::recursiveFill at a finer grain
       }
       if (d_is_reset) {
          d_data_test_strategy->setDataContext(d_reset_refine_scratch);

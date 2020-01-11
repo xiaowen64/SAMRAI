@@ -484,9 +484,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
       TBOX_ASSERT(cell_data);
 
       hier::Box patch_interior = cell_data->getBox();
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize();
-#endif
+
       checkPatchInteriorData(cell_data, patch_interior, patch);
 
       /*
@@ -627,6 +625,7 @@ bool CellDataTest::verifyResults(
                   test_failed = true;
                }
             }
+            if (test_failed) break;
          }
       }
       if (!test_failed) {

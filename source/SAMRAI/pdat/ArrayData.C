@@ -452,6 +452,7 @@ void ArrayData<TYPE>::copyDepth(
       TYPE* const dst_ptr_d = dst_ptr + dst_depth * d_offset;
       const TYPE* const src_ptr_d = src_ptr + src_depth * d_offset;
 
+
 #if defined(HAVE_RAJA)
       pdat::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE(int i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);

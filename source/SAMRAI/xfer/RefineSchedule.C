@@ -2151,6 +2151,9 @@ RefineSchedule::recursiveFill(
     * for data where coarse data takes priority on level boundaries.
     */
    d_coarse_priority_level_schedule->communicate();
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * If there is a coarser schedule stored in this object, then we will
@@ -2322,6 +2325,9 @@ RefineSchedule::recursiveFill(
     * for data where fine data takes priority on level boundaries.
     */
    d_fine_priority_level_schedule->communicate();
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * Fill the physical boundaries of the scratch space on the destination

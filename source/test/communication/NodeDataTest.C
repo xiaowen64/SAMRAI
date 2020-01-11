@@ -191,7 +191,7 @@ void NodeDataTest::setLinearData(
       }
 
       for (int d = 0; d < depth; ++d) {
-         (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
+         (*data)(*ci, d) = static_cast<NODE_KERNEL_TYPE>(d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z);
       }
 
    }
@@ -232,7 +232,7 @@ void NodeDataTest::setPeriodicData(
       for (int d = 0; d < d_dim.getValue(); ++d) {
          double tmpf = dx[d] * (*ni)(d) / domain_len[d];
          tmpf = sin(2 * M_PI * tmpf);
-         val *= tmpf;
+         val *= static_cast<NODE_KERNEL_TYPE>(tmpf);
       }
       val = val + 20.0; // Shift function range to [1,3] to avoid bad floating point compares.
       for (int d = 0; d < depth; ++d) {
