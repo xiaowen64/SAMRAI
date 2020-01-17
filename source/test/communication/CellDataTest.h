@@ -33,7 +33,7 @@ namespace SAMRAI {
 
 class CommTester;
 
-using CELL_KERNEL_TYPE = dcomplex;
+using CELL_KERNEL_TYPE = dcomplex; // float | double | dcomplex
 /**
  * Class CellDataTest provides routines to test communication operations
  * for cell-centered patch data on an AMR patch hierarchy.

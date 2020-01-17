@@ -34,6 +34,8 @@ namespace SAMRAI {
 
 class CommTester;
 
+using EDGE_KERNEL_TYPE = double; // dcomplex is not supported
+
 /**
  * Class EdgeDataTest provides routines to test communication operations
  * for edge-centered patch data on an AMR patch hierarchy.
@@ -138,7 +140,7 @@ private:
     */
    void
    setConstantData(
-      std::shared_ptr<pdat::EdgeData<double> > data,
+      std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
       const hier::Box& box,
       double ndimfact,
       double axfact) const;
@@ -149,7 +151,7 @@ private:
     */
    void
    setConstantBoundaryData(
-      std::shared_ptr<pdat::EdgeData<double> > data,
+      std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
       const hier::BoundaryBox& bbox,
       double ndimfact,
       double axfact) const;
@@ -159,7 +161,7 @@ private:
     */
    void
    setConservativeData(
-      std::shared_ptr<pdat::EdgeData<double> > data,
+      std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch,
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -167,13 +169,13 @@ private:
 
    void
    setLinearData(
-      std::shared_ptr<pdat::EdgeData<double> > data,
+      std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::EdgeData<double> >& data,
+      const std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const;
 

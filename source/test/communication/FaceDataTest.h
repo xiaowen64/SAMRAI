@@ -34,6 +34,7 @@
 namespace SAMRAI {
 
 class CommTester;
+using FACE_KERNEL_TYPE = double; // dcomplex not supported
 
 /**
  * Class FaceDataTest provides routines to test communication operations
@@ -132,7 +133,7 @@ private:
 
    void
    setLinearData(
-      std::shared_ptr<pdat::FaceData<double> > data,
+      std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -141,7 +142,7 @@ private:
     */
    void
    setConservativeData(
-      std::shared_ptr<pdat::FaceData<double> > data,
+      std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch,
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -149,7 +150,7 @@ private:
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::FaceData<double> >& data,
+      const std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const;
 

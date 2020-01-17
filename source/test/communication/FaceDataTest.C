@@ -150,7 +150,7 @@ void FaceDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::FaceVariable<double>(d_dim,
+         new pdat::FaceVariable<FACE_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i],
             d_use_fine_value_at_interface[i]));
@@ -176,7 +176,7 @@ void FaceDataTest::registerVariables(
 }
 
 void FaceDataTest::setConservativeData(
-   std::shared_ptr<pdat::FaceData<double> > data,
+   std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch,
    const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -314,8 +314,8 @@ void FaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::FaceData<double> > face_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > face_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<FACE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
@@ -328,8 +328,8 @@ void FaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::FaceData<double> > face_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > face_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<FACE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
@@ -345,7 +345,7 @@ void FaceDataTest::initializeDataOnPatch(
 }
 
 void FaceDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::FaceData<double> >& data,
+   const std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
@@ -395,10 +395,10 @@ void FaceDataTest::checkPatchInteriorData(
             }
          }
 
-         double value;
+         FACE_KERNEL_TYPE value;
          for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(*fi,
+            if (!(tbox::MathUtilities<FACE_KERNEL_TYPE>::equalEps((*data)(*fi,
                                                                 d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled"
                           << std::endl;
@@ -437,8 +437,8 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::FaceData<double> > face_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > face_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<FACE_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -493,7 +493,7 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 }
 
 void FaceDataTest::setLinearData(
-   std::shared_ptr<pdat::FaceData<double> > data,
+   std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -587,8 +587,8 @@ bool FaceDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::FaceData<double> > solution(
-         new pdat::FaceData<double>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > solution(
+         new pdat::FaceData<FACE_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
       tbox.grow(tgcw);
@@ -600,8 +600,8 @@ bool FaceDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::FaceData<double> > face_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<FACE_KERNEL_TYPE> > face_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<FACE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
          int depth = face_data->getDepth();
@@ -615,10 +615,10 @@ bool FaceDataTest::verifyResults(
             pdat::FaceIterator siend(pdat::FaceGeometry::end(dbox, id));
             for (pdat::FaceIterator si(pdat::FaceGeometry::begin(dbox, id));
                  si != siend; ++si) {
-               double correct = (*solution)(*si);
+               FACE_KERNEL_TYPE correct = (*solution)(*si);
                for (int d = 0; d < depth; ++d) {
-                  double result = (*face_data)(*si, d);
-                  if (!tbox::MathUtilities<double>::equalEps(correct,
+                  FACE_KERNEL_TYPE result = (*face_data)(*si, d);
+                  if (!tbox::MathUtilities<FACE_KERNEL_TYPE>::equalEps(correct,
                          result)) {
                      test_failed = true;
                      tbox::perr << "Test FAILED: ...."

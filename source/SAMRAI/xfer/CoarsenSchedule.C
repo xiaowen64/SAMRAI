@@ -22,6 +22,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <vector>
 
@@ -307,6 +308,9 @@ CoarsenSchedule::coarsenData() const
     */
 
    d_schedule->communicate();
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * Deallocate the source data in the temporary patch level.

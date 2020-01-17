@@ -2098,6 +2098,9 @@ RefineSchedule::fillData(
     */
 
    copyScratchToDestination();
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * Deallocate any allocated scratch space on the destination level.

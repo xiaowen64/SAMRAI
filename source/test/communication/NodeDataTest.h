@@ -35,7 +35,7 @@ namespace SAMRAI {
 
 class CommTester;
 
-using NODE_KERNEL_TYPE = float; 
+using NODE_KERNEL_TYPE = double; // use float | double | dcomplex
 /**
  * Class NodeDataTest provides routines to test communication operations
  * for node-centered patch data on an AMR patch hierarchy.
