@@ -553,6 +553,70 @@ void ArrayData<TYPE>::sum(
    }
 }
 
+////////////////////////////////
+// specialization for dcomplex
+template <>
+inline void ArrayData<dcomplex>::sum(
+    const ArrayData<dcomplex>& src,
+    const hier::Box& box)
+{
+
+   SumOperation<dcomplex> sumop;
+
+   /*
+    * Do a fast copy and add if all data aligns with copy region
+    */
+
+   if ((d_depth == src.d_depth) &&
+       (d_box.isSpatiallyEqual(src.d_box)) &&
+       (box.isSpatiallyEqual(d_box))) {
+
+      dcomplex* const dst_ptr = &d_array[0];
+      dcomplex* const src_ptr = &src.d_array[0];
+      const size_t n = d_offset * d_depth;
+
+#if defined(HAVE_RAJA)
+      SumOperation<double> sumop_dbl;
+      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {   
+         double &dst_ptr_real = reinterpret_cast<double(&)[2]>(dst_ptr[i])[0];
+         double &dst_ptr_imag = reinterpret_cast<double(&)[2]>(dst_ptr[i])[1];
+         double &src_ptr_real = reinterpret_cast<double(&)[2]>(src_ptr[i])[0];
+         double &src_ptr_imag = reinterpret_cast<double(&)[2]>(src_ptr[i])[1];
+
+         sumop_dbl(dst_ptr_real, src_ptr_real);
+         sumop_dbl(dst_ptr_imag, src_ptr_imag);
+      });
+#else
+      for (size_t i = 0; i < n; ++i) {
+         sumop(dst_ptr[i], src_ptr[i]);
+      }
+#endif
+
+   } else {
+
+      const hier::Box copybox = box * d_box * src.d_box;
+
+      if (!copybox.empty()) {
+
+         const unsigned int dst_start_depth = 0;
+         const unsigned int src_start_depth = 0;
+         const unsigned int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
+         const hier::IntVector src_shift(box.getDim(), 0);
+
+         ArrayDataOperationUtilities<dcomplex, SumOperation<dcomplex> >::
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       sumop);
+      }
+   }
+}
+
+
 /*
  *************************************************************************
  *

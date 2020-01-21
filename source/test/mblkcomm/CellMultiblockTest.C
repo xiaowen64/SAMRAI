@@ -22,7 +22,7 @@
 
 using namespace SAMRAI;
 
-using KERNEL_TYPE = dcomplex;
+using KERNEL_TYPE = double;
 
 CellMultiblockTest::CellMultiblockTest(
    const std::string& object_name,
