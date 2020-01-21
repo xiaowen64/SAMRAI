@@ -15,6 +15,7 @@
 #include "SAMRAI/pdat/CellVariable.h"
 //#include "SAMRAI/pdat/CellDoubleConstantRefine.h"
 #include "SAMRAI/pdat/CellConstantRefine.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include "MultiblockTester.h"
 
@@ -22,7 +23,7 @@
 
 using namespace SAMRAI;
 
-using KERNEL_TYPE = double;
+using CELL_MBLK_KERNEL_TYPE = double;
 
 CellMultiblockTest::CellMultiblockTest(
    const std::string& object_name,
@@ -98,7 +99,7 @@ void CellMultiblockTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::CellVariable<KERNEL_TYPE>(d_dim,
+         new pdat::CellVariable<CELL_MBLK_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
@@ -129,14 +130,17 @@ void CellMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::CellData<KERNEL_TYPE> > cell_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::CellData<KERNEL_TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<CELL_MBLK_KERNEL_TYPE> > cell_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_MBLK_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
          hier::Box dbox = cell_data->getGhostBox();
-         cell_data->fillAll((KERNEL_TYPE)block_id.getBlockValue());
+         cell_data->fillAll((CELL_MBLK_KERNEL_TYPE)block_id.getBlockValue());
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
    }
 }
 
@@ -181,8 +185,8 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > cell_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::CellData<KERNEL_TYPE>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<CELL_MBLK_KERNEL_TYPE> > cell_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -196,7 +200,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
                gcw_to_fill);
 
          if (!node_bdry[ni].getIsMultiblockSingularity()) {
-            cell_data->fillAll((KERNEL_TYPE)(node_bdry[ni].getLocationIndex() + 100),
+            cell_data->fillAll((CELL_MBLK_KERNEL_TYPE)(node_bdry[ni].getLocationIndex() + 100),
                fill_box);
          }
       }
@@ -212,7 +216,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
                   gcw_to_fill);
 
             if (!edge_bdry[ei].getIsMultiblockSingularity()) {
-               cell_data->fillAll((KERNEL_TYPE)(edge_bdry[ei].getLocationIndex()
+               cell_data->fillAll((CELL_MBLK_KERNEL_TYPE)(edge_bdry[ei].getLocationIndex()
                                            + 100),
                   fill_box);
             }
@@ -230,7 +234,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
                   gcw_to_fill);
 
             if (!face_bdry[fi].getIsMultiblockSingularity()) {
-               cell_data->fillAll((KERNEL_TYPE)(face_bdry[fi].getLocationIndex()
+               cell_data->fillAll((CELL_MBLK_KERNEL_TYPE)(face_bdry[fi].getLocationIndex()
                                            + 100),
                   fill_box);
             }
@@ -238,6 +242,9 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
       }
 
    }
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
 }
 
@@ -257,13 +264,17 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > cell_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::CellData<KERNEL_TYPE>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<CELL_MBLK_KERNEL_TYPE> > cell_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
       hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
       cell_data->fillAll(0.0, sing_fill_box);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
+
 
       int depth = cell_data->getDepth();
       int num_encon_used = 0;
@@ -316,8 +327,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  std::shared_ptr<pdat::CellData<KERNEL_TYPE> > sing_data(
-                     SAMRAI_SHARED_PTR_CAST<pdat::CellData<KERNEL_TYPE>, hier::PatchData>(
+                  std::shared_ptr<pdat::CellData<CELL_MBLK_KERNEL_TYPE> > sing_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_MBLK_KERNEL_TYPE>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -348,9 +359,12 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
          }
       } else {
          cell_data->fillAll(
-            (KERNEL_TYPE)bbox.getLocationIndex() + 200.0, fill_box);
+            (CELL_MBLK_KERNEL_TYPE)bbox.getLocationIndex() + 200.0, fill_box);
       }
    }
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 }
 
 /*
@@ -379,8 +393,8 @@ bool CellMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   std::shared_ptr<pdat::CellData<KERNEL_TYPE> > solution(
-      new pdat::CellData<KERNEL_TYPE>(pbox, 1, tgcw));
+   std::shared_ptr<pdat::CellData<CELL_MBLK_KERNEL_TYPE> > solution(
+      new pdat::CellData<CELL_MBLK_KERNEL_TYPE>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
@@ -399,10 +413,10 @@ bool CellMultiblockTest::verifyResults(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      KERNEL_TYPE correct = (KERNEL_TYPE)block_id.getBlockValue();
+      CELL_MBLK_KERNEL_TYPE correct = (CELL_MBLK_KERNEL_TYPE)block_id.getBlockValue();
 
-      std::shared_ptr<pdat::CellData<KERNEL_TYPE> > cell_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::CellData<KERNEL_TYPE>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<CELL_MBLK_KERNEL_TYPE> > cell_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();
@@ -411,9 +425,9 @@ bool CellMultiblockTest::verifyResults(
       for (pdat::CellIterator ci(pdat::CellGeometry::begin(pbox));
            ci != ciend; ++ci) {
          for (int d = 0; d < depth; ++d) {
-            KERNEL_TYPE result = (*cell_data)(*ci, d);
+            CELL_MBLK_KERNEL_TYPE result = (*cell_data)(*ci, d);
 
-            if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct, result)) {
+            if (!tbox::MathUtilities<CELL_MBLK_KERNEL_TYPE>::equalEps(correct, result)) {
                tbox::perr << "Test FAILED: ...."
                           << " : cell index = " << *ci << std::endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
@@ -449,9 +463,9 @@ bool CellMultiblockTest::verifyResults(
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(*ng));
                  ci != ciend; ++ci) {
                for (int d = 0; d < depth; ++d) {
-                  KERNEL_TYPE result = (*cell_data)(*ci, d);
+                  CELL_MBLK_KERNEL_TYPE result = (*cell_data)(*ci, d);
 
-                  if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct,
+                  if (!tbox::MathUtilities<CELL_MBLK_KERNEL_TYPE>::equalEps(correct,
                          result)) {
                      tbox::perr << "Test FAILED: ...."
                                 << " : cell index = " << *ci << std::endl;
@@ -501,25 +515,25 @@ bool CellMultiblockTest::verifyResults(
 
                if (num_sing_neighbors == 0) {
 
-                  correct = (KERNEL_TYPE)bdry[k].getLocationIndex() + 200.0;
+                  correct = (CELL_MBLK_KERNEL_TYPE)bdry[k].getLocationIndex() + 200.0;
 
                } else {
 
-                  correct /= (KERNEL_TYPE)num_sing_neighbors;
+                  correct /= (CELL_MBLK_KERNEL_TYPE)num_sing_neighbors;
 
                }
 
             } else {
-               correct = (KERNEL_TYPE)(bdry[k].getLocationIndex() + 100);
+               correct = (CELL_MBLK_KERNEL_TYPE)(bdry[k].getLocationIndex() + 100);
             }
 
             pdat::CellIterator ciend(pdat::CellGeometry::end(fill_box));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(fill_box));
                  ci != ciend; ++ci) {
                for (int d = 0; d < depth; ++d) {
-                  KERNEL_TYPE result = (*cell_data)(*ci, d);
+                  CELL_MBLK_KERNEL_TYPE result = (*cell_data)(*ci, d);
 
-                  if (!tbox::MathUtilities<KERNEL_TYPE>::equalEps(correct,
+                  if (!tbox::MathUtilities<CELL_MBLK_KERNEL_TYPE>::equalEps(correct,
                          result)) {
                      tbox::perr << "Test FAILED: ...."
                                 << " : cell index = " << *ci << std::endl;
