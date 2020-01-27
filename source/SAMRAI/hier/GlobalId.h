@@ -118,6 +118,10 @@ public:
     * owner values first; if they compare equal, compare the LocalId
     * next.
     */
+   GlobalId&
+   operator = (
+      const GlobalId& r) = default;
+
    bool
    operator == (
       const GlobalId& r) const

@@ -179,6 +179,12 @@ public:
     *
     * All comparison operators use the GlobalId and PeriodicId.
     */
+
+   BoxId&
+   operator = (
+      const BoxId& r) = default;
+
+
    bool
    operator == (
       const BoxId& r) const
