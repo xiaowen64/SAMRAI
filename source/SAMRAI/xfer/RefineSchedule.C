@@ -2216,6 +2216,9 @@ RefineSchedule::recursiveFill(
       d_coarse_interp_schedule->recursiveFill(fill_time,
          do_physical_boundary_fill);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       /*
        * d_coarse_interp_level should now be filled.  Now interpolate
        * data from the coarse grid into the fine grid.
@@ -2294,6 +2297,9 @@ RefineSchedule::recursiveFill(
 
       d_coarse_interp_encon_schedule->recursiveFill(fill_time,
          do_physical_boundary_fill);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       /*
        * d_coarse_interp_encon_level should now be filled.  Now interpolate
@@ -2720,6 +2726,9 @@ RefineSchedule::refineScratchData(
 
             }
          }
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
 
          if (d_refine_patch_strategy) {
             d_refine_patch_strategy->postprocessRefineBoxes(*fine_patch,
@@ -2776,6 +2785,9 @@ RefineSchedule::refineScratchData(
 
             }
          }
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
 
          if (d_refine_patch_strategy) {
             d_refine_patch_strategy->postprocessRefineBoxes(*nbr_fill_patch,

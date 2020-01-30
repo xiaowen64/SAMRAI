@@ -49,6 +49,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 //integer constants for boundary conditions
 #define CHECK_BDRY_DATA (0)
@@ -586,6 +587,9 @@ void LinAdv::initializeDataOnPatch(
       const hier::LocalId& local_id = box_id.getLocalId();
       double id_val = local_id.getValue() % 2 ? static_cast<double>(local_id.getValue() % 10) : 0.0;
       workload_data->fillAll(1.0+id_val);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
    }
 
 }
@@ -1897,6 +1901,9 @@ void LinAdv::tagGradientDetectorCells(
    std::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->fillAll(not_refine_tag_val);
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * Possible tagging criteria includes

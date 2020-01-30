@@ -21,6 +21,7 @@
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #if defined(HAVE_UMPIRE)
 #include "umpire/ResourceManager.hpp"
@@ -275,6 +276,7 @@ void ArrayData<TYPE>::copy(
          copyop(dst_ptr[i], src_ptr[i]);
       }
 #endif
+
    } else {
 
       const hier::Box copybox = box * d_box * src.d_box;
@@ -950,6 +952,7 @@ void ArrayData<TYPE>::fillAll(
       }
 #endif
    }
+
 }
 
 template <class TYPE>
@@ -976,12 +979,14 @@ void ArrayData<TYPE>::fill(
       pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          ptr[i] = t;
       });
+
 #else
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
       }
 #endif
    }
+
 }
 
 template <class TYPE>
@@ -1022,6 +1027,7 @@ void ArrayData<TYPE>::fill(
          default:
             TBOX_ERROR("pdat::parallel_for_all undefined for dim > 3" << std::endl);
       }
+
 #else
       const tbox::Dimension& dim = box.getDim();
 

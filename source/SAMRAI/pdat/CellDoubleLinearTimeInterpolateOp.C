@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <memory>
 
@@ -154,6 +155,7 @@ void CellDoubleLinearTimeInterpolateOp::timeInterpolate(
             const double oldfrac = 1.0 - tfrac;
             dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
          });
+
 #else
          SAMRAI_F77_FUNC(lintimeintcelldoub2d, LINTIMEINTCELLDOUB2D)
          (ifirst(0),

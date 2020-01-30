@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/pdat/SumOperation.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 namespace SAMRAI
 {
@@ -317,6 +318,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
             TBOX_ERROR("Aborting in " __FILE__);
             break;
       }
+
 #else  // !HAVE_RAJA
       size_t dat_counter = dat_begin;
       size_t buf_counter = buf_begin;
@@ -383,7 +385,6 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 #endif
 
    }  // d loop over depth indices
-
 }  // end doArrayDataBufferOperationOnBox
 
 // specialize for dcomplex sum

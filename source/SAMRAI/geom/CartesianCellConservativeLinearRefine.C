@@ -19,6 +19,7 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
@@ -83,8 +84,6 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 {
    RANGE_PUSH("ConservativeLinearRefine::refine", 3);
 
-   //fprintf(stdout,"GenericCellConservativeLinearRefine<%s>\n",typeid(T).name());
-
    const tbox::Dimension &dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
@@ -128,10 +127,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 
-   // change to alloc_db->getDevicePool or other generic pool allocator for gpu policies
-   //pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getTagAllocator());
    pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
-
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
@@ -154,7 +150,6 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
-         //pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
          pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          auto fine_array = fdata->template getView<2>(d);
          auto coarse_array = cdata->template getView<2>(d);
@@ -238,7 +233,6 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
          diff_box.growUpper(2, 1);
-         //pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
          pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
 
          auto fine_array = fdata->template getView<3>(d);
@@ -344,6 +338,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
       }
    }  // for (int d = 0; d < fdata->getDepth(); ++d)
    RANGE_POP;
+
 }  // end CartesianCellDoubleConservativeLinearRefine::refine(
 
 
@@ -404,10 +399,7 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
 
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 
-   // change to alloc_db->getDevicePool or other generic pool allocator for gpu policies
-   //pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getTagAllocator());
    pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
-
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
@@ -430,7 +422,6 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
-         //pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
          pdat::ArrayData<dcomplex> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          auto fine_array = fdata->template getView<2>(d);
          auto coarse_array = cdata->template getView<2>(d);
@@ -585,7 +576,6 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
          diff_box.growUpper(2, 1);
-         //pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
          pdat::ArrayData<dcomplex> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
 
          auto fine_array = fdata->template getView<3>(d);

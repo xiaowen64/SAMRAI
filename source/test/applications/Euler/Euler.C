@@ -50,6 +50,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 //integer constants for boundary conditions
 #define CHECK_BDRY_DATA (0)
@@ -701,6 +702,9 @@ void Euler::initializeDataOnPatch(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
    }
 
    t_init->stop();

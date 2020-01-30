@@ -859,6 +859,7 @@ GriddingAlgorithm::makeFinerLevel(
 
          tag_level->allocatePatchData(d_buf_tag_indx, level_time);
          bufferTagsOnLevel(d_true_tag, tag_level, tag_buffer);
+
          tag_level->deallocatePatchData(d_buf_tag_indx);
 
          /*
@@ -3122,6 +3123,9 @@ void GriddingAlgorithm::setBooleanTagData(
       if (!preserve_existing_tags) {
          boolean_tag_data->fillAll(d_false_tag);
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize(); // host is accessing this array in the next loop
+#endif
 
       size_t data_length = boolean_tag_data->getGhostBox().size();
       TBOX_ASSERT(data_length == user_tag_data->getGhostBox().size());
@@ -3193,6 +3197,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
       TBOX_ASSERT(boolean_tag_data);
 
       buf_tag_data->fillAll(not_tag);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize(); // we're operating on buf_tag_data in next loop : host side
+#endif
 
       const hier::Box& interior(patch->getBox());
 
@@ -3204,6 +3211,7 @@ GriddingAlgorithm::bufferTagsOnLevel(
         }
      }
    }
+
 
    /*
     * Communicate boundary data for buffered tag array so that tags

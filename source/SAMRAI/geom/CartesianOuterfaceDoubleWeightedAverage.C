@@ -17,6 +17,7 @@
 #include "SAMRAI/pdat/OuterfaceData.h"
 #include "SAMRAI/pdat/OuterfaceVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 /*
  *************************************************************************
@@ -158,7 +159,7 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
    for (int d = 0; d < cdata->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
       for (int side = 0; side < 2; ++side) {
-         //fprintf(stdout,"side[%d]\n",side);
+         //fprintf(stdout,"side[%d]\n",side);  // explore why this routine segfaults without emplaced syncs in callers
          if ((dim == tbox::Dimension(1))) {
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d,
                             CARTWGTAVGOUTFACEDOUB1D)

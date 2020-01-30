@@ -294,6 +294,9 @@ CoarsenSchedule::coarsenData() const
       d_precoarsen_refine_schedule->fillData(0.0);
       t_coarse_data_fill->stop();
    }
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * Coarsen the data from the sources on the fine data level into the
@@ -301,6 +304,9 @@ CoarsenSchedule::coarsenData() const
     */
 
    coarsenSourceData(d_coarsen_patch_strategy);
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    /*
     * Copy data from the source interiors of the temporary patch level
@@ -1001,7 +1007,6 @@ CoarsenSchedule::coarsenSourceData(
    /*
     * Loop over all local patches (fine and temp have the same mapping)
     */
-
    for (hier::PatchLevel::iterator p(d_fine_level->begin());
         p != d_fine_level->end(); ++p) {
       const std::shared_ptr<hier::Patch>& fine_patch = *p;
@@ -1015,12 +1020,10 @@ CoarsenSchedule::coarsenSourceData(
       /*
        * Coarsen the fine space onto the temporary coarse space
        */
-
       if (patch_strategy) {
          patch_strategy->preprocessCoarsen(*temp_patch,
             *fine_patch, box, block_ratio);
       }
-
       for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          const CoarsenClasses::Data * const crs_item =
             d_coarsen_items[ici];
@@ -1031,6 +1034,9 @@ CoarsenSchedule::coarsenSourceData(
                box, block_ratio);
          }
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       if (patch_strategy) {
          patch_strategy->postprocessCoarsen(*temp_patch,

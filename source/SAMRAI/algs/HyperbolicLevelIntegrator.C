@@ -34,6 +34,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -1494,6 +1495,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
       t_coarsen_fluxsum_comm->start();
       sched->coarsenData();
+
       t_coarsen_fluxsum_comm->stop();
 
       /*
@@ -1506,6 +1508,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
       t_advance_bdry_fill_comm->start();
       d_bdry_sched_advance[coarse_level->getLevelNumber()]->
          fillData(coarse_sim_time);
+
       t_advance_bdry_fill_comm->stop();
 
       const double reflux_dt = sync_time - coarse_sim_time;
@@ -1546,6 +1549,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
    t_coarsen_sync_comm->start();
    sched->coarsenData();
+
    t_coarsen_sync_comm->stop();
 
    d_patch_strategy->clearDataContext();
@@ -2163,6 +2167,10 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                ++fs_var;
             }
          }
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
+
 
       } else {
          level->setTime(new_time, d_fluxsum_data);
