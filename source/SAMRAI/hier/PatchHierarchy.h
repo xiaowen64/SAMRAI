@@ -711,6 +711,9 @@ public:
             d_max_levels - 1,
             d_proper_nesting_buffer.empty() ?
             1 : d_proper_nesting_buffer.back());
+         d_minimum_cells.resize(
+            d_max_levels,
+            d_minimum_cells.back());
       }
    }
 
@@ -778,6 +781,15 @@ public:
       d_smallest_patch_size[level] = size;
    }
 
+   void
+   setMinimumCellRequest(
+      int cells,
+      int level)
+   {
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
+      d_minimum_cells[level] = cells;
+   }
+
    /*!
     * @brief Get the smallest patch size on the given level.
     *
@@ -793,6 +805,14 @@ public:
    {
       TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       return d_smallest_patch_size[level];
+   }
+
+   int
+   getMinimumCellRequest(
+      int level) const
+   {
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
+      return d_minimum_cells[level];
    }
 
    /*!
@@ -1248,6 +1268,11 @@ private:
     * unlimited.
     */
    std::vector<IntVector> d_largest_patch_size;
+
+   /*!
+    *
+    */
+   std::vector<int> d_minimum_cells;
 
    /*!
     * @brief Whether to normally allow patches smaller than the max

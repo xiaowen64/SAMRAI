@@ -310,6 +310,10 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
    trial.d_breakoff.clear();
    trial.d_leftover.clear();
 
+   if (trial.d_whole_box.size() <= d_pparams->getSmallestZoneCount()) {
+      return false;
+   }
+
    const hier::IntVector box_dims = trial.d_whole_box.numberCells();
 
    if (trial.d_whole_box_load <= trial.d_ideal_load) {
@@ -548,6 +552,10 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 bool
 BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 {
+   if (trial.d_whole_box.size() <= d_pparams->getSmallestZoneCount()) {
+      return false;
+   }
+
    const tbox::Dimension dim(trial.d_whole_box.getDim());
 
    const hier::IntVector box_dims(trial.d_whole_box.numberCells());
@@ -716,7 +724,8 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 
       int break_acceptance_flags[4] = { 0, 0, 0, 0 };
 
-      if (BalanceUtilities::compareLoads(
+      if (corner_box.size() >= d_pparams->getSmallestZoneCount() &&
+          BalanceUtilities::compareLoads(
              break_acceptance_flags, best_breakoff_load,
              corner_box_load, trial.d_ideal_load,
              trial.d_low_load, trial.d_high_load, *d_pparams)) {
@@ -791,7 +800,13 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
             }
             growable(inc_dir) = corner_box.lower() (inc_dir) > trial.d_whole_box.lower() (inc_dir);
          }
+
          corner_box_size = corner_box.numberCells();
+
+         if (corner_box.size() < d_pparams->getSmallestZoneCount()) {
+            continue;
+         }
+
          corner_box_load = trial.computeBreakOffLoad(corner_box);
 
          const bool accept_break = BalanceUtilities::compareLoads(
@@ -1049,8 +1064,22 @@ void BalanceBoxBreaker::TrialBreak::computeBreakData(
    d_breakoff.clear();
    d_leftover.clear();
    burstBox(d_leftover, d_whole_box, box);
-   d_breakoff.push_back(box);
-   d_breakoff_load = computeBreakOffLoad(box);
+   bool do_cut = box.size() >= d_pparams->getSmallestZoneCount();
+   if (do_cut) {
+      for (auto itr = d_leftover.begin(); itr != d_leftover.end(); ++itr) {
+         if ((*itr).size() < d_pparams->getSmallestZoneCount()) {
+            do_cut = false;
+         }
+      }
+   }
+   if (do_cut) {
+      d_breakoff.push_back(box);
+      d_breakoff_load = computeBreakOffLoad(box);
+   } else {
+      d_leftover.clear(); 
+      d_leftover.push_back(d_whole_box);
+      d_breakoff_load = 0;
+   }
    computeMerits();
 }
 

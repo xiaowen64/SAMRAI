@@ -23,11 +23,13 @@ PartitioningParams::PartitioningParams(
    const hier::IntVector& max_size,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
+   int smallest_zones,
    double flexible_load_tol):
    d_min_size(min_size),
    d_max_size(max_size),
    d_bad_interval(bad_interval, grid_geometry.getNumberBlocks()),
    d_cut_factor(cut_factor),
+   d_smallest_zones(smallest_zones),
    d_flexible_load_tol(flexible_load_tol),
    d_load_comparison_tol(1e-6),
    d_using_vouchers(false),
@@ -46,6 +48,7 @@ PartitioningParams::PartitioningParams(
    d_max_size(other.d_max_size),
    d_bad_interval(other.d_bad_interval),
    d_cut_factor(other.d_cut_factor),
+   d_smallest_zones(other.d_smallest_zones),
    d_load_comparison_tol(other.d_load_comparison_tol),
    d_using_vouchers(other.d_using_vouchers),
    d_work_data_id(other.d_work_data_id)
