@@ -197,7 +197,7 @@ CascadePartitioner::loadBalanceBoxLevel(
       TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
    }
 
-   int minimum_cells = 1;
+   size_t minimum_cells = 1;
 
    if (hierarchy) {
       minimum_cells = hierarchy->getMinimumCellRequest(level_number);
