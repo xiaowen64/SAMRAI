@@ -310,7 +310,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
    trial.d_breakoff.clear();
    trial.d_leftover.clear();
 
-   if (trial.d_whole_box.size() <= d_pparams->getSmallestZoneCount()) {
+   if (trial.d_whole_box.size() <= d_pparams->getMinimumCellRequest()) {
       return false;
    }
 
@@ -552,7 +552,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 bool
 BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 {
-   if (trial.d_whole_box.size() <= d_pparams->getSmallestZoneCount()) {
+   if (trial.d_whole_box.size() <= d_pparams->getMinimumCellRequest()) {
       return false;
    }
 
@@ -724,7 +724,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 
       int break_acceptance_flags[4] = { 0, 0, 0, 0 };
 
-      if (corner_box.size() >= d_pparams->getSmallestZoneCount() &&
+      if (corner_box.size() >= d_pparams->getMinimumCellRequest() &&
           BalanceUtilities::compareLoads(
              break_acceptance_flags, best_breakoff_load,
              corner_box_load, trial.d_ideal_load,
@@ -803,7 +803,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 
          corner_box_size = corner_box.numberCells();
 
-         if (corner_box.size() < d_pparams->getSmallestZoneCount()) {
+         if (corner_box.size() < d_pparams->getMinimumCellRequest()) {
             continue;
          }
 
@@ -1064,10 +1064,10 @@ void BalanceBoxBreaker::TrialBreak::computeBreakData(
    d_breakoff.clear();
    d_leftover.clear();
    burstBox(d_leftover, d_whole_box, box);
-   bool do_cut = box.size() >= d_pparams->getSmallestZoneCount();
+   bool do_cut = box.size() >= d_pparams->getMinimumCellRequest();
    if (do_cut) {
       for (auto itr = d_leftover.begin(); itr != d_leftover.end(); ++itr) {
-         if ((*itr).size() < d_pparams->getSmallestZoneCount()) {
+         if ((*itr).size() < d_pparams->getMinimumCellRequest()) {
             do_cut = false;
          }
       }

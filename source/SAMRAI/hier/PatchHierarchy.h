@@ -783,7 +783,7 @@ public:
 
    void
    setMinimumCellRequest(
-      int cells,
+      size_t cells,
       int level)
    {
       TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
@@ -807,7 +807,7 @@ public:
       return d_smallest_patch_size[level];
    }
 
-   int
+   size_t
    getMinimumCellRequest(
       int level) const
    {
@@ -1272,7 +1272,7 @@ private:
    /*!
     *
     */
-   std::vector<int> d_minimum_cells;
+   std::vector<size_t> d_minimum_cells;
 
    /*!
     * @brief Whether to normally allow patches smaller than the max

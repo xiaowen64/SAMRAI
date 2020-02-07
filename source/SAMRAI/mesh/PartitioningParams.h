@@ -35,7 +35,7 @@ public:
       const hier::IntVector& max_size,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
-      int smallest_zones,
+      size_t minimum_cells,
       double flexible_load_tol);
 
    PartitioningParams(
@@ -65,8 +65,8 @@ public:
       return d_cut_factor;
    }
 
-   int getSmallestZoneCount() const {
-      return d_smallest_zones;
+   size_t getMinimumCellRequest() const {
+      return d_minimum_cells;
    } 
 
    const tbox::Dimension& getDim() const {
@@ -120,7 +120,10 @@ private:
    hier::IntVector d_bad_interval;
    hier::IntVector d_cut_factor;
 
-   int d_smallest_zones;
+   /*
+    * @brief The requested minimum for number of cells in a patch
+    */
+   size_t d_minimum_cells;
 
    /*!
     * @brief Fraction of ideal load a process can accept over and
