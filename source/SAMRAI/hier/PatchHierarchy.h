@@ -75,6 +75,16 @@ namespace hier {
  *      limit on patch size.  The input is given for each level n, where
  *      n (= 0, 1,..., N-1) is the level number.
  *
+ *   - \b    minimum_cell_request
+ *      A set of max_levels integers, each of which indicates a desired
+ *      minimum total cell count for the patches on each level.  This is
+ *      enforced in addition to smallest_patch_size, which sets dimension-
+ *      based minimums on the patch size.  Strict enforcement of the
+ *      minimum_cell_request is not guaranteed, as other parameters
+ *      and algorithmic restrictions may cause some patches to have a size
+ *      smaller than this requested minimum.  The input is given for each level
+ *      n, where n (= 0, 1,..., N-1) is the level number.
+ *
  *   - \b    proper_nesting_buffer
  *      A set of max_levels - 1 integer values specifying the number of coarse
  *      cells by which the next finer level is nested within the interior of
@@ -138,6 +148,14 @@ namespace hier {
  *     <td>max_levels int[]</td>
  *     <td>all values max int</td>
  *     <td>each value >=0 must be >= corresponding smallest_patch_size value</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>minimum_cell_request</td>
+ *     <td>max_levels int</td>
+ *     <td>all values 1</td>
+ *     <td>all values >0</td>
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
@@ -781,6 +799,14 @@ public:
       d_smallest_patch_size[level] = size;
    }
 
+   /*!
+    * @brief Set the requested minimum cell count.
+    *
+    * @param[in]  cells  A minimum cell count for new patches.
+    * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
+    */
    void
    setMinimumCellRequest(
       size_t cells,
@@ -1270,7 +1296,7 @@ private:
    std::vector<IntVector> d_largest_patch_size;
 
    /*!
-    *
+    * @brief Requested minimum cell count for patches
     */
    std::vector<size_t> d_minimum_cells;
 
