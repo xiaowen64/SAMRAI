@@ -133,6 +133,7 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
    std::shared_ptr<pdat::OuterfaceData<double> > cdata(
        SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
            coarse.getPatchData(dst_component)));
+
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -159,7 +160,6 @@ void CartesianOuterfaceDoubleWeightedAverage::coarsen(
    for (int d = 0; d < cdata->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
       for (int side = 0; side < 2; ++side) {
-         //fprintf(stdout,"side[%d]\n",side);  // explore why this routine segfaults without emplaced syncs in callers
          if ((dim == tbox::Dimension(1))) {
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d,
                             CARTWGTAVGOUTFACEDOUB1D)

@@ -2998,6 +2998,9 @@ GriddingAlgorithm::fillTags(
       tag_data->fill(tag_value);
 
    }
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
    t_fill_tags->stop();
 }
 
@@ -3092,6 +3095,9 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
             }
          }
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
    }
    t_fill_tags->stop();
@@ -3246,6 +3252,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
       buf_tag_box.grow(hier::IntVector(dim, buffer_size));
 
       boolean_tag_data->fillAll(not_tag);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize(); // we're operating on buf_tag_data in next loop : host side
+#endif
 
       pdat::CellIterator icend(pdat::CellGeometry::end(buf_tag_box));
       for (pdat::CellIterator ic(pdat::CellGeometry::begin(buf_tag_box));
@@ -3257,6 +3266,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
             boolean_tag_data->fill(tag_value, buf_box);
          }
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize(); // we're operating on buf_tag_data in next loop : host side
+#endif
    }
 
    /*

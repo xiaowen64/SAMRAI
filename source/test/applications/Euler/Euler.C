@@ -2402,6 +2402,9 @@ void Euler::tagGradientDetectorCells(
          1,
          d_nghosts));
    temp_tags->fillAll(FALSE);
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    if (d_dim == tbox::Dimension(2)) {
       /*
@@ -2412,6 +2415,9 @@ void Euler::tagGradientDetectorCells(
             hier::Box tagbox(hier::Index(9, 0), hier::Index(9, 3), hier::BlockId(0));
             if (error_level_number == 1) {
                tagbox.refine(hier::IntVector(d_dim, 2));
+#if defined(HAVE_CUDA)
+               cudaDeviceSynchronize();
+#endif
             }
             hier::Box ibox = pbox * tagbox;
 

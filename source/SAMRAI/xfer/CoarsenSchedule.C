@@ -1007,6 +1007,7 @@ CoarsenSchedule::coarsenSourceData(
    /*
     * Loop over all local patches (fine and temp have the same mapping)
     */
+
    for (hier::PatchLevel::iterator p(d_fine_level->begin());
         p != d_fine_level->end(); ++p) {
       const std::shared_ptr<hier::Patch>& fine_patch = *p;

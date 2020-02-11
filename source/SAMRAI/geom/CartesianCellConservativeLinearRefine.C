@@ -207,7 +207,6 @@ void CartesianCellConservativeLinearRefine<T>::refine(
             const double deltax0 = (static_cast<double>(ir0) + 0.5) * fdx0 - cdx0 * 0.5;
             fine_array(j, k) = coarse_array(ic0, ic1) + slope0(ic0, ic1) * deltax0 + slope1(ic0, ic1) * deltax1;
          });
-
 #else  // Fortran Dimension 2
          std::vector<T> diff1_f(cgbox.numberCells(1) + 1);
          std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
@@ -355,7 +354,6 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
 {
    RANGE_PUSH("ConservativeLinearRefine::refine", 3);
 
-   //fprintf(stdout,"GenericCellConservativeLinearRefine<dcomplex>\n");
    const tbox::Dimension &dim(fine.getDim());
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 

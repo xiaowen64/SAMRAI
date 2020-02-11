@@ -170,7 +170,6 @@ void CartesianCellDoubleLinearRefine::refine(
           fdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
 #if defined(HAVE_RAJA)
-         //fprintf(stderr,"CellLinearRefine\n");
          auto fine_array = fdata->getView<2>(d);
          auto coarse_array = cdata->getView<2>(d);
          const double* fdx = fgeom->getDx();
@@ -198,8 +197,6 @@ void CartesianCellDoubleLinearRefine::refine(
             double x = deltax0 / cdx0;
             double y = deltax1 / cdx1;
 
-            //fprintf(stderr,"deltax0=%f deltax1=%f cdx0=%d cdx1=%d fdx0=%d fdx1=%d x=%f y=%f\n",deltax0,deltax1,cdx0,cdx1,fdx0,fdx1,x,y);
-
             if (x < 0.0) {
                jj--;
                x += 1.0;
@@ -209,7 +206,6 @@ void CartesianCellDoubleLinearRefine::refine(
                y += 1.0;
             }
             fine_array(j, k) = (coarse_array(jj, kk) + (coarse_array(jj + 1, kk) - coarse_array(jj, kk)) * x) * (1.0 - y) + (coarse_array(jj, kk + 1) + (coarse_array(jj + 1, kk + 1) - coarse_array(jj, kk + 1)) * x) * y;
-            //fprintf(stderr,"fine(%d,%d) = %f @ %p with jj=%d kk=%d x=%f y=%f \n",j,k,fine_array(j,k),&fine_array(j,k),jj,kk,x,y);
          });
 #else   // Fortran Dimension 2
 
@@ -227,7 +223,6 @@ void CartesianCellDoubleLinearRefine::refine(
 #endif  // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
 #if defined(HAVE_RAJA)
-         //fprintf(stderr,"CellLinearRefine\n");
          auto fine_array = fdata->getView<3>(d);
          auto coarse_array = cdata->getView<3>(d);
          const double* fdx = fgeom->getDx();
