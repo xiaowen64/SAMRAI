@@ -94,7 +94,7 @@ Stencil::initializeDataOnPatch(
          auto rho = pdat::get_view<2, pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext()));
          // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
 
-         pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+         pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int j, int k) {
             rho(j,k) = 0.0;
          });
       }
@@ -142,6 +142,7 @@ Stencil::conservativeDifferenceOnPatch(
    RANGE_PUSH("Stencil::conservativeDifference", 1);
 
    auto rho_new = pdat::get_view<2, pdat::CellData<double>>(patch.getPatchData(d_rho_update, getDataContext()));
+
    // CellView<double, 2> rhoNew(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_update, getDataContext())));
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
@@ -149,7 +150,6 @@ Stencil::conservativeDifferenceOnPatch(
 
    const double dx = pgeom->getDx()[0];
    const double dy = pgeom->getDx()[1];
-
    for ( const auto& rho_var : d_rho_variables ) {
       auto rho = pdat::get_view<2, pdat::CellData<double>>(patch.getPatchData(rho_var, getDataContext()));
       // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, getDataContext())));
@@ -159,7 +159,7 @@ Stencil::conservativeDifferenceOnPatch(
       const double an_lr = d_velocity[0] * 0.5;
       const double an_tb = d_velocity[1] * 0.5;
 
-      pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int j, int k) {
          const double FL = (rho(j-1,k) + rho(j,k)) * an_abs_lr + (rho(j-1,k) - rho(j,k)) * an_lr;
          const double FR = (rho(j,k) + rho(j+1,k)) * an_abs_lr + (rho(j,k) - rho(j+1,k)) * an_lr;
          const double FT = (rho(j,k) + rho(j,k+1)) * an_abs_tb + (rho(j,k) - rho(j,k+1)) * an_tb;
@@ -167,11 +167,10 @@ Stencil::conservativeDifferenceOnPatch(
          rho_new(j,k) = rho(j,k) - dt * (1.0 / dx * (FR - FL) + 1.0 / dy * (FT - FB));
       });
 
-      pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int j, int k) {
          rho(j,k) = rho_new(j,k);
       });
    }
-
    RANGE_POP;
 }
 
@@ -203,7 +202,7 @@ Stencil::tagGradientDetectorCells(
    const int ilast0 = ilast(0);
    const int ilast1 = ilast(1);
 
-   pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+   pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int j, int k) {
       const double d2x = ABS(rho(j+1,k) - 2.0*rho(j,k) + rho(j-1,k));
       const double d2y = ABS(rho(j,k+1) - 2.0*rho(j,k) + rho(j,k-1));
 
@@ -314,7 +313,7 @@ Stencil::computeNorm(const std::shared_ptr<hier::VariableContext>& context, hier
    for ( const auto& rho_var : d_rho_variables ) {
       auto rho = pdat::get_const_view<2, pdat::CellData<double>>(patch.getPatchData(rho_var, context));
       // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(rho_var, context)));
-      pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int k, int j) {
+      pdat::parallel_for_all(patch.getBox(), [=] SAMRAI_HOST_DEVICE (int j, int k) {
          norm += ABS(rho(j,k)) * dx * dy;
       });
    }

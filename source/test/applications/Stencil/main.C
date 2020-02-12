@@ -353,17 +353,17 @@ int main(
       tbox::pout << "Simulation time is " << loop_time << endl;
       char buf[50];
       sprintf(buf, "Timestep %d", iteration_num);
-      RANGE_PUSH(buf, 2);
-#if defined(HAVE_CUDA)
-      if (iteration_num == 11)
-        cudaProfilerStart();
-#endif
+//      RANGE_PUSH(buf, 2);
+//#if defined(HAVE_CUDA)
+//      if (iteration_num == 11)
+//        cudaProfilerStart();
+//#endif
       double dt_new = time_integrator->advanceHierarchy(dt_now);
-#if defined(HAVE_CUDA)
-      if (iteration_num == 13)
-        cudaProfilerStop();
-#endif
-      RANGE_POP;
+//#if defined(HAVE_CUDA)
+//      if (iteration_num == 13)
+//        cudaProfilerStop();
+//#endif
+//      RANGE_POP;
       loop_time += dt_now;
       dt_now = dt_new;
 
@@ -379,6 +379,21 @@ int main(
              loop_time);
        }
 #endif
+       {
+          // /*
+          //  * Compute a solution norm as a check.
+          //  */
+           double norm = 0.0;
+           int nlevels = patch_hierarchy->getNumberOfLevels();
+           for (int ln = 0; ln < nlevels; ++ln) {
+             const std::shared_ptr<hier::PatchLevel>& level(patch_hierarchy->getPatchLevel(ln));
+             for (hier::PatchLevel::Iterator p(level->begin()); p != level->end(); ++p) {
+               const std::shared_ptr<hier::Patch>& patch = *p;
+               norm += stencil_model->computeNorm(hyp_level_integrator->getCurrentContext(), *patch);
+             }
+           }
+           std::cout << "Solution norm: " << std::scientific << std::setprecision(12) << norm << std::endl;
+       }
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
@@ -389,23 +404,23 @@ int main(
     // /*
     //  * Compute a solution norm as a check.
     //  */
-    // double norm = 0.0;
-    // int nlevels = patch_hierarchy->getNumberOfLevels();
-    // for (int ln = 0; ln < nlevels; ++ln) {
-    //   const std::shared_ptr<hier::PatchLevel>& level(patch_hierarchy->getPatchLevel(ln));
-    //   for (hier::PatchLevel::Iterator p(level->begin()); p != level->end(); ++p) {
-    //     const std::shared_ptr<hier::Patch>& patch = *p;
-    //     norm += stencil_model->computeNorm(hyp_level_integrator->getCurrentContext(), *patch);
-    //   }
+     double norm = 0.0;
+     int nlevels = patch_hierarchy->getNumberOfLevels();
+     for (int ln = 0; ln < nlevels; ++ln) {
+       const std::shared_ptr<hier::PatchLevel>& level(patch_hierarchy->getPatchLevel(ln));
+       for (hier::PatchLevel::Iterator p(level->begin()); p != level->end(); ++p) {
+         const std::shared_ptr<hier::Patch>& patch = *p;
+         norm += stencil_model->computeNorm(hyp_level_integrator->getCurrentContext(), *patch);
+       }
 
-    // }
+     }
 
     /*
      * Output timer results.
      */
     tbox::TimerManager::getManager()->print(tbox::pout);
 
-    // std::cout << "Solution norm: " << std::scientific << std::setprecision(12) << norm << std::endl;
+     std::cout << "Solution norm: " << std::scientific << std::setprecision(12) << norm << std::endl;
     /*
      * At conclusion of simulation, deallocate objects.
      */
