@@ -50,7 +50,7 @@
 // Classes for run-time plotting and autotesting.
 
 #if (TESTING == 1)
-#include "AutoTester.h"
+#include "test/testlib/AutoTester.h"
 #endif
 
 using namespace SAMRAI;

@@ -43,6 +43,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 #include <vector>
 
 #include <cmath>
@@ -719,7 +720,9 @@ int main(
          bool exact_tagging = false;
          hierarchy->getPatchLevel(coarser_ln)->allocatePatchData(tag_data_id);
          mesh_gen->setTags(exact_tagging, hierarchy, coarser_ln, tag_data_id);
-
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
          /*
           * Cluster.
           */
@@ -912,6 +915,9 @@ int main(
          bool exact_tagging = false;
          hierarchy->getPatchLevel(coarser_ln)->allocatePatchData(tag_data_id);
          mesh_gen->setTags(exact_tagging, hierarchy, coarser_ln, tag_data_id);
+#if defined(HAVE_CUDA)
+         cudaDeviceSynchronize();
+#endif
 
          /*
           * Cluster.

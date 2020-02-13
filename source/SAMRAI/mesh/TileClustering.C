@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 namespace SAMRAI {
 namespace mesh {
@@ -1086,6 +1087,9 @@ TileClustering::makeCoarsenedTagData(const pdat::CellData<int>& tag_data,
                               1,
                               hier::IntVector::getZero(tag_data.getDim())));
    coarsened_tag_data->fill(0, 0);
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
    size_t coarse_tag_count = 0;
 

@@ -979,7 +979,6 @@ void ArrayData<TYPE>::fill(
       pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          ptr[i] = t;
       });
-
 #else
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
@@ -1027,7 +1026,6 @@ void ArrayData<TYPE>::fill(
          default:
             TBOX_ERROR("pdat::parallel_for_all undefined for dim > 3" << std::endl);
       }
-
 #else
       const tbox::Dimension& dim = box.getDim();
 
