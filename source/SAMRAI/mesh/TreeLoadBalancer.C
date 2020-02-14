@@ -177,7 +177,6 @@ TreeLoadBalancer::loadBalanceBoxLevel(
 #ifndef DEBUG_CHECK_DIM_ASSERTIONS
    NULL_USE(domain_box_level);
 #endif
-   NULL_USE(hierarchy);
    NULL_USE(level_number);
    TBOX_ASSERT(!balance_to_reference || balance_to_reference->hasTranspose());
    TBOX_ASSERT(!balance_to_reference ||
@@ -189,8 +188,14 @@ TreeLoadBalancer::loadBalanceBoxLevel(
       domain_box_level,
       bad_interval,
       cut_factor);
+   
    if (hierarchy) {
       TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
+   }
+
+   size_t minimum_cells = 1;
+   if (hierarchy) {
+      minimum_cells = hierarchy->getMinimumCellRequest(level_number);
    }
 
    if (d_mpi_is_dupe) {
@@ -290,7 +295,7 @@ TreeLoadBalancer::loadBalanceBoxLevel(
    d_pparams = std::make_shared<PartitioningParams>(
          *balance_box_level.getGridGeometry(),
          balance_box_level.getRefinementRatio(),
-         min_size, max_size, bad_interval, effective_cut_factor,
+         min_size, max_size, bad_interval, effective_cut_factor, minimum_cells,
          d_flexible_load_tol);
 
    /*
