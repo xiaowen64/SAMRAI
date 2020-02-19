@@ -22,6 +22,7 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 
 /*
@@ -740,6 +741,10 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
             pdat::OuternodeData<double> tmp_onode_data(
                cfpatch->getBox(), onode_data->getDepth());
             tmp_onode_data.fillAll(0.0);
+#if defined(HAVE_RAJA)
+            tbox::parallel_synchronize();
+#endif
+
 
             // Copy "coarse" node values on coarse-fine boundary to
             // temporary outernode data arrays.
@@ -912,6 +917,10 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
                }  // switch(box_loc)
 
             } // for (int ibb0 ...  iterate over coarse-fine boundary box regions
+#if defined(HAVE_RAJA)
+            tbox::parallel_synchronize();
+#endif
+
 
             // Sum "coarse" node values on coarse-fine boundary.
 
@@ -1102,6 +1111,10 @@ PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
          onode_data->copy(*node_data);
       }
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
+
 
 }
 
@@ -1133,6 +1146,10 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
          onode_data->copy2(*node_data);
       }
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
+
 
 }
 

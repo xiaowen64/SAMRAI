@@ -17,6 +17,8 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 
 namespace SAMRAI {
@@ -344,9 +346,11 @@ PatchBoundaryEdgeSum::doLevelSum(
          TBOX_ASSERT(oedge_data);
 
          oedge_data->copy(*edge_data);
-
       }
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    d_single_level_sum_schedule->fillData(0.0, false);
 
@@ -370,7 +374,9 @@ PatchBoundaryEdgeSum::doLevelSum(
 
       }
    }
-
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 }
 
 }

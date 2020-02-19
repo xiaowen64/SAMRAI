@@ -16,6 +16,7 @@
 #include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/pdat/SumOperation.h"
+#include "SAMRAI/tbox/Collectives.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
 namespace SAMRAI
@@ -101,6 +102,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    for (unsigned int d = 0; d < num_depth; ++d) {
 
 #if defined(HAVE_RAJA)
+
       switch (dim.getValue()) {
          case 1: {
             auto dest = get_view<1>(dst, d);
@@ -140,7 +142,6 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
             TBOX_ERROR("Aborting in " __FILE__);
             break;
       }
-
 #else
 
       size_t dst_counter = dst_begin;

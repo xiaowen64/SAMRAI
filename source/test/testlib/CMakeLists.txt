@@ -63,4 +63,4 @@ set_target_properties(testlib PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories( testlib
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/testlib)
 # the scope of the following does not extend beyond target testlib
-target_compile_definitions(testlib PUBLIC TESTING=1)
+target_compile_definitions(testlib PRIVATE TESTING=1)

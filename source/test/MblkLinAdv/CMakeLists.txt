@@ -22,7 +22,7 @@ blt_add_executable(
   SOURCES ${mblklinadv_sources}
   DEPENDS_ON ${mblklinadv_depends})
 
-target_compile_definitions(mblklinadv PUBLIC TESTING=1)
+target_compile_definitions(mblklinadv PRIVATE TESTING=0) # Source still needs to be modified to work with autotester
 
 file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
 

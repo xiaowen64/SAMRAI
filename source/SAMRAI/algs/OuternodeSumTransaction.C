@@ -15,6 +15,7 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/OuternodeData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -164,6 +165,10 @@ OuternodeSumTransaction::copyLocalData()
    TBOX_ASSERT(onode_src_data);
 
    onode_dst_data->sum(*onode_src_data, *d_overlap);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
+
 }
 
 /*

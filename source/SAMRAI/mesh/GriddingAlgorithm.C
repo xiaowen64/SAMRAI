@@ -2998,8 +2998,8 @@ GriddingAlgorithm::fillTags(
       tag_data->fill(tag_value);
 
    }
-#if defined(HAVE_CUDA)
-   cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
 #endif
    t_fill_tags->stop();
 }
@@ -3095,10 +3095,9 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
             }
          }
       }
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
-
    }
    t_fill_tags->stop();
 }
@@ -3129,10 +3128,9 @@ void GriddingAlgorithm::setBooleanTagData(
       if (!preserve_existing_tags) {
          boolean_tag_data->fillAll(d_false_tag);
       }
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize(); // host is accessing this array in the next loop
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
-
       size_t data_length = boolean_tag_data->getGhostBox().size();
       TBOX_ASSERT(data_length == user_tag_data->getGhostBox().size());
 
@@ -3203,10 +3201,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
       TBOX_ASSERT(boolean_tag_data);
 
       buf_tag_data->fillAll(not_tag);
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize(); // we're operating on buf_tag_data in next loop : host side
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
-
       const hier::Box& interior(patch->getBox());
 
      pdat::CellIterator icend(pdat::CellGeometry::end(interior));
@@ -3252,10 +3249,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
       buf_tag_box.grow(hier::IntVector(dim, buffer_size));
 
       boolean_tag_data->fillAll(not_tag);
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize(); // we're operating on buf_tag_data in next loop : host side
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
-
       pdat::CellIterator icend(pdat::CellGeometry::end(buf_tag_box));
       for (pdat::CellIterator ic(pdat::CellGeometry::begin(buf_tag_box));
            ic != icend; ++ic) {
@@ -3266,8 +3262,8 @@ GriddingAlgorithm::bufferTagsOnLevel(
             boolean_tag_data->fill(tag_value, buf_box);
          }
       }
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize(); // we're operating on buf_tag_data in next loop : host side
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
    }
 

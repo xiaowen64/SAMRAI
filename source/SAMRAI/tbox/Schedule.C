@@ -225,6 +225,9 @@ Schedule::finalizeCommunication()
 {
    d_object_timers->t_finalize_communication->start();
    performLocalCopies();
+#if defined(HAVE_RAJA)
+   parallel_synchronize();
+#endif
    processCompletedCommunications();
    deallocateCommunicationObjects();
    d_object_timers->t_finalize_communication->stop();
