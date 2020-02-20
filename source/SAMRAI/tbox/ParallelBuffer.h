@@ -107,7 +107,8 @@ public:
    void
    outputString(
       const std::string& text,
-      const int length);
+      const int length,
+      const bool recursive = false);
 
    /**
     * Synchronize the parallel buffer (called from streambuf).
