@@ -113,13 +113,13 @@ OuterfaceDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-#if defined(ENABLE_UMPIRE)
+#if defined(HAVE_UMPIRE)
   if (d_has_allocator) {
    return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth, d_allocator);
   } else {
 #endif
    return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth);
-#if defined(ENABLE_UMPIRE)
+#if defined(HAVE_UMPIRE)
   }
 #endif
 }

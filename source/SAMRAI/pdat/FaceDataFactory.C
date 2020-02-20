@@ -118,7 +118,7 @@ FaceDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-#if defined(ENABLE_UMPIRE)
+#if defined(HAVE_UMPIRE)
   if (d_has_allocator) {
     return std::make_shared<FaceData<TYPE> >(patch.getBox(), d_depth, d_ghosts, d_allocator);
   } else {
@@ -127,7 +127,7 @@ FaceDataFactory<TYPE>::allocate(
              patch.getBox(),
              d_depth,
              d_ghosts);
-#if defined(ENABLE_UMPIRE)
+#if defined(HAVE_UMPIRE)
   }
 #endif
 }
