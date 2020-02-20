@@ -1,16 +1,21 @@
 set (rank_group_sources
   main.C)
 
+set(rank_group_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(rank_group_depends ${rank_group_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(rank_group_depends ${rank_group_depends} cuda)
+endif ()
+
 blt_add_executable(
   NAME rank_group
   SOURCES ${rank_group_sources}
-  DEPENDS_ON
-  SAMRAI_mesh
-  SAMRAI_hier
-  SAMRAI_geom
-  SAMRAI_pdat
-  SAMRAI_appu
-  SAMRAI_tbox)
+  DEPENDS_ON ${rank_group_depends})
 
 target_compile_definitions(rank_group PUBLIC TESTING=1)
 

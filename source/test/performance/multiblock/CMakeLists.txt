@@ -31,11 +31,31 @@ process_m4(NAME fortran/stable3d)
 process_m4(NAME fortran/init2d)
 process_m4(NAME fortran/init3d)
 
+set(multiblock_depends testlib)
+set(multiblock_depends ${multiblock_depends} ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(multiblock_depends ${multiblock_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(multiblock_depends ${multiblock_depends} cuda)
+endif ()
+
+
 blt_add_executable(
   NAME multiblock
   SOURCES ${multiblock_sources}
-  DEPENDS_ON
-    testlib
-    SAMRAI)
+  DEPENDS_ON ${multiblock_depends})
 
-  #target_compile_definitions(multiblock PUBLIC TESTING=1)
+target_compile_definitions(multiblock PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/performance_inputs/*.input)
+
+samrai_add_tests(
+  NAME multiblock
+  EXECUTABLE multiblock
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)
+

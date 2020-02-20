@@ -20,7 +20,6 @@
 #include "SAMRAI/tbox/Collectives.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
-
 namespace SAMRAI {
 namespace algs {
 
