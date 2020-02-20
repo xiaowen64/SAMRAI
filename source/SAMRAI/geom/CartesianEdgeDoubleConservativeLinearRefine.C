@@ -189,7 +189,9 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
             }
          }
 
+#ifdef HAVE_UMPIRE
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
+#endif
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
          const hier::Index &ifirstc = coarse_box.lower();

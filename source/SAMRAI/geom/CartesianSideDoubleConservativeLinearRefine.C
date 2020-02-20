@@ -192,7 +192,6 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
          const auto fine_side_box = pdat::SideGeometry::toSideBox(fine_box, axis);
-         tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 
          fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
@@ -207,8 +206,13 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
          //pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
          //                                directions, alloc_db->getTagAllocator());
+#ifdef HAVE_UMPIRE
+         tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
                                          directions, alloc_db->getDevicePool());
+#else
+         pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts, directions);
+#endif
 
 #define HOIST_INTERMEDIATES 1
 //#undef HOIST_INTERMEDIATES
@@ -404,8 +408,12 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
                //pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                //                                directions, alloc_db->getTagAllocator());
+#ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getDevicePool());
+#else
+               pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
+#endif
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0)
@@ -636,12 +644,17 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
 #else  // Fortran Dimension 3
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
+               std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
+
+#ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getTagAllocator());
-
-               std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
                pdat::SideData<double> slope2_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getTagAllocator());
+#else
+               pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
+               pdat::SideData<double> slope2_f(cgbox, 1, tmp_ghosts, directions);
+#endif
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0)

@@ -192,8 +192,6 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
          fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
-         tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
          const hier::Index &ifirstc = coarse_box.lower();
          const hier::Index &ilastc = coarse_box.upper();
@@ -202,7 +200,14 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
          const hier::IntVector tmp_ghosts(dim, 0);
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
+
+#ifdef HAVE_UMPIRE
+         tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
          pdat::FaceData<double> slope0_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
+#else
+         pdat::FaceData<double> slope0_f(cgbox, 1, tmp_ghosts);
+#endif
+
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -356,7 +361,11 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
 #else  // Fortran Dimension 2
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
+#ifdef HAVE_UMPIRE
                pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
+#else
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts);
+#endif
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0)
@@ -634,10 +643,15 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 #else                 // Fortran Dimension3 \
                       // Iteration space is slightly different between the directions
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
-               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
-
                std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
+
+#ifdef HAVE_UMPIRE
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
                pdat::FaceData<double> slope2_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
+#else
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts);
+               pdat::FaceData<double> slope2_f(cgbox, 1, tmp_ghosts);
+#endif
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0)
