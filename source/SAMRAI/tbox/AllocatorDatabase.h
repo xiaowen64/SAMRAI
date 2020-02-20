@@ -13,6 +13,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#ifdef HAVE_UMPIRE
+
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include "umpire/Allocator.hpp"
@@ -55,4 +57,5 @@ private:
 }
 }
 
+#endif
 #endif

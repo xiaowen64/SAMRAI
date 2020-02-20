@@ -59,6 +59,7 @@ OuterfaceData<TYPE>::OuterfaceData(
    }
 }
 
+#ifdef HAVE_UMPIRE
 template<class TYPE>
 OuterfaceData<TYPE>::OuterfaceData(
    const hier::Box& box,
@@ -81,6 +82,8 @@ OuterfaceData<TYPE>::OuterfaceData(
       d_data[d][1].reset(new ArrayData<TYPE>(outerfacebox, depth,allocator));
    }
 }
+#endif
+
 template<class TYPE>
 OuterfaceData<TYPE>::~OuterfaceData()
 {

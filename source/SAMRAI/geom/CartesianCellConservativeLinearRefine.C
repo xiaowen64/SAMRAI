@@ -126,11 +126,15 @@ void CartesianCellConservativeLinearRefine<T>::refine(
    SAMRAI::hier::Box diff_box = coarse_box;
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
+#ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 
    // change to alloc_db->getDevicePool or other generic pool allocator for gpu policies
    //pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getTagAllocator());
    pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
+#else
+   pdat::ArrayData<T> slope(cgbox, dim.getValue());
+#endif
 
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
@@ -402,11 +406,15 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
    SAMRAI::hier::Box diff_box = coarse_box;
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
+#ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 
    // change to alloc_db->getDevicePool or other generic pool allocator for gpu policies
    //pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getTagAllocator());
    pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
+#else
+   pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue());
+#endif
 
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
@@ -770,9 +778,9 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
 
 #else // Fortran dim 3
 
-         std::vector<T> diff0_f(cgbox.numberCells(0) + 1);
-         std::vector<T> diff1_f(cgbox.numberCells(1) + 1);
-         std::vector<T> diff2_f(cgbox.numberCells(2) + 1);
+         std::vector<dcomplex> diff0_f(cgbox.numberCells(0) + 1);
+         std::vector<dcomplex> diff1_f(cgbox.numberCells(1) + 1);
+         std::vector<dcomplex> diff2_f(cgbox.numberCells(2) + 1);
          Call3dFortranCellLinearRefine(
           ifirstc(0),
           ifirstc(1), ifirstc(2),

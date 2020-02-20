@@ -22,7 +22,7 @@
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
 
-#if defined(HAVE_UMPIRE)
+#ifdef HAVE_UMPIRE
 #include "umpire/ResourceManager.hpp"
 #endif
 
@@ -99,6 +99,7 @@ ArrayData<TYPE>::ArrayData(
 #endif
 }
 
+#ifdef HAVE_UMPIRE
 template<class TYPE>
 ArrayData<TYPE>::ArrayData(
    const hier::Box& box,
@@ -107,12 +108,8 @@ ArrayData<TYPE>::ArrayData(
    d_depth(depth),
    d_offset(box.size()),
    d_box(box)
-#if defined(HAVE_UMPIRE)
    , d_allocator(allocator)
    , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
-#else
-   , d_array(d_depth * d_offset)
-#endif
 {
    TBOX_ASSERT(depth > 0);
 
@@ -120,6 +117,7 @@ ArrayData<TYPE>::ArrayData(
    undefineData();
 #endif
 }
+#endif
 
 template<class TYPE>
 ArrayData<TYPE>::~ArrayData()

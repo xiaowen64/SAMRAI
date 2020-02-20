@@ -87,6 +87,7 @@ CellData<TYPE>::CellData(
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth));
 }
 
+#ifdef HAVE_UMPIRE
 template<class TYPE>
 CellData<TYPE>::CellData(
    const hier::Box& box,
@@ -105,6 +106,7 @@ CellData<TYPE>::CellData(
 
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth, allocator));
 }
+#endif
 
 template<class TYPE>
 CellData<TYPE>::~CellData()
