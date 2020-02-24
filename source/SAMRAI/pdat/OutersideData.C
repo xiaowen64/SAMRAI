@@ -58,6 +58,7 @@ OutersideData<TYPE>::OutersideData(
    }
 }
 
+#ifdef HAVE_UMPIRE
 template<class TYPE>
 OutersideData<TYPE>::OutersideData(
    const hier::Box& box,
@@ -80,7 +81,7 @@ OutersideData<TYPE>::OutersideData(
       d_data[d][1].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
    }
 }
-
+#endif
 
 template<class TYPE>
 OutersideData<TYPE>::~OutersideData()
