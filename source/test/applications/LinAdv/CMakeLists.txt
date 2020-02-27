@@ -29,7 +29,8 @@ process_m4(NAME fortran/trace1d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
-set(linadv_depends ${SAMRAI_LIBRARIES})
+set(linadv_depends testlib)
+set(linadv_depends ${linadv_depends} ${SAMRAI_LIBRARIES})
 
 # TODO CMake should resolve this dependency for us...
 if (ENABLE_OPENMP)
@@ -40,7 +41,6 @@ if (ENABLE_CUDA)
   set(linadv_depends ${linadv_depends} cuda)
 endif ()
 
-set(linadv_depends ${linadv_depends} testlib)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DTESTING=1") 
 

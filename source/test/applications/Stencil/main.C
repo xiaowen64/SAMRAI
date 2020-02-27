@@ -441,10 +441,11 @@ int main(
     main_db.reset();
 
   }
+  //tbox::pout << "\nPASSED:  Stencil" << std::endl;
 
   tbox::SAMRAIManager::shutdown();
 
   tbox::SAMRAIManager::finalize();
   tbox::SAMRAI_MPI::finalize();
-
+  return(0);
 }

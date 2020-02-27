@@ -39,7 +39,8 @@ process_m4(NAME fortran/trace1d3d)
 process_m4(NAME fortran/trace2d)
 process_m4(NAME fortran/trace3d)
 
-set(euler_depends ${SAMRAI_LIBRARIES})
+set(euler_depends testlib)
+set(euler_depends ${euler_depends} ${SAMRAI_LIBRARIES})
 
 # TODO CMake should resolve this dependency for us...
 if (ENABLE_OPENMP)

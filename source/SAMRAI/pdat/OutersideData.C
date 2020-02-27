@@ -109,7 +109,6 @@ typename OutersideData<TYPE>::template View<DIM> OutersideData<TYPE>::getView(
 {
   const hier::Box& box = getGhostBox();
   hier::Box outersidebox = box;
-  // Note come back to this as we may not logic for 2 vs 3 dim
   if(DIM < 3) { // we can get away with not transposing since the slices are 1d
      if(side_normal == 0) {
        if(side == 0) {
@@ -165,7 +164,6 @@ typename OutersideData<TYPE>::template ConstView<DIM> OutersideData<TYPE>::getCo
 {
   const hier::Box& box = getGhostBox();
   hier::Box outersidebox = box;
-  // Note come back to this as we may not logic for 2 vs 3 dim
   if(DIM < 3) { // we can get away with not transposing since the slices are 1d
      if(side_normal == 0) {
        if(side == 0) {

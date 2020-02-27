@@ -20,7 +20,8 @@ process_m4(NAME fortran/rkstep3d)
 process_m4(NAME fortran/tag_cells2d)
 process_m4(NAME fortran/tag_cells3d)
 
-set(convdiff_depends ${SAMRAI_LIBRARIES})
+set(convdiff_depends testlib)
+set(convdiff_depends ${convdiff_depends} ${SAMRAI_LIBRARIES})
 
 # TODO CMake should resolve this dependency for us...
 if (ENABLE_OPENMP)
