@@ -183,8 +183,8 @@ private:
 
    void
    timeInterpolate(
-      const std::shared_ptr<hier::PatchData>& pd_dst,
-      const std::shared_ptr<hier::PatchData>& pd_old,
+      hier::PatchData& pd_dst,
+      const hier::PatchData& pd_old,
       const std::shared_ptr<hier::PatchData>& pd_new);
 
    std::shared_ptr<hier::Patch> d_dst_patch;
