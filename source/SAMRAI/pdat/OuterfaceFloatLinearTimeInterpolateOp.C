@@ -119,9 +119,11 @@ void
 OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
+   const hier::BoxOverlap& overlap,
    const hier::PatchData& src_data_old,
    const hier::PatchData& src_data_new) const
 {
+   NULL_USE(overlap);
    const tbox::Dimension& dim(where.getDim());
 
    const OuterfaceData<float>* old_dat =

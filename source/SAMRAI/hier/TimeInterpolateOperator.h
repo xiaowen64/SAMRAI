@@ -90,6 +90,7 @@ public:
    timeInterpolate(
       PatchData& dst_data,
       const Box& where,
+      const BoxOverlap& overlap, 
       const PatchData& src_data_old,
       const PatchData& src_data_new) const = 0;
 

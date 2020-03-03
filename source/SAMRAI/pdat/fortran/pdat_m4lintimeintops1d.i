@@ -71,7 +71,7 @@ lin_time_int_subroutine_head_1d()dnl
      &  arraynew(FACE1d(nilo,nihi,0)),
      &  arraydst(FACE1d(dilo,dihi,0))
       integer ie0
-lin_time_int_body_1d(`ie0',`ifirst0,ilast0+1')dnl
+lin_time_int_body_1d(`ie0',`ifirst0,ilast0')dnl
 ')dnl
 c
 define(lin_time_int_op_node_1d,`dnl
@@ -81,7 +81,7 @@ lin_time_int_subroutine_head_1d()dnl
      &  arraynew(NODE1d(nilo,nihi,0)),
      &  arraydst(NODE1d(dilo,dihi,0))
       integer ie0
-lin_time_int_body_1d(`ie0',`ifirst0,ilast0+1')dnl
+lin_time_int_body_1d(`ie0',`ifirst0,ilast0')dnl
 ')dnl
 c
 define(lin_time_int_op_outerface_1d,`dnl
@@ -127,5 +127,5 @@ lin_time_int_subroutine_head_1d()dnl
      &  arraynew(SIDE1d(nilo,nihi,0)),
      &  arraydst(SIDE1d(dilo,dihi,0))
       integer ie0
-lin_time_int_body_1d(`ie0',`ifirst0,ilast0+1')dnl
+lin_time_int_body_1d(`ie0',`ifirst0,ilast0')dnl
 ')dnl
