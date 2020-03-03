@@ -135,7 +135,7 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
-#if defined(HAVE_UMPIRE)
+#ifdef HAVE_UMPIRE
   FaceData(const hier::Box& box, int depth, const hier::IntVector& ghosts,umpire::Allocator allocator);
 #endif
 

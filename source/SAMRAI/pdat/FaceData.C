@@ -54,6 +54,7 @@ FaceData<TYPE>::FaceData(
    }
 }
 
+#if defined(HAVE_UMPIRE)
 template <class TYPE>
 FaceData<TYPE>::FaceData(const hier::Box& box,
                          int depth,
@@ -70,6 +71,7 @@ FaceData<TYPE>::FaceData(const hier::Box& box,
     d_data[d].reset(new ArrayData<TYPE>(face, depth, allocator));
   }
 }
+#endif
 
 template<class TYPE>
 FaceData<TYPE>::~FaceData()

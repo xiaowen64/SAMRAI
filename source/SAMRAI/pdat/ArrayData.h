@@ -106,7 +106,7 @@ public:
       const hier::Box& box,
       unsigned int depth);
 
-#if defined(HAVE_UMPIRE)
+#ifdef HAVE_UMPIRE
    /*!
     * Construct an array data object using an Umpire allocator.
     *

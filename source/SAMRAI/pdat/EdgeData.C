@@ -54,6 +54,7 @@ EdgeData<TYPE>::EdgeData(
    }
 }
 
+#if defined(HAVE_UMPIRE)
 template<class TYPE>
 EdgeData<TYPE>::EdgeData(
    const hier::Box& box,
@@ -74,6 +75,7 @@ EdgeData<TYPE>::EdgeData(
       d_data[d].reset(new ArrayData<TYPE>(edge_box, depth, allocator));
    }
 }
+#endif
 
 template<class TYPE>
 EdgeData<TYPE>::~EdgeData()

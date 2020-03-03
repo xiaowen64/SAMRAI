@@ -1,9 +1,5 @@
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/thirdparty/")
 
-if (NOT ENABLE_UMPIRE)
-  message(FATAL_ERROR "This code branch requires UMPIRE, for now...")
-endif ()
-
 if (ENABLE_CUDA)
   if (NOT ENABLE_RAJA)
     message(FATAL_ERROR "CUDA support requires RAJA")

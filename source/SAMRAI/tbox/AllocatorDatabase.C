@@ -10,6 +10,8 @@
 
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
+#ifdef HAVE_UMPIRE
+
 #include "umpire/strategy/DynamicPool.hpp"
 #include "umpire/ResourceManager.hpp"
 
@@ -136,3 +138,5 @@ AllocatorDatabase::getTagAllocator()
 
 }
 }
+
+#endif

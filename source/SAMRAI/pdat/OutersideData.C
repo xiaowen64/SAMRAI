@@ -58,6 +58,31 @@ OutersideData<TYPE>::OutersideData(
    }
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+OutersideData<TYPE>::OutersideData(
+   const hier::Box& box,
+   int depth,
+   umpire::Allocator allocator):
+   hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
+   d_depth(depth)
+{
+
+   TBOX_ASSERT(depth > 0);
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      const hier::Box& ghosts = getGhostBox();
+      const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
+      hier::Box outersidebox = sidebox;
+      outersidebox.setUpper(0, sidebox.lower(0));
+      d_data[d][0].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
+      outersidebox.setLower(0, sidebox.upper(0));
+      outersidebox.setUpper(0, sidebox.upper(0));
+      d_data[d][1].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
+   }
+}
+#endif
+
 template<class TYPE>
 OutersideData<TYPE>::~OutersideData()
 {

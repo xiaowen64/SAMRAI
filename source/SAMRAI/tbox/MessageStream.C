@@ -29,7 +29,11 @@ MessageStream::MessageStream(
    const void* data_to_read,
    bool deep_copy):
    d_mode(mode),
+#ifdef HAVE_UMPIRE
    d_write_buffer(AllocatorDatabase::getDatabase()->getStreamAllocator()),
+#else
+   d_write_buffer(),
+#endif
    d_read_buffer(0),
    d_buffer_size(0),
    d_buffer_index(0),
@@ -57,7 +61,11 @@ MessageStream::MessageStream(
 
 MessageStream::MessageStream():
    d_mode(Write),
+#ifdef HAVE_UMPIRE
    d_write_buffer(AllocatorDatabase::getDatabase()->getStreamAllocator()),
+#else
+   d_write_buffer(),
+#endif
    d_read_buffer(0),
    d_buffer_size(0),
    d_buffer_index(0),

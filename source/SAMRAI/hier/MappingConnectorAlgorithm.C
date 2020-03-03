@@ -1301,7 +1301,9 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const InvertedNeighborhoodSet& inverted_nbrhd,
    const IntVector& head_refinement_ratio) const
 {
+#ifndef HAVE_OPENMP
    d_object_timers->t_modify_find_overlaps_for_one_process->start();
+#endif
 
    const BoxLevel& old = mapping_connector.getBase();
    const std::shared_ptr<const BaseGridGeometry>& grid_geometry(
@@ -1446,7 +1448,9 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
       }
    }
 
+#ifndef HAVE_OPENMP
    d_object_timers->t_modify_find_overlaps_for_one_process->stop();
+#endif
 }
 
 /*

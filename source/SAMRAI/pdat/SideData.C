@@ -61,6 +61,7 @@ SideData<TYPE>::SideData(
    }
 }
 
+#ifdef HAVE_UMPIRE
 template<class TYPE>
 SideData<TYPE>::SideData(
    const hier::Box& box,
@@ -109,6 +110,7 @@ SideData<TYPE>::SideData(
       d_data[d].reset(new ArrayData<TYPE>(side, depth, allocator));
    }
 }
+#endif
 
 template<class TYPE>
 SideData<TYPE>::SideData(
