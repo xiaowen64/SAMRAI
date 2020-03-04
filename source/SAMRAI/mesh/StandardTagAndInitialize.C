@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 #include <stdio.h>
 #include <memory>
@@ -168,7 +169,9 @@ StandardTagAndInitialize::initializeLevelData(
          old_level,
          allocate_data);
    }
-
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 }
 
 /*
@@ -257,6 +260,9 @@ StandardTagAndInitialize::tagCellsForRefinement(
          coarsest_sync_level,
          can_be_refined);
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    if (usesGradientDetector(regrid_cycle, regrid_time)) {
 
@@ -307,6 +313,9 @@ StandardTagAndInitialize::tagCellsForRefinement(
             }
          }
       }
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
    }
 
 }
@@ -479,8 +488,14 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       coarser_level,
       end_time,
       before_advance);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    coarser_level->allocatePatchData(tag_index, end_time);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * Coarsen tags from level to coarser level.
@@ -573,6 +588,9 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * Final cleanup.  Reset data to initial state before entering this routine.
@@ -586,7 +604,9 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
          std::shared_ptr<hier::PatchLevel>(),
          allocate_data);
    }
-
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 }
 
 /*

@@ -20,9 +20,10 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <vector>
 
@@ -293,10 +294,10 @@ CoarsenSchedule::coarsenData() const
       t_coarse_data_fill->start();
       d_precoarsen_refine_schedule->fillData(0.0);
       t_coarse_data_fill->stop();
-   }
-#if defined(HAVE_CUDA)
-   cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
+   }
 
    /*
     * Coarsen the data from the sources on the fine data level into the
@@ -304,9 +305,6 @@ CoarsenSchedule::coarsenData() const
     */
 
    coarsenSourceData(d_coarsen_patch_strategy);
-#if defined(HAVE_CUDA)
-   cudaDeviceSynchronize();
-#endif
 
    /*
     * Copy data from the source interiors of the temporary patch level
@@ -314,8 +312,8 @@ CoarsenSchedule::coarsenData() const
     */
 
    d_schedule->communicate();
-#if defined(HAVE_CUDA)
-   cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
 #endif
 
    /*
@@ -1024,7 +1022,11 @@ CoarsenSchedule::coarsenSourceData(
       if (patch_strategy) {
          patch_strategy->preprocessCoarsen(*temp_patch,
             *fine_patch, box, block_ratio);
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
       }
+
       for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          const CoarsenClasses::Data * const crs_item =
             d_coarsen_items[ici];
@@ -1035,8 +1037,8 @@ CoarsenSchedule::coarsenSourceData(
                box, block_ratio);
          }
       }
-#if defined(HAVE_CUDA)
-      cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
 #endif
 
       if (patch_strategy) {
@@ -1044,6 +1046,9 @@ CoarsenSchedule::coarsenSourceData(
             *fine_patch,
             box,
             block_ratio);
+#if defined(HAVE_RAJA)
+        tbox::parallel_synchronize();
+#endif
       }
    }
 }

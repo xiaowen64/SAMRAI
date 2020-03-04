@@ -58,10 +58,12 @@ set (xfer_sources
   StandardRefineTransactionFactory.C
   VariableFillPattern.C)
 
-set (xfer_depends SAMRAI_hier)
+set (xfer_depends 
+   SAMRAI_hier
+   SAMRAI_tbox)
 
 if (ENABLE_CUDA)
-  set (xfer_depends ${xfer_depends} cuda_runtime)
+  set(xfer_depends ${xfer_depends} cuda)
 endif ()
 
 blt_add_library(

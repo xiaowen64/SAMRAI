@@ -759,10 +759,6 @@ public:
       for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(id, timestamp);
       }
-#if defined(HAVE_CUDA) && defined(DEBUG_INITIALIZE_UNDEFINED)
-     cudaDeviceSynchronize(); // allocate patch calls ArrayData::fillAll(t) in debug
-#endif
-
    }
 
    /*!
@@ -780,10 +776,6 @@ public:
       for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(components, timestamp);
       }
-#if defined(HAVE_CUDA) && defined(DEBUG_INITIALIZE_UNDEFINED)
-      cudaDeviceSynchronize(); // allocate patch calls ArrayData::fillAll(t) in debug
-#endif
-
    }
 
    /*!

@@ -945,6 +945,9 @@ void ArrayData<TYPE>::fillAll(
       pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          ptr[i] = t;
       });
+#if defined(DEBUG_INITIALIZE_UNDEFINED)      
+      tbox::parallel_synchronize();
+#endif
 #else
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;

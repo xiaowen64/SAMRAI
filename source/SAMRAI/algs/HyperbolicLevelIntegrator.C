@@ -34,6 +34,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Collectives.h"
 #include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <cstdlib>
@@ -1103,6 +1104,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       regrid_advance,
       first_step,
       last_step);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * (5) Call user-routine to pre-process state data, if needed.
@@ -1134,6 +1138,9 @@ HyperbolicLevelIntegrator::advanceLevel(
          current_time,
          dt);
       t_patch_num_kernel->stop();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
 
       bool at_syncronization = false;
 
@@ -1143,6 +1150,9 @@ HyperbolicLevelIntegrator::advanceLevel(
          dt,
          at_syncronization);
       t_patch_num_kernel->stop();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
 
       patch->deallocatePatchData(d_temp_var_scratch_data);
    }
@@ -1164,6 +1174,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       last_step,
       regrid_advance);
    t_patch_num_kernel->stop();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
    t_advance_level_integrate->stop();
@@ -1195,7 +1208,6 @@ HyperbolicLevelIntegrator::advanceLevel(
          if (d_use_ghosts_for_dt) {
             d_patch_strategy->setDataContext(d_scratch);
             copyTimeDependentData(level, d_current, d_scratch);
-
          } else {
             d_patch_strategy->setDataContext(d_current);
          }
@@ -1253,6 +1265,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       regrid_advance,
       first_step,
       last_step);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
    t_advance_level_post_integrate->stop();
@@ -2177,10 +2192,9 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                ++fs_var;
             }
          }
-#if defined(HAVE_CUDA)
-         cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
 #endif
-
 
       } else {
          level->setTime(new_time, d_fluxsum_data);
@@ -2447,9 +2461,10 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
       }
 
    }
-#if defined(HAVE_CUDA)
-   cudaDeviceSynchronize();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
 #endif
+
    t_copy_time_dependent_data->stop();
 
 }

@@ -17,6 +17,7 @@
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 /*
  *************************************************************************
