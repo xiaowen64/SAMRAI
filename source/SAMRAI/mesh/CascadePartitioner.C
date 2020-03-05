@@ -181,7 +181,6 @@ CascadePartitioner::loadBalanceBoxLevel(
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
-   NULL_USE(hierarchy);
    NULL_USE(level_number);
    NULL_USE(domain_box_level);
    TBOX_ASSERT(!balance_to_reference || balance_to_reference->hasTranspose());
@@ -196,6 +195,12 @@ CascadePartitioner::loadBalanceBoxLevel(
       cut_factor);
    if (hierarchy) {
       TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
+   }
+
+   size_t minimum_cells = 1;
+
+   if (hierarchy) {
+      minimum_cells = hierarchy->getMinimumCellRequest(level_number);
    }
 
    if (d_mpi_is_dupe) {
@@ -283,6 +288,7 @@ CascadePartitioner::loadBalanceBoxLevel(
          *balance_box_level.getGridGeometry(),
          balance_box_level.getRefinementRatio(),
          min_size, max_size, bad_interval, effective_cut_factor,
+         minimum_cells,
          d_flexible_load_tol);
 
    LoadType local_load = computeLocalLoad(balance_box_level);
