@@ -204,8 +204,6 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          const hier::IntVector tmp_ghosts(dim, 0);
 
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
-         //pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
-         //                                directions, alloc_db->getTagAllocator());
 #ifdef HAVE_UMPIRE
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
@@ -261,8 +259,6 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
             }  // test for axis and directions
          }     // end if DIM 3
-         //pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-         //pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
          pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 #endif  // Hoisting
@@ -406,8 +402,6 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
 #else   // Fortran Dimension 2
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
-               //pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
-               //                                directions, alloc_db->getTagAllocator());
 #ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getDevicePool());

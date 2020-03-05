@@ -591,7 +591,6 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                   });
 
                   pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
-                     // TODO we should rename coef2 and bound to reflect index, do this for all of the axes
                      const double coef2i = 0.5 * (diff0(i, j + 1, k) + diff0(i, j, k));
                      const double boundi = 2.0 * MIN(fabs(diff0(i, j + 1, k)), fabs(diff0(i, j, k)));
 

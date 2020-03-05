@@ -98,7 +98,6 @@ ArrayData<TYPE>::ArrayData(
 #endif
 }
 
-
 #ifdef HAVE_UMPIRE
 template<class TYPE>
 ArrayData<TYPE>::ArrayData(
