@@ -127,10 +127,9 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 
 #ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-
-   pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
+   pdat::ArrayData<T> slope_f(cgbox, dim.getValue(), alloc_db->getTagAllocator());
 #else
-   pdat::ArrayData<T> slope(cgbox, dim.getValue());
+   pdat::ArrayData<T> slope_f(cgbox, dim.getValue());
 #endif
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
@@ -147,13 +146,14 @@ void CartesianCellConservativeLinearRefine<T>::refine(
              fgeom->getDx(),
              cdata->getPointer(d),
              fdata->getPointer(d),
-             &diff0_f[0], slope.getPointer());
+             &diff0_f[0], slope_f.getPointer());
       } else if ((dim == tbox::Dimension(2))) {
 
 #if defined(HAVE_RAJA)
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
+         pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
          pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          auto fine_array = fdata->template getView<2>(d);
          auto coarse_array = cdata->template getView<2>(d);
@@ -226,8 +226,8 @@ void CartesianCellConservativeLinearRefine<T>::refine(
              fgeom->getDx(),
              cdata->getPointer(d),
              fdata->getPointer(d),
-             &diff0_f[0], slope.getPointer(0),
-             &diff1_f[0], slope.getPointer(1));
+             &diff0_f[0], slope_f.getPointer(0),
+             &diff1_f[0], slope_f.getPointer(1));
 
 #endif  // test for RAJA
       } else if ((dim == tbox::Dimension(3))) {
@@ -236,6 +236,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
          diff_box.growUpper(2, 1);
+         pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
          pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
 
          auto fine_array = fdata->template getView<3>(d);
@@ -331,9 +332,9 @@ void CartesianCellConservativeLinearRefine<T>::refine(
              fgeom->getDx(),
              cdata->getPointer(d),
              fdata->getPointer(d),
-             &diff0_f[0], slope.getPointer(0),
-             &diff1_f[0], slope.getPointer(1),
-             &diff2_f[0], slope.getPointer(2));
+             &diff0_f[0], slope_f.getPointer(0),
+             &diff1_f[0], slope_f.getPointer(1),
+             &diff2_f[0], slope_f.getPointer(2));
 #endif  // test for RAJA
       } else {
          TBOX_ERROR("CartesianCellConservativeLinearRefine error...\n"

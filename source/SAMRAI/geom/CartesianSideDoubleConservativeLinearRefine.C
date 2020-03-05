@@ -207,7 +207,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
 #ifdef HAVE_UMPIRE
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
-                                         directions, alloc_db->getDevicePool());
+                                         directions, alloc_db->getTagAllocator());
 #else
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts, directions);
 #endif
@@ -300,8 +300,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      slope_box.growUpper(1, 1);
                   }
 
-                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 #endif
                   auto fine_array = fdata->getView<2>(axis, d);
                   auto coarse_array = cdata->getConstView<2>(axis, d);
@@ -404,7 +404,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
 #ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
-                                               directions, alloc_db->getDevicePool());
+                                               directions, alloc_db->getTagAllocator());
 #else
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
 #endif
@@ -468,8 +468,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      slope_box.growUpper(2, 1);
                   }
 
-                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
 #endif
                   auto fine_array = fdata->getView<3>(axis, d);

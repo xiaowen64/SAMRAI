@@ -187,11 +187,9 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
             for (int rx = 0; rx < r0; rx++) {
                int jf = j * r0 + rx;
                spv += fine_array(jf, kf) * lengthf;
-               //fprintf(stdout,"fine_array[%d,%d]=%0.15E\n",jf,kf,fine_array(jf,kf));
             }
 
             coarse_array(j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array[%d,%d]=%0.15E\n",j,k,coarse_array(j,k));
          });
 
          SAMRAI::hier::Box coarse_box_1 = coarse_box;
@@ -208,11 +206,9 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
             for (int ry = 0; ry < r1; ry++) {
                int kf = k * r1 + ry;
                spv += fine_array_1(jf, kf) * lengthf;
-               //fprintf(stdout,"fine_array_t[%d,%d]=%0.15E\n",jf,kf,fine_array_t(jf,kf));
             }
 
             coarse_array_1(j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array_t[%d,%d]=%0.15f\n",j,k,coarse_array_t(j,k));
          });
 #else  // Fortran Dim 2
          SAMRAI_F77_FUNC(cartwgtavgedgedoub2d0, CARTWGTAVGEDGEDOUB2D0)
@@ -272,7 +268,6 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
             }
 
             coarse_array(i, j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array(i,j,k));
          });
 
 
@@ -295,7 +290,6 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
             }
 
             coarse_array_1(i, j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array_t1[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array_t1(i,j,k));
          });
 
          SAMRAI::hier::Box coarse_box_2 = coarse_box;
@@ -317,7 +311,6 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
             }
 
             coarse_array_2(i, j, k) = spv / lengthc;
-            //fprintf(stdout,"coarse_array_t2[%d,%d,%d]=%0.15E\n",i,j,k,coarse_array_t2(i,j,k));
          });
 
 #else  // Fortran dim 3

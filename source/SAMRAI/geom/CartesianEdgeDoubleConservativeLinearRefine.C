@@ -236,8 +236,8 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                }
 
 
-               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
                auto fine_array = fdata->getView<2>(axis, d);
                auto coarse_array = cdata->getConstView<2>(axis, d);
@@ -405,8 +405,8 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                   slope_box.growUpper(1, 1);
                }
 
-               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
                auto fine_array = fdata->getView<3>(axis, d);
                auto coarse_array = cdata->getConstView<3>(axis, d);

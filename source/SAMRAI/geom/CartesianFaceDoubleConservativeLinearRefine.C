@@ -255,8 +255,8 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                // so that we have for 2d two components with the same box extents namely diff0, diff1
                // Lifetime of this Array data exits just for a given depth component being processed
                // We may want to redo this approach to avoid alloc/dealloc redundancies
-               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
                auto fine_array = fdata->getView<2>(axis, d);
                auto coarse_array = cdata->getConstView<2>(axis, d);
@@ -445,8 +445,8 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                diff_box.growUpper(1, 1);
                diff_box.growUpper(2, 1);
 
-               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getTagAllocator());
-               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getTagAllocator());
+               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
                auto fine_array = fdata->getView<3>(axis, d);
                auto coarse_array = cdata->getConstView<3>(axis, d);

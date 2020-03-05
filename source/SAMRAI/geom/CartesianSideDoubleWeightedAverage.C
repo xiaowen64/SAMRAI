@@ -268,8 +268,6 @@ void CartesianSideDoubleWeightedAverage::coarsen(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         //fprintf(stdout,"directions(0)=%d directions(1)=%d directions(2)=%d\n",directions(0),directions(1),directions(2));
-
          if (directions(0)) {
             SAMRAI::hier::Box coarse_box_plus = coarse_box;
             coarse_box_plus.growUpper(0, 1);
@@ -340,7 +338,6 @@ void CartesianSideDoubleWeightedAverage::coarsen(
                }
 
                coarse_array(i, j, k) = spv / areac;
-               //fprintf(stdout,"direction(2) coarse_array(%d,%d,%d)=%f @ %p\n",i,j,k,coarse_array(i,j,k),&coarse_array(i,j,k));
             });
          }
 
