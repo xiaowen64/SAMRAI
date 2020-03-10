@@ -170,6 +170,7 @@ RefineTimeTransaction::packStream(
 
       timeInterpolate(
          *temporary_patch_data,
+         *d_overlap,
          src_told_data,
          d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
 
@@ -204,9 +205,8 @@ RefineTimeTransaction::copyLocalData()
        */
 
       scratch_data.copy(src_told_data, *d_overlap);
-   }
 
-   else if (d_overlap->getSourceOffset() ==
+   } else if (d_overlap->getSourceOffset() ==
        hier::IntVector::getZero(d_box.getDim()) &&
        d_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
@@ -219,7 +219,7 @@ RefineTimeTransaction::copyLocalData()
        * to the destination patchdata.
        */
 
-      timeInterpolate(scratch_data, src_told_data, src_tnew_data);
+      timeInterpolate(scratch_data, *d_overlap, src_told_data, src_tnew_data);
 
    } else {
 
@@ -239,7 +239,7 @@ RefineTimeTransaction::copyLocalData()
 
       temp->setTime(s_time);
 
-      timeInterpolate(*temp, src_told_data, src_tnew_data);
+      timeInterpolate(*temp, *d_overlap, src_told_data, src_tnew_data);
 
       scratch_data.copy(*temp, *d_overlap);
 
@@ -250,6 +250,7 @@ RefineTimeTransaction::copyLocalData()
 void
 RefineTimeTransaction::timeInterpolate(
    hier::PatchData& pd_dst,
+   const hier::BoxOverlap& overlap,
    const hier::PatchData& pd_old,
    const std::shared_ptr<hier::PatchData>& pd_new)
 {
@@ -258,7 +259,7 @@ RefineTimeTransaction::timeInterpolate(
 
    if (tbox::MathUtilities<double>::equalEps(pd_old.getTime(), s_time)) {
       d_refine_data[d_item_id]->
-      d_optime->timeInterpolate(pd_dst, d_box, pd_old, pd_old);
+      d_optime->timeInterpolate(pd_dst, d_box, overlap, pd_old, pd_old);
    } else {
 
       TBOX_ASSERT(pd_new);
@@ -267,7 +268,7 @@ RefineTimeTransaction::timeInterpolate(
       TBOX_ASSERT(pd_new->getTime() >= s_time);
 
       d_refine_data[d_item_id]->
-      d_optime->timeInterpolate(pd_dst, d_box, pd_old, *pd_new);
+      d_optime->timeInterpolate(pd_dst, d_box, overlap, pd_old, *pd_new);
    }
 }
 
