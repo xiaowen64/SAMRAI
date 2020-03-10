@@ -184,6 +184,7 @@ private:
    void
    timeInterpolate(
       hier::PatchData& pd_dst,
+      const hier::BoxOverlap& overlap,
       const hier::PatchData& pd_old,
       const std::shared_ptr<hier::PatchData>& pd_new);
 

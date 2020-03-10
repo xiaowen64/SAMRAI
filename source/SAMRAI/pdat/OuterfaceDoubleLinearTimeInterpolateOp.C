@@ -116,13 +116,16 @@ OuterfaceDoubleLinearTimeInterpolateOp::~OuterfaceDoubleLinearTimeInterpolateOp(
 {
 }
 
-void OuterfaceDoubleLinearTimeInterpolateOp::timeInterpolate(
-    hier::PatchData &dst_data,
-    const hier::Box &where,
-    const hier::PatchData &src_data_old,
-    const hier::PatchData &src_data_new) const
+void
+OuterfaceDoubleLinearTimeInterpolateOp::timeInterpolate(
+   hier::PatchData& dst_data,
+   const hier::Box& where,
+   const hier::BoxOverlap& overlap,
+   const hier::PatchData& src_data_old,
+   const hier::PatchData& src_data_new) const
 {
-   const tbox::Dimension &dim(where.getDim());
+   NULL_USE(overlap);
+   const tbox::Dimension& dim(where.getDim());
 
    const OuterfaceData<double> *old_dat =
        CPP_CAST<const OuterfaceData<double> *>(&src_data_old);
