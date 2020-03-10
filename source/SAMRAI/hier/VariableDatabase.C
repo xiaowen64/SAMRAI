@@ -17,7 +17,25 @@
 namespace SAMRAI {
 namespace hier {
 
-VariableDatabase * VariableDatabase::s_variable_database_instance(0);
+ /*
+  * Static data members used to control access to and destruction of
+  * singleton variable database instance.
+  */
+class VariableDatabaseInstance{
+public:
+  static VariableDatabaseInstance &instance(){
+    static VariableDatabaseInstance self;
+    return self;
+  }
+  VariableDatabase * get(){
+    return s_variable_database_instance;
+  }
+  void set(VariableDatabase * ptr){
+    s_variable_database_instance = ptr;
+  }
+private:
+  VariableDatabase * s_variable_database_instance = nullptr;
+};
 
 const int VariableDatabase::s_context_array_alloc_size(10);
 const int VariableDatabase::s_variable_array_alloc_size(100);
@@ -42,19 +60,20 @@ VariableDatabase::s_shutdown_handler(
 VariableDatabase *
 VariableDatabase::getDatabase()
 {
-   if (!s_variable_database_instance) {
-      s_variable_database_instance = new VariableDatabase();
+   if (!VariableDatabaseInstance::instance().get()) {
+      VariableDatabaseInstance::instance().set(new VariableDatabase());
    }
-   return s_variable_database_instance;
+   return VariableDatabaseInstance::instance().get();
 }
 
 void
 VariableDatabase::shutdownCallback()
 {
+   VariableDatabase * s_variable_database_instance = VariableDatabaseInstance::instance().get();
    if (s_variable_database_instance) {
       delete s_variable_database_instance;
    }
-   s_variable_database_instance = 0;
+   VariableDatabaseInstance::instance().set(nullptr);
 }
 
 /*
@@ -86,8 +105,8 @@ void
 VariableDatabase::registerSingletonSubclassInstance(
    VariableDatabase* subclass_instance)
 {
-   if (!s_variable_database_instance) {
-      s_variable_database_instance = subclass_instance;
+   if (!VariableDatabaseInstance::instance().get()) {
+      VariableDatabaseInstance::instance().set(subclass_instance);
    } else {
       TBOX_ERROR("hier::VariableDatabase internal error...\n"
          << "Attemptng to set Singleton instance to subclass instance,"
