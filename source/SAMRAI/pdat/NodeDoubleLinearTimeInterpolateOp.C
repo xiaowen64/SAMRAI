@@ -155,9 +155,6 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(d));
          } else if (dim == tbox::Dimension(2)) {
 #if defined(HAVE_RAJA)
-            SAMRAI::hier::Box dest_box = where;
-            dest_box.growUpper(0, 1);
-            dest_box.growUpper(1, 1);
             auto old_array = old_dat->getConstView<2>(d);
             auto new_array = new_dat->getConstView<2>(d);
             auto dst_array = dst_dat->getView<2>(d);
@@ -179,10 +176,6 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
 #endif
          } else if (dim == tbox::Dimension(3)) {
 #if defined(HAVE_RAJA)
-            SAMRAI::hier::Box dest_box = where;
-            dest_box.growUpper(0, 1);
-            dest_box.growUpper(1, 1);
-            dest_box.growUpper(2, 1);
             auto old_array = old_dat->getConstView<3>(d);
             auto new_array = new_dat->getConstView<3>(d);
             auto dst_array = dst_dat->getView<3>(d);

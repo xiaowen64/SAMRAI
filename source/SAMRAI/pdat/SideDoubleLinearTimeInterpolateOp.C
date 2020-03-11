@@ -203,29 +203,33 @@ SideDoubleLinearTimeInterpolateOp::timeInterpolate(
       } else if (dim == tbox::Dimension(2)) {
 #if defined(HAVE_RAJA)
          if (directions(0)) {
-            SAMRAI::hier::Box d0_box = where;
-            d0_box.growUpper(0, 1);
-            auto old_array = old_dat->getConstView<2>(0, d);
-            auto new_array = new_dat->getConstView<2>(0, d);
-            auto dst_array = dst_dat->getView<2>(0, d);
+            for (auto itr = ovlp_boxes[0].begin();
+                 itr != ovlp_boxes[0].end(); ++itr) {
+               hier::Box dest_box((*itr) * side_where[0]);
+               auto old_array = old_dat->getConstView<2>(0, d);
+               auto new_array = new_dat->getConstView<2>(0, d);
+               auto dst_array = dst_dat->getView<2>(0, d);
 
-            pdat::parallel_for_all(d0_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
-            });
-         }
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
+               });
+            } // end iterate ovlp_boxes[0]
+         } // directions(0)
          if (directions(1)) {
-            SAMRAI::hier::Box d1_box = where;
-            d1_box.growUpper(1, 1);
-            auto old_array = old_dat->getConstView<2>(1, d);
-            auto new_array = new_dat->getConstView<2>(1, d);
-            auto dst_array = dst_dat->getView<2>(1, d);
+            for (auto itr = ovlp_boxes[1].begin();
+                 itr != ovlp_boxes[1].end(); ++itr) {
+               hier::Box dest_box((*itr) * side_where[1]);
+               auto old_array = old_dat->getConstView<2>(1, d);
+               auto new_array = new_dat->getConstView<2>(1, d);
+               auto dst_array = dst_dat->getView<2>(1, d);
 
-            pdat::parallel_for_all(d1_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
-            });
-         }
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
+               });
+            } // end iterate ovlp_boxes[1]
+         } // directions(1)
 #else
          if (directions(0)) {
             for (auto itr = ovlp_boxes[0].begin();
@@ -265,41 +269,47 @@ SideDoubleLinearTimeInterpolateOp::timeInterpolate(
       } else if (dim == tbox::Dimension(3)) {
 #if defined(HAVE_RAJA)
          if (directions(0)) {
-            SAMRAI::hier::Box d0_box = where;
-            d0_box.growUpper(0, 1);
-            auto old_array = old_dat->getConstView<3>(0, d);
-            auto new_array = new_dat->getConstView<3>(0, d);
-            auto dst_array = dst_dat->getView<3>(0, d);
+            for (auto itr = ovlp_boxes[0].begin();
+                 itr != ovlp_boxes[0].end(); ++itr) {
+               hier::Box dest_box((*itr) * side_where[0]);
+               auto old_array = old_dat->getConstView<3>(0, d);
+               auto new_array = new_dat->getConstView<3>(0, d);
+               auto dst_array = dst_dat->getView<3>(0, d);
 
-            pdat::parallel_for_all(d0_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
-            });
-         }
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+               });
+            } // end iterate ovlp_boxes[0]
+         } // directions(0)
          if (directions(1)) {
-            SAMRAI::hier::Box d1_box = where;
-            d1_box.growUpper(1, 1);
-            auto old_array = old_dat->getConstView<3>(1, d);
-            auto new_array = new_dat->getConstView<3>(1, d);
-            auto dst_array = dst_dat->getView<3>(1, d);
+            for (auto itr = ovlp_boxes[1].begin();
+                 itr != ovlp_boxes[1].end(); ++itr) {
+               hier::Box dest_box((*itr) * side_where[1]);
+               auto old_array = old_dat->getConstView<3>(1, d);
+               auto new_array = new_dat->getConstView<3>(1, d);
+               auto dst_array = dst_dat->getView<3>(1, d);
 
-            pdat::parallel_for_all(d1_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
-            });
-         }
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+               });
+            } // end iterate ovlp_boxes[1]
+         } // directions(1)
          if (directions(2)) {
-            SAMRAI::hier::Box d2_box = where;
-            d2_box.growUpper(2, 1);
-            auto old_array = old_dat->getConstView<3>(2, d);
-            auto new_array = new_dat->getConstView<3>(2, d);
-            auto dst_array = dst_dat->getView<3>(2, d);
+            for (auto itr = ovlp_boxes[2].begin();
+                 itr != ovlp_boxes[2].end(); ++itr) {
+               hier::Box dest_box((*itr) * side_where[2]);
+               auto old_array = old_dat->getConstView<3>(2, d);
+               auto new_array = new_dat->getConstView<3>(2, d);
+               auto dst_array = dst_dat->getView<3>(2, d);
 
-            pdat::parallel_for_all(d2_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
-            });
-         }
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+               });
+            } // end iterate over ovlp_boxes[2]
+         } // directions(2)
 #else
          if (directions(0)) {
             for (auto itr = ovlp_boxes[0].begin();

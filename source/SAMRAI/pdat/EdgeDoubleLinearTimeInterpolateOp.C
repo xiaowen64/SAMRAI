@@ -190,35 +190,21 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(0, d));
          }
       } else if (dim == tbox::Dimension(2)) {
-#if defined(HAVE_RAJA)
-         {
-            SAMRAI::hier::Box d0_box = where;
-            d0_box.growUpper(1, 1);
-            auto old_array = old_dat->getConstView<2>(0, d);
-            auto new_array = new_dat->getConstView<2>(0, d);
-            auto dst_array = dst_dat->getView<2>(0, d);
-
-            pdat::parallel_for_all(d0_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
-            });
-         }
-         {
-            SAMRAI::hier::Box d1_box = where;
-            d1_box.growUpper(0, 1);
-            auto old_array = old_dat->getConstView<2>(1, d);
-            auto new_array = new_dat->getConstView<2>(1, d);
-            auto dst_array = dst_dat->getView<2>(1, d);
-
-            pdat::parallel_for_all(d1_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
-            });
-         }
-#else
          for (auto itr = ovlp_boxes[0].begin();
               itr != ovlp_boxes[0].end(); ++itr) {
             hier::Box dest_box((*itr) * edge_where[0]);
+#if defined(HAVE_RAJA)
+            {
+               auto old_array = old_dat->getConstView<2>(0, d);
+               auto new_array = new_dat->getConstView<2>(0, d);
+               auto dst_array = dst_dat->getView<2>(0, d);
+
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
+               });
+            }
+#else
             const hier::Index& ifirst = dest_box.lower();
             const hier::Index& ilast = dest_box.upper();
             SAMRAI_F77_FUNC(lintimeintedgedoub2d0, LINTIMEINTEDGEDOUB2D0) (
@@ -230,10 +216,25 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(0, d),
                new_dat->getPointer(0, d),
                dst_dat->getPointer(0, d));
-         }
+#endif // HAVE_RAJA for 2D, 0 direction
+         } // end iterate ovrer ovlp_boxes[0]
+
          for (auto itr = ovlp_boxes[1].begin();
               itr != ovlp_boxes[1].end(); ++itr) {
             hier::Box dest_box((*itr) * edge_where[1]);
+
+#if defined(HAVE_RAJA)
+            {
+               auto old_array = old_dat->getConstView<2>(1, d);
+               auto new_array = new_dat->getConstView<2>(1, d);
+               auto dst_array = dst_dat->getView<2>(1, d);
+
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
+               });
+            }
+#else
             const hier::Index& ifirst = dest_box.lower();
             const hier::Index& ilast = dest_box.upper();
             SAMRAI_F77_FUNC(lintimeintedgedoub2d1, LINTIMEINTEDGEDOUB2D1) (
@@ -245,53 +246,24 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(1, d),
                new_dat->getPointer(1, d),
                dst_dat->getPointer(1, d));
-         }
-#endif
+#endif // HAVE_RAJA for 2D, 1 direction
+         } // end iterate over ovlp_boxes[1]
       } else if (dim == tbox::Dimension(3)) {
-#if defined(HAVE_RAJA)
-         {
-            SAMRAI::hier::Box d0_box = where;
-            d0_box.growUpper(1, 1);
-            d0_box.growUpper(2, 1);
-            auto old_array = old_dat->getConstView<3>(0, d);
-            auto new_array = new_dat->getConstView<3>(0, d);
-            auto dst_array = dst_dat->getView<3>(0, d);
-
-            pdat::parallel_for_all(d0_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
-            });
-         }
-         {
-            SAMRAI::hier::Box d1_box = where;
-            d1_box.growUpper(0, 1);
-            d1_box.growUpper(2, 1);
-            auto old_array = old_dat->getConstView<3>(1, d);
-            auto new_array = new_dat->getConstView<3>(1, d);
-            auto dst_array = dst_dat->getView<3>(1, d);
-
-            pdat::parallel_for_all(d1_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
-            });
-         }
-         {
-            SAMRAI::hier::Box d2_box = where;
-            d2_box.growUpper(0, 1);
-            d2_box.growUpper(1, 1);
-            auto old_array = old_dat->getConstView<3>(2, d);
-            auto new_array = new_dat->getConstView<3>(2, d);
-            auto dst_array = dst_dat->getView<3>(2, d);
-
-            pdat::parallel_for_all(d2_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
-               const double oldfrac = 1.0 - tfrac;
-               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
-            });
-         }
-#else
          for (auto itr = ovlp_boxes[0].begin();
               itr != ovlp_boxes[0].end(); ++itr) {
             hier::Box dest_box((*itr) * edge_where[0]);
+#if defined(HAVE_RAJA)
+            {
+               auto old_array = old_dat->getConstView<3>(0, d);
+               auto new_array = new_dat->getConstView<3>(0, d);
+               auto dst_array = dst_dat->getView<3>(0, d);
+
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+               });
+            }
+#else
             const hier::Index& ifirst = dest_box.lower();
             const hier::Index& ilast = dest_box.upper();
             SAMRAI_F77_FUNC(lintimeintedgedoub3d0, LINTIMEINTEDGEDOUB3D0) (
@@ -307,10 +279,25 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(0, d),
                new_dat->getPointer(0, d),
                dst_dat->getPointer(0, d));
-         }
+         
+#endif // HAVE RAJA for 3D, 0 direction
+         } // end iterate ovlp_boxes[0]
+
          for (auto itr = ovlp_boxes[1].begin();
               itr != ovlp_boxes[1].end(); ++itr) {
             hier::Box dest_box((*itr) * edge_where[1]);
+#if defined(HAVE_RAJA)
+            {
+               auto old_array = old_dat->getConstView<3>(1, d);
+               auto new_array = new_dat->getConstView<3>(1, d);
+               auto dst_array = dst_dat->getView<3>(1, d);
+
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+               });
+            }
+#else
             const hier::Index& ifirst = dest_box.lower();
             const hier::Index& ilast = dest_box.upper();
             SAMRAI_F77_FUNC(lintimeintedgedoub3d1, LINTIMEINTEDGEDOUB3D1) (
@@ -326,10 +313,25 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(1, d),
                new_dat->getPointer(1, d),
                dst_dat->getPointer(1, d));
-         }
+
+#endif // HAVE RAJA for 3D, 1 direction
+         } // end iterate ovlp_boxes[1]
+
          for (auto itr = ovlp_boxes[2].begin();
               itr != ovlp_boxes[2].end(); ++itr) {
             hier::Box dest_box((*itr) * edge_where[2]);
+#if defined(HAVE_RAJA)
+            {
+               auto old_array = old_dat->getConstView<3>(2, d);
+               auto new_array = new_dat->getConstView<3>(2, d);
+               auto dst_array = dst_dat->getView<3>(2, d);
+
+               pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+                  const double oldfrac = 1.0 - tfrac;
+                  dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+               });
+            }
+#else
             const hier::Index& ifirst = dest_box.lower();
             const hier::Index& ilast = dest_box.upper();
             SAMRAI_F77_FUNC(lintimeintedgedoub3d2, LINTIMEINTEDGEDOUB3D2) (
@@ -345,8 +347,8 @@ EdgeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(2, d),
                new_dat->getPointer(2, d),
                dst_dat->getPointer(2, d));
-         }
-#endif
+#endif // HAVE RAJA for 3D, 2 direction
+         } // end iterate ovlp_boxes[2]
       } else {
          TBOX_ERROR(
              "EdgeDoubleLinearTimeInterpolateOp::TimeInterpolate dim > 3 not supported"
