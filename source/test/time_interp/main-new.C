@@ -167,7 +167,7 @@ int main(
             }
          }
       }
-#if 1
+
       pdat::NodeData<double> node_old(box, data_depth, ghost_vec);
       pdat::NodeData<double> node_new(box, data_depth, ghost_vec);
       pdat::NodeData<double> node_dst(box, data_depth, ghost_vec);
@@ -241,7 +241,7 @@ int main(
             }
          }
       }
-#endif
+
       pdat::FaceData<double> face_old(box, data_depth, ghost_vec);
       pdat::FaceData<double> face_new(box, data_depth, ghost_vec);
       pdat::FaceData<double> face_dst(box, data_depth, ghost_vec);
@@ -373,6 +373,7 @@ int main(
          }  
       }
 
+
       pdat::SideData<double> side_old(box, data_depth, ghost_vec);
       pdat::SideData<double> side_new(box, data_depth, ghost_vec);
       pdat::SideData<double> side_dst(box, data_depth, ghost_vec);
@@ -442,14 +443,14 @@ int main(
                             tbox::MathUtilities<double>::Abs(result) < test_eps) {
                            continue;
                         }
-                        tbox::perr << "Side time interp test FAILED: ...."
-                                 << " : side index = " << *side_itr
-                                 << " of box"
-                                 << " " << ghost_box << std::endl;
-                        tbox::perr << "    result = " << result
-                                 << " : correct = " << correct << std::endl;
-                        ++fail_count;
                      }
+                     tbox::perr << "Side time interp test FAILED: ...."
+                                << " : side index = " << *side_itr
+                                << " of box"
+                                << " " << ghost_box << std::endl;
+                     tbox::perr << "    result = " << result
+                                << " : correct = " << correct << std::endl;
+                     ++fail_count;
                   }
                }
             }
@@ -587,6 +588,7 @@ int main(
             }
          }
       }
+
       if (fail_count == 0) {
          tbox::pout << "\nPASSED:  time interp test" << std::endl;
       }
