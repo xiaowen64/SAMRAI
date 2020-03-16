@@ -51,7 +51,7 @@ blt_add_executable(
 
 target_compile_definitions(multiblock PUBLIC TESTING=1)
 
-file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/performance_inputs/*.input)
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
 
 samrai_add_tests(
   NAME multiblock
