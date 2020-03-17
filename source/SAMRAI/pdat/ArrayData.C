@@ -572,7 +572,7 @@ inline void ArrayData<dcomplex>::sum(
        (box.isSpatiallyEqual(d_box))) {
 
       dcomplex* const dst_ptr = &d_array[0];
-      dcomplex* const src_ptr = &src.d_array[0];
+      const dcomplex* const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 
 #if defined(HAVE_RAJA)
@@ -580,8 +580,8 @@ inline void ArrayData<dcomplex>::sum(
       pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {   
          double &dst_ptr_real = reinterpret_cast<double(&)[2]>(dst_ptr[i])[0];
          double &dst_ptr_imag = reinterpret_cast<double(&)[2]>(dst_ptr[i])[1];
-         double &src_ptr_real = reinterpret_cast<double(&)[2]>(src_ptr[i])[0];
-         double &src_ptr_imag = reinterpret_cast<double(&)[2]>(src_ptr[i])[1];
+         const double &src_ptr_real = reinterpret_cast<const double(&)[2]>(src_ptr[i])[0];
+         const double &src_ptr_imag = reinterpret_cast<const double(&)[2]>(src_ptr[i])[1];
 
          sumop_dbl(dst_ptr_real, src_ptr_real);
          sumop_dbl(dst_ptr_imag, src_ptr_imag);
