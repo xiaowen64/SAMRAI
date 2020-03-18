@@ -476,8 +476,8 @@ private:
     * user data TYPE in the same MPI message.
     */
    union FlexData {
-      int i;
-      TYPE t;
+      int d_i;
+      TYPE d_t;
       FlexData();
    };
 
