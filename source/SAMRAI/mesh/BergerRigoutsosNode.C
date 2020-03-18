@@ -248,6 +248,7 @@ BergerRigoutsosNode::continueAlgorithm()
       case completed:
          TBOX_ERROR("Library error: Senseless continuation of completed node."
          << std::endl);
+         break;
       default:
          TBOX_ERROR("Library error: Nonexistent phase." << std::endl);
    }

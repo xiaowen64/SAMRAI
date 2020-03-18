@@ -189,7 +189,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    const hier::Box& array_d_box(arraydata.getBox());
    const unsigned int array_d_depth = arraydata.getDepth();
 
-   int box_w[SAMRAI::MAX_DIM_VAL];
+   int box_w[dim.getValue()];
    int dat_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
