@@ -88,7 +88,7 @@ start:
     - echo ${SAMRAI_ALLOC_NAME}
     - export JOBID=$(squeue -h --name=${SAMRAI_ALLOC_NAME} --format=%A)
     - echo ${JOBID}
-    - srun $( [[ -n "${JOBID}" ]] && echo "--jobid=${JOBID}" ) -t 10 -N 1 -n 1 -c 4 source/scripts/gitlab/build_and_test.sh --test-only
+    - srun $( [[ -n "${JOBID}" ]] && echo "--jobid=${JOBID}" ) -t 20 -N 1 -n 1 -c 4 source/scripts/gitlab/build_and_test.sh --test-only
 
 # Lassen and Butte use a different job scheduler (spectrum lsf) that does not
 # allow pre-allocation the same way slurm does.
