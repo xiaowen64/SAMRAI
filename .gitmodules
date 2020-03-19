@@ -3,4 +3,4 @@
 	url = https://github.com/LLNL/blt.git
 [submodule ".radiuss-ci"]
 	path = .radiuss-ci
-	url = git@github.com:LLNL/radiuss-ci.git
+	url = https://github.com/LLNL/radiuss-ci.git
