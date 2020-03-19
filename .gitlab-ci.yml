@@ -64,6 +64,7 @@ start:
   stage: start
   tags:
     - shell
+    - quartz
   script:
     - echo "Creating a reference job for dag execution (needs keyword)"
 
