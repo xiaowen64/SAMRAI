@@ -218,6 +218,7 @@ AsyncCommGroup::proceedToNextWait()
          TBOX_ERROR("There is no current operation to check.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_mpi_tag);
+         break;
       default:
          TBOX_ERROR("Library error: attempt to use an operation that\n"
          << "has not been written yet"
@@ -330,12 +331,10 @@ AsyncCommGroup::checkBcast()
    size_t ic;
    int flag = 0;
 
-   switch (d_next_task_op) {
-
-      case none:
-         break;
-
-      case recv_start:
+   if (d_next_task_op != none) {
+      bool task_entered = false;
+      if (d_next_task_op == recv_start) {
+         task_entered = true;
          if (d_parent_rank > -1) {
             d_mpi_err = d_mpi.Irecv(d_external_buf,
                   d_external_size,
@@ -356,8 +355,10 @@ AsyncCommGroup::checkBcast()
                  << std::endl;
 #endif
          }
-
-      case recv_check:
+      }
+      bool breakout = false;
+      if (d_next_task_op == recv_start || d_next_task_op == recv_check) {
+         task_entered = true;
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
             d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
@@ -397,11 +398,15 @@ AsyncCommGroup::checkBcast()
 #endif
             } else {
                d_next_task_op = recv_check;
-               break;
+               breakout = true;
             }
          }
+      }
 
-      case send_start:
+      if (!breakout &&
+            (d_next_task_op == recv_start || d_next_task_op == recv_check ||
+             d_next_task_op == send_start)) {
+         task_entered = true;
          for (ic = 0; ic < d_nchild; ++ic) {
             if (d_child_data[ic].rank >= 0) {
                if (d_use_blocking_send_to_children) {
@@ -432,8 +437,12 @@ AsyncCommGroup::checkBcast()
 #endif
             }
          }
+      }
 
-      case send_check:
+      if (!breakout &&
+            (d_next_task_op == recv_start || d_next_task_op == recv_check ||
+             d_next_task_op == send_start || d_next_task_op == send_check)) {
+         task_entered = true;
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
@@ -464,17 +473,20 @@ AsyncCommGroup::checkBcast()
                break;
             }
          }
-         if (ic < d_nchild) {
+         if (!breakout && ic < d_nchild) {
             d_next_task_op = send_check;
-            break;
+            breakout = true;
          }
-         d_next_task_op = none;
-         break;
+         if (!breakout) { 
+            d_next_task_op = none;
+         }
+      }
 
-      default:
+      if (!task_entered) {
          TBOX_ERROR("checkBcast is incompatible with current state."
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_mpi_tag);
+      }
    }
 
    if (d_parent_rank == -1) {
@@ -608,12 +620,10 @@ AsyncCommGroup::checkGather()
    int older_sibling_size;
    int flag = 0;
 
-   switch (d_next_task_op) {
-
-      case none:
-         break;
-
-      case recv_start:
+   if (d_next_task_op != none) {
+      bool task_entered = false;
+      if (d_next_task_op == recv_start) {
+         task_entered = true;
          older_sibling_size = 0;
          for (ic = 0; ic < d_nchild; ++ic) {
             if (d_child_data[ic].rank >= 0) {
@@ -636,9 +646,11 @@ AsyncCommGroup::checkGather()
                older_sibling_size += d_child_data[ic].size;
             }
          }
+      }
 
-      case recv_check:
-
+      bool breakout = false;
+      if (d_next_task_op == recv_start || d_next_task_op == recv_check) {
+         task_entered = true;
          /*
           * Check all pending receives from the children.
           */
@@ -695,13 +707,13 @@ AsyncCommGroup::checkGather()
          }
          if (ic < d_nchild) {
             d_next_task_op = recv_check;
-            break;
+            breakout = true;
          }
 
          /*
           * At this point, all receives are completed.
           */
-         if (d_parent_rank < 0) {
+         if (!breakout && d_parent_rank < 0) {
             /*
              * The root of the gather (only the root!) transfers the
              * internal buffer into the external buffer, unshuffling
@@ -725,8 +737,12 @@ AsyncCommGroup::checkGather()
                }
             }
          }
+      }
 
-      case send_start:
+      if (!breakout &&
+            (d_next_task_op == recv_start || d_next_task_op == recv_check ||
+             d_next_task_op == send_start)) {
+         task_entered = true;
          if (d_parent_rank >= 0) {
             if (d_use_blocking_send_to_parent) {
                d_mpi_err = d_mpi.Send(&d_internal_buf[0],
@@ -748,8 +764,12 @@ AsyncCommGroup::checkGather()
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
          }
+      }
 
-      case send_check:
+      if (!breakout &&
+            (d_next_task_op == recv_start || d_next_task_op == recv_check ||
+             d_next_task_op == send_start || d_next_task_op == send_check)) {
+         task_entered = true;
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
             d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
@@ -778,12 +798,12 @@ AsyncCommGroup::checkGather()
 #endif
             d_next_task_op = none;
          }
-         break;
-
-      default:
+      }
+      if (!task_entered) { 
          TBOX_ERROR("checkGather is incompatible with current state.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
          << "mpi_tag = " << d_mpi_tag << '\n');
+      }
    }
 
    return d_next_task_op == none;
@@ -932,12 +952,10 @@ AsyncCommGroup::checkReduce()
 
    size_t ic;
    int flag = 0;
-   switch (d_next_task_op) {
-
-      case none:
-         break;
-
-      case recv_start:
+   if (d_next_task_op != none) {
+      bool task_entered = false;
+      if (d_next_task_op == recv_start) {
+         task_entered = true;
          for (ic = 0; ic < d_nchild; ++ic) {
             if (d_child_data[ic].rank >= 0) {
                d_mpi_err = d_mpi.Irecv(&d_internal_buf[0] + ic * msg_size,
@@ -960,9 +978,11 @@ AsyncCommGroup::checkReduce()
 #endif
             }
          }
+      }
 
-      case recv_check:
-
+      bool breakout = false;
+      if (d_next_task_op == recv_start || d_next_task_op == recv_check) {
+         task_entered = true;
          for (ic = 0; ic < d_nchild; ++ic) {
             if (req[ic] != MPI_REQUEST_NULL) {
                resetStatus();
@@ -1022,10 +1042,10 @@ AsyncCommGroup::checkReduce()
          }
          if (ic < d_nchild) {
             d_next_task_op = recv_check;
-            break;
+            breakout = true;
          }
 
-         {
+         if (!breakout) {
             int* local_data = d_parent_rank < 0 ? d_external_buf :
                &d_internal_buf[0] + d_internal_buf.size() - msg_size;
             t_reduce_data->start();
@@ -1037,8 +1057,11 @@ AsyncCommGroup::checkReduce()
             }
             t_reduce_data->stop();
          }
-
-      case send_start:
+      }
+      if (!breakout &&
+            (d_next_task_op == recv_start || d_next_task_op == recv_check ||
+             d_next_task_op == send_start)) {
+         task_entered = true;
          if (d_parent_rank >= 0) {
             int* ptr = &d_internal_buf[0]
                + d_internal_buf.size() - msg_size;
@@ -1069,8 +1092,12 @@ AsyncCommGroup::checkReduce()
                  << std::endl;
 #endif
          }
+      }
 
-      case send_check:
+      if (!breakout &&
+            (d_next_task_op == recv_start || d_next_task_op == recv_check ||
+             d_next_task_op == send_start || d_next_task_op == send_check)) {
+         task_entered = true;
          if (req[0] != MPI_REQUEST_NULL) {
             resetStatus();
             d_mpi_err = SAMRAI_MPI::Test(&req[0], &flag, &d_mpi_status);
@@ -1097,12 +1124,12 @@ AsyncCommGroup::checkReduce()
          } else {
             d_next_task_op = none;
          }
-         break;
-
-      default:
+      }
+      if (!task_entered) {
          TBOX_ERROR("checkReduce is incompatible with current state.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
          << "mpi_tag = " << d_mpi_tag << '\n');
+      }
    }
 
    if (getParentRank() == -1) {
@@ -1114,6 +1141,7 @@ AsyncCommGroup::checkReduce()
    }
 
    return d_next_task_op == none;
+
 }
 
 /*
