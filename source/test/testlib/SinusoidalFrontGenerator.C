@@ -138,6 +138,7 @@ void SinusoidalFrontGenerator::applyGradientDetector(
    const bool initial_time,
    const bool uses_richardson_extrapolation)
 {
+   NULL_USE(error_data_time);
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation);
    TBOX_ASSERT(base_hierarchy_);
@@ -155,7 +156,7 @@ void SinusoidalFrontGenerator::applyGradientDetector(
          SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tag_cell_data_);
-      assert(tag_cell_data_->getTime() == error_data_time);
+      TBOX_ASSERT(tag_cell_data_->getTime() == error_data_time);
 
       // Compute tag data for patch.
       computePatchData(patch,

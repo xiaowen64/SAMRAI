@@ -297,6 +297,7 @@ void MblkGeometry::getFromInput(
          //}
 
       }
+      NULL_USE(rtest);
 
       fclose(fid);
       found = true;
@@ -1116,7 +1117,7 @@ void MblkGeometry::computeUnitSphereOctant(
       *xface = cx * sz / den;
       *yface = cx * cz / den;
       *zface = sx * cz / den;
-   } else if (tb == 2) { // a z face (block 2)
+   } else { // a z face (block 2)
       double li = tj / (double)nth; // 1 - tj;
       double lj = tk / (double)nth; // 1 - tk;
 

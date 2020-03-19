@@ -710,6 +710,7 @@ Connector::computeTransposeOf(const Connector& other,
 
       recv_buffer.clear();
    }
+   NULL_USE(mpi_err);
 
    if (!requests.empty()) {
       // Complete sends before allowing memory deallocation.
