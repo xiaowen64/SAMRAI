@@ -1,8 +1,8 @@
 #!/bin/bash
 #########################################################################
 ##
-## This file is part of the SAMRAI distribution.  For full copyright 
-## information, see COPYRIGHT and LICENSE. 
+## This file is part of the SAMRAI distribution.  For full copyright
+## information, see COPYRIGHT and LICENSE.
 ##
 ## Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
 ##
