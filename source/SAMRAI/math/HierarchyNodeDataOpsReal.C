@@ -199,9 +199,10 @@ HierarchyNodeDataOpsReal<TYPE>::printData(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
+   auto factory = d_hierarchy->getPatchDescriptor()->
+      getPatchDataFactory(data_id).get();
    s << "Patch descriptor id = " << data_id << std::endl;
-   s << "Factory = " << typeid(*d_hierarchy->getPatchDescriptor()->
-                               getPatchDataFactory(data_id)).name()
+   s << "Factory = " << typeid(*factory).name()
      << std::endl;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
