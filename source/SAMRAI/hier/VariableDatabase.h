@@ -750,12 +750,6 @@ private:
       bool user_variable);
 
    /*
-    * Static data members used to control access to and destruction of
-    * singleton variable database instance.
-    */
-   static VariableDatabase* s_variable_database_instance;
-
-   /*
     * Static data members used to control allocation of arrays.
     */
    static const int s_context_array_alloc_size;
