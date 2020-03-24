@@ -269,7 +269,7 @@ MVAPICH2        2.2
 
 PETSc 	        3.10.5    (this version is required if PETSc is used)
 
-Sundials        4.1.0
+Sundials        5.0.0
 
 hypre           2.11.1
 
