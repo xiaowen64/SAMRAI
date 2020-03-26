@@ -265,15 +265,15 @@ icc		18.0.2, 19.0.0
 
 HDF5		1.8.5
 
-MVAPICH2        2.2
+MVAPICH2        2.3
 
 PETSc 	        3.10.5    (this version is required if PETSc is used)
 
-Sundials        4.1.0
+Sundials        5.0.0
 
 hypre           2.11.1
 
-VisIt		2.13.3
+VisIt		3.1.1
 
 doxygen	        1.6.1
 
