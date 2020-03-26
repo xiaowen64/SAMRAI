@@ -572,7 +572,7 @@ inline void ArrayData<dcomplex>::sum(
        (box.isSpatiallyEqual(d_box))) {
 
       dcomplex* const dst_ptr = &d_array[0];
-      dcomplex* const src_ptr = &src.d_array[0];
+      const dcomplex* const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 
 #if defined(HAVE_RAJA)
