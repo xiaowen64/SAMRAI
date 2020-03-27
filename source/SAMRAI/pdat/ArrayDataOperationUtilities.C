@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated array data looping operations supporting patch data types
  *
  ************************************************************************/
@@ -620,7 +620,7 @@ inline void ArrayDataOperationUtilities<dcomplex, SumOperation<dcomplex> >::doAr
 #if !defined(HAVE_RAJA)
    const hier::Box& array_d_box(arraydata.getBox());
 
-   int box_w[SAMRAI::MAX_DIM_VAL];
+   int box_w[dim.getValue()];
    int dat_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {

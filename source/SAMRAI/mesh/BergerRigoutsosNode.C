@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -250,6 +250,7 @@ BergerRigoutsosNode::continueAlgorithm()
       case completed:
          TBOX_ERROR("Library error: Senseless continuation of completed node."
          << std::endl);
+         break;
       default:
          TBOX_ERROR("Library error: Nonexistent phase." << std::endl);
    }

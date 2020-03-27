@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
@@ -297,6 +297,7 @@ void MblkGeometry::getFromInput(
          //}
 
       }
+      NULL_USE(rtest);
 
       fclose(fid);
       found = true;
@@ -1116,7 +1117,7 @@ void MblkGeometry::computeUnitSphereOctant(
       *xface = cx * sz / den;
       *yface = cx * cz / den;
       *zface = sx * cz / den;
-   } else if (tb == 2) { // a z face (block 2)
+   } else { // a z face (block 2)
       double li = tj / (double)nth; // 1 - tj;
       double lj = tk / (double)nth; // 1 - tk;
 
