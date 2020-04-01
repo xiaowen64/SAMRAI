@@ -639,7 +639,8 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                   });
                }
 
-#else                 // Fortran Dimension3 \
+#else
+                      // Fortran Dimension3
                       // Iteration space is slightly different between the directions
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
                std::vector<double> diff2_f(cgbox.numberCells(2) + 2);

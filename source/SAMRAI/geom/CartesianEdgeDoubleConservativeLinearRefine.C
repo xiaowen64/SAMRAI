@@ -453,7 +453,7 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                          const double coef2j = 0.5 * (diff1(i, j - 1, k) + diff1(i, j, k));
                          const double boundj = 2.0 * MIN(fabs(diff1(i, j - 1, k)), fabs(diff1(i, j, k)));
 
-                         if (diff1(i, j, k) * diff1(i, j - 1, k) > 0.0 & cdx1 != 0) {
+                         if (diff1(i, j, k) * diff1(i, j - 1, k) > 0.0 && cdx1 != 0) {
                             slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
                          } else {
                             slope1(i, j, k) = 0.0;
@@ -509,7 +509,7 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                          const double coef2j = 0.5 * (diff1(i, j + 1, k) + diff1(i, j, k));
                          const double boundj = 2.0 * MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
 
-                         if (diff1(i, j, k) * diff1(i, j + 1, k) > 0.0 & cdx1 != 0) {
+                         if (diff1(i, j, k) * diff1(i, j + 1, k) > 0.0 && cdx1 != 0) {
                             slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
                          } else {
                             slope1(i, j, k) = 0.0;
@@ -566,7 +566,7 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
                          const double coef2j = 0.5 * (diff1(i, j - 1, k) + diff1(i, j, k));
                          const double boundj = 2.0 * MIN(fabs(diff1(i, j - 1, k)), fabs(diff1(i, j, k)));
 
-                         if (diff1(i, j, k) * diff1(i, j - 1, k) > 0.0 & cdx1 != 0) {
+                         if (diff1(i, j, k) * diff1(i, j - 1, k) > 0.0 && cdx1 != 0) {
                             slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
                          } else {
                             slope1(i, j, k) = 0.0;

@@ -448,6 +448,7 @@ inline void ArrayDataOperationUtilities<dcomplex,SumOperation<dcomplex> >::doArr
    NULL_USE(src_shift);
    NULL_USE(dst_start_depth);
    NULL_USE(src_start_depth);
+   NULL_USE(op);
 #endif
 
    /*
@@ -646,6 +647,8 @@ inline void ArrayDataOperationUtilities<dcomplex, SumOperation<dcomplex> >::doAr
 
    size_t dat_begin = array_d_box.offset(opbox.lower());
    size_t buf_begin = 0;
+#else
+   NULL_USE(op);
 #endif
 
    /*
