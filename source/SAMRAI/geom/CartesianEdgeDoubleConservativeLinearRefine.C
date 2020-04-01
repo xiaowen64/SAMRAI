@@ -189,7 +189,7 @@ void CartesianEdgeDoubleConservativeLinearRefine::refine(
             }
          }
 
-#ifdef HAVE_UMPIRE
+#if defined(HAVE_RAJA)
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
 #endif
 
