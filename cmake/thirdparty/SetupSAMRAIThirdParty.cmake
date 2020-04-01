@@ -44,7 +44,7 @@ if (ENABLE_UMPIRE)
 endif ()
 
 # RAJA
-if (ENABLE_RAJA)
+if (ENABLE_RAJA OR RAJA_DIR)
   if (NOT ENABLE_UMPIRE)
     message(FATAL_ERROR "RAJA support requires UMPIRE.")
   endif ()
@@ -62,6 +62,7 @@ if (ENABLE_RAJA)
 
   if (RAJA_FOUND)
     set (HAVE_RAJA True)
+    set (ENABLE_RAJA ON)
 
     blt_register_library(
       NAME RAJA
