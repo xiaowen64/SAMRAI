@@ -32,10 +32,11 @@ if (ENABLE_CUDA)
 endif ()
 
 # UMPIRE
-if (ENABLE_UMPIRE)
+if (ENABLE_UMPIRE OR umpire_DIR)
   find_package(umpire REQUIRED)
 
   set (HAVE_UMPIRE True)
+  set (ENABLE_UMPIRE On)
 
   blt_register_library(
     NAME umpire

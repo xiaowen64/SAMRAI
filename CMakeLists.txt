@@ -45,7 +45,7 @@ set(gtest_disable_pthreads ON CACHE BOOL "")
 message(STATUS "Enable Test Flag Top: ${ENABLE_TESTS} " )
 
 # Third party libraries
-option(ENABLE_UMPIRE "Enable UMPIRE memory management" On)
+option(ENABLE_UMPIRE "Enable UMPIRE memory management" Off)
 option(ENABLE_RAJA "Enable RAJA" Off)
 option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
