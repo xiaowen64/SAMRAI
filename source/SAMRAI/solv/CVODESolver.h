@@ -703,6 +703,31 @@ public:
    }
 
    /**
+    * Enable use of a user -defined projection function. The uses_projectionfn
+    * argument indicates whether or not the user has defined a projection
+    * routines in their concrete subclass of the CVODEAbstractFunctions class.
+    * Note this function must be called before initializeCVODE().
+    */
+   void
+   setProjectionFunction(bool uses_projectionfn)
+   {
+      d_uses_projectionfn = uses_projectionfn;
+   }
+
+   /**
+    * Enable use of a different RHS function in Jacobian -vector products.
+    * The uses_jtimesrhsfn argument indicates whether or not the user has
+    * defined a projection routine in their concrete subclass of the
+    * CVODEAbstractFunctions class. Note this function must be called before
+    * initializeCVODE().
+    */
+   void
+   setJTimesRhsFunction(bool uses_jtimesrhsfn)
+   {
+      d_uses_jtimesrhsfn = uses_jtimesrhsfn;
+   }
+
+   /**
     * Get solution vector.
     */
    SundialsAbstractVector *
@@ -1273,6 +1298,38 @@ private:
       return success;
    }
 
+   static int
+   CVODEProjEval(
+      realtype t,
+      N_Vector y,
+      N_Vector corr ,
+      realtype epsProj ,
+      N_Vector err, void* my_solver)
+   {
+      int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
+         applyProjection(t,
+            SABSVEC_CAST(y),
+            SABSVEC_CAST(corr),
+            epsProj,
+            SABSVEC_CAST (err));
+      return success;
+   }
+
+   static int
+   CVODEJTimesRHSFuncEval(
+      realtype t,
+      N_Vector y,
+      N_Vector y_dot ,
+      void* my_solver)
+   {
+      int success = ((CVODESolver *)my_solver)->getCVODEFunctions()->
+         evaluateJTimesRHSFunction(t,
+            SABSVEC_CAST(y),
+            SABSVEC_CAST(y_dot));
+      return success;
+   }
+
+
    /*
     * Open CVODE log file, allocate main memory for CVODE and initialize
     * CVODE memory record.  CVODE is initialized based on current state
@@ -1373,6 +1430,20 @@ private:
     * CVODEAbstractFunctions.
     */
    bool d_uses_preconditioner;
+
+   /*
+    * Boolean flag indicating whether a user-supplied projection
+    * routine is provided in the concrete subclass of
+    * CVODEAbstractFunctions.
+    */
+   bool d_uses_projectionfn;
+
+   /*
+    * Boolean flag indicating whether a different RHS
+    * routine for Jacobian -vector products is provided
+    * in the concrete subclass of CVODEAbstractFunctions.
+    */ 
+   bool d_uses_jtimesrhsfn;
 };
 
 }

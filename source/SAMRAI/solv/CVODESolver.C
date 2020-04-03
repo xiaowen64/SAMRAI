@@ -237,6 +237,16 @@ CVODESolver::initializeCVODE()
          CVODE_SAMRAI_ERROR(ierr);
       }
 
+      if (d_uses_projectionfn) {
+         CVProjFn proj_fn = CVODESolver::CVODEProjEval;
+         ierr = CVodeSetProjFn(d_cvode_mem , proj_fn);
+      }
+
+      if (d_uses_jtimesrhsfn) {
+         CVRhsFn jtimesrhs_fn = CVODESolver::CVODEJTimesRHSFuncEval;
+         ierr = CVodeSetJacTimesRhsFn(d_cvode_mem , jtimesrhs_fn);
+      }
+
    } // if no need to initialize CVODE, function does nothing
 
    d_CVODE_needs_initialization = false;

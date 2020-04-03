@@ -393,6 +393,36 @@ public:
       double delta,
       int lr);
 
+   virtual int
+   applyProjection(
+      double t,
+      SundialsAbstractVector* y,
+      SundialsAbstractVector* corr,
+      double epsProj,
+      SundialsAbstractVector* err)
+   {
+      NULL_USE(t);
+      NULL_USE(y);
+      NULL_USE(corr);
+      NULL_USE(epsProj);
+      NULL_USE(err);
+
+      return 0;
+   }
+
+   virtual int evaluateJTimesRHSFunction(
+      double t,
+      SundialsAbstractVector* y,
+      SundialsAbstractVector* y_dot)
+   {
+      NULL_USE(t);
+      NULL_USE(y);
+      NULL_USE(y_dot);
+
+      return 0;
+   }
+
+
 /*************************************************************************
  *
  * Methods particular to CVODEModel class.
