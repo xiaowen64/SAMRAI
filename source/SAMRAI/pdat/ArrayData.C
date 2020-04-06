@@ -14,7 +14,6 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/ForAll.h"
 #include "SAMRAI/pdat/ArrayData.h"

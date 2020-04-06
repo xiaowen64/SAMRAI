@@ -19,15 +19,10 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include "SAMRAI/tbox/AllocatorDatabase.h"
 
-#define MAX(a, b) (((b) > (a)) ? (b) : (a))
-#define MIN(a, b) (((b) < (a)) ? (b) : (a))
-#define ABS abs
-#define SQRT sqrt
-#define COPYSIGN copysign
+#define SAMRAI_GEOM_MIN(a, b) (((b) < (a)) ? (b) : (a))
 
 namespace SAMRAI
 {
@@ -182,19 +177,19 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 
          pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const T coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
-            const T boundj = 2.0 * MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
+            const T boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
 
             if (diff0(j, k) * diff0(j + 1, k) > 0.0 && cdx0 != 0) {
-               slope0(j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx0;
+               slope0(j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx0;
             } else {
                slope0(j, k) = 0.0;
             }
 
             const T coef2k = 0.5 * (diff1(j, k + 1) + diff1(j, k));
-            const T boundk = 2.0 * MIN(fabs(diff1(j, k + 1)), fabs(diff1(j, k)));
+            const T boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(j, k + 1)), fabs(diff1(j, k)));
 
             if (diff1(j, k) * diff1(j, k + 1) > 0.0 && cdx1 != 0) {
-               slope1(j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx1;
+               slope1(j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx1;
             } else {
                slope1(j, k) = 0.0;
             }
@@ -272,25 +267,25 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 
          pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const T coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
-            const T boundi = 2.0 * MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
+            const T boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
             if (diff0(i, j, k) * diff0(i + 1, j, k) > 0.0 && cdx0 != 0) {
-               slope0(i, j, k) = COPYSIGN(MIN(fabs(coef2i), boundi), coef2i) / cdx0;
+               slope0(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2i), boundi), coef2i) / cdx0;
             } else {
                slope0(i, j, k) = 0.0;
             }
 
             const T coef2j = 0.5 * (diff1(i, j + 1, k) + diff1(i, j, k));
-            const T boundj = 2.0 * MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
+            const T boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
             if (diff1(i, j, k) * diff1(i, j + 1, k) > 0.0 && cdx1 != 0) {
-               slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
+               slope1(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx1;
             } else {
                slope1(i, j, k) = 0.0;
             }
 
             const T coef2k = 0.5 * (diff2(i, j, k + 1) + diff2(i, j, k));
-            const T boundk = 2.0 * MIN(fabs(diff2(i, j, k + 1)), fabs(diff2(i, j, k)));
+            const T boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff2(i, j, k + 1)), fabs(diff2(i, j, k)));
             if (diff2(i, j, k) * diff2(i, j, k + 1) > 0.0 && cdx2 != 0) {
-               slope2(i, j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx2;
+               slope2(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx2;
             } else {
                slope2(i, j, k) = 0.0;
             }
@@ -483,22 +478,22 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             const double coef2jreal = 0.5 * (diff0_1_real + diff0_0_real);
             const double coef2jimag = 0.5 * (diff0_1_imag + diff0_0_imag);
 
-            const double boundjreal = 2.0 * MIN(fabs(diff0_1_real), fabs(diff0_0_real));
-            const double boundjimag = 2.0 * MIN(fabs(diff0_1_imag), fabs(diff0_0_imag));
+            const double boundjreal = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0_1_real), fabs(diff0_0_real));
+            const double boundjimag = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0_1_imag), fabs(diff0_0_imag));
 
             double &slope0_real = reinterpret_cast<double(&)[2]>(slope0(j, k))[0];
             double &slope0_imag = reinterpret_cast<double(&)[2]>(slope0(j, k))[1];
 
 
             if (diff0_0_real * diff0_1_real > 0.0 && cdx0 != 0) {
-               slope0_real = COPYSIGN(MIN(fabs(coef2jreal), boundjreal), coef2jreal) / cdx0;
+               slope0_real = copysign(SAMRAI_GEOM_MIN(fabs(coef2jreal), boundjreal), coef2jreal) / cdx0;
             } else {
                slope0_real = 0.0;
             }
 
 
             if (diff0_0_imag * diff0_1_imag > 0.0 && cdx0 != 0) {
-               slope0_imag = COPYSIGN(MIN(fabs(coef2jimag), boundjimag), coef2jimag) / cdx0;
+               slope0_imag = copysign(SAMRAI_GEOM_MIN(fabs(coef2jimag), boundjimag), coef2jimag) / cdx0;
             } else {
                slope0_imag = 0.0;
             }
@@ -512,20 +507,20 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             const double coef2kreal = 0.5 * (diff1_1_real + diff1_0_real);
             const double coef2kimag = 0.5 * (diff1_1_imag + diff1_0_imag);
 
-            const double boundkreal = 2.0 * MIN(fabs(diff1_1_real), fabs(diff1_0_real));
-            const double boundkimag = 2.0 * MIN(fabs(diff1_1_imag), fabs(diff1_0_imag));
+            const double boundkreal = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1_1_real), fabs(diff1_0_real));
+            const double boundkimag = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1_1_imag), fabs(diff1_0_imag));
 
             double &slope1_real = reinterpret_cast<double(&)[2]>(slope1(j, k))[0];
             double &slope1_imag = reinterpret_cast<double(&)[2]>(slope1(j, k))[1];
 
             if (diff1_0_real * diff1_1_real > 0.0 && cdx1 != 0) {
-               slope1_real = COPYSIGN(MIN(fabs(coef2kreal), boundkreal), coef2kreal) / cdx1;
+               slope1_real = copysign(SAMRAI_GEOM_MIN(fabs(coef2kreal), boundkreal), coef2kreal) / cdx1;
             } else {
                slope1_real = 0.0;
             }
 
             if (diff1_0_imag * diff1_1_imag > 0.0 && cdx1 != 0) {
-               slope1_imag = COPYSIGN(MIN(fabs(coef2kimag), boundkimag), coef2kimag) / cdx1;
+               slope1_imag = copysign(SAMRAI_GEOM_MIN(fabs(coef2kimag), boundkimag), coef2kimag) / cdx1;
             } else {
                slope1_imag = 0.0;
             }
@@ -653,21 +648,21 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             const double coef2ireal = 0.5 * (diff0_1_real + diff0_0_real);
             const double coef2iimag = 0.5 * (diff0_1_imag + diff0_0_imag);
 
-            const double boundireal = 2.0 * MIN(fabs(diff0_1_real), fabs(diff0_0_real));
-            const double boundiimag = 2.0 * MIN(fabs(diff0_1_imag), fabs(diff0_0_imag));
+            const double boundireal = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0_1_real), fabs(diff0_0_real));
+            const double boundiimag = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0_1_imag), fabs(diff0_0_imag));
 
             double &slope0_real = reinterpret_cast<double(&)[2]>(slope0(i, j, k))[0];
             double &slope0_imag = reinterpret_cast<double(&)[2]>(slope0(i, j, k))[1];
 
 
             if (diff0_0_real * diff0_1_real > 0.0 && cdx0 != 0) {
-               slope0_real = COPYSIGN(MIN(fabs(coef2ireal), boundireal), coef2ireal) / cdx0;
+               slope0_real = copysign(SAMRAI_GEOM_MIN(fabs(coef2ireal), boundireal), coef2ireal) / cdx0;
             } else {
                slope0_real = 0.0;
             }
 
             if (diff0_0_imag * diff0_1_imag > 0.0 && cdx0 != 0) {
-               slope0_imag = COPYSIGN(MIN(fabs(coef2iimag), boundiimag), coef2iimag) / cdx0;
+               slope0_imag = copysign(SAMRAI_GEOM_MIN(fabs(coef2iimag), boundiimag), coef2iimag) / cdx0;
             } else {
                slope0_imag = 0.0;
             }
@@ -681,21 +676,21 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             const double coef2jreal = 0.5 * (diff1_1_real + diff1_0_real);
             const double coef2jimag = 0.5 * (diff1_1_imag + diff1_0_imag);
 
-            const double boundjreal = 2.0 * MIN(fabs(diff1_1_real), fabs(diff1_0_real));
-            const double boundjimag = 2.0 * MIN(fabs(diff1_1_imag), fabs(diff1_0_imag));
+            const double boundjreal = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1_1_real), fabs(diff1_0_real));
+            const double boundjimag = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1_1_imag), fabs(diff1_0_imag));
 
             double &slope1_real = reinterpret_cast<double(&)[2]>(slope1(i, j, k))[0];
             double &slope1_imag = reinterpret_cast<double(&)[2]>(slope1(i, j, k))[1];
 
 
             if (diff1_0_real * diff1_1_real > 0.0 && cdx1 != 0) {
-               slope1_real = COPYSIGN(MIN(fabs(coef2jreal), boundjreal), coef2jreal) / cdx1;
+               slope1_real = copysign(SAMRAI_GEOM_MIN(fabs(coef2jreal), boundjreal), coef2jreal) / cdx1;
             } else {
                slope1_real = 0.0;
             }
 
             if (diff1_0_imag * diff1_1_imag > 0.0 && cdx1 != 0) {
-               slope1_imag = COPYSIGN(MIN(fabs(coef2jimag), boundjimag), coef2jimag) / cdx1;
+               slope1_imag = copysign(SAMRAI_GEOM_MIN(fabs(coef2jimag), boundjimag), coef2jimag) / cdx1;
             } else {
                slope1_imag = 0.0;
             }
@@ -710,21 +705,21 @@ void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             const double coef2kreal = 0.5 * (diff2_1_real + diff2_0_real);
             const double coef2kimag = 0.5 * (diff2_1_imag + diff2_0_imag);
 
-            const double boundkreal = 2.0 * MIN(fabs(diff2_1_real), fabs(diff2_0_real));
-            const double boundkimag = 2.0 * MIN(fabs(diff2_1_imag), fabs(diff2_0_imag));
+            const double boundkreal = 2.0 * SAMRAI_GEOM_MIN(fabs(diff2_1_real), fabs(diff2_0_real));
+            const double boundkimag = 2.0 * SAMRAI_GEOM_MIN(fabs(diff2_1_imag), fabs(diff2_0_imag));
 
             double &slope2_real = reinterpret_cast<double(&)[2]>(slope2(i, j, k))[0];
             double &slope2_imag = reinterpret_cast<double(&)[2]>(slope2(i, j, k))[1];
 
 
             if (diff2_0_real * diff2_1_real > 0.0 && cdx2 != 0) {
-               slope2_real = COPYSIGN(MIN(fabs(coef2kreal), boundkreal), coef2kreal) / cdx2;
+               slope2_real = copysign(SAMRAI_GEOM_MIN(fabs(coef2kreal), boundkreal), coef2kreal) / cdx2;
             } else {
                slope2_real = 0.0;
             }
 
             if (diff2_0_imag * diff2_1_imag > 0.0 && cdx2 != 0) {
-               slope2_imag = COPYSIGN(MIN(fabs(coef2kimag), boundkimag), coef2kimag) / cdx2;
+               slope2_imag = copysign(SAMRAI_GEOM_MIN(fabs(coef2kimag), boundkimag), coef2kimag) / cdx2;
             } else {
                slope2_imag = 0.0;
             }

@@ -18,7 +18,6 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/tbox/Collectives.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 namespace SAMRAI {
 namespace algs {

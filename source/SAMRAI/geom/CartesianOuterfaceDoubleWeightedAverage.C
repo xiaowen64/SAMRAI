@@ -17,7 +17,6 @@
 #include "SAMRAI/pdat/OuterfaceData.h"
 #include "SAMRAI/pdat/OuterfaceVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 /*
  *************************************************************************

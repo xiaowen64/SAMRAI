@@ -19,11 +19,7 @@
 #include <cfloat>
 #include <cmath>
 
-#define MAX(a, b) (((b) > (a)) ? (b) : (a))
-#define MIN(a, b) (((b) < (a)) ? (b) : (a))
-#define ABS abs
-#define SQRT sqrt
-#define COPYSIGN copysign
+#define SAMRAI_GEOM_MIN(a, b) (((b) < (a)) ? (b) : (a))
 
 /*
  *************************************************************************
@@ -337,19 +333,19 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   if (axis == 0 && directions(0)) {
                      pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                         const double coef2j = 0.5 * (diff0(j - 1, k) + diff0(j, k));
-                        const double boundj = 2.0 * MIN(fabs(diff0(j - 1, k)), fabs(diff0(j, k)));
+                        const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(j - 1, k)), fabs(diff0(j, k)));
 
                         if (diff0(j, k) * diff0(j - 1, k) > 0.0 && cdx0 != 0) {
-                           slope0(j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx0;
+                           slope0(j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx0;
                         } else {
                            slope0(j, k) = 0.0;
                         }
 
                         const double coef2k = 0.5 * (diff1(j, k + 1) + diff1(j, k));
-                        const double boundk = 2.0 * MIN(fabs(diff1(j, k + 1)), fabs(diff1(j, k)));
+                        const double boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(j, k + 1)), fabs(diff1(j, k)));
 
                         if (diff1(j, k) * diff1(j, k + 1) > 0.0 && cdx1 != 0) {
-                           slope1(j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx1;
+                           slope1(j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx1;
                         } else {
                            slope1(j, k) = 0.0;
                         }
@@ -357,19 +353,19 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   } else {
                      pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                         const double coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
-                        const double boundj = 2.0 * MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
+                        const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
 
                         if (diff0(j, k) * diff0(j - 1, k) > 0.0 && cdx0 != 0) {
-                           slope0(j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx0;
+                           slope0(j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx0;
                         } else {
                            slope0(j, k) = 0.0;
                         }
 
                         const double coef2k = 0.5 * (diff1(j, k - 1) + diff1(j, k));
-                        const double boundk = 2.0 * MIN(fabs(diff1(j, k - 1)), fabs(diff1(j, k)));
+                        const double boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(j, k - 1)), fabs(diff1(j, k)));
 
                         if (diff1(j, k) * diff1(j, k - 1) > 0.0 && cdx1 != 0) {
-                           slope1(j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx1;
+                           slope1(j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx1;
                         } else {
                            slope1(j, k) = 0.0;
                         }
@@ -520,28 +516,28 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   if (axis == 0 && directions(0)) {
                      pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i - 1, j, k) + diff0(i, j, k));
-                        const double boundi = 2.0 * MIN(fabs(diff0(i - 1, j, k)), fabs(diff0(i, j, k)));
+                        const double boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i - 1, j, k)), fabs(diff0(i, j, k)));
 
                         if (diff0(i, j, k) * diff0(i - 1, j, k) > 0.0 && cdx0 != 0) {
-                           slope0(i, j, k) = COPYSIGN(MIN(fabs(coef2i), boundi), coef2i) / cdx0;
+                           slope0(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2i), boundi), coef2i) / cdx0;
                         } else {
                            slope0(i, j, k) = 0.0;
                         }
 
                         const double coef2j = 0.5 * (diff1(i, j + 1, k) + diff1(i, j, k));
-                        const double boundj = 2.0 * MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
+                        const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
 
                         if (diff1(i, j, k) * diff1(i, j + 1, k) > 0.0 && cdx1 != 0) {
-                           slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
+                           slope1(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx1;
                         } else {
                            slope1(i, j, k) = 0.0;
                         }
 
                         const double coef2k = 0.5 * (diff2(i, j, k + 1) + diff2(i, j, k));
-                        const double boundk = 2.0 * MIN(fabs(diff2(i, j, k + 1)), fabs(diff2(i, j, k)));
+                        const double boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff2(i, j, k + 1)), fabs(diff2(i, j, k)));
 
                         if (diff2(i, j, k) * diff2(i, j, k + 1) > 0.0 && cdx2 != 0) {
-                           slope2(i, j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx2;
+                           slope2(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx2;
                         } else {
                            slope2(i, j, k) = 0.0;
                         }
@@ -549,28 +545,28 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   } else if (axis == 1 && directions(1)) {
                      pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
-                        const double boundi = 2.0 * MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
+                        const double boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
 
                         if (diff0(i, j, k) * diff0(i + 1, j, k) > 0.0 && cdx0 != 0) {
-                           slope0(i, j, k) = COPYSIGN(MIN(fabs(coef2i), boundi), coef2i) / cdx0;
+                           slope0(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2i), boundi), coef2i) / cdx0;
                         } else {
                            slope0(i, j, k) = 0.0;
                         }
 
                         const double coef2j = 0.5 * (diff1(i, j - 1, k) + diff1(i, j, k));
-                        const double boundj = 2.0 * MIN(fabs(diff1(i, j - 1, k)), fabs(diff1(i, j, k)));
+                        const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(i, j - 1, k)), fabs(diff1(i, j, k)));
 
                         if (diff1(i, j, k) * diff1(i, j - 1, k) > 0.0 && cdx1 != 0) {
-                           slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
+                           slope1(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx1;
                         } else {
                            slope1(i, j, k) = 0.0;
                         }
 
                         const double coef2k = 0.5 * (diff2(i, j, k + 1) + diff2(i, j, k));
-                        const double boundk = 2.0 * MIN(fabs(diff2(i, j, k + 1)), fabs(diff2(i, j, k)));
+                        const double boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff2(i, j, k + 1)), fabs(diff2(i, j, k)));
 
                         if (diff2(i, j, k) * diff2(i, j, k + 1) > 0.0 && cdx2 != 0) {
-                           slope2(i, j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx2;
+                           slope2(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx2;
                         } else {
                            slope2(i, j, k) = 0.0;
                         }
@@ -578,28 +574,28 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   } else if (axis == 2 && directions(2)) {
                      pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
-                        const double boundi = 2.0 * MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
+                        const double boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
 
                         if (diff0(i, j, k) * diff0(i + 1, j, k) > 0.0 && cdx0 != 0) {
-                           slope0(i, j, k) = COPYSIGN(MIN(fabs(coef2i), boundi), coef2i) / cdx0;
+                           slope0(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2i), boundi), coef2i) / cdx0;
                         } else {
                            slope0(i, j, k) = 0.0;
                         }
 
                         const double coef2j = 0.5 * (diff1(i, j + 1, k) + diff1(i, j, k));
-                        const double boundj = 2.0 * MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
+                        const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff1(i, j + 1, k)), fabs(diff1(i, j, k)));
 
                         if (diff1(i, j, k) * diff1(i, j + 1, k) > 0.0 && cdx1 != 0) {
-                           slope1(i, j, k) = COPYSIGN(MIN(fabs(coef2j), boundj), coef2j) / cdx1;
+                           slope1(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2j), boundj), coef2j) / cdx1;
                         } else {
                            slope1(i, j, k) = 0.0;
                         }
 
                         const double coef2k = 0.5 * (diff2(i, j, k - 1) + diff2(i, j, k));
-                        const double boundk = 2.0 * MIN(fabs(diff2(i, j, k - 1)), fabs(diff2(i, j, k)));
+                        const double boundk = 2.0 * SAMRAI_GEOM_MIN(fabs(diff2(i, j, k - 1)), fabs(diff2(i, j, k)));
 
                         if (diff2(i, j, k) * diff2(i, j, k - 1) > 0.0 && cdx2 != 0) {
-                           slope2(i, j, k) = COPYSIGN(MIN(fabs(coef2k), boundk), coef2k) / cdx2;
+                           slope2(i, j, k) = copysign(SAMRAI_GEOM_MIN(fabs(coef2k), boundk), coef2k) / cdx2;
                         } else {
                            slope2(i, j, k) = 0.0;
                         }

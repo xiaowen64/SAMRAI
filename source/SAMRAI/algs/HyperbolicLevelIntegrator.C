@@ -35,7 +35,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Collectives.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <cstdlib>
 #include <fstream>

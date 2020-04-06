@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <map>
 #include <vector>

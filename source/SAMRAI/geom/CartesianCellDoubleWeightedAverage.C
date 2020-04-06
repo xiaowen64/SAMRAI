@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <float.h>
 #include <math.h>
