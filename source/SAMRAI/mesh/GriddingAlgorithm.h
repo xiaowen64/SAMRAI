@@ -509,7 +509,7 @@ public:
       return d_object_name;
    }
 
-//private:
+private:
    /*
     * Static integer constant describing this class's version number.
     */
