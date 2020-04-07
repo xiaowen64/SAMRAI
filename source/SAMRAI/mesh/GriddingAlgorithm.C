@@ -222,7 +222,6 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_fill_saved_tags->registerRefine(d_saved_tag_indx,
       d_user_tag_indx,
       d_saved_tag_indx,
-      //std::shared_ptr<hier::RefineOperator>(new pdat::CellIntegerConstantRefine()),
       std::shared_ptr<hier::RefineOperator>(new pdat::CellConstantRefine<int>()),
       std::shared_ptr<xfer::VariableFillPattern>(new xfer::PatchInteriorVariableFillPattern(dim)));
 

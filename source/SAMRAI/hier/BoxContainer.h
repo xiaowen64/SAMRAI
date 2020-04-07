@@ -23,7 +23,6 @@
 #include <list>
 #include <set>
 #include <vector>
-#include <cstddef>
 
 namespace SAMRAI {
 namespace hier {
