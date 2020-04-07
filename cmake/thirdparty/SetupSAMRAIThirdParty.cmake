@@ -1,15 +1,5 @@
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/thirdparty/")
 
-if (ENABLE_CUDA)
-  if (NOT ENABLE_RAJA)
-    message(FATAL_ERROR "CUDA support requires RAJA")
-  endif ()
-
-  if (NOT ENABLE_UMPIRE)
-    message(FATAL_ERROR "CUDA support requires UMPIRE")
-  endif ()
-endif ()
-
 # MPI is setup by BLT
 if (MPI_FOUND)
   set(HAVE_MPI True)
@@ -21,13 +11,6 @@ endif ()
 if (ENABLE_OPENMP)
   if (OPENMP_FOUND)
     set(HAVE_OPENMP True)
-  endif ()
-endif ()
-
-# CUDA is setup by BLT
-if (ENABLE_CUDA)
-  if (CUDA_FOUND)
-    set (HAVE_CUDA True)
   endif ()
 endif ()
 
@@ -70,6 +53,21 @@ if (ENABLE_RAJA OR RAJA_DIR)
       INCLUDES ${RAJA_INCLUDE_DIR}
       LIBRARIES RAJA
       DEPENDS_ON ${raja_depends})
+  endif ()
+endif ()
+
+# CUDA is setup by BLT
+if (ENABLE_CUDA)
+  if (NOT ENABLE_RAJA)
+    message(FATAL_ERROR "CUDA support requires RAJA")
+  endif ()
+
+  if (NOT ENABLE_UMPIRE)
+    message(FATAL_ERROR "CUDA support requires UMPIRE")
+  endif ()
+
+  if (CUDA_FOUND)
+    set (HAVE_CUDA True)
   endif ()
 endif ()
 
