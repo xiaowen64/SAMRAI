@@ -30,7 +30,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
         (cd RAJA && git checkout v0.11.0) || exit $?
         mkdir -p $raja_install
         mkdir -p $raja_build && cd $_
-        cmake -DCMAKE_INSTALL_PREFIX=$raja_install -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_CUDA=OFF -DENABLE_OPENMP=OFF -DENABLE_MPI=OFF -DENABLE_EXAMPLES=OFF -DENABLE_BENCHMARKS=OFF -DENABLE_TESTS=OFF -DCMAKE_CXX_COMPILER="$COMPILER" ../RAJA || exit $?
+        cmake -DCMAKE_INSTALL_PREFIX=$raja_install -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_CUDA=OFF -DENABLE_OPENMP=OFF -DENABLE_MPI=OFF -DENABLE_EXAMPLES=OFF -DENABLE_BENCHMARKS=OFF -DENABLE_TESTS=OFF -DCMAKE_CXX_COMPILER="$COMPILER" -DCMAKE_Fortran_COMPILER=/usr/local/bin/gfortran ../RAJA || exit $?
         make -j $threads install || exit $?
         cd $base_path
     fi
