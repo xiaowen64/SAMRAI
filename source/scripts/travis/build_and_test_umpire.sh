@@ -13,7 +13,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
 
     if [ ! -d $umpire_build ]; then
         git clone --recursive https://github.com/LLNL/Umpire || exit $?
-        (cd Umpire && git checkout v0.3.5) || exit $?
+        (cd Umpire && git checkout v2.1.0) || exit $?
         mkdir -p $umpire_install
         mkdir -p $umpire_build && cd $_
         cmake -DCMAKE_INSTALL_PREFIX=$umpire_install -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_CUDA=OFF -DENABLE_OPENMP=OFF -DENABLE_MPI=OFF -DENABLE_EXAMPLES=OFF -DENABLE_BENCHMARKS=OFF -DENABLE_TESTS=OFF -DCMAKE_CXX_COMPILER="$COMPILER" ../Umpire || exit $?
@@ -27,7 +27,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
 
     if [ ! -d $raja_build ]; then
         git clone --recursive https://github.com/LLNL/RAJA || exit $?
-        (cd RAJA && git checkout v0.8.0) || exit $?
+        (cd RAJA && git checkout v0.11.0) || exit $?
         mkdir -p $raja_install
         mkdir -p $raja_build && cd $_
         cmake -DCMAKE_INSTALL_PREFIX=$raja_install -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_CUDA=OFF -DENABLE_OPENMP=OFF -DENABLE_MPI=OFF -DENABLE_EXAMPLES=OFF -DENABLE_BENCHMARKS=OFF -DENABLE_TESTS=OFF -DCMAKE_CXX_COMPILER="$COMPILER" ../RAJA || exit $?
