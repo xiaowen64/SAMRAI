@@ -20,4 +20,5 @@ macro (process_m4)
     VERBATIM)
 
   set_source_files_properties(${arg_NAME}.f PROPERTIES GENERATED true)
+  set_source_files_properties(${arg_NAME}.f PROPERTIES LANGUAGE Fortran)
 endmacro ()

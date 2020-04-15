@@ -150,6 +150,14 @@ public:
       const hier::IntVector& ghosts,
       const hier::IntVector& directions);
 
+#if defined(HAVE_UMPIRE)
+   SideData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      const hier::IntVector& directions,
+      umpire::Allocator allocator);
+#endif
    /*!
     * @brief Same as previous constructor but with directions
     * vector of 1's.
@@ -164,6 +172,14 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
+   SideData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+#endif
+      
    /*!
     * @brief The virtual destructor for a side data object.
     */
@@ -213,6 +229,26 @@ public:
    getPointer(
       int side_normal,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+   template <int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template <int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   template <int DIM>
+   View<DIM>
+   getView(
+      int side_normal,
+      int depth = 0);
+
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int side_normal,
+      int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding
@@ -602,6 +638,14 @@ private:
 
    std::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL];
 };
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename SideData<TYPE>::template View<DIM> get_view(SideData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename SideData<TYPE>::template ConstView<DIM> get_const_view(const SideData<TYPE>& data, Args&&... args);
+#endif
 
 }
 }

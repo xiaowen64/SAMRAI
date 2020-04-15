@@ -33,6 +33,7 @@
 namespace SAMRAI {
 
 class CommTester;
+using OUTERNODE_KERNEL_TYPE = double; // only double is supported 
 
 /**
  * Class OuternodeDataTest provides routines to test communication operations
@@ -135,7 +136,7 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::OuternodeData<double> > data,
+      std::shared_ptr<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -144,13 +145,13 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::NodeData<double> > data,
+      std::shared_ptr<pdat::NodeData<OUTERNODE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::OuternodeData<double> >& data,
+      const std::shared_ptr<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const;
 

@@ -47,8 +47,11 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 #include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+
 
 //integer constants for boundary conditions
 #define CHECK_BDRY_DATA (0)
@@ -586,6 +589,9 @@ void LinAdv::initializeDataOnPatch(
       const hier::LocalId& local_id = box_id.getLocalId();
       double id_val = local_id.getValue() % 2 ? static_cast<double>(local_id.getValue() % 10) : 0.0;
       workload_data->fillAll(1.0+id_val);
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
    }
 
 }
@@ -1897,6 +1903,9 @@ void LinAdv::tagGradientDetectorCells(
    std::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->fillAll(not_refine_tag_val);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * Possible tagging criteria includes
@@ -2668,7 +2677,6 @@ void LinAdv::getFromInput(
                                      << "`front_position' input required for "
                                      << d_data_problem << " problem." << std::endl);
          }
-
          d_number_of_intervals =
             tbox::MathUtilities<int>::Min(static_cast<int>(d_front_position.size()) + 1,
                static_cast<int>(init_data_keys.size()) - 1);

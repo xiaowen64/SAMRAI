@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 
 namespace SAMRAI {
@@ -317,6 +318,7 @@ CompositeBoundarySchedule::fillData(double fill_time)
       }
 
       d_refine_schedule->fillData(fill_time);
+
    }
 
    const std::shared_ptr<hier::PatchLevel>& level =

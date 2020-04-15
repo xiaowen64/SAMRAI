@@ -60,7 +60,7 @@ SideMultiblockTest {
    //    Optional input:  depth              (default = 1)
    //                     src_ghosts         (default = 0,0,0)
    //                     dst_ghosts         (default = 0,0,0)
-   //                     refine_operator    (default = "NO_REFINE")
+   //                     refine_operator    (default = "CONSTANT_REFINE")
    //
    VariableData {
 
@@ -150,6 +150,12 @@ StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
    level_0 {
       block_0 {
+         boxes = [ (3,3) , (4,4) ]
+      }
+      block_1 {
+         boxes = [ (3,3) , (4,4) ]
+      }
+      block_2 {
          boxes = [ (3,3) , (4,4) ]
       }
    }

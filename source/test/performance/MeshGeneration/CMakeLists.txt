@@ -1,19 +1,22 @@
 set (meshgeneration_sources
   mg.C)
 
-set (meshgeneration_depends_on
-  testlib
-  SAMRAI_mesh
-  SAMRAI_hier
-  SAMRAI_geom
-  SAMRAI_pdat
-  SAMRAI_appu
-  SAMRAI_tbox)
+set(meshgeneration_depends testlib)
+set(meshgeneration_depends ${meshgeneration_depends} ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(meshgeneration_depends ${meshgeneration_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(meshgeneration_depends ${meshgeneration_depends} cuda)
+endif ()
 
 blt_add_executable(
   NAME meshgeneration
   SOURCES ${meshgeneration_sources}
-  DEPENDS_ON ${meshgeneration_depends_on})
+  DEPENDS_ON ${meshgeneration_depends})
 
 target_compile_definitions(meshgeneration PUBLIC TESTING=1)
 

@@ -61,6 +61,57 @@ SideData<TYPE>::SideData(
    }
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+SideData<TYPE>::SideData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   const hier::IntVector& directions,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth),
+   d_directions(directions)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY3(box, ghosts, directions);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(directions.min() >= 0);
+
+   const tbox::Dimension& dim(box.getDim());
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      if (d_directions(d)) {
+         const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
+         d_data[d].reset(new ArrayData<TYPE>(side, depth, allocator));
+      } else {
+         d_data[d].reset(new ArrayData<TYPE>(hier::Box::getEmptyBox(dim), depth, allocator));
+      }
+   }
+}
+
+template<class TYPE>
+SideData<TYPE>::SideData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth),
+   d_directions(hier::IntVector::getOne(box.getDim()))
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+   TBOX_ASSERT(d_directions.min() >= 0);
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
+      d_data[d].reset(new ArrayData<TYPE>(side, depth, allocator));
+   }
+}
+#endif
+
 template<class TYPE>
 SideData<TYPE>::SideData(
    const hier::Box& box,
@@ -81,7 +132,6 @@ SideData<TYPE>::SideData(
       d_data[d].reset(new ArrayData<TYPE>(side, depth));
    }
 }
-
 template<class TYPE>
 SideData<TYPE>::~SideData()
 {
@@ -126,6 +176,30 @@ SideData<TYPE>::getPointer(
 
    return d_data[side_normal]->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+template<class TYPE>
+template<int DIM>
+typename SideData<TYPE>::template View<DIM>
+SideData<TYPE>::getView(
+        int side_normal,
+        int depth)
+{
+   const hier::Box side_box = SideGeometry::toSideBox(getGhostBox(), side_normal);
+   return SideData<TYPE>::View<DIM>(getPointer(side_normal, depth), side_box);
+}
+
+template<class TYPE>
+template<int DIM>
+typename SideData<TYPE>::template ConstView<DIM>
+SideData<TYPE>::getConstView(
+        int side_normal,
+        int depth) const
+{
+   const hier::Box side_box = SideGeometry::toSideBox(getGhostBox(), side_normal);
+   return SideData<TYPE>::ConstView<DIM>(getPointer(side_normal, depth), side_box);
+}
+#endif
 
 template<class TYPE>
 TYPE&
@@ -842,6 +916,20 @@ SideData<TYPE>::putToRestart(
       }
    }
 }
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename SideData<TYPE>::template View<DIM> get_view(SideData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename SideData<TYPE>::template ConstView<DIM> get_const_view(const SideData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

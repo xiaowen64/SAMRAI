@@ -21,21 +21,13 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE>
-SumOperation<TYPE>::SumOperation()
-{
-}
-
-template<class TYPE>
-SumOperation<TYPE>::~SumOperation()
-{
-}
-
 /*
  * Member functions for SumOperation
  */
 
 template<class TYPE>
+SAMRAI_INLINE
+SAMRAI_HOST_DEVICE
 void
 SumOperation<TYPE>::operator () (
    TYPE& vdst,

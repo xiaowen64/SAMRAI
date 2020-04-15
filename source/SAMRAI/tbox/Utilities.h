@@ -377,6 +377,18 @@ typedef int mode_t;
 #define DEPRECATED(func) func
 #endif
 
+/*
+ * Macros defined for host-device compilation.
+ */
+#define SAMRAI_INLINE inline
+
+#if defined(HAVE_CUDA) && defined(__CUDACC__)
+#define SAMRAI_HOST_DEVICE __host__ __device__
+#else
+#define SAMRAI_HOST_DEVICE
+#endif
+
+
 /*!
  * Utilities is a Singleton class containing basic routines for error
  * reporting, file manipulations, etc.

@@ -131,6 +131,9 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
+   EdgeData(const hier::Box& box, int depth, const hier::IntVector& ghosts,umpire::Allocator allocator);
+#endif
    /*!
     * @brief The virtual destructor for an edge data object.
     */
@@ -166,6 +169,20 @@ public:
    getPointer(
       int axis,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+  template <int DIM>
+  using View = pdat::ArrayView<DIM, TYPE>;
+
+  template <int DIM>
+  using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+  template <int DIM>
+  View<DIM> getView(int axis, int depth = 0);
+
+  template <int DIM>
+  ConstView<DIM> getConstView(int axis, int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding
@@ -551,6 +568,18 @@ private:
    std::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL];
 
 };
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename EdgeData<TYPE>::template View<DIM> get_view(EdgeData<TYPE>& data,
+                                                     Args&&... args);
+
+template <int DIM, typename TYPE, typename... Args>
+typename EdgeData<TYPE>::template ConstView<DIM> get_const_view(
+    const EdgeData<TYPE>& data,
+    Args&&... args);
+#endif
+
 
 }
 }

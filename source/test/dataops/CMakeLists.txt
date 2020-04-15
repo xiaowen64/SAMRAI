@@ -2,135 +2,108 @@ set (indx_dataops_sources
   indx_dataops.C
   SampleIndexData.C)
 
+set(dataops_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(dataops_depends ${dataops_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(dataops_depends ${dataops_depends} cuda)
+endif ()
+
 blt_add_executable(
   NAME indx_dataops
   SOURCES ${indx_dataops_sources}
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME cell_patchtest
   SOURCES cell_patchtest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME cell_hiertest
   SOURCES cell_hiertest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME cell_hiertest3d
   SOURCES cell_hiertest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME edge_hiertest
   SOURCES edge_hiertest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME face_hiertest
   SOURCES face_hiertest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME side_hiertest
   SOURCES side_hiertest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME node_hiertest
   SOURCES node_hiertest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME cell_cplxtest
   SOURCES cell_cplxtest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME edge_cplxtest
   SOURCES edge_cplxtest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME node_cplxtest
   SOURCES node_cplxtest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME face_cplxtest
   SOURCES face_cplxtest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
 
 blt_add_executable(
   NAME side_cplxtest
   SOURCES side_cplxtest.C
   DEPENDS_ON
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_math
-    SAMRAI_tbox)
+    ${dataops_depends})
+
+
 
 target_compile_definitions(indx_dataops PUBLIC DISPLAY TESTING=1)
 target_compile_definitions(cell_patchtest PUBLIC DISPLAY TESTING=1)
@@ -160,11 +133,11 @@ target_include_directories(node_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/tes
 target_include_directories(face_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 target_include_directories(side_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 
+
 foreach(dim RANGE 2 ${MAXDIM})
   blt_add_test(
     NAME indx_dataops${dim}
     COMMAND indx_dataops ${dim})
-
   blt_add_test(
     NAME cell_patchtest${dim}
     COMMAND cell_patchtest ${dim})

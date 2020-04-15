@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/ArrayView.h"
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
 #include "SAMRAI/pdat/CellOverlap.h"
@@ -114,6 +115,14 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
+   CellData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+#endif
+
    /*!
     * @brief The virtual destructor for a cell data object.
     */
@@ -145,6 +154,24 @@ public:
    const TYPE *
    getPointer(
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+   template<int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template<int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   template <int DIM>
+   View<DIM>
+   getView(
+      int depth = 0);
+
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int depth = 0) const;
+#endif
 
    /*!
     * @brief Return reference to cell data entry corresponding
@@ -504,6 +531,16 @@ private:
    static std::shared_ptr<tbox::Timer> t_copy;
 
 };
+
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template View<DIM> get_view(CellData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template ConstView<DIM> get_const_view(const CellData<TYPE>& data, Args&&... args);
+#endif
+
 
 }
 }

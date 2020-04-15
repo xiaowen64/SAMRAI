@@ -21,6 +21,10 @@
 
 #include <memory>
 
+#if defined(HAVE_UMPIRE)
+#include "umpire/Allocator.hpp"
+#endif
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -69,6 +73,15 @@ public:
       bool fine_boundary_represents_var,
       const hier::IntVector& directions);
 
+#if defined(HAVE_UMPIRE)
+
+   SideDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      bool fine_boundary_represents_var,
+      const hier::IntVector& directions,
+      umpire::Allocator allocator);
+#endif
    /*!
     * @brief Constructor for the side data factory class setting up allocation
     * of data in all coordinate directions.
@@ -85,6 +98,13 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
 
+#if defined(HAVE_UMPIRE)
+   SideDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      bool fine_boundary_represents_var,
+      umpire::Allocator allocator);
+#endif
    /**
     * Virtual destructor for the side data factory class.
     */
@@ -188,10 +208,14 @@ private:
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
 
+#if defined(HAVE_UMPIRE)
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
+#endif
 };
 
-}
-}
+} // Namespace pdat
+} // Namespace SAMRAI
 
 #include "SAMRAI/pdat/SideDataFactory.C"
 

@@ -16,6 +16,10 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#ifdef HAVE_UMPIRE
+#include "umpire/TypedAllocator.hpp"
+#endif
+
 #include <cstring>
 #include <iostream>
 #include <vector>
@@ -414,7 +418,11 @@ private:
    /*!
     * The buffer for the streamed data to be written.
     */
+#ifdef HAVE_UMPIRE
+   std::vector<char, umpire::TypedAllocator<char> > d_write_buffer;
+#else
    std::vector<char> d_write_buffer;
+#endif
 
    /*!
     * @brief Pointer to the externally supplied memory to read from in

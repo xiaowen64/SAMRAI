@@ -152,16 +152,20 @@ set (math_sources
   PatchSideDataOpsComplex.C
   PatchSideDataOpsInteger.C)
 
-set (math_depends_on
+set (math_depends
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_tbox)
+
+if (ENABLE_CUDA)
+  set (math_depends ${math_depends} cuda)
+endif ()
 
 blt_add_library(
   NAME SAMRAI_math
   SOURCES ${math_sources}
   HEADERS ${math_headers}
-  DEPENDS_ON ${math_depends_on})
+  DEPENDS_ON ${math_depends})
 
 target_include_directories( SAMRAI_math
   PUBLIC

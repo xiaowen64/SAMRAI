@@ -84,20 +84,22 @@ process_m4(NAME fortran/setbc1d)
 process_m4(NAME fortran/setbc2d)
 process_m4(NAME fortran/setbc3d)
 
-set (nonlinear_depends_on
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_solv
-    SAMRAI_appu
-    SAMRAI_mesh
-    SAMRAI_algs
-    SAMRAI_tbox)
+set(nonlinear_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(nonlinear_depends ${nonlinear_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(nonlinear_depends ${nonlinear_depends} cuda)
+endif ()
 
 blt_add_executable(
   NAME nonlinear
   SOURCES ${nonlinear_sources}
   DEPENDS_ON
-    ${nonlinear_depends_on})
+    ${nonlinear_depends})
 
 target_compile_definitions(nonlinear PUBLIC TESTING=1)
 

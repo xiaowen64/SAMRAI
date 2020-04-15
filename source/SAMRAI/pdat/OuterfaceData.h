@@ -127,6 +127,13 @@ public:
       const hier::Box& box,
       int depth);
 
+#if defined(HAVE_UMPIRE)
+   OuterfaceData(
+      const hier::Box& box,
+      int depth,
+      umpire::Allocator allocator);
+#endif
+
    /*!
     * @brief Virtual destructor for a outerface data object.
     */
@@ -178,6 +185,20 @@ public:
       int face_normal,
       int side,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+  template <int DIM>
+  using View = pdat::ArrayView<DIM, TYPE>;
+
+  template <int DIM>
+  using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+  template <int DIM>
+  View<DIM> getView(int face_normal, int side, int depth = 0);
+
+  template <int DIM>
+  ConstView<DIM> getConstView(int face_normal, int side, int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to data entry corresponding
@@ -578,6 +599,18 @@ private:
 
    std::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL][2];
 };
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OuterfaceData<TYPE>::template View<DIM> get_view(OuterfaceData<TYPE>& data,
+                                                     Args&&... args);
+
+template <int DIM, typename TYPE, typename... Args>
+typename OuterfaceData<TYPE>::template ConstView<DIM> get_const_view(
+    const OuterfaceData<TYPE>& data,
+    Args&&... args);
+#endif
+
 
 }
 }

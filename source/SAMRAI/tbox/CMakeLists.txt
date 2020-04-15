@@ -1,4 +1,5 @@
 set ( tbox_headers
+  AllocatorDatabase.h
   Array.h
   Array.C
   AsyncCommGroup.h
@@ -9,6 +10,7 @@ set ( tbox_headers
   BreadthFirstRankTree.h
   CenteredRankTree.h
   Clock.h
+  Collectives.h
   ConduitDatabase.h
   CommGraphWriter.h
   Complex.h
@@ -16,6 +18,7 @@ set ( tbox_headers
   DatabaseBox.h
   DatabaseFactory.h
   Dimension.h
+  ExecutionPolicy.h
   Grammar.h
   HDFDatabase.h
   HDFDatabaseFactory.h
@@ -31,6 +34,7 @@ set ( tbox_headers
   MemoryUtilities.h
   MessageStream.h
   NullDatabase.h
+  NVTXUtilities.h
   OpenMPUtilities.h
   ParallelBuffer.h
   Parser.h
@@ -62,6 +66,7 @@ set_source_files_properties(
   PROPERTIES HEADER_FILE_ONLY TRUE)
 
 set (tbox_sources
+  AllocatorDatabase.C
   ArraySpecial.C
   AsyncCommGroup.C
   AsyncCommStage.C
@@ -111,8 +116,8 @@ set (tbox_sources
   Transaction.C
   Utilities.C)
 
-if (HAVE_HDF5)
-    list(APPEND tbox_depends_on hdf5)
+if (ENABLE_HDF5)
+  set(tbox_depends ${tbox_depends} hdf5)
 endif ()
 
 if (HAVE_SILO)
@@ -124,18 +129,52 @@ if (SAMRAI_HAVE_CONDUIT)
 endif ()
 
 if (ENABLE_MPI)
-  list(APPEND tbox_depends_on mpi)
+  set(tbox_depends ${tbox_depends} mpi)
+endif ()
+
+if (ENABLE_UMPIRE)
+  set(tbox_depends ${tbox_depends} umpire)
+endif ()
+
+if (ENABLE_OPENMP)
+  set(tbox_depends ${tbox_depends} openmp)
+endif ()
+
+if (ENABLE_RAJA)
+  set(tbox_depends ${tbox_depends} raja)
+endif ()
+
+if (ENABLE_CUDA)
+  set(cuda_sources Schedule.C)
+  set_source_files_properties(${cuda_sources} PROPERTIES LANGUAGE CUDA)
+
+  if (ENABLE_NVTX_REGIONS)
+    find_package(CUDA REQUIRED)
+
+    find_library(NVTX_LIBRARY
+       NAME libnvToolsExt.so
+       PATHS ${CUDA_TOOLKIT_ROOT_DIR}/lib64 ${CUDA_TOOLKIT_ROOT_DIR}/lib)
+
+    message(STATUS "NVidia tools extension library found in " ${NVTX_LIBRARY})
+    blt_register_library(
+     NAME nvToolsExt
+     LIBRARIES ${NVTX_LIBRARY})
+
+    set(tbox_depends ${tbox_depends} nvToolsExt)
+    message(STATUS "Enable NVTX Regions Detected")
+  endif ()
 endif ()
 
 blt_add_library( NAME SAMRAI_tbox
   SOURCES ${tbox_sources}
   HEADERS ${tbox_headers}
-  DEPENDS_ON ${tbox_depends_on})
+  DEPENDS_ON ${tbox_depends})
 
 target_include_directories( SAMRAI_tbox
   PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/source>
   $<INSTALL_INTERFACE:include>)
+
 
 install(TARGETS SAMRAI_tbox
   EXPORT SAMRAITargets

@@ -16,21 +16,13 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE>
-CopyOperation<TYPE>::CopyOperation()
-{
-}
-
-template<class TYPE>
-CopyOperation<TYPE>::~CopyOperation()
-{
-}
-
 /*
  * Member functions for CopyOperation
  */
 
-template<class TYPE>
+template <class TYPE>
+SAMRAI_INLINE
+SAMRAI_HOST_DEVICE
 void
 CopyOperation<TYPE>::operator () (
    TYPE& vdst,

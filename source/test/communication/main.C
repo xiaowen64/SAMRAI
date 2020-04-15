@@ -580,7 +580,6 @@ int main(
 #endif
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
-
       if (do_refine) {
 
          for (int n = 0; n < ntimes_run; ++n) {
@@ -634,7 +633,6 @@ int main(
       }
 
       bool test2_passed = comm_tester->verifyCommunicationResults();
-
       /*
        * Deallocate objects when done.
        */

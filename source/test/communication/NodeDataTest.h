@@ -29,10 +29,13 @@
 
 #include <memory>
 
+
+
 namespace SAMRAI {
 
 class CommTester;
 
+using NODE_KERNEL_TYPE = double; // use float | double | dcomplex
 /**
  * Class NodeDataTest provides routines to test communication operations
  * for node-centered patch data on an AMR patch hierarchy.
@@ -58,6 +61,7 @@ class CommTester;
  * See PatchDataTestStrategy header file comments for variable and
  * refinement input data description.
  */
+
 
 class NodeDataTest:public PatchDataTestStrategy
 {
@@ -141,7 +145,7 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::NodeData<double> > data,
+      std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -151,13 +155,13 @@ private:
     */
    void
    setPeriodicData(
-      std::shared_ptr<pdat::NodeData<double> > data,
+      std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::NodeData<double> >& data,
+      const std::shared_ptr<pdat::NodeData<NODE_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const hier::Patch& patch) const;
 

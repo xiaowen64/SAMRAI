@@ -137,12 +137,12 @@ void OuternodeDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
-         new pdat::OuternodeVariable<double>(
+         new pdat::OuternodeVariable<OUTERNODE_KERNEL_TYPE>(
             d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
       d_variables_dst[i].reset(
-         new pdat::NodeVariable<double>(
+         new pdat::NodeVariable<OUTERNODE_KERNEL_TYPE>(
             d_dim,
             d_variable_dst_name[i],
             d_variable_depth[i]));
@@ -168,7 +168,7 @@ void OuternodeDataTest::registerVariables(
 }
 
 void OuternodeDataTest::setLinearData(
-   std::shared_ptr<pdat::NodeData<double> > data,
+   std::shared_ptr<pdat::NodeData<OUTERNODE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -215,7 +215,7 @@ void OuternodeDataTest::setLinearData(
 }
 
 void OuternodeDataTest::setLinearData(
-   std::shared_ptr<pdat::OuternodeData<double> > data,
+   std::shared_ptr<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -295,11 +295,11 @@ void OuternodeDataTest::initializeDataOnPatch(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
 
-         std::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            std::dynamic_pointer_cast<pdat::OuternodeData<double>,
+         std::shared_ptr<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE> > onode_data(
+            std::dynamic_pointer_cast<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
-         std::shared_ptr<pdat::NodeData<double> > node_data(
-            std::dynamic_pointer_cast<pdat::NodeData<double>,
+         std::shared_ptr<pdat::NodeData<OUTERNODE_KERNEL_TYPE> > node_data(
+            std::dynamic_pointer_cast<pdat::NodeData<OUTERNODE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
@@ -320,11 +320,11 @@ void OuternodeDataTest::initializeDataOnPatch(
          std::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
          TBOX_ASSERT(data);
-         std::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            std::dynamic_pointer_cast<pdat::OuternodeData<double>,
+         std::shared_ptr<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE> > onode_data(
+            std::dynamic_pointer_cast<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
-         std::shared_ptr<pdat::NodeData<double> > node_data(
-            std::dynamic_pointer_cast<pdat::NodeData<double>,
+         std::shared_ptr<pdat::NodeData<OUTERNODE_KERNEL_TYPE> > node_data(
+            std::dynamic_pointer_cast<pdat::NodeData<OUTERNODE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
@@ -343,7 +343,7 @@ void OuternodeDataTest::initializeDataOnPatch(
 }
 
 void OuternodeDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::OuternodeData<double> >& data,
+   const std::shared_ptr<pdat::OuternodeData<OUTERNODE_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
@@ -374,10 +374,10 @@ void OuternodeDataTest::checkPatchInteriorData(
          z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
-      double value;
+      OUTERNODE_KERNEL_TYPE value;
       for (int d = 0; d < depth; ++d) {
          value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci,
+         if (!(tbox::MathUtilities<OUTERNODE_KERNEL_TYPE>::equalEps((*data)(*ci,
                                                              d), value))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << std::endl;
@@ -429,8 +429,8 @@ bool OuternodeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::NodeData<double> > solution(
-         new pdat::NodeData<double>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::NodeData<OUTERNODE_KERNEL_TYPE> > solution(
+         new pdat::NodeData<OUTERNODE_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
       tbox.grow(tgcw);
@@ -444,8 +444,8 @@ bool OuternodeDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
-         std::shared_ptr<pdat::NodeData<double> > node_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::NodeData<OUTERNODE_KERNEL_TYPE> > node_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<OUTERNODE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables_dst[i], getDataContext())));
          TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();
@@ -454,10 +454,10 @@ bool OuternodeDataTest::verifyResults(
          pdat::NodeIterator ciend(pdat::NodeGeometry::end(dbox));
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
               ci != ciend; ++ci) {
-            double correct = (*solution)(*ci);
+            OUTERNODE_KERNEL_TYPE  correct = (*solution)(*ci);
             for (int d = 0; d < depth; ++d) {
-               double result = (*node_data)(*ci, d);
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               OUTERNODE_KERNEL_TYPE  result = (*node_data)(*ci, d);
+               if (!tbox::MathUtilities<OUTERNODE_KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : node index = " << *ci << std::endl;
                   tbox::perr << "    hier::Variable = "

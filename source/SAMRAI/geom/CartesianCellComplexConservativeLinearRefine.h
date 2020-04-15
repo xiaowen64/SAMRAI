@@ -115,6 +115,8 @@ public:
       const hier::IntVector& ratio) const;
 };
 
-}
-}
+} // end namespace geom
+} // end namespace SAMRAI
+
+#include "SAMRAI/geom/CartesianCellConservativeLinearRefine.C"
 #endif
