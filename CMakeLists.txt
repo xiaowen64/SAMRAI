@@ -34,7 +34,7 @@ endif()
 
 # BLT Options need to be set in the CACHE
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
-set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
+set(ENABLE_OPENMP Off CACHE Bool "Enable OpenMP")
 set(ENABLE_CUDA Off CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
