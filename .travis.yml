@@ -10,7 +10,7 @@ matrix:
   - compiler: gcc7
     env:
     - COMPILER=g++
-    - IMG=gcc-7
+    - IMG=gcc
     - VERSION=7.1.0
       #  - compiler: clang4
       #    env:
