@@ -455,7 +455,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
       int source = status.MPI_SOURCE;
       int count = -1;
       tbox::SAMRAI_MPI::Get_count(&status, MPI_CHAR, &count);
-      incoming_message.resize(count, -1);
+      incoming_message.resize(count, '\0');
 
       mpi.Recv(
          static_cast<void *>(&incoming_message[0]),
