@@ -42,7 +42,7 @@ if [[ "$DO_BUILD" == "yes" ]] ; then
     cd $samrai_source && git submodule init && git submodule update || exit $?
     samrai_build=$base_path/SAMRAI-build
     mkdir -p $samrai_build && cd $_ || exit $?
-    cmake -DENABLE_MPI=Off -DENABLE_CUDA=OFF -DENABLE_HDF5=Off -DENABLE_RAJA=ON -DRAJA_DIR=$raja_install/share/raja/cmake -DENABLE_UMPIRE=ON -Dumpire_DIR=$umpire_install/share/umpire/cmake -DCMAKE_CXX_COMPILER="$COMPILER" -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_EXAMPLES=ON -DENABLE_TESTS=ON -DCMAKE_Fortran_COMPILER=/usr/local/bin/gfortran $samrai_source || exit $?
+    cmake -DENABLE_MPI=Off -DENABLE_CUDA=OFF -DENABLE_HDF5=Off -DENABLE_RAJA=ON -DRAJA_DIR=$raja_install/share/raja/cmake -DENABLE_UMPIRE=ON -Dumpire_DIR=$umpire_install/share/umpire/cmake -DCMAKE_CXX_COMPILER="$COMPILER" -DCMAKE_CXX_FLAGS=$CMAKE_EXTRA_FLAGS -DENABLE_EXAMPLES=ON -DENABLE_TESTS=ON -DCMAKE_Fortran_COMPILER=/usr/bin/gfortran $samrai_source || exit $?
     make -j $threads || exit $?
     [[ "$DO_TEST" == "yes" ]] && ctest --extra-verbose -j $threads || exit $?
 fi
