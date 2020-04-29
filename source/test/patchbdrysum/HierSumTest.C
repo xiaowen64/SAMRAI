@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
@@ -27,6 +27,8 @@
 #include "SAMRAI/algs/PatchBoundaryNodeSum.h"
 #include "SAMRAI/algs/PatchBoundaryEdgeSum.h"
 #include "SAMRAI/hier/CoarseFineBoundary.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 extern "C" {
 void SAMRAI_F77_FUNC(setedges2d, SETEDGES2D) (const int&, const int&,
@@ -839,6 +841,9 @@ void HierSumTest::initializeLevelData(
       uedge->fillAll(0.0);
    }
 
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
    /*
     * Set cell weights.  We want interior cells set to 1.0 and
     * ghost cells set to 0.0.  (Eventually, we will reset the ghosts
@@ -863,6 +868,10 @@ void HierSumTest::initializeLevelData(
 
       ucell_edge->fillAll(0.0, ucell_edge->getGhostBox()); // ghost box
       ucell_edge->fillAll(1.0, patch->getBox());          // interior patch box
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
+
 
       // set cell values at physical boundary
       const std::shared_ptr<CartesianPatchGeometry> patch_geom(
@@ -923,6 +932,10 @@ void HierSumTest::initializeLevelData(
                ucell_node->fillAll(0.0, setbox);
             }
          }
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
+
 
          // zero out cells on the boundary that lie at coarse-fine
          // interface.

@@ -7,6 +7,71 @@ else ()
   set(LACKS_MPI True)
 endif ()
 
+# OpenMP is set up by BLT
+if (ENABLE_OPENMP)
+  if (OPENMP_FOUND)
+    set(HAVE_OPENMP True)
+  endif ()
+endif ()
+
+# UMPIRE
+if (ENABLE_UMPIRE OR umpire_DIR)
+  find_package(umpire REQUIRED)
+
+  set (HAVE_UMPIRE True)
+  set (ENABLE_UMPIRE On)
+
+  blt_register_library(
+    NAME umpire
+    INCLUDES ${UMPIRE_INCLUDE_DIRS}
+    LIBRARIES umpire)
+endif ()
+
+# RAJA
+if (ENABLE_RAJA OR RAJA_DIR)
+  if (NOT ENABLE_UMPIRE)
+    message(FATAL_ERROR "RAJA support requires UMPIRE.")
+  endif ()
+
+  find_package(RAJA REQUIRED)
+
+  set (raja_depends_on)
+  if (ENABLE_CUDA)
+    list (APPEND raja_depends cuda)
+  endif ()
+
+  if (ENABLE_OPENMP)
+    list (APPEND raja_depends openmp)
+  endif ()
+
+  if (RAJA_FOUND)
+    set (HAVE_RAJA True)
+    set (ENABLE_RAJA ON)
+
+    blt_register_library(
+      NAME RAJA
+      INCLUDES ${RAJA_INCLUDE_DIR}
+      LIBRARIES RAJA
+      DEPENDS_ON ${raja_depends})
+  endif ()
+endif ()
+
+# CUDA is setup by BLT
+if (ENABLE_CUDA)
+  if (NOT ENABLE_RAJA)
+    message(FATAL_ERROR "CUDA support requires RAJA")
+  endif ()
+
+  if (NOT ENABLE_UMPIRE)
+    message(FATAL_ERROR "CUDA support requires UMPIRE")
+  endif ()
+
+  if (CUDA_FOUND)
+    set (HAVE_CUDA True)
+  endif ()
+endif ()
+
+# HDF5
 if (ENABLE_HDF5)
   if (NOT ENABLE_MPI)
     message(FATAL_ERROR "HDF5 requires MPI.")
@@ -28,6 +93,7 @@ endif ()
 #HAVE_HYPRE
 if (ENABLE_HYPRE OR HYPRE_DIR)
   find_package(HYPRE REQUIRED)
+  # TODO: Ensure this is set in SAMRAI_config.h...
 
   if(HYPRE_FOUND)
     set (HAVE_HYPRE True)
@@ -62,6 +128,7 @@ if (ENABLE_PETSC OR PETSC_DIR)
   endif ()
 endif()
 
+
 #HAVE_SILO
 if (ENABLE_SILO OR SILO_DIR)
   find_package(SILO REQUIRED)
@@ -77,6 +144,7 @@ if (ENABLE_SILO OR SILO_DIR)
   endif ()
 endif ()
 
+
 #HAVE_SUNDIALS
 if (ENABLE_SUNDIALS OR SUNDIALS_DIR)
   find_package(SUNDIALS REQUIRED)
@@ -90,6 +158,7 @@ if (ENABLE_SUNDIALS OR SUNDIALS_DIR)
       LIBRARIES ${SUNDIALS_LIBRARIES})
   endif ()
 endif ()
+
 
 #SAMRAI_HAVE_CONDUIT
 if (ENABLE_CONDUIT OR CONDUIT_DIR)

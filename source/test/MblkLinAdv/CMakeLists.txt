@@ -4,23 +4,30 @@ set (mblklinadv_sources
   SkeletonOutersideDoubleWeightedAverage.C
   main.C)
 
-set (mblklinadv_depends_on
-    testlib
-    SAMRAI_appu
-    SAMRAI_algs
-    SAMRAI_solv
-    SAMRAI_geom
-    SAMRAI_mesh
-    SAMRAI_math
-    SAMRAI_pdat
-    SAMRAI_xfer
-    SAMRAI_hier
-    SAMRAI_tbox)
+
+set(mblklinadv_depends testlib)
+set(mblklinadv_depends ${mblklinadv_depends} ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(mblklinadv_depends ${mblklinadv_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(mblklinadv_depends ${mblklinadv_depends} cuda)
+endif ()
 
 blt_add_executable(
   NAME mblklinadv
   SOURCES ${mblklinadv_sources}
-  DEPENDS_ON
-    ${mblklinadv_depends_on})
+  DEPENDS_ON ${mblklinadv_depends})
 
-  #target_compile_definitions(mblklinadv PUBLIC TESTING=1)
+target_compile_definitions(mblklinadv PRIVATE TESTING=0) # Source still needs to be modified to work with autotester
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME mblklinadv
+  EXECUTABLE mblklinadv
+  INPUTS ${test_inputs}
+  PARALLEL TRUE)

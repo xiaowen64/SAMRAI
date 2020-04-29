@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated node centered patch data type
  *
  ************************************************************************/
@@ -96,6 +96,26 @@ NodeData<TYPE>::getPointer(
 
    return d_data->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+template<class TYPE>
+template<int DIM>
+typename NodeData<TYPE>::template View<DIM>
+NodeData<TYPE>::getView(int depth)
+{
+   const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
+   return NodeData<TYPE>::View<DIM>(getPointer(depth), node_box);
+}
+
+template<class TYPE>
+template<int DIM>
+typename NodeData<TYPE>::template ConstView<DIM>
+NodeData<TYPE>::getConstView(int depth) const
+{
+   const hier::Box node_box = NodeGeometry::toNodeBox(getGhostBox());
+   return NodeData<TYPE>::ConstView<DIM>(getPointer(depth), node_box);
+}
+#endif
 
 template<class TYPE>
 TYPE&
@@ -635,6 +655,20 @@ NodeData<TYPE>::putToRestart(
 
    d_data->putToRestart(restart_db->putDatabase("d_data"));
 }
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template View<DIM> get_view(NodeData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template ConstView<DIM> get_const_view(const NodeData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

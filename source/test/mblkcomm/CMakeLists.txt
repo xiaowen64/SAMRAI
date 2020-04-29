@@ -15,6 +15,15 @@ set (mblkcomm_depends_on
   SAMRAI_mesh
   SAMRAI_tbox)
 
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(mblkcomm_depends_on ${mblkcomm_depends_on} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(mblkcomm_depends_on ${mblkcomm_depends_on} cuda)
+endif ()
+
 blt_add_executable(
   NAME mblkcomm
   SOURCES ${mblkcomm_sources}

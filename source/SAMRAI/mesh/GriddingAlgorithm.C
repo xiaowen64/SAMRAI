@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -19,8 +19,12 @@
 #include "SAMRAI/math/PatchCellDataBasicOps.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
+#include "SAMRAI/pdat/CellConstantRefine.h"
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
+#include "SAMRAI/tbox/AllocatorDatabase.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,21 +144,40 @@ GriddingAlgorithm::GriddingAlgorithm(
          var_db->getVariable(tag_interior_variable_name));
    if (!d_user_tag) {
       d_user_tag.reset(
-         new pdat::CellVariable<int>(dim, tag_interior_variable_name, 1));
+         new pdat::CellVariable<int>(
+           dim,
+           tag_interior_variable_name,
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+           1
+           ));
    }
 
    d_saved_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
          var_db->getVariable(tag_saved_variable_name));
    if (!d_saved_tag) {
       d_saved_tag.reset(
-         new pdat::CellVariable<int>(dim, tag_saved_variable_name, 1));
+         new pdat::CellVariable<int>(dim,
+           tag_saved_variable_name,
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+           1
+           ));
    }
 
    d_boolean_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
          var_db->getVariable(tag_algorithm_variable_name));
    if (!d_boolean_tag) {
       d_boolean_tag.reset(
-         new pdat::CellVariable<int>(dim, tag_algorithm_variable_name, 1));
+         new pdat::CellVariable<int>(dim,
+           tag_algorithm_variable_name,
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+           1
+           ));
    }
 
    d_buf_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
@@ -162,7 +185,11 @@ GriddingAlgorithm::GriddingAlgorithm(
    if (!d_buf_tag) {
       d_buf_tag.reset(new pdat::CellVariable<int>(dim,
             tag_buffer_variable_name,
-            1));
+#if defined(HAVE_UMPIRE)
+           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+#endif
+            1
+            ));
    }
 
    d_user_tag_indx = var_db->registerInternalSAMRAIVariable(d_user_tag,
@@ -195,7 +222,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_fill_saved_tags->registerRefine(d_saved_tag_indx,
       d_user_tag_indx,
       d_saved_tag_indx,
-      std::shared_ptr<hier::RefineOperator>(new pdat::CellIntegerConstantRefine()),
+      std::shared_ptr<hier::RefineOperator>(new pdat::CellConstantRefine<int>()),
       std::shared_ptr<xfer::VariableFillPattern>(new xfer::PatchInteriorVariableFillPattern(dim)));
 
    d_proper_nesting_complement.resize(d_hierarchy->getMaxNumberOfLevels());
@@ -418,7 +445,7 @@ GriddingAlgorithm::makeCoarsestLevel(
       domain_box_level,
       domain_box_level,
       hier::IntVector::max(
-         d_hierarchy->getRequiredConnectorWidth(0, 0, true), 
+         d_hierarchy->getRequiredConnectorWidth(0, 0, true),
          hier::IntVector::getOne(dim)));
 
    if (d_barrier_and_time) {
@@ -620,7 +647,7 @@ GriddingAlgorithm::makeCoarsestLevel(
 
    std::shared_ptr<hier::PatchLevel> new_level(
       d_hierarchy->getPatchLevel(ln));
- 
+
    new_level->allocatePatchData(d_saved_tag_indx);
    fillTags(d_false_tag, new_level, d_saved_tag_indx);
 
@@ -831,6 +858,7 @@ GriddingAlgorithm::makeFinerLevel(
 
          tag_level->allocatePatchData(d_buf_tag_indx, level_time);
          bufferTagsOnLevel(d_true_tag, tag_level, tag_buffer);
+
          tag_level->deallocatePatchData(d_buf_tag_indx);
 
          /*
@@ -1330,16 +1358,17 @@ GriddingAlgorithm::regridFinerLevel(
        * load balance in preparation for constructing new refined level.
        */
       if (do_tagging) {
-
          /*
           * Tagging stuff have been factored out to shorten this method.
           */
+        RANGE_PUSH("doTaggingBefore", 3);
          regridFinerLevel_doTaggingBeforeRecursiveRegrid(
             tag_ln,
             level_is_coarsest_sync_level,
             regrid_start_time,
             regrid_time,
             regrid_cycle);
+         RANGE_POP;
 
          /*
           * Perform regridding recursively on finer levels, if appropriate.
@@ -1373,20 +1402,24 @@ GriddingAlgorithm::regridFinerLevel(
          /*
           * Tagging stuff have been factored out to shorten this method.
           */
+        RANGE_PUSH("doTaggingAfter", 3);
          regridFinerLevel_doTaggingAfterRecursiveRegrid(
             tag_to_finer,
             tag_ln,
             tag_buffer,
             regrid_time);
+         RANGE_POP;
 
          /*
           * Determine boxes containing cells on level with a true tag
           * value.
           */
+         RANGE_PUSH("findbox", 3);
          findRefinementBoxes(
             new_box_level,
             tag_to_new,
             tag_ln);
+         RANGE_POP;
 
          d_tag_init_strategy->checkUserTagData(d_hierarchy,
             tag_ln,
@@ -1445,6 +1478,7 @@ GriddingAlgorithm::regridFinerLevel(
        * next finer level if it is no longer needed.
        */
 
+      RANGE_PUSH("nex_box_level", 3);
       if (new_box_level && new_box_level->isInitialized()) {
 
          /*
@@ -1484,6 +1518,7 @@ GriddingAlgorithm::regridFinerLevel(
          }
 
       } // if we are not re-regenerating level new_ln.
+      RANGE_POP;
 
       if (do_tagging) {
          tag_level->deallocatePatchData(d_user_tag_indx);
@@ -2962,6 +2997,9 @@ GriddingAlgorithm::fillTags(
       tag_data->fill(tag_value);
 
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
    t_fill_tags->stop();
 }
 
@@ -3056,7 +3094,9 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
             }
          }
       }
-
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
    }
    t_fill_tags->stop();
 }
@@ -3084,23 +3124,25 @@ void GriddingAlgorithm::setBooleanTagData(
          SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_boolean_tag_indx)));
 
-      if (!preserve_existing_tags) { 
+      if (!preserve_existing_tags) {
          boolean_tag_data->fillAll(d_false_tag);
       }
-
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
       size_t data_length = boolean_tag_data->getGhostBox().size();
       TBOX_ASSERT(data_length == user_tag_data->getGhostBox().size());
 
       const int* user_tag_ptr = user_tag_data->getPointer();
       int* boolean_tag_ptr = boolean_tag_data->getPointer();
 
-      for (unsigned int i = 0; i < data_length; ++i) {
-         if (user_tag_ptr[i] != d_false_tag) {
-            boolean_tag_ptr[i] = d_true_tag;
-         } 
-      }
+     for (unsigned int i = 0; i < data_length; ++i) {
+        if (user_tag_ptr[i] != d_false_tag) {
+           boolean_tag_ptr[i] = d_true_tag;
+        }
+     }
    }
-} 
+}
 
 /*
  *************************************************************************
@@ -3158,17 +3200,20 @@ GriddingAlgorithm::bufferTagsOnLevel(
       TBOX_ASSERT(boolean_tag_data);
 
       buf_tag_data->fillAll(not_tag);
-
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
       const hier::Box& interior(patch->getBox());
 
-      pdat::CellIterator icend(pdat::CellGeometry::end(interior));
-      for (pdat::CellIterator ic(pdat::CellGeometry::begin(interior));
-           ic != icend; ++ic) {
-         if ((*boolean_tag_data)(*ic) == tag_value) {
-            (*buf_tag_data)(*ic) = d_true_tag;
-         }
-      }
+     pdat::CellIterator icend(pdat::CellGeometry::end(interior));
+     for (pdat::CellIterator ic(pdat::CellGeometry::begin(interior));
+          ic != icend; ++ic) {
+        if ((*boolean_tag_data)(*ic) == tag_value) {
+           (*buf_tag_data)(*ic) = d_true_tag;
+        }
+     }
    }
+
 
    /*
     * Communicate boundary data for buffered tag array so that tags
@@ -3203,7 +3248,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
       buf_tag_box.grow(hier::IntVector(dim, buffer_size));
 
       boolean_tag_data->fillAll(not_tag);
-
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
       pdat::CellIterator icend(pdat::CellGeometry::end(buf_tag_box));
       for (pdat::CellIterator ic(pdat::CellGeometry::begin(buf_tag_box));
            ic != icend; ++ic) {
@@ -3214,7 +3261,9 @@ GriddingAlgorithm::bufferTagsOnLevel(
             boolean_tag_data->fill(tag_value, buf_box);
          }
       }
-
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
    }
 
    /*
@@ -3239,12 +3288,12 @@ GriddingAlgorithm::bufferTagsOnLevel(
       int* user_tag_ptr = user_tag_data->getPointer();
       const int* boolean_tag_ptr = boolean_tag_data->getPointer();
 
-      for (unsigned int i = 0; i < data_length; ++i) {
-         if (boolean_tag_ptr[i] == d_true_tag &&
-             user_tag_ptr[i] == d_false_tag) {
-            user_tag_ptr[i] = d_buffer_tag;
-         }
-      }
+     for (unsigned int i = 0; i < data_length; ++i) {
+        if (boolean_tag_ptr[i] == d_true_tag &&
+            user_tag_ptr[i] == d_false_tag) {
+           user_tag_ptr[i] = d_buffer_tag;
+        }
+     }
    }
 
    t_buffer_tags->stop();
@@ -4619,7 +4668,7 @@ GriddingAlgorithm::getGriddingParameters(
        */
       hier::IntVector multi_max_ghosts(max_ghosts,
                                        d_hierarchy->getNumberBlocks());
- 
+
       const hier::IntVector sz(hier::IntVector::ceilingDivide(
                                   multi_max_ghosts, den));
       smallest_box_to_refine.max(sz);

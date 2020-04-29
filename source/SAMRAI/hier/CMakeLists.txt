@@ -133,14 +133,17 @@ set (hier_sources
   VariableContext.C
   VariableDatabase.C)
 
-set (hier_depends_on
-  SAMRAI_tbox)
+set (hier_depends SAMRAI_tbox)
+
+if (ENABLE_MPI)
+  set (hier_depends ${hier_depends} mpi)
+endif ()
 
 blt_add_library(
   NAME SAMRAI_hier
   SOURCES ${hier_sources}
   HEADERS ${hier_headers}
-  DEPENDS_ON ${hier_depends_on})
+  DEPENDS_ON ${hier_depends})
 
 target_include_directories(
   SAMRAI_hier

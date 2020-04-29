@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Singleton database class for managing variables and contexts.
  *
  ************************************************************************/
@@ -748,12 +748,6 @@ private:
       const std::shared_ptr<VariableContext>& context,
       const IntVector& ghosts,
       bool user_variable);
-
-   /*
-    * Static data members used to control access to and destruction of
-    * singleton variable database instance.
-    */
-   static VariableDatabase* s_variable_database_instance;
 
    /*
     * Static data members used to control allocation of arrays.

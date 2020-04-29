@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -13,6 +13,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 #include <cstring>
 
@@ -224,6 +225,9 @@ Schedule::finalizeCommunication()
 {
    d_object_timers->t_finalize_communication->start();
    performLocalCopies();
+#if defined(HAVE_RAJA)
+   parallel_synchronize();
+#endif
    processCompletedCommunications();
    deallocateCommunicationObjects();
    d_object_timers->t_finalize_communication->stop();
@@ -375,6 +379,10 @@ Schedule::postSends()
            pack != transactions.end(); ++pack) {
          (*pack)->packStream(outgoing_stream);
       }
+#if defined(HAVE_RAJA)      
+      parallel_synchronize();
+#endif
+
       d_object_timers->t_pack_stream->stop();
 
       if (can_estimate_incoming_message_size) {
@@ -450,6 +458,10 @@ Schedule::processCompletedCommunications()
               recv != d_recv_sets[sender].end(); ++recv) {
             (*recv)->unpackStream(incoming_stream);
          }
+#if defined(HAVE_RAJA)
+         parallel_synchronize();
+#endif
+
          d_object_timers->t_unpack_stream->stop();
          completed_comm.clearRecvData();
 
@@ -488,6 +500,9 @@ Schedule::processCompletedCommunications()
                  recv != d_recv_sets[sender].end(); ++recv) {
                (*recv)->unpackStream(incoming_stream);
             }
+#if defined(HAVE_RAJA)
+            parallel_synchronize();
+#endif
             d_object_timers->t_unpack_stream->stop();
             completed_comm->clearRecvData();
          } else {

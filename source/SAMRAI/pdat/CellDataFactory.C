@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating cell data objects
  *
  ************************************************************************/
@@ -43,10 +43,29 @@ CellDataFactory<TYPE>::CellDataFactory(
    const hier::IntVector& ghosts):
    hier::PatchDataFactory(ghosts),
    d_depth(depth)
+#if defined(HAVE_UMPIRE)
+   , d_has_allocator(false)
+#endif
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
+
+#if defined(HAVE_UMPIRE)
+template<class TYPE>
+CellDataFactory<TYPE>::CellDataFactory(
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchDataFactory(ghosts),
+   d_depth(depth),
+   d_allocator(allocator),
+   d_has_allocator(true)
+{
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+}
+#endif
 
 template<class TYPE>
 CellDataFactory<TYPE>::~CellDataFactory()
@@ -68,7 +87,17 @@ CellDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
+#if defined(HAVE_UMPIRE)
+   if (d_has_allocator) {
+     return
+       std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts, d_allocator);
+   } else {
+#endif
+   return 
+     std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
+#if defined(HAVE_UMPIRE)
+   }
+#endif
 }
 
 /*
@@ -86,10 +115,22 @@ CellDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
+#if defined(HAVE_UMPIRE)
+   if (d_has_allocator) {
+     return std::make_shared<CellData<TYPE> >(
+               patch.getBox(),
+               d_depth,
+               d_ghosts,
+               d_allocator);
+   } else {
+#endif
    return std::make_shared<CellData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts);
+#if defined(HAVE_UMPIRE)
+   }
+#endif
 }
 
 /*

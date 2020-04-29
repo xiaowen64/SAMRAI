@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Sum operation on single array data elements templated on data type
  *
  ************************************************************************/
@@ -21,21 +21,13 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE>
-SumOperation<TYPE>::SumOperation()
-{
-}
-
-template<class TYPE>
-SumOperation<TYPE>::~SumOperation()
-{
-}
-
 /*
  * Member functions for SumOperation
  */
 
 template<class TYPE>
+SAMRAI_INLINE
+SAMRAI_HOST_DEVICE
 void
 SumOperation<TYPE>::operator () (
    TYPE& vdst,

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -1003,20 +1003,10 @@ SparseData<BOX_GEOMETRY>::getDblAttributeId(
    const std::string& attribute) const
 {
    DoubleAttributeId id(-1);
-// stupid need
-#ifdef GNUC_VERSION_412
-   DoubleAttrNameMap::const_iterator iter = d_dbl_names.find(attribute);
+   auto iter = d_dbl_names.find(attribute);
    if (iter != d_dbl_names.end()) {
       id = iter->second;
    }
-#else
-   try
-   {
-      id = d_dbl_names.at(attribute);
-   } catch (std::out_of_range e) {
-      //TBOX_ASSERT(id != DoubleAttributeId::INVALID_DOUBLE_ID);
-   }
-#endif
    return id;
 }
 
@@ -1029,19 +1019,10 @@ SparseData<BOX_GEOMETRY>::getIntAttributeId(
    const std::string& attribute) const
 {
    IntegerAttributeId id(-1);
-#ifdef GNUC_VERSION_412
-   IntAttrNameMap::const_iterator iter = d_int_names.find(attribute);
+   auto iter = d_int_names.find(attribute);
    if (iter != d_int_names.end()) {
       id = iter->second;
    }
-#else
-   try
-   {
-      id = d_int_names.at(attribute);
-   } catch (std::out_of_range e) {
-      //TBOX_ASSERT(id != IntegerAttributeId::INVALID_INT_ID);
-   }
-#endif
    return id;
 }
 

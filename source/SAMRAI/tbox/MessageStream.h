@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
@@ -15,6 +15,10 @@
 
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#ifdef HAVE_UMPIRE
+#include "umpire/TypedAllocator.hpp"
+#endif
 
 #include <cstring>
 #include <iostream>
@@ -414,7 +418,11 @@ private:
    /*!
     * The buffer for the streamed data to be written.
     */
+#ifdef HAVE_UMPIRE
+   std::vector<char, umpire::TypedAllocator<char> > d_write_buffer;
+#else
    std::vector<char> d_write_buffer;
+#endif
 
    /*!
     * @brief Pointer to the externally supplied memory to read from in

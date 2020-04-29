@@ -37,10 +37,14 @@ set (algs_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/algs_upfluxsum2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/algs_upfluxsum3d.f)
 
-set (algs_depends_on
+set (algs_depends
   SAMRAI_hier
   SAMRAI_tbox
   SAMRAI_pdat)
+
+if (ENABLE_CUDA)
+  set (algs_depends ${algs_depends} cuda)
+endif ()
 
 process_m4(NAME fortran/algs_nodeouternodeops2d)
 process_m4(NAME fortran/algs_nodeouternodeops3d)
@@ -51,7 +55,7 @@ process_m4(NAME fortran/algs_upfluxsum3d)
 blt_add_library( NAME SAMRAI_algs
   SOURCES ${algs_sources}
   HEADERS ${algs_headers}
-  DEPENDS_ON ${algs_depends_on})
+  DEPENDS_ON ${algs_depends})
 
 set_target_properties(SAMRAI_algs PROPERTIES LINKER_LANGUAGE CXX)
 

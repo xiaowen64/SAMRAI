@@ -11,10 +11,9 @@ macro (samrai_add_tests)
 
     set(command_args ${test_file} ${arg_EXTRA_ARG})
 
-    message(STATUS "Test: ${arg_NAME} with input ${command_args}")
-
     get_filename_component(short_test_file ${test_file} NAME)
     set(test_name "${base_name}_test_${short_test_file}")
+    message(STATUS "Test: ${test_name} with input ${command_args}")
 
     if(ENABLE_MPI)
       blt_add_test(NAME ${test_name}

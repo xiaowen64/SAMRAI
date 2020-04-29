@@ -12,22 +12,23 @@ set (facadaptive_sources
   patchFcns.C
   setArrayData.C)
 
-set (facadaptive_depends_on
-  testlib
-  SAMRAI_hier
-  SAMRAI_pdat
-  SAMRAI_mesh
-  SAMRAI_solv
-  SAMRAI_appu
-  SAMRAI_xfer
-  SAMRAI_geom
-  SAMRAI_tbox)
+set(facadaptive_depends testlib)
+set(facadaptive_depends ${facadaptive_depends} ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(facadaptive_depends ${facadaptive_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(facadaptive_depends ${facadaptive_depends} cuda)
+endif ()
 
 blt_add_executable(
   NAME facadaptive
   SOURCES ${facadaptive_sources}
   DEPENDS_ON
-    ${facadaptive_depends_on})
+    ${facadaptive_depends})
 
 target_compile_definitions(facadaptive PUBLIC TESTING=1)
 

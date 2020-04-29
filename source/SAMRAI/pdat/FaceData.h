@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated face centered patch data type
  *
  ************************************************************************/
@@ -135,6 +135,10 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#ifdef HAVE_UMPIRE
+  FaceData(const hier::Box& box, int depth, const hier::IntVector& ghosts,umpire::Allocator allocator);
+#endif
+
    /*!
     * @brief The virtual destructor for a face data object.
     */
@@ -170,6 +174,20 @@ public:
    getPointer(
       int face_normal,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+  template <int DIM>
+  using View = pdat::ArrayView<DIM, TYPE>;
+
+  template <int DIM>
+  using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+  template <int DIM>
+  View<DIM> getView(int face_normal, int depth = 0);
+
+  template <int DIM>
+  ConstView<DIM> getConstView(int face_normal, int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding
@@ -557,6 +575,17 @@ private:
    std::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL];
 
 };
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename FaceData<TYPE>::template View<DIM> get_view(FaceData<TYPE>& data,
+                                                     Args&&... args);
+
+template <int DIM, typename TYPE, typename... Args>
+typename FaceData<TYPE>::template ConstView<DIM> get_const_view(
+    const FaceData<TYPE>& data,
+    Args&&... args);
+#endif
 
 }
 }

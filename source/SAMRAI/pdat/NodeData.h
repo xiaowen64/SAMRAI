@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated node centered patch data type
  *
  ************************************************************************/
@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/ArrayView.h"
 #include "SAMRAI/pdat/NodeIndex.h"
 #include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
@@ -146,6 +147,24 @@ public:
    const TYPE *
    getPointer(
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+   template<int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template<int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   template <int DIM>
+   View<DIM>
+   getView(
+      int depth = 0);
+
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding
@@ -484,6 +503,14 @@ private:
    std::shared_ptr<ArrayData<TYPE> > d_data;
 
 };
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template View<DIM> get_view(NodeData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template ConstView<DIM> get_const_view(const NodeData<TYPE>& data, Args&&... args);
+#endif
 
 }
 }

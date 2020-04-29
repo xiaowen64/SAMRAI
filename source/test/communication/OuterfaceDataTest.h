@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for outerface-centered patch data
  *
  ************************************************************************/
@@ -35,6 +35,7 @@
 namespace SAMRAI {
 
 class CommTester;
+using OUTERFACE_KERNEL_TYPE = double; // dcomplex not supported
 
 /**
  * Class OuterfaceDataTest provides routines to test communication operations
@@ -133,19 +134,19 @@ private:
 
    void
    setLinearData(
-      std::shared_ptr<pdat::FaceData<double> > data,
+      std::shared_ptr<pdat::FaceData<OUTERFACE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    setLinearData(
-      std::shared_ptr<pdat::OuterfaceData<double> > data,
+      std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::OuterfaceData<double> >& data,
+      const std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const;
 

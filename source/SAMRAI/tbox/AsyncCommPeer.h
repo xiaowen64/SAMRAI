@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -476,8 +476,8 @@ private:
     * user data TYPE in the same MPI message.
     */
    union FlexData {
-      int i;
-      TYPE t;
+      int d_i;
+      TYPE d_t;
       FlexData();
    };
 

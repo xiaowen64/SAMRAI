@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -13,12 +13,15 @@
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/NodeVariable.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include "MultiblockTester.h"
 
 #include <vector>
 
 using namespace SAMRAI;
+
+using NODE_MBLK_KERNEL_TYPE = double;
 
 NodeMultiblockTest::NodeMultiblockTest(
    const std::string& object_name,
@@ -87,7 +90,7 @@ void NodeMultiblockTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::NodeVariable<double>(d_dim,
+         new pdat::NodeVariable<NODE_MBLK_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
@@ -118,16 +121,19 @@ void NodeMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::NodeData<double> > node_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::NodeData<NODE_MBLK_KERNEL_TYPE> > node_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_MBLK_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(node_data);
 
          hier::Box dbox = node_data->getGhostBox();
 
-         node_data->fillAll((double)block_id.getBlockValue());
+         node_data->fillAll((NODE_MBLK_KERNEL_TYPE)block_id.getBlockValue());
 
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
    }
 }
 
@@ -172,8 +178,8 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::NodeData<double> > node_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::NodeData<NODE_MBLK_KERNEL_TYPE> > node_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
@@ -195,7 +201,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
                if (!patch_node_box.contains(*ni)) {
                   for (int d = 0; d < node_data->getDepth(); ++d) {
                      (*node_data)(*ni, d) =
-                        (double)(node_bdry[nb].getLocationIndex() + 100);
+                        (NODE_MBLK_KERNEL_TYPE)(node_bdry[nb].getLocationIndex() + 100);
                   }
                }
             }
@@ -236,7 +242,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
                      if (use_index) {
                         for (int d = 0; d < node_data->getDepth(); ++d) {
                            (*node_data)(*ni, d) =
-                              (double)(edge_bdry[eb].getLocationIndex() + 100);
+                              (NODE_MBLK_KERNEL_TYPE)(edge_bdry[eb].getLocationIndex() + 100);
                         }
                      }
                   }
@@ -279,7 +285,7 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
                      if (use_index) {
                         for (int d = 0; d < node_data->getDepth(); ++d) {
                            (*node_data)(*ni, d) =
-                              (double)(face_bdry[fb].getLocationIndex() + 100);
+                              (NODE_MBLK_KERNEL_TYPE)(face_bdry[fb].getLocationIndex() + 100);
                         }
                      }
                   }
@@ -289,6 +295,9 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
       }
 
    }
+#if defined(HAVE_CUDA)
+   cudaDeviceSynchronize();
+#endif
 
 }
 
@@ -307,8 +316,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::NodeData<double> > node_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::NodeData<NODE_MBLK_KERNEL_TYPE> > node_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
 
@@ -389,8 +398,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  std::shared_ptr<pdat::NodeData<double> > sing_data(
-                     SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::NodeData<NODE_MBLK_KERNEL_TYPE> > sing_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_MBLK_KERNEL_TYPE>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -463,7 +472,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
             if (use_index) {
                for (int d = 0; d < depth; ++d) {
                   (*node_data)(*ci,
-                               d) = (double)bbox.getLocationIndex() + 200.0;
+                               d) = (NODE_MBLK_KERNEL_TYPE)bbox.getLocationIndex() + 200.0;
                }
             }
          }
@@ -497,8 +506,8 @@ bool NodeMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   std::shared_ptr<pdat::NodeData<double> > solution(
-      new pdat::NodeData<double>(pbox, 1, tgcw));
+   std::shared_ptr<pdat::NodeData<NODE_MBLK_KERNEL_TYPE> > solution(
+      new pdat::NodeData<NODE_MBLK_KERNEL_TYPE>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
@@ -518,10 +527,10 @@ bool NodeMultiblockTest::verifyResults(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      double correct = (double)block_id.getBlockValue();
+      NODE_MBLK_KERNEL_TYPE correct = (NODE_MBLK_KERNEL_TYPE)block_id.getBlockValue();
 
-      std::shared_ptr<pdat::NodeData<double> > node_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::NodeData<NODE_MBLK_KERNEL_TYPE> > node_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<NODE_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(node_data);
       int depth = node_data->getDepth();
@@ -533,9 +542,9 @@ bool NodeMultiblockTest::verifyResults(
       for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(interior_box));
            ci != ciend; ++ci) {
          for (int d = 0; d < depth; ++d) {
-            double result = (*node_data)(*ci, d);
+            NODE_MBLK_KERNEL_TYPE result = (*node_data)(*ci, d);
 
-            if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+            if (!tbox::MathUtilities<NODE_MBLK_KERNEL_TYPE>::equalEps(correct, result)) {
                tbox::perr << "Test FAILED: ...."
                           << " : node index = " << *ci << std::endl;
                tbox::perr << "    Variable = " << d_variable_src_name[i]
@@ -596,9 +605,9 @@ bool NodeMultiblockTest::verifyResults(
                pdat::NodeIndex ni(*ci, hier::IntVector(d_dim, 0));
                if (!patch_node_box.contains(ni)) {
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*node_data)(ni, d);
+                     NODE_MBLK_KERNEL_TYPE result = (*node_data)(ni, d);
 
-                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                     if (!tbox::MathUtilities<NODE_MBLK_KERNEL_TYPE>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
                                    << " : node index = " << ni << std::endl;
@@ -647,16 +656,16 @@ bool NodeMultiblockTest::verifyResults(
 
                if (num_sing_neighbors == 0) {
 
-                  correct = (double)bdry[k].getLocationIndex() + 200.0;
+                  correct = (NODE_MBLK_KERNEL_TYPE)bdry[k].getLocationIndex() + 200.0;
 
                } else {
 
-                  correct /= (double)num_sing_neighbors;
+                  correct /= (NODE_MBLK_KERNEL_TYPE)num_sing_neighbors;
 
                }
 
             } else {
-               correct = (double)(bdry[k].getLocationIndex() + 100);
+               correct = (NODE_MBLK_KERNEL_TYPE)(bdry[k].getLocationIndex() + 100);
             }
 
             pdat::NodeIterator ciend(pdat::NodeGeometry::end(fill_box));
@@ -678,9 +687,9 @@ bool NodeMultiblockTest::verifyResults(
 
                   if (use_index) {
                      for (int d = 0; d < depth; ++d) {
-                        double result = (*node_data)(*ci, d);
+                        NODE_MBLK_KERNEL_TYPE result = (*node_data)(*ci, d);
 
-                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                        if (!tbox::MathUtilities<NODE_MBLK_KERNEL_TYPE>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
                                       << " : node index = " << *ci << std::endl;

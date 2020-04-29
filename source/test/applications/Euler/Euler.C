@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for Euler equations SAMRAI example
  *
  ************************************************************************/
@@ -50,6 +50,8 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 //integer constants for boundary conditions
 #define CHECK_BDRY_DATA (0)
@@ -701,6 +703,9 @@ void Euler::initializeDataOnPatch(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
    }
 
    t_init->stop();
@@ -800,7 +805,6 @@ void Euler::computeFluxesOnPatch(
    const double dt)
 {
    NULL_USE(time);
-
    t_compute_fluxes->start();
 
    if (d_dim == tbox::Dimension(3)) {
@@ -2064,6 +2068,10 @@ void Euler::postprocessCoarsen(
    TBOX_ASSERT(cgeom);
 
    const hier::Box fine_box = hier::Box::refine(coarse_box, ratio);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
+
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
    const hier::Index ifirstf = fine_box.lower();
@@ -2398,6 +2406,9 @@ void Euler::tagGradientDetectorCells(
          1,
          d_nghosts));
    temp_tags->fillAll(FALSE);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    if (d_dim == tbox::Dimension(2)) {
       /*
@@ -2408,6 +2419,9 @@ void Euler::tagGradientDetectorCells(
             hier::Box tagbox(hier::Index(9, 0), hier::Index(9, 3), hier::BlockId(0));
             if (error_level_number == 1) {
                tagbox.refine(hier::IntVector(d_dim, 2));
+#if defined(HAVE_RAJA)
+               tbox::parallel_synchronize();
+#endif
             }
             hier::Box ibox = pbox * tagbox;
 

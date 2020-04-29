@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated outerside centered patch data type
  *
  ************************************************************************/
@@ -126,6 +126,13 @@ public:
       const hier::Box& box,
       int depth);
 
+#if defined(HAVE_UMPIRE)
+   OutersideData(
+      const hier::Box& box,
+      int depth,
+      umpire::Allocator allocator);
+#endif
+   
    /*!
     * @brief Virtual destructor for a outerside data object.
     */
@@ -177,6 +184,20 @@ public:
       int side_normal,
       int side,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+  template <int DIM>
+  using View = pdat::ArrayView<DIM, TYPE>;
+
+  template <int DIM>
+  using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+  template <int DIM>
+  View<DIM> getView(int side_normal, int side, int depth = 0);
+
+  template <int DIM>
+  ConstView<DIM> getConstView(int side_normal, int side, int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to data entry corresponding
@@ -572,6 +593,18 @@ private:
 
    std::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL][2];
 };
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template View<DIM> get_view(OutersideData<TYPE>& data,
+                                                     Args&&... args);
+
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template ConstView<DIM> get_const_view(
+    const OutersideData<TYPE>& data,
+    Args&&... args);
+#endif
+
 
 }
 }

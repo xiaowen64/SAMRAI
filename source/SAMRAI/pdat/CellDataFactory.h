@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating cell data objects
  *
  ************************************************************************/
@@ -20,6 +20,10 @@
 #include "SAMRAI/tbox/Complex.h"
 
 #include <memory>
+
+#if defined(HAVE_UMPIRE)
+#include "umpire/Allocator.hpp"
+#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -50,6 +54,23 @@ public:
    CellDataFactory(
       int depth,
       const hier::IntVector& ghosts);
+
+#if defined(HAVE_UMPIRE)
+   /**
+    * Constructor for the cell data factory class that takes a specific
+    * umpire::Allocator.  The ghost cell width and depth (number of components)
+    * arguments give the defaults for all cell data objects created with this
+    * factory.
+    *
+    * The allocator
+    *
+    * @pre depth > 0 @pre ghosts.min() >= 0
+    */
+   CellDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+#endif
 
    /**
     * Virtual destructor for the cell data factory class.
@@ -143,6 +164,10 @@ public:
 private:
    int d_depth;
 
+#if defined(HAVE_UMPIRE)
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
+#endif
 };
 
 }

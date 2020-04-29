@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for side-centered patch data
  *
  ************************************************************************/
@@ -461,6 +461,9 @@ void SideDataTest::setPhysicalBoundaryConditions(
       TBOX_ASSERT(side_data);
 
       hier::Box patch_interior = side_data->getBox();
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       checkPatchInteriorData(side_data, patch_interior, patch);
 
       /*
