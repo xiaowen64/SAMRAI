@@ -24,29 +24,6 @@
     - when: on_success
 
 ####
-# In pre-build phase, allocate a node for builds
-allocate_resources (on quartz):
-  variables:
-    GIT_STRATEGY: none
-  extends: .on_quartz
-  stage: q_allocate_resources
-  script:
-    - salloc -N 1 -c 36 -p pdebug -t 30 --no-shell --job-name=${SAMRAI_ALLOC_NAME}
-  needs: ["start"]
-
-####
-# In post-build phase, deallocate resources
-# Note : make sure this is run even on build phase failure
-release_resources (on quartz):
-  variables:
-    GIT_STRATEGY: none
-  extends: .on_quartz
-  stage: q_release_resources
-  script:
-    - export JOBID=$(squeue -h --name=${SAMRAI_ALLOC_NAME} --format=%A)
-    - ([[ -n "${JOBID}" ]] && scancel ${JOBID})
-
-####
 # Generic qwartz build job, extending build script
 .build_on_quartz:
   stage: q_build
