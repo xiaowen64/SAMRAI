@@ -75,7 +75,9 @@ then
 
     cd ${build_dir}
 
-    ctest --output-on-failure -T test 2>&1 | tee tests_output.txt
+    ctest_out=0
+
+    ( ctest --output-on-failure -T test 2>&1 || ( ctest_out=$?; echo "Error(s) in CTest" ) ) | tee tests_output.txt
 
     no_test_str="No tests were found!!!"
     if [[ "$(tail -n 1 tests_output.txt)" == "${no_test_str}" ]]
@@ -89,4 +91,6 @@ then
     do
         cp ${report} ${project_dir}/ctest_report_${report//\//_}
     done
+
+    exit ${ctest_out}
 fi
