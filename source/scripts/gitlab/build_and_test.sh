@@ -75,7 +75,7 @@ then
 
     cd ${build_dir}
 
-    ctest -T test 2>&1 | tee tests_output.txt
+    ctest --output-on-failure -T test 2>&1 | tee tests_output.txt
 
     no_test_str="No tests were found!!!"
     if [[ "$(tail -n 1 tests_output.txt)" == "${no_test_str}" ]]
