@@ -88,6 +88,9 @@ start:
     - export JOBID=$(squeue -h --name=${SAMRAI_ALLOC_NAME} --format=%A)
     - echo ${JOBID}
     - srun -p pdebug -t 30 -N 1 source/scripts/gitlab/build_and_test.sh --test-only
+  artifacts:
+    paths:
+      - ctest_report_*.xml
 
 # Lassen and Butte use a different job scheduler (spectrum lsf) that does not
 # allow pre-allocation the same way slurm does.

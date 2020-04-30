@@ -85,5 +85,8 @@ then
 
     echo "Copying Testing xml reports for export"
     tree Testing
-    cp Testing/*/Test.xml ${project_dir}
+    for report in Testing/*/Test.xml
+    do
+        cp ${report} ${project_dir}/ctest_report_${report//\//_}
+    done
 fi
