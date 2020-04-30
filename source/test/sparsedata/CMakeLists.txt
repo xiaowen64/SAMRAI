@@ -27,10 +27,19 @@ blt_add_executable(
 
 target_compile_definitions(sparse PUBLIC TESTING=1)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_test(
   NAME main-sparsedata
-  COMMAND main-sparsedata)
+  COMMAND main-sparsedata
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_test(
   NAME sparse
-  COMMAND sparse)
+  COMMAND sparse
+  NUM_MPI_TASKS ${TASKS})
+

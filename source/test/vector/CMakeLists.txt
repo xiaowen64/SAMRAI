@@ -1,3 +1,9 @@
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_executable(
   NAME kvtest
   SOURCES kvtest.C
@@ -10,7 +16,8 @@ blt_add_executable(
 
 blt_add_test(
   NAME kvtest
-  COMMAND kvtest)
+  COMMAND kvtest
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_executable(
   NAME pvtest
@@ -24,4 +31,6 @@ blt_add_executable(
 
 blt_add_test(
   NAME pvtest
-  COMMAND pvtest)
+  COMMAND pvtest
+  NUM_MPI_TASKS ${TASKS})
+
