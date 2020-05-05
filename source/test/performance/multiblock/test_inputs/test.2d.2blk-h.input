@@ -149,7 +149,7 @@ GridGeometry {
       block_b = 1
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 0, 20
+      point_in_a_space = 0, 10
       point_in_b_space = 0, 0
    }
 }
