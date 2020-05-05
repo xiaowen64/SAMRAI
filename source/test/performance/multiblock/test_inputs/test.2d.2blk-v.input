@@ -139,15 +139,15 @@ TimerManager {
 // Refer to input documentation for hier:GridGeometry class.
 GridGeometry {
    num_blocks = 2
-   domain_boxes_0 = [ (0,0) , (29,39) ]
-   domain_boxes_1 = [ (0,0) , (29,39) ]
+   domain_boxes_0 = [ (0,0) , (14,19) ]
+   domain_boxes_1 = [ (0,0) , (14,19) ]
 
    BlockNeighbors0 {
       block_a = 0
       block_b = 1
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 30, 0
+      point_in_a_space = 15, 0
       point_in_b_space = 0, 0
    }
 }
@@ -200,6 +200,6 @@ TimeRefinementIntegrator{
    start_time           = 0.e0     // initial simulation time
    end_time             = 100.e0   // final simulation time
    grow_dt              = 1.1e0    // growth factor for timesteps
-   max_integrator_steps = 20       // max number of simulation timesteps
+   max_integrator_steps = 100    // max number of simulation timesteps
    regrid_interval      = 10
 }

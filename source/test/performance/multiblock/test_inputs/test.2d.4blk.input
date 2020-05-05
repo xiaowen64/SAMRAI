@@ -145,17 +145,17 @@ TimerManager {
 // Refer to input documentation for hier:GridGeometry class.
 GridGeometry {
    num_blocks = 4
-   domain_boxes_0 = [ (0,0) , (29,19) ]
-   domain_boxes_1 = [ (0,0) , (29,19) ]
-   domain_boxes_2 = [ (0,0) , (29,19) ]
-   domain_boxes_3 = [ (0,0) , (29,19) ]
+   domain_boxes_0 = [ (0,0) , (14,9) ]
+   domain_boxes_1 = [ (0,0) , (14,9) ]
+   domain_boxes_2 = [ (0,0) , (14,9) ]
+   domain_boxes_3 = [ (0,0) , (14,9) ]
 
    BlockNeighbors0 {
       block_a = 0
       block_b = 1
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 0, 20
+      point_in_a_space = 0, 10
       point_in_b_space = 0, 0
    }
 
@@ -164,7 +164,7 @@ GridGeometry {
       block_b = 2
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 30, 0
+      point_in_a_space = 15, 0
       point_in_b_space = 0, 0
    }
 
@@ -173,7 +173,7 @@ GridGeometry {
       block_b = 3
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 30, 20
+      point_in_a_space = 15, 10
       point_in_b_space = 0, 0
    }
 
@@ -182,8 +182,8 @@ GridGeometry {
       block_b = 2
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 30, -1
-      point_in_b_space = 0, 19
+      point_in_a_space = 15, -1
+      point_in_b_space = 0, 9
    }
 
    BlockNeighbors4 {
@@ -191,7 +191,7 @@ GridGeometry {
       block_b = 3
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 30, 0
+      point_in_a_space = 15, 0
       point_in_b_space = 0, 0
    }
 
@@ -200,7 +200,7 @@ GridGeometry {
       block_b = 3
 
       rotation_b_to_a = "I_UP", "J_UP"
-      point_in_a_space = 0, 20
+      point_in_a_space = 0, 10
       point_in_b_space = 0, 0
    }
 }
@@ -253,6 +253,6 @@ TimeRefinementIntegrator{
    start_time           = 0.e0     // initial simulation time
    end_time             = 100.e0   // final simulation time
    grow_dt              = 1.1e0    // growth factor for timesteps
-   max_integrator_steps = 20       // max number of simulation timesteps
+   max_integrator_steps = 100   // max number of simulation timesteps
    regrid_interval      = 10
 }
