@@ -158,7 +158,7 @@ BergerRigoutsos {
 GridGeometry {
    num_blocks = 1
 
-   domain_boxes_0 = [ (0,0) , (59,39) ]
+   domain_boxes_0 = [ (0,0) , (29,19) ]
 }
 
 
@@ -207,6 +207,6 @@ TimeRefinementIntegrator{
    start_time           = 0.e0     // initial simulation time
    end_time             = 100.e0   // final simulation time
    grow_dt              = 1.1e0    // growth factor for timesteps
-   max_integrator_steps = 20       // max number of simulation timesteps
+   max_integrator_steps = 100     // max number of simulation timesteps
    regrid_interval      = 10
 }
