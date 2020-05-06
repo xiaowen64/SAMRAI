@@ -4,15 +4,20 @@ else()
   set(TASKS 0)
 endif()
 
+set(vector_depends ${SAMRAI_LIBRARIES})
+
+if (ENABLE_OPENMP)
+  set(vector_depends ${vector_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(vector_depends ${vector_depends} cuda) 
+endif ()
+
 blt_add_executable(
   NAME kvtest
   SOURCES kvtest.C
-  DEPENDS_ON
-    SAMRAI_solv
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_hier
-    SAMRAI_tbox)
+  DEPENDS_ON ${vector_depends})
 
 blt_add_test(
   NAME kvtest
@@ -22,12 +27,7 @@ blt_add_test(
 blt_add_executable(
   NAME pvtest
   SOURCES pvtest.C
-  DEPENDS_ON
-    SAMRAI_solv
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_hier
-    SAMRAI_tbox)
+  DEPENDS_ON ${vector_depends})
 
 blt_add_test(
   NAME pvtest
