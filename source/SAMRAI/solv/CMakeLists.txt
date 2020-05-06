@@ -87,15 +87,15 @@ if (ENABLE_CUDA)
 endif ()
 
 if (ENABLE_HYPRE)
-  list (APPEND solv_depends_on HYPRE)
+  list (APPEND solv_depends HYPRE)
 endif()
 
 if (ENABLE_SUNDIALS)
-  list (APPEND solv_depends_on SUNDIALS)
+  list (APPEND solv_depends SUNDIALS)
 endif()
 
 if (ENABLE_PETSC)
-  list (APPEND solv_depends_on PETSc)
+  list (APPEND solv_depends PETSc)
 endif()
 
 blt_add_library(
