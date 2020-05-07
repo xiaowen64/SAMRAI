@@ -1,8 +1,8 @@
 #!/bin/bash
 #########################################################################
 ##
-## This file is part of the SAMRAI distribution.  For full copyright 
-## information, see COPYRIGHT and LICENSE. 
+## This file is part of the SAMRAI distribution.  For full copyright
+## information, see COPYRIGHT and LICENSE.
 ##
 ## Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
 ##
@@ -75,7 +75,9 @@ then
 
     cd ${build_dir}
 
-    ctest -T test 2>&1 | tee tests_output.txt
+    ctest_out=0
+
+    ( ctest --output-on-failure -T test 2>&1 || ( ctest_out=$?; echo "Error(s) in CTest" ) ) | tee tests_output.txt
 
     no_test_str="No tests were found!!!"
     if [[ "$(tail -n 1 tests_output.txt)" == "${no_test_str}" ]]
@@ -85,5 +87,10 @@ then
 
     echo "Copying Testing xml reports for export"
     tree Testing
-    cp Testing/*/Test.xml ${project_dir}
+    for report in Testing/*/Test.xml
+    do
+        cp ${report} ${project_dir}/ctest_report_${report//\//_}
+    done
+
+    exit ${ctest_out}
 fi

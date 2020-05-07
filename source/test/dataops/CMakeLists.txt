@@ -133,56 +133,75 @@ target_include_directories(node_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/tes
 target_include_directories(face_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 target_include_directories(side_cplxtest PUBLIC ${PROJECT_SOURCE_DIR}/source/test/dataops)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
 
 foreach(dim RANGE 2 ${MAXDIM})
   blt_add_test(
     NAME indx_dataops${dim}
-    COMMAND indx_dataops ${dim})
+    COMMAND indx_dataops ${dim}
+    NUM_MPI_TASKS ${TASKS})
+
   blt_add_test(
     NAME cell_patchtest${dim}
-    COMMAND cell_patchtest ${dim})
+    COMMAND cell_patchtest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME cell_hiertest${dim}
-    COMMAND cell_hiertest ${dim})
+    COMMAND cell_hiertest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME cell_hiertest3d${dim}
-    COMMAND cell_hiertest3d ${dim})
+    COMMAND cell_hiertest3d ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME edge_hiertest${dim}
-    COMMAND edge_hiertest ${dim})
+    COMMAND edge_hiertest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME face_hiertest${dim}
-    COMMAND face_hiertest ${dim})
+    COMMAND face_hiertest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME side_hiertest${dim}
-    COMMAND side_hiertest ${dim})
+    COMMAND side_hiertest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME node_hiertest${dim}
-    COMMAND node_hiertest ${dim})
+    COMMAND node_hiertest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME cell_cplxtest${dim}
-    COMMAND cell_cplxtest ${dim})
+    COMMAND cell_cplxtest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME edge_cplxtest${dim}
-    COMMAND edge_cplxtest ${dim})
+    COMMAND edge_cplxtest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME node_cplxtest${dim}
-    COMMAND node_cplxtest ${dim})
+    COMMAND node_cplxtest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME face_cplxtest${dim}
-    COMMAND face_cplxtest ${dim})
+    COMMAND face_cplxtest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 
   blt_add_test(
     NAME side_cplxtest${dim}
-    COMMAND side_cplxtest ${dim})
+    COMMAND side_cplxtest ${dim}
+    NUM_MPI_TASKS ${TASKS})
 endforeach(dim)

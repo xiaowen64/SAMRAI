@@ -19,6 +19,13 @@ blt_add_executable(
 
 target_compile_definitions(indexdata PUBLIC TESTING=1)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_test(
   NAME indexdata
-  COMMAND indexdata)
+  COMMAND indexdata
+  NUM_MPI_TASKS ${TASKS})

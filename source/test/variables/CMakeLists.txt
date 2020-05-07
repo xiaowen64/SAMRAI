@@ -16,6 +16,13 @@ blt_add_executable(NAME variables
 
 target_compile_definitions(variables PUBLIC TESTING=1)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_test(
   NAME variables
-  COMMAND variables)
+  COMMAND variables
+  NUM_MPI_TASKS ${TASKS})

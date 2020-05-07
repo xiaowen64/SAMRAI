@@ -9,6 +9,13 @@ blt_add_executable(
 
 target_compile_definitions(dimension PUBLIC TESTING=1)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_test(
   NAME dimension
-  COMMAND dimension)
+  COMMAND dimension
+  NUM_MPI_TASKS ${TASKS})
