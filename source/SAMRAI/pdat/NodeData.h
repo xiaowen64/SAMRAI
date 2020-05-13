@@ -155,11 +155,17 @@ public:
    template<int DIM>
    using ConstView = pdat::ArrayView<DIM, const TYPE>;
 
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
    template <int DIM>
    View<DIM>
    getView(
       int depth = 0);
 
+   /*!
+    * @brief Get a const ArrayView that can access the array for RAJA looping.
+    */
    template <int DIM>
    ConstView<DIM>
    getConstView(

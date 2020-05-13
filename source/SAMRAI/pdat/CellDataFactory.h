@@ -62,8 +62,6 @@ public:
     * arguments give the defaults for all cell data objects created with this
     * factory.
     *
-    * The allocator
-    *
     * @pre depth > 0 @pre ghosts.min() >= 0
     */
    CellDataFactory(

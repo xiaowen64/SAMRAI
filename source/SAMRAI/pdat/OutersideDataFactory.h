@@ -40,8 +40,8 @@ class OutersideDataFactory:public hier::PatchDataFactory
 {
 public:
    /**
-    * The default constructor for the outerside data factory class.
-    * The depth (number of components) gives the default for all of
+    * The constructor for the outerside data factory class.
+    * The depth (number of components) sets the default for all of
     * the outerside data objects created with this factory.
     *
     * @pre depth > 0
@@ -51,6 +51,16 @@ public:
       const int depth);
 
 #if defined(HAVE_UMPIRE)
+   /**
+    * The constructor for the outerside data factory class.
+    * The depth (number of components) sets the default for all of
+    * the outerside data objects created with this factory.
+    *
+    * This constructor sets an umpire allocator for the management of
+    * data held in the outserside data objects.
+    *
+    * @pre depth > 0
+    */
    OutersideDataFactory(
       const tbox::Dimension& dim,
       const int depth,

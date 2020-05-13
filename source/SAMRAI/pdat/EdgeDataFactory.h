@@ -46,8 +46,8 @@ public:
    /**
     * The constructor for the edge data factory class.  The ghost cell width,
     * depth (number of components), and fine boundary representation arguments
-    * give the defaults for all edge data objects created with this factory.
-    * See the EdgeVariable<TYPE> class header file for more information.
+    * set the defaults for all edge data objects created with this factory.
+    * See the EdgeVariable class header file for more information.
     *
     * @pre depth > 0
     * @pre ghosts.min() >= 0
@@ -58,6 +58,16 @@ public:
       bool fine_boundary_represents_var);
 
 #if defined(HAVE_UMPIRE)
+   /**
+    * The constructor for the edge data factory class that takes an umpire
+    * allocator.  The ghost cell width, depth (number of components), and fine
+    * boundary representation arguments set the defaults for all edge data
+    * objects created with this factory.
+    * See the EdgeVariable class header file for more information.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    */
   EdgeDataFactory(int depth,
                   const hier::IntVector& ghosts,
                   bool fine_boundary_represents_var,

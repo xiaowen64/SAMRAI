@@ -56,7 +56,7 @@ public:
 #if defined(HAVE_UMPIRE)
    /*!
     * @brief Create a cell-centered variable object with the given name,
-    * allocator,  and depth (i.e., number of data values at each cell index
+    * allocator, and depth (i.e., number of data values at each cell index
     * location).  A default depth of one is provided.
     */
    CellVariable(

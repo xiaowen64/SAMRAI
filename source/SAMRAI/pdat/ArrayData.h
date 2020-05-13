@@ -114,6 +114,7 @@ public:
     *              of the index space associated with the array data object.
     * @param depth Integer number of data values at each spatial location in
     *              the array.
+    * @param allocator An umpire allocator
     *
     * @pre depth > 0
     */
@@ -194,11 +195,17 @@ public:
    template<int DIM>
    using ConstView = pdat::ArrayView<DIM, const TYPE>;
 
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
    template <int DIM>
    View<DIM>
    getView(
       int depth = 0);
 
+   /*!
+    * @brief Get a const ArrayView that can access the array for RAJA looping.
+    */
    template <int DIM>
    ConstView<DIM>
    getConstView(

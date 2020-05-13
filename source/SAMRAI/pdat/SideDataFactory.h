@@ -74,7 +74,14 @@ public:
       const hier::IntVector& directions);
 
 #if defined(HAVE_UMPIRE)
-
+   /**
+    * Constructor for the cell data factory class that takes a specific
+    * umpire::Allocator.  The ghost cell width and depth (number of components)
+    * arguments give the defaults for all cell data objects created with this
+    * factory.
+    *
+    * @pre depth > 0 @pre ghosts.min() >= 0
+    */
    SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
@@ -82,12 +89,13 @@ public:
       const hier::IntVector& directions,
       umpire::Allocator allocator);
 #endif
+
    /*!
     * @brief Constructor for the side data factory class setting up allocation
     * of data in all coordinate directions.
     *
     * This constructor works the same as the other constructor, but
-    * it takes no direcions argument, meaning that all directions are going
+    * it takes no directions argument, meaning that all directions are going
     * to be allocated.
     *
     * @pre depth > 0
@@ -99,6 +107,17 @@ public:
       bool fine_boundary_represents_var);
 
 #if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Constructor for the side data factory class setting up allocation
+    * of data in all coordinate directions and uses an umpire allocator
+    *
+    * This constructor works the same as the other constructor, but
+    * it takes no directions argument, meaning that all directions are going
+    * to be allocated.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    */
    SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
