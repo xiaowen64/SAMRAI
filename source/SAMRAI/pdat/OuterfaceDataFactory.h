@@ -66,6 +66,7 @@ public:
       int depth,
       umpire::Allocator allocator);
 #endif
+
    /**
     * Virtual destructor for the outerface data factory class.
     */
@@ -156,8 +157,8 @@ private:
    int d_depth;
    hier::IntVector d_no_ghosts;
 #if defined(HAVE_UMPIRE)
-  umpire::Allocator d_allocator;
-  bool d_has_allocator;
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
 #endif
 };
 

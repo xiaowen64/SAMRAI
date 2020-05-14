@@ -1,0 +1,77 @@
+ArrayData.h:#if defined(HAVE_RAJA)
+ArrayData.h:#if defined(HAVE_RAJA)
+ArrayView.h:#if defined(HAVE_RAJA)
+ArrayView.h:#include "RAJA/RAJA.hpp"
+ArrayView.h:   using Layout1d = RAJA::OffsetLayout<1, RAJA::Index_type>;
+ArrayView.h:   using Layout2d = RAJA::OffsetLayout<2, RAJA::Index_type>;
+ArrayView.h:   using Layout3d = RAJA::OffsetLayout<3, RAJA::Index_type>;
+ArrayView.h:struct ArrayView<1, TYPE> : public RAJA::View<TYPE, detail::layout_traits::Layout1d>
+ArrayView.h:      RAJA::View<TYPE, Layout>(
+ArrayView.h:         RAJA::make_permuted_offset_layout(
+ArrayView.h:            std::array<RAJA::Index_type, 1>{ {box.lower()[0]} },
+ArrayView.h:            std::array<RAJA::Index_type, 1>{ {box.upper()[0]} },
+ArrayView.h:            RAJA::as_array<RAJA::PERM_I>::get())){}
+ArrayView.h:struct ArrayView<2, TYPE> : public RAJA::View<TYPE, detail::layout_traits::Layout2d>
+ArrayView.h:      RAJA::View<TYPE, Layout>(
+ArrayView.h:         RAJA::make_permuted_offset_layout(
+ArrayView.h:            std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} },
+ArrayView.h:            std::array<RAJA::Index_type, 2>{ {box.upper()[0], box.upper()[1]} },
+ArrayView.h:            RAJA::as_array<RAJA::PERM_JI>::get())){}
+ArrayView.h:struct ArrayView<3, TYPE> : public RAJA::View<TYPE, detail::layout_traits::Layout3d>
+ArrayView.h:      RAJA::View<TYPE, Layout>(
+ArrayView.h:         RAJA::make_permuted_offset_layout(
+ArrayView.h:            std::array<RAJA::Index_type, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} },
+ArrayView.h:            std::array<RAJA::Index_type, 3>{ {box.upper()[0], box.upper()[1], box.upper()[2]} },
+ArrayView.h:            RAJA::as_array<RAJA::PERM_KJI>::get())){};
+ArrayView.h:struct ArrayView<1, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout1d>
+ArrayView.h:      RAJA::View<const TYPE, Layout>(
+ArrayView.h:         RAJA::make_permuted_offset_layout(
+ArrayView.h:            std::array<RAJA::Index_type, 1>{ {box.lower()[0]} },
+ArrayView.h:            std::array<RAJA::Index_type, 1>{ {box.upper()[0]} },
+ArrayView.h:            RAJA::as_array<RAJA::PERM_I>::get())){}
+ArrayView.h:struct ArrayView<2, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout2d>
+ArrayView.h:      RAJA::View<const TYPE, Layout>(
+ArrayView.h:         RAJA::make_permuted_offset_layout(
+ArrayView.h:            std::array<RAJA::Index_type, 2>{ {box.lower()[0], box.lower()[1]} },
+ArrayView.h:            std::array<RAJA::Index_type, 2>{ {box.upper()[0], box.upper()[1]} },
+ArrayView.h:            RAJA::as_array<RAJA::PERM_JI>::get())){}
+ArrayView.h:struct ArrayView<3, const TYPE> : public RAJA::View<const TYPE, detail::layout_traits::Layout3d>
+ArrayView.h:      RAJA::View<const TYPE, Layout>(
+ArrayView.h:         RAJA::make_permuted_offset_layout(
+ArrayView.h:            std::array<RAJA::Index_type, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} },
+ArrayView.h:            std::array<RAJA::Index_type, 3>{ {box.upper()[0], box.upper()[1], box.upper()[2]} },
+ArrayView.h:            RAJA::as_array<RAJA::PERM_KJI>::get())){};
+ArrayView.h:#endif // HAVE_RAJA
+CellData.h:#if defined(HAVE_RAJA)
+CellData.h:#if defined(HAVE_RAJA)
+EdgeData.h:#if defined(HAVE_RAJA)
+EdgeData.h:#if defined(HAVE_RAJA)
+FaceData.h:#if defined(HAVE_RAJA)
+FaceData.h:#if defined(HAVE_RAJA)
+ForAll.h:#if defined(HAVE_RAJA)
+ForAll.h:#include "RAJA/RAJA.hpp"
+ForAll.h:for_all<policy>()      version that takes a custom RAJA policy (could be either host or device)
+ForAll.h:inline RAJA::RangeSegment make_range(const hier::Index& ifirst, const hier::Index& ilast, std::size_t index)
+ForAll.h:   return RAJA::RangeSegment(ifirst(index), ilast(index) + 1);
+ForAll.h:      RAJA::kernel<typename tbox::detail::policy_traits<Policy>::Policy1d>(
+ForAll.h:          RAJA::make_tuple(make_range(ifirst, ilast, 0)),
+ForAll.h:      RAJA::kernel<Policy>(
+ForAll.h:          RAJA::make_tuple(make_range(ifirst, ilast, 0)),
+ForAll.h:      RAJA::kernel<typename tbox::detail::policy_traits<Policy>::Policy2d>(
+ForAll.h:          RAJA::make_tuple(make_range(ifirst, ilast, 0),
+ForAll.h:      RAJA::kernel<Policy>(
+ForAll.h:          RAJA::make_tuple(make_range(ifirst, ilast, 0),
+ForAll.h:      RAJA::kernel<typename tbox::detail::policy_traits<Policy>::Policy3d>(
+ForAll.h:          RAJA::make_tuple(make_range(ifirst, ilast, 0),
+ForAll.h:      RAJA::kernel<Policy>(
+ForAll.h:          RAJA::make_tuple(make_range(ifirst, ilast, 0),
+ForAll.h:   RAJA::forall<typename tbox::detail::policy_traits<Policy>::Policy>(RAJA::RangeSegment(begin, end), body);
+ForAll.h:   RAJA::forall<Policy>(RAJA::RangeSegment(begin, end), body);
+NodeData.h:#if defined(HAVE_RAJA)
+NodeData.h:#if defined(HAVE_RAJA)
+OuterfaceData.h:#if defined(HAVE_RAJA)
+OuterfaceData.h:#if defined(HAVE_RAJA)
+OutersideData.h:#if defined(HAVE_RAJA)
+OutersideData.h:#if defined(HAVE_RAJA)
+SideData.h:#if defined(HAVE_RAJA)
+SideData.h:#if defined(HAVE_RAJA)

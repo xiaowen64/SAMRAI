@@ -83,18 +83,18 @@ OuterfaceDataFactory<TYPE>::cloneFactory(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
 #if defined(HAVE_UMPIRE)
-  if (d_has_allocator) {
-   return std::make_shared<OuterfaceDataFactory<TYPE> >(
+   if (d_has_allocator) {
+      return std::make_shared<OuterfaceDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth,
              d_allocator);
-  } else {
+   } else {
 #endif
    return std::make_shared<OuterfaceDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth);
 #if defined(HAVE_UMPIRE)
-  }
+   }
 #endif
 }
 
@@ -114,13 +114,13 @@ OuterfaceDataFactory<TYPE>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
 #if defined(HAVE_UMPIRE)
-  if (d_has_allocator) {
-   return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth, d_allocator);
-  } else {
+   if (d_has_allocator) {
+      return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth, d_allocator);
+   } else {
 #endif
    return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth);
 #if defined(HAVE_UMPIRE)
-  }
+   }
 #endif
 }
 
