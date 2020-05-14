@@ -56,7 +56,7 @@ public:
     * The depth (number of components) sets the default for all of
     * the outerside data objects created with this factory.
     *
-    * This constructor sets an umpire allocator for the management of
+    * This constructor sets an Umpire allocator for the management of
     * data held in the outserside data objects.
     *
     * @pre depth > 0

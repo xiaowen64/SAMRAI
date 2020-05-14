@@ -165,7 +165,7 @@ public:
     * @param directions const IntVector reference indicating which
     *                   coordinate directions will have data associated
     *                   with them.
-    * @param allocator An umpire allocator to manage the allocation of the
+    * @param allocator An Umpire allocator to manage the allocation of the
     *                  underlying data.
     *
     * @pre (box.getDim() == ghosts.getDim()) &&

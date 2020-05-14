@@ -109,7 +109,7 @@ public:
 #if defined(HAVE_UMPIRE)
    /*!
     * @brief Constructor for the side data factory class setting up allocation
-    * of data in all coordinate directions and uses an umpire allocator
+    * of data in all coordinate directions and uses an Umpire allocator
     *
     * This constructor works the same as the other constructor, but
     * it takes no directions argument, meaning that all directions are going

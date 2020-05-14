@@ -143,7 +143,7 @@ public:
     * @param ghosts const IntVector reference indicating the width
     *              of the ghost cell region around the box over which
     *              the edge data will be allocated.
-    * @param allocator An umpire allocator to manage the allocation of the
+    * @param allocator An Umpire allocator to manage the allocation of the
     *                  underlying data.
     *
     * @pre box.getDim() == ghosts.getDim()
