@@ -344,7 +344,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
 ////////////////////////////////
 // specialization for dcomplex
 template <>
-void CartesianCellConservativeLinearRefine<dcomplex>::refine(
+inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
     hier::Patch &fine,
     const hier::Patch &coarse,
     const int dst_component,
