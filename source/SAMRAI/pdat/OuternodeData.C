@@ -83,6 +83,56 @@ OuternodeData<TYPE>::OuternodeData(
    }
 }
 
+#if defined(HAVE_UMPIRE)
+template<class TYPE>
+OuternodeData<TYPE>::OuternodeData(
+   const hier::Box& box,
+   int depth,
+   umpire::Allocator allocator):
+   hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
+   d_depth(depth)
+{
+   TBOX_ASSERT(depth > 0);
+
+   const tbox::Dimension& dim(box.getDim());
+
+   for (tbox::Dimension::dir_t d = 0; d < dim.getValue(); ++d) {
+
+      hier::Box nodebox = NodeGeometry::toNodeBox(box);
+
+      for (tbox::Dimension::dir_t dh = static_cast<tbox::Dimension::dir_t>(d + 1);
+           dh < dim.getValue();
+           ++dh) {
+
+         /*
+          * For directions higher than d, narrow the box down to avoid
+          * representing edge and corner nodes multiple times.
+          *
+          *  i.e.    Y--Y--Y  outernodeX0 defined on nodes (0,1)
+          *          |  |  |  outernodeX1 defined on nodes (2,1)
+          *          X--o--X  outernodeY0 defined on node  (0,0)-(2,0)
+          *          |  |  |  outernodeY1 defined on node  (0,2)-(2,2)
+          *          Y--Y--Y
+          *         node box
+          */
+         nodebox.setLower(dh, nodebox.lower(dh) + 1);
+         nodebox.setUpper(dh, nodebox.upper(dh) - 1);
+      }
+
+      hier::Box outernodebox = nodebox;
+      outernodebox.setUpper(d, nodebox.lower(d));
+      outernodebox.setLower(d, nodebox.lower(d));
+      d_data[d][0].reset(new ArrayData<TYPE>(outernodebox, depth, allocator));
+
+      outernodebox = nodebox;
+      outernodebox.setLower(d, nodebox.upper(d));
+      outernodebox.setUpper(d, nodebox.upper(d));
+      d_data[d][1].reset(new ArrayData<TYPE>(outernodebox, depth, allocator));
+
+   }
+}
+#endif
+
 template<class TYPE>
 OuternodeData<TYPE>::~OuternodeData()
 {
@@ -132,6 +182,31 @@ OuternodeData<TYPE>::getPointer(
 
    return d_data[face_normal][side]->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename OuternodeData<TYPE>::template View<DIM> OuternodeData<TYPE>::getView(
+    int face_normal,
+    int side,
+    int depth)
+{
+   ArrayData<TYPE>& array_data = getArrayData(face_normal, side);
+   return array_data.getView(depth);
+}
+
+template <class TYPE>
+template <int DIM>
+typename OuternodeData<TYPE>::template ConstView<DIM>
+OuternodeData<TYPE>::getConstView(
+    int face_normal,
+    int side,
+    int depth) const
+{
+   const ArrayData<TYPE>& array_data = getArrayData(face_normal, side);
+   return array_data.getConstView(depth);
+}
+#endif
 
 template<class TYPE>
 ArrayData<TYPE>&
@@ -1118,6 +1193,24 @@ OuternodeData<TYPE>::putToRestart(
       }
    }
 }
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OuternodeData<TYPE>::template View<DIM> get_view(OuternodeData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename OuternodeData<TYPE>::template ConstView<DIM> get_const_view(
+    const OuternodeData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
 
 }
 }

@@ -48,8 +48,26 @@ NodeData<TYPE>::NodeData(
 
    const hier::Box node = NodeGeometry::toNodeBox(getGhostBox());
    d_data.reset(new ArrayData<TYPE>(node, depth));
-
 }
+
+#if defined(HAVE_UMPIRE)
+template<class TYPE>
+NodeData<TYPE>::NodeData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+
+   const hier::Box node = NodeGeometry::toNodeBox(getGhostBox());
+   d_data.reset(new ArrayData<TYPE>(node, depth, allocator));
+}
+#endif
 
 template<class TYPE>
 NodeData<TYPE>::~NodeData()

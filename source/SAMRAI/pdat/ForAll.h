@@ -29,10 +29,40 @@ namespace SAMRAI
 namespace pdat
 {
 
-/*
-parallel_for_all()  version that picks parallel policy (GPU if ENABLE_CUDA=ON)
-for_all<policy>()      version that takes a custom RAJA policy (could be either host or device)
-*/
+/*!
+ * Two looping structures for use with RAJA policies are provided
+ *
+ * parallel_for_all() uses a default parallel policy based on the
+ * configuration used build SAMRAI.  If SAMRAI is confugured with cuda,
+ * the loop kernel will be launched on the GPU.  If cuda is not used
+ * but OpenMP is enabled, then the looped will CPU-threaded using OpenMP.
+ * If neither cuda nor OpenMP are used, the loop will execute as an
+ * unthreaded loop on the CPU.
+ *
+ * parallel_for_all() loops over a mesh defined by a hier::Box of
+ * a Dimension from 1 to 3.  To use it, provide the Box and the list of
+ * integer loop indices.  The number of indices must equal the Dimension of
+ * the Box.  The SAMRAI_HOST_DEVICE macro is used to set the default policy
+ * as described abov.
+ * 
+ * \verbatim
+ *
+ * pdat::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+ * });
+ *
+ * \endverbatim
+ *
+ * for_all<policy>() uses a template to allow the calling code to choose
+ * a custom RAJA policy.  Usage is similar, as it also loops over a hier::Box.
+ *
+ * \verbatim
+ *
+ * pdat::for_all<policy>(box, [=] (int i, int j, int k) {
+ * });
+ *
+ * \endverbatim
+ *
+ */
 
 namespace detail
 {

@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
- * Description:   Templated array data structure supporting patch data types
+ * Description:   Templated class providing RAJA indexing into data
  *
  ************************************************************************/
 
@@ -29,6 +29,33 @@ struct layout_traits {
 };
 
 } // namespace detail
+
+/*!
+ * @brief ArrayView<DIM,TYPE> is a templated struct that provides an
+ * indexing interface into the arrays held by class ArrayData<TYPE> for
+ * use within RAJA loops as defined by the pdat::parallel_for_all loops
+ * provided in the file ForAll.h
+ *
+ * This can be used with any of the standard PatchData implementations
+ * that depend on ArrayData in the pdat component of SAMRAI: CellData,
+ * FaceData, etc.
+ *
+ * Usage example
+ * \verbatim
+ *
+ * CellData<double> old_data; // Assume this is allocated and initialized
+ * CellData<double> new_data; // Assume this is allocated
+ *
+ * auto old_array = old_data.getConstView<3>();
+ * auto new_array = new_data.getView<3>();
+ * const hier::Box& box = new_data.getBox();
+ *
+ * pdat::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+ *    new_array(i, j, k) = old_array(i, j, k);
+ * });
+ *
+ * \endverbatim
+ */
 
 template<int DIM, class TYPE>
 struct ArrayView {};

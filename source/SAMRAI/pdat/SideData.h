@@ -151,6 +151,29 @@ public:
       const hier::IntVector& directions);
 
 #if defined(HAVE_UMPIRE)
+   /*!
+    * @brief The constructor for a side data object.
+    *
+    * @param box const Box reference describing the interior of the
+    *            standard CELL-centered index box over which the
+    *            side data object will be created.
+    * @param depth gives the number of components for each
+    *              spatial location in the array.
+    * @param ghosts const IntVector reference indicating the width
+    *               of the ghost cell region around the box over which
+    *               the side data will be allocated.
+    * @param directions const IntVector reference indicating which
+    *                   coordinate directions will have data associated
+    *                   with them.
+    * @param allocator An Umpire allocator to manage the allocation of the
+    *                  underlying data.
+    *
+    * @pre (box.getDim() == ghosts.getDim()) &&
+    *      (box.getDim() == directions.getDim())
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    * @pre directions.min() >= 0
+    */
    SideData(
       const hier::Box& box,
       int depth,
@@ -158,14 +181,13 @@ public:
       const hier::IntVector& directions,
       umpire::Allocator allocator);
 #endif
+
    /*!
-    * @brief Same as previous constructor but with directions
-    * vector of 1's.
+    * @brief Same as previous constructor but with all directions allocated.
     *
     * @pre box.getDim() == ghosts.getDim()
     * @pre depth > 0
     * @pre ghosts.min() >= 0
-    *
     */
    SideData(
       const hier::Box& box,
@@ -173,6 +195,14 @@ public:
       const hier::IntVector& ghosts);
 
 #if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Constructor with all directions allocated using an umpire
+    * allocator.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    */
    SideData(
       const hier::Box& box,
       int depth,
@@ -237,12 +267,18 @@ public:
    template <int DIM>
    using ConstView = pdat::ArrayView<DIM, const TYPE>;
 
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
    template <int DIM>
    View<DIM>
    getView(
       int side_normal,
       int depth = 0);
 
+   /*!
+    * @brief Get a const ArrayView that can access the array for RAJA looping.
+    */
    template <int DIM>
    ConstView<DIM>
    getConstView(

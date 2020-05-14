@@ -54,11 +54,19 @@ public:
       bool fine_boundary_represents_var);
 
 #if defined(HAVE_UMPIRE)
-  FaceDataFactory(int depth,
-                  const hier::IntVector& ghosts,
-                  bool fine_boundary_represents_var,
-                  umpire::Allocator allocator);
-
+   /**
+    * Constructor for the face data factory class that takes a specific
+    * umpire::Allocator.  The ghost cell width and depth (number of components)
+    * arguments give the defaults for all face data objects created with this
+    * factory.
+    *
+    * @pre depth > 0 @pre ghosts.min() >= 0
+    */
+   FaceDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      bool fine_boundary_represents_var,
+      umpire::Allocator allocator);
 #endif
 
    /**
