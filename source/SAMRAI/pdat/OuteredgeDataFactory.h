@@ -59,7 +59,7 @@ public:
     * The depth (number of components) sets the default for all of
     * the outeredge data objects created with this factory.
     *
-    * This constructor sets an umpire allocator for the memory management
+    * This constructor sets an Umpire allocator for the memory management
     * of the data held within outeredge data objects.
     *
     * @pre depth > 0

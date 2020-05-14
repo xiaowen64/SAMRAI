@@ -179,7 +179,7 @@ public:
     *            outeredge data object will be created.
     * @param depth gives the number of data values for each
     *              spatial location in the array.
-    * @param allocator An umpire allocator to manage the allocation of the
+    * @param allocator An Umpire allocator to manage the allocation of the
     *                  underlying data. 
     *
     *
