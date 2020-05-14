@@ -147,7 +147,7 @@ public:
     * @param ghosts const IntVector reference indicating the width
     *               of the ghost cell region around the box over which
     *               the face data will be allocated.
-    * @param allocator An umpire allocator controlling the allocation of the
+    * @param allocator An Umpire allocator controlling the allocation of the
     *                  underlying data.
     *
     * @pre box.getDim() == ghosts.getDim()

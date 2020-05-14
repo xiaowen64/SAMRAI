@@ -114,7 +114,7 @@ public:
     *              of the index space associated with the array data object.
     * @param depth Integer number of data values at each spatial location in
     *              the array.
-    * @param allocator An umpire allocator
+    * @param allocator An Umpire allocator
     *
     * @pre depth > 0
     */
