@@ -44,6 +44,12 @@ namespace tbox {
  *
  * Tag allocator--Allocator for memory for the tag data object created and
  * owned by GriddingAlgorithm and provided to applications.
+ *
+ * These allocators can be overriden by creating Umpire allocators with the
+ * appropriate name prior to calling tbox::SAMRAIManager::initialize().
+ * The names are samrai::temporary_data_allocator, samrai::stream_allocator,
+ * and samrai::tag_allocator.  Please see the Umpire documentation for details
+ * on how to create new allocators.
  */
 
 class AllocatorDatabase
