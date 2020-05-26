@@ -4,12 +4,14 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
- * Description:   Class to record statistics during program execution.
+ * Description:   Manages execution policy for RAJA
  *
  ************************************************************************/
 
 #ifndef included_tbox_ExecutionPolicy
 #define included_tbox_ExecutionPolicy
+
+#if defined(HAVE_RAJA)
 
 #include "RAJA/RAJA.hpp"
 
@@ -149,5 +151,7 @@ struct policy_traits<policy::parallel> {
 
 }
 }
+
+#endif // HAVE_RAJA
 
 #endif

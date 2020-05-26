@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and LICENSE.
  *
  * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
- * Description:   Class to record statistics during program execution.
+ * Description:   RAJA collective operations
  *
  ************************************************************************/
 
