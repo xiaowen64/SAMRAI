@@ -8,8 +8,8 @@
  *
  ************************************************************************/
 
-#ifndef included_pdat_ForAll
-#define included_pdat_ForAll
+#ifndef included_hier_ForAll
+#define included_hier_ForAll
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -26,7 +26,7 @@
 
 namespace SAMRAI
 {
-namespace pdat
+namespace hier
 {
 
 /*!
@@ -47,7 +47,7 @@ namespace pdat
  * 
  * \verbatim
  *
- * pdat::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+ * hier::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
  * });
  *
  * \endverbatim
@@ -57,7 +57,7 @@ namespace pdat
  *
  * \verbatim
  *
- * pdat::for_all<policy>(box, [=] (int i, int j, int k) {
+ * hier::for_all<policy>(box, [=] (int i, int j, int k) {
  * });
  *
  * \endverbatim
@@ -230,9 +230,9 @@ inline void parallel_for_all(const hier::Box& box, LoopBody body)
    for_all<tbox::policy::parallel>(box, body);
 }
 
-}  // namespace pdat
+}  // namespace hier
 }  // namespace SAMRAI
 
 #endif
 
-#endif  // included_pdat_ForAll
+#endif  // included_hier_ForAll

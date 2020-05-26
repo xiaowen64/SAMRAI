@@ -159,7 +159,7 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
             auto new_array = new_dat->getConstView<2>(d);
             auto dst_array = dst_dat->getView<2>(d);
 
-            pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            hier::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                const double oldfrac = 1.0 - tfrac;
                dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
             });
@@ -180,7 +180,7 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
             auto new_array = new_dat->getConstView<3>(d);
             auto dst_array = dst_dat->getView<3>(d);
 
-            pdat::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+            hier::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
                const double oldfrac = 1.0 - tfrac;
                dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
             });

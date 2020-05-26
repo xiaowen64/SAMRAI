@@ -183,7 +183,7 @@ void CartesianNodeDoubleLinearRefine::refine(
 
          auto fine_node_box = pdat::NodeGeometry::toNodeBox(fine_box);
 
-         pdat::parallel_for_all(fine_node_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         hier::parallel_for_all(fine_node_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const int ic0 = floor(static_cast<double>(j) / r0);
             const int ic1 = floor(static_cast<double>(k) / r1);
 
@@ -225,7 +225,7 @@ void CartesianNodeDoubleLinearRefine::refine(
          const double realrat2 = 1.0 / static_cast<double>(r2);
 
          auto fine_node_box = pdat::NodeGeometry::toNodeBox(fine_box);
-         pdat::parallel_for_all(fine_node_box, [=] SAMRAI_HOST_DEVICE(int i /*fast */, int j, int k) {
+         hier::parallel_for_all(fine_node_box, [=] SAMRAI_HOST_DEVICE(int i /*fast */, int j, int k) {
             const int ic0 = floor(static_cast<double>(i) / r0);
             const int ic1 = floor(static_cast<double>(j) / r1);
             const int ic2 = floor(static_cast<double>(k) / r2);

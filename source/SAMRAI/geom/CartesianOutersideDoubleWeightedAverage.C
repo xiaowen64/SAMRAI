@@ -211,7 +211,7 @@ void CartesianOutersideDoubleWeightedAverage::coarsen(
             double lengthf = fdx1;
             double lengthc = cdx1;
 
-            pdat::parallel_for_all(coarse_box_sn0, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            hier::parallel_for_all(coarse_box_sn0, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int jf = jf0bounds;
                for (int ry = 0; ry < r1; ry++) {
@@ -228,7 +228,7 @@ void CartesianOutersideDoubleWeightedAverage::coarsen(
             lengthf = fdx0;
             lengthc = cdx0;
 
-            pdat::parallel_for_all(coarse_box_sn1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+            hier::parallel_for_all(coarse_box_sn1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
                double spv = 0.0;
                int kf = kf1bounds;
                for (int rx = 0; rx < r0; rx++) {
@@ -302,7 +302,7 @@ void CartesianOutersideDoubleWeightedAverage::coarsen(
             double areaf = fdx1 * fdx2;
             double areac = cdx1 * cdx2;
 
-            pdat::parallel_for_all(coarse_box_sn0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            hier::parallel_for_all(coarse_box_sn0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                double spv = 0.0;
                int ii = if0bounds;
                for (int rz = 0; rz < r2; rz++) {
@@ -330,7 +330,7 @@ void CartesianOutersideDoubleWeightedAverage::coarsen(
             areaf = fdx2 * fdx0;
             areac = cdx2 * cdx0;
 
-            pdat::parallel_for_all(coarse_box_sn1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            hier::parallel_for_all(coarse_box_sn1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                double spv = 0.0;
                int jj = jf1bounds;
                for (int rx = 0; rx < r0; rx++) {
@@ -359,7 +359,7 @@ void CartesianOutersideDoubleWeightedAverage::coarsen(
             areaf = fdx0 * fdx1;
             areac = cdx0 * cdx1;
 
-            pdat::parallel_for_all(coarse_box_sn2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            hier::parallel_for_all(coarse_box_sn2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                double spv = 0.0;
                int kk = kf2bounds;
                for (int ry = 0; ry < r1; ry++) {
