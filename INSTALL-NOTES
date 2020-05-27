@@ -198,6 +198,10 @@ Compilers:
 
   -DCMAKE_CXX_COMPILER=[C++ compiler]
   -DCMAKE_Fortran_COMPILER=[Fortran compiler]
+  -DCMAKE_CUDA_COMPILER=[CUDA compiler] (optional)
+
+In order to compile with CUDA, you must also add -DENABLE_CUDA=On to the
+CMake line.
 
 Libraries:
 
