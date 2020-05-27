@@ -79,7 +79,7 @@ void CellConstantRefine<T>::refine(
          const int r0 = ratio[0];
          const int r1 = ratio[1];
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
             const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -104,7 +104,7 @@ void CellConstantRefine<T>::refine(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
             const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
             const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;

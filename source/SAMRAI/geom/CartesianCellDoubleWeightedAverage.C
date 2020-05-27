@@ -11,7 +11,7 @@
 #include "SAMRAI/geom/CartesianCellDoubleWeightedAverage.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/pdat/ForAll.h"
+#include "SAMRAI/hier/ForAll.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -166,7 +166,7 @@ void CartesianCellDoubleWeightedAverage::coarsen(
          const double dVf = fdx0 * fdx1;
          const double dVc = cdx0 * cdx1;
 
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+         hier::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
             double spv = 0.0;
 
             for (int rx = 0; rx < r0; rx++) {
@@ -214,7 +214,7 @@ void CartesianCellDoubleWeightedAverage::coarsen(
          const double dVf = fdx0 * fdx1 * fdx2;
          const double dVc = cdx0 * cdx1 * cdx2;
 
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+         hier::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
             double spv = 0.0;
 
             for (int rx = 0; rx < r0; rx++) {

@@ -128,7 +128,7 @@ void NodeDoubleInjection::coarsen(
          const int r0 = ratio[0];
          const int r1 = ratio[1];
 
-         pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+         hier::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
             int if0 = j * r0;
             int if1 = k * r1;
             coarse_array(j, k) = fine_array(if0, if1);
@@ -157,7 +157,7 @@ void NodeDoubleInjection::coarsen(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         pdat::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+         hier::parallel_for_all(coarse_box_plus, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
             int if0 = i * r0;
             int if1 = j * r1;
             int if2 = k * r2;

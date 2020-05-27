@@ -318,12 +318,12 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   const int r0 = ratio[0];
                   const int r1 = ratio[1];
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+                     hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                         diff0(j, k) = coarse_array(j + 1, k) - coarse_array(j, k);
                         diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
                      });
                   } else {
-                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+                     hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
                         diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
                         diff1(j, k) = coarse_array(j, k + 1) - coarse_array(j, k);
                      });
@@ -331,7 +331,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
 
 
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                     hier::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                         const double coef2j = 0.5 * (diff0(j - 1, k) + diff0(j, k));
                         const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(j - 1, k)), fabs(diff0(j, k)));
 
@@ -351,7 +351,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   } else {
-                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                     hier::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                         const double coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
                         const double boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
 
@@ -375,7 +375,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   // we can't use directions i.e IntVector on the device so make it more generic
                   const bool directions0 = directions(0);
                   const bool directions1 = directions(1);
-                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+                  hier::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                      const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
                      const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -493,19 +493,19 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   const int r2 = ratio[2];
 
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
+                     hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                         diff0(i, j, k) = coarse_array(i + 1, j, k) - coarse_array(i, j, k);
                         diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                         diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                      });
                   } else if (axis == 1 && directions(1)) {
-                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
+                     hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                         diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i - 1, j, k);
                         diff1(i, j, k) = coarse_array(i, j + 1, k) - coarse_array(i, j, k);
                         diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
                      });
                   } else if (axis == 2 && directions(2)) {
-                     pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
+                     hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fast*/, int j, int k /*slow */) {
                         diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i - 1, j, k);
                         diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
                         diff2(i, j, k) = coarse_array(i, j, k + 1) - coarse_array(i, j, k);
@@ -514,7 +514,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
 
 
                   if (axis == 0 && directions(0)) {
-                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     hier::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i - 1, j, k) + diff0(i, j, k));
                         const double boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i - 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -543,7 +543,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   } else if (axis == 1 && directions(1)) {
-                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     hier::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
                         const double boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -572,7 +572,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                         }
                      });
                   } else if (axis == 2 && directions(2)) {
-                     pdat::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                     hier::parallel_for_all(slope_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                         const double coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
                         const double boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
 
@@ -605,7 +605,7 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                   const bool directions0 = directions(0);
                   const bool directions1 = directions(1);
                   const bool directions2 = directions(2);
-                  pdat::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+                  hier::parallel_for_all(fine_box_plus, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                      const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
                      const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
                      const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;

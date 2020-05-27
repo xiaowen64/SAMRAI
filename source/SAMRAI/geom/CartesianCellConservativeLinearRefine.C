@@ -15,7 +15,7 @@
 #include <typeinfo>
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/pdat/ForAll.h"
+#include "SAMRAI/hier/ForAll.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/Utilities.h"
@@ -170,12 +170,12 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          const int r1 = ratio[1];
 
 
-         pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+         hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
             diff0(j, k) = coarse_array(j, k) - coarse_array(j - 1, k);
             diff1(j, k) = coarse_array(j, k) - coarse_array(j, k - 1);
          });
 
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         hier::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const T coef2j = 0.5 * (diff0(j + 1, k) + diff0(j, k));
             const T boundj = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(j + 1, k)), fabs(diff0(j, k)));
 
@@ -195,7 +195,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
             }
          });
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
             const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -259,13 +259,13 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+         hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
             diff0(i, j, k) = coarse_array(i, j, k) - coarse_array(i - 1, j, k);
             diff1(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j - 1, k);
             diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
          });
 
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const T coef2i = 0.5 * (diff0(i + 1, j, k) + diff0(i, j, k));
             const T boundi = 2.0 * SAMRAI_GEOM_MIN(fabs(diff0(i + 1, j, k)), fabs(diff0(i, j, k)));
             if (diff0(i, j, k) * diff0(i + 1, j, k) > 0.0 && cdx0 != 0) {
@@ -291,7 +291,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
             }
          });
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
             const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
             const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
@@ -444,7 +444,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          const int r0 = ratio[0];
          const int r1 = ratio[1];
 
-         pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
+         hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k /*slow */) {
             double &diff0_real = reinterpret_cast<double(&)[2]>(diff0(j, k))[0];
             double &diff1_real = reinterpret_cast<double(&)[2]>(diff1(j, k))[0];
             double c0_real = reinterpret_cast<double(&)[2]>(coarse_array(j, k))[0];
@@ -468,7 +468,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          });
 
          // fill in slope arrays
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         hier::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             double diff0_0_real = reinterpret_cast<double(&)[2]>(diff0(j, k))[0];
             double diff0_0_imag = reinterpret_cast<double(&)[2]>(diff0(j, k))[1];
 
@@ -526,7 +526,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             }
          });
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j, int k) {
             const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
             const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
 
@@ -605,7 +605,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         pdat::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+         hier::parallel_for_all(diff_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
             double &diff0_real = reinterpret_cast<double(&)[2]>(diff0(i, j, k))[0];
             double &diff1_real = reinterpret_cast<double(&)[2]>(diff1(i, j, k))[0];
             double &diff2_real = reinterpret_cast<double(&)[2]>(diff2(i, j, k))[0];
@@ -638,7 +638,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             //diff2(i, j, k) = coarse_array(i, j, k) - coarse_array(i, j, k - 1);
          });
 
-         pdat::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(coarse_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double diff0_0_real = reinterpret_cast<double(&)[2]>(diff0(i, j, k))[0];
             double diff0_0_imag = reinterpret_cast<double(&)[2]>(diff0(i, j, k))[1];
 
@@ -725,7 +725,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
             }
          });
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;
             const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
             const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;

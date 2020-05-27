@@ -15,7 +15,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/pdat/ForAll.h"
+#include "SAMRAI/hier/ForAll.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/CopyOperation.h"
@@ -265,7 +265,7 @@ void ArrayData<TYPE>::copy(
       const TYPE* const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
 #if defined(HAVE_RAJA)
-      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          copyop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -453,7 +453,7 @@ void ArrayData<TYPE>::copyDepth(
 
 
 #if defined(HAVE_RAJA)
-      pdat::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE(int i) {
+      hier::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE(int i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       });
 #else
@@ -519,7 +519,7 @@ void ArrayData<TYPE>::sum(
       const size_t n = d_offset * d_depth;
 
 #if defined(HAVE_RAJA)
-      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          sumop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -576,7 +576,7 @@ inline void ArrayData<dcomplex>::sum(
 
 #if defined(HAVE_RAJA)
       SumOperation<double> sumop_dbl;
-      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {   
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {   
          double &dst_ptr_real = reinterpret_cast<double(&)[2]>(dst_ptr[i])[0];
          double &dst_ptr_imag = reinterpret_cast<double(&)[2]>(dst_ptr[i])[1];
          const double &src_ptr_real = reinterpret_cast<const double(&)[2]>(src_ptr[i])[0];
@@ -940,7 +940,7 @@ void ArrayData<TYPE>::fillAll(
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
 #if defined(HAVE_RAJA)
-      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          ptr[i] = t;
       });
 #if defined(DEBUG_INITIALIZE_UNDEFINED)      
@@ -976,7 +976,7 @@ void ArrayData<TYPE>::fill(
    const size_t n = d_offset;
    if (!d_box.empty()) {
 #if defined(HAVE_RAJA)
-      pdat::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
          ptr[i] = t;
       });
 #else
@@ -1003,7 +1003,7 @@ void ArrayData<TYPE>::fill(
       switch (ispace.getDim().getValue()) {
          case 1: {
             auto data = getView<1>(d);
-            pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int k) {
+            hier::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int k) {
                data(k) = t;
             });
             break;
@@ -1011,20 +1011,20 @@ void ArrayData<TYPE>::fill(
          case 2: {
             auto data = getView<2>(d);
 
-            pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+            hier::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int j, int k) {
                data(j, k) = t;
             });
             break;
          }
          case 3: {
             auto data = getView<3>(d);
-            pdat::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+            hier::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
                data(i, j, k) = t;
             });
             break;
          }
          default:
-            TBOX_ERROR("pdat::parallel_for_all undefined for dim > 3" << std::endl);
+            TBOX_ERROR("hier::parallel_for_all undefined for dim > 3" << std::endl);
       }
 #else
       const tbox::Dimension& dim = box.getDim();
