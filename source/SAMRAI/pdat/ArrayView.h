@@ -33,7 +33,7 @@ struct layout_traits {
 /*!
  * @brief ArrayView<DIM,TYPE> is a templated struct that provides an
  * indexing interface into the arrays held by class ArrayData<TYPE> for
- * use within RAJA loops as defined by the pdat::parallel_for_all loops
+ * use within RAJA loops as defined by the hier::parallel_for_all loops
  * provided in the file ForAll.h
  *
  * This can be used with any of the standard PatchData implementations
@@ -50,7 +50,7 @@ struct layout_traits {
  * auto new_array = new_data.getView<3>();
  * const hier::Box& box = new_data.getBox();
  *
- * pdat::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+ * hier::parallel_for_all(box, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
  *    new_array(i, j, k) = old_array(i, j, k);
  * });
  *

@@ -181,7 +181,7 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
          double lengthf = fdx0;
          double lengthc = cdx0;
 
-         pdat::parallel_for_all(coarse_box_0, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+         hier::parallel_for_all(coarse_box_0, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
             double spv = 0.0;
             int kf = k * r1;
             for (int rx = 0; rx < r0; rx++) {
@@ -200,7 +200,7 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
          lengthf = fdx1;
          lengthc = cdx1;
 
-         pdat::parallel_for_all(coarse_box_1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+         hier::parallel_for_all(coarse_box_1, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
             double spv = 0.0;
             int jf = j * r0;  // careful here, ratios are also switched
             for (int ry = 0; ry < r1; ry++) {
@@ -258,7 +258,7 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
          double lengthf = fdx0;
          double lengthc = cdx0;
 
-         pdat::parallel_for_all(coarse_box_0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(coarse_box_0, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double spv = 0.0;
             int kk = k * r2;
             int jj = j * r1;
@@ -280,7 +280,7 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
          lengthf = fdx1;
          lengthc = cdx1;
 
-         pdat::parallel_for_all(coarse_box_1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(coarse_box_1, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double spv = 0.0;
             int ii = i * r0;
             int kk = k * r2;
@@ -301,7 +301,7 @@ void CartesianEdgeDoubleWeightedAverage::coarsen(
          lengthf = fdx2;
          lengthc = cdx2;
 
-         pdat::parallel_for_all(coarse_box_2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+         hier::parallel_for_all(coarse_box_2, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
             double spv = 0.0;
             int jj = j * r1;
             int ii = i * r0;

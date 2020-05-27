@@ -182,7 +182,7 @@ void CartesianCellDoubleLinearRefine::refine(
          const int r0 = ratio[0];
          const int r1 = ratio[1];
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int j /*fast*/, int k) {
             const int ic0 = (j < 0) ? (j + 1) / r0 - 1 : j / r0;
             const int ic1 = (k < 0) ? (k + 1) / r1 - 1 : k / r1;
             const int ir0 = j - ic0 * r0;
@@ -238,7 +238,7 @@ void CartesianCellDoubleLinearRefine::refine(
          const int r1 = ratio[1];
          const int r2 = ratio[2];
 
-         pdat::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest */, int j, int k) {
+         hier::parallel_for_all(fine_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest */, int j, int k) {
             const int ic0 = (i < 0) ? (i + 1) / r0 - 1 : i / r0;
             const int ic1 = (j < 0) ? (j + 1) / r1 - 1 : j / r1;
             const int ic2 = (k < 0) ? (k + 1) / r2 - 1 : k / r2;

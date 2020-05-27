@@ -30,6 +30,7 @@ set (hier_headers
   Connector.h
   ConnectorStatistics.h
   FlattenedHierarchy.h
+  ForAll.h
   GlobalId.h
   HierarchyNeighbors.h
   Index.h
