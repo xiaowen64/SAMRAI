@@ -74,7 +74,7 @@ the allocation in architectures with multiple memory spaces.  The patch data
 objects in the pdat directory have new overloaded constructors that take
 an umpire::Allocator as an argument.  Additionally a new singleton class
 tbox::AllocatorDatabase manages certain Allocators that are held
-by SAMRAI and used to control allocations that are occur internally during
+by SAMRAI and used to control allocations that occur internally during
 SAMRAI operations.  Application codes can access these Allocators from the
 AllocatorDatabase and use them to ensure that application-allocated data
 and library-allocated data are allocated in the same way before they interact.
