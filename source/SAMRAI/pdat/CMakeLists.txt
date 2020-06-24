@@ -305,7 +305,7 @@ set (pdat_depends
   SAMRAI_xfer)
 
 if (ENABLE_RAJA)
-  set(pdat_depends ${pdat_depends} raja)
+  set(pdat_depends ${pdat_depends} RAJA)
 endif ()
 
 if (ENABLE_CUDA)

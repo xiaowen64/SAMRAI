@@ -16,15 +16,21 @@ endif ()
 
 # UMPIRE
 if (ENABLE_UMPIRE OR umpire_DIR)
-  find_package(umpire REQUIRED)
+  if (TARGET umpire)
+    set (HAVE_UMPIRE True)
+    set (ENABLE_UMPIRE On)
+  else ()
+    message(STATUS "Searching for Umpire package")
+    find_package(umpire REQUIRED)
 
-  set (HAVE_UMPIRE True)
-  set (ENABLE_UMPIRE On)
+    set (HAVE_UMPIRE True)
+    set (ENABLE_UMPIRE On)
 
-  blt_register_library(
-    NAME umpire
-    INCLUDES ${UMPIRE_INCLUDE_DIRS}
-    LIBRARIES umpire)
+    blt_register_library(
+      NAME umpire
+      INCLUDES ${UMPIRE_INCLUDE_DIRS}
+      LIBRARIES umpire)
+  endif ()
 endif ()
 
 # RAJA
@@ -33,18 +39,22 @@ if (ENABLE_RAJA OR RAJA_DIR)
     message(FATAL_ERROR "RAJA support requires UMPIRE.")
   endif ()
 
-  find_package(RAJA REQUIRED)
+  if (TARGET RAJA)
+    set (HAVE_RAJA True)
+    set (ENABLE_RAJA ON)
+  else ()
+    message(STATUS "Searching for RAJA package")
+    find_package(RAJA REQUIRED)
 
-  set (raja_depends_on)
-  if (ENABLE_CUDA)
-    list (APPEND raja_depends cuda)
-  endif ()
+    set (raja_depends_on)
+    if (ENABLE_CUDA)
+      list (APPEND raja_depends cuda)
+    endif ()
 
-  if (ENABLE_OPENMP)
-    list (APPEND raja_depends openmp)
-  endif ()
+    if (ENABLE_OPENMP)
+      list (APPEND raja_depends openmp)
+    endif ()
 
-  if (RAJA_FOUND)
     set (HAVE_RAJA True)
     set (ENABLE_RAJA ON)
 

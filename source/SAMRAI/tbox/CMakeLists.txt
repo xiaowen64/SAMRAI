@@ -141,7 +141,7 @@ if (ENABLE_OPENMP)
 endif ()
 
 if (ENABLE_RAJA)
-  set(tbox_depends ${tbox_depends} raja)
+  set(tbox_depends ${tbox_depends} RAJA)
 endif ()
 
 if (ENABLE_CUDA)
