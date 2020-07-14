@@ -89,6 +89,8 @@ CVODESolver::CVODESolver(
    setCVSpgmrToleranceScaleFactor(0);
 
    d_CVODE_needs_initialization = true;
+   d_uses_projectionfn = false;
+   d_uses_jtimesrhsfn = false;
 }
 
 CVODESolver::~CVODESolver()
