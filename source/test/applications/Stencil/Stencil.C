@@ -1,7 +1,6 @@
 #include "Stencil.h"
 
 #include "SAMRAI/hier/ForAll.h"
-#include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Collectives.h"
 
