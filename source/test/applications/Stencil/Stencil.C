@@ -199,7 +199,7 @@ Stencil::tagGradientDetectorCells(
    auto rho = pdat::get_const_view<2, pdat::CellData<double> >(patch.getPatchData(d_rho_variables[0], getDataContext()));
    // CellView<double, 2> rho(SAMRAI_SHARED_PTR_CAST<pdat::CellData<double> >(patch.getPatchData(d_rho_variables[0], getDataContext())));
 
-   auto tags = pdat::get_view<2, pdat::CellData<double> >(patch.getPatchData(tag_index));
+   auto tags = pdat::get_view<2, pdat::CellData<int> >(patch.getPatchData(tag_index));
    // CellView<int, 2> tags(SAMRAI_SHARED_PTR_CAST<pdat::CellData<int> >(patch.getPatchData(tag_index)));
 
    double tag_threshold = d_tag_threshold;

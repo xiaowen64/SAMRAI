@@ -441,7 +441,7 @@ int main(
     main_db.reset();
 
   }
-  //tbox::pout << "\nPASSED:  Stencil" << std::endl;
+  tbox::pout << "\nPASSED:  Stencil" << std::endl;
 
   tbox::SAMRAIManager::shutdown();
 
