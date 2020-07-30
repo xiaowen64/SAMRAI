@@ -62,7 +62,7 @@ then
       -C ${generic_conf} \
       -C ${samrai_conf} \
       ${project_dir}
-    cmake --build . -j 4
+    cmake --build . -j 8
 fi
 
 # Test
