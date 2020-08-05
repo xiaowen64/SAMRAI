@@ -727,7 +727,7 @@ void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
       hier::VariableDatabase::getDatabase()->getContext("SOURCE");
 
    std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_data(
-      SAMRAI_SHARED_PTR_CAST<pdat::CellData<KERNEK_TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(
          patch->getPatchData(d_variables[0], source)));
 
    size_t data_size = cell_data->getGhostBox().size();
