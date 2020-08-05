@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v4.0.1
+                     Release Notes for SAMRAI v4.0.0
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -24,22 +24,9 @@ it to us so that we may fix it.
 Please send email to samrai-bugs@llnl.gov or post an issue on github.
 https://github.com/LLNL/SAMRAI
 
-Version 4.0.1 is a bugfix release.  Unless otherwise marked, the
-notes in this file are the notes from release 4.0.0.
-
 *****************************************************************************
 
-----------------------------------------------------------------------------
-                Significant bug fixes
-----------------------------------------------------------------------------
-
-1) NEW for v. 4.0.1  Bugs in the CMake configuration that caused Conduit
-and SILO to be excluded from the build even when included in the cmake
-configuration line have been fixed.
-
 *****************************************************************************
-
-
 
 ----------------------------------------------------------------------------
                 Summary of what's new
