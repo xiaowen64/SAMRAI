@@ -542,8 +542,10 @@ int main(
 
       int num_hier_patches = 0; 
       for (int i = 0; i < patch_hierarchy->getNumberOfLevels(); ++i) {
-         const std::shared_ptr<hier::PatchLevel>& level =  patch_hierarchy->getPatchLevel(i);
-         num_hier_patches += patch_hierarchy->getPatchLevel(i)->getNumberOfPatches();
+         const std::shared_ptr<hier::PatchLevel>& level = 
+            patch_hierarchy->getPatchLevel(i);
+         num_hier_patches +=
+            patch_hierarchy->getPatchLevel(i)->getNumberOfPatches();
 
          for (hier::PatchLevel::Iterator p(level->begin()); p != level->end();
               ++p) {
@@ -566,6 +568,9 @@ int main(
          }
       }
 
+      std::string bp_protocol = main_db->getStringWithDefault(
+         "blueprint_protocol", "json"); 
+
       bp_utils.writeBlueprintMesh(
          n,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
@@ -573,7 +578,7 @@ int main(
          "amr_mesh",
          "celldata",
          "bpindex.root",
-         "json");
+         bp_protocol);
 
       conduit::Node info;
       TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
