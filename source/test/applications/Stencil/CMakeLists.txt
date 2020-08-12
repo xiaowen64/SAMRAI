@@ -29,9 +29,9 @@ file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
 execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 
-# samrai_add_tests(
-#   NAME stencil
-#   EXECUTABLE stencil
-#   INPUTS ${test_inputs}
-#  PARALLEL TRUE)
+samrai_add_tests(
+   NAME stencil
+   EXECUTABLE stencil
+   INPUTS ${test_inputs}
+   PARALLEL TRUE)
 
