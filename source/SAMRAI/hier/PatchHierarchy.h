@@ -1123,13 +1123,16 @@ private:
    void setAdjacencyNeighbor(
    std::shared_ptr<tbox::Database>& domain_db,
    const std::string& topology_name,
-   int nbr_id) const;
+   int nbr_id,
+   int nbr_rank) const;
 
 void setAdjacencyOverlaps(
    std::shared_ptr<tbox::Database>& domain_db,
    int nbr_id,
    const Box& overlap,
    const Box& nbr_overlap,
+   int level_id,
+   int nbr_level_id,
    const IntVector& ratio) const;
 
    /*!

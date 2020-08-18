@@ -46,6 +46,7 @@
 
 #ifdef SAMRAI_HAVE_CONDUIT
 #include "conduit_blueprint.hpp"
+#include "conduit_blueprint_mesh.hpp"
 #include "conduit_relay.hpp"
 #endif
 
@@ -54,6 +55,11 @@
 #endif
 
 using namespace SAMRAI;
+
+void makeQuadElemConnectivity(
+   std::vector<int64_t>& connect,
+   int64_t element,
+   int64_t iwidth);
 
 void transformToPolyhedral(conduit::Node& out, const conduit::Node& in, const std::string& name);
 /*
@@ -596,7 +602,13 @@ int main(
       TBOX_ASSERT(conduit::blueprint::verify("mesh", flatn, info));
 
       conduit::Node poly;
-      transformToPolyhedral(poly, flatn, "mesh");
+
+      if (dim.getValue() == 2) {
+         conduit::blueprint::mesh::to_poly(flatn, poly, "mesh");
+      } else {
+         conduit::blueprint::mesh::to_polyhedral(flatn, poly, "mesh");
+      }
+      //transformToPolyhedral(poly, flatn, "mesh");
       TBOX_ASSERT(conduit::blueprint::verify("mesh", poly, info));
 
       bp_utils.writeBlueprintMesh(
@@ -608,22 +620,10 @@ int main(
          "poly.root",
          "json");
 
-      // poly = polygonal/polyhedral with explicit coords
-      // polyuni = polygonal/polyhedral with original uniform coords
-      // polystruct = polyuni transformed back to structured
 
       conduit::Node polyuni = poly;
 
       conduit::NodeConstIterator itr = poly.children();
-
-      while(itr.has_next())
-      {
-         itr.next();
-         std::string domain_name = itr.name();
-
-         polyuni[domain_name]["coordsets/coords"].reset();
-         polyuni[domain_name]["coordsets/coords"] = n[domain_name]["coordsets/coords"];
-      }
 
       conduit::Node polystruct = polyuni;
 
@@ -635,7 +635,7 @@ int main(
 
          conduit::Node dest; 
          conduit::Node cdest; 
-         conduit::blueprint::mesh::topology::uniform::to_structured(
+         conduit::blueprint::mesh::topology::rectilinear::to_structured(
             polyuni[domain_name]["topologies/mesh"], dest, cdest);
 
          polystruct[domain_name]["coordsets/coords"].reset();
@@ -742,86 +742,583 @@ void transformToPolyhedral(conduit::Node& out, const conduit::Node& in, const st
 {
    conduit::NodeConstIterator itr = in.children();
 
+   std::map<int, std::map<int, std::vector<int64_t> > > poly_elems_map;
+
    while(itr.has_next())
    {
       const conduit::Node& child = itr.next();
       std::string domain_name = itr.name();
       out[domain_name]["state"] = child["state"];
-      conduit::Node& out_coords = out[domain_name]["coordsets/coords"];
       const conduit::Node& in_coords = child["coordsets/coords"];
 
-      if (in_coords["type"].as_string() == "uniform") {
-         conduit::blueprint::mesh::coordset::uniform::to_explicit(in_coords, out_coords);
-      } else {
-         out_coords["type"] = in_coords["type"];
-         conduit::Node& out_values = out_coords["values"];
-         const conduit::Node& in_values = in_coords["values"];
-         out_values = in_values;
-      }
-/*
-      if (child.has_child("adjsets/adjset/association"))  {
-         conduit::Node& out_adjset = out[domain_name]["adjsets/adjset"];
-         const conduit::Node& in_adjset = child["adjsets/adjset"];
-         out_adjset["association"] = in_adjset["association"];
-         out_adjset["topology"] = name;
+      int64_t domain_id = child["state/domain_id"].as_int64();
+      std::string win_name =
+         "window_" + tbox::Utilities::intToString(domain_id, 6);
 
-         if (in_adjset.has_child("groups") {
-            conduit::NodeConstIterator win_itr = in_adjset["groups"].children();
-            while(win_itr.has_next())
-            {
-               const conduit::Node& win_child = win_itr.next();
-               std::string win_name = win_itr.name();
+      const conduit::Node& in_topo = child["topologies"][name];
 
-               if (win_child.has_child("neighbors") {
-                  out_adjset["groups"][win_name]["neighbors"] =
-                     win_child["neighbors"]
+      int64_t niwidth = in_topo["elements/dims/i"].as_int64() + 1;
+
+      int64_t i_lo = in_topo["elements/origin/i0"].as_int64();
+      int64_t j_lo = in_topo["elements/origin/j0"].as_int64();
+
+      const conduit::Node* in_parent = child.parent();
+
+      if (child.has_path("adjsets/adjset/groups")) {
+         const conduit::Node& in_groups = child["adjsets/adjset/groups"];
+         conduit::NodeConstIterator grp_itr = in_groups.children();
+         while(grp_itr.has_next())
+         {
+            const conduit::Node& group = grp_itr.next();
+            std::string grp_name = grp_itr.name();
+
+            if (group.has_child("neighbors")) {
+               conduit::int64_array neighbors = group["neighbors"].as_int64_array();
+
+               int nbr_id = neighbors[1];
+
+               if (group.has_child("windows")) {
+                  const conduit::Node& in_windows = group["windows"];
+                  std::string nbr_win_name =
+                     "window_" + tbox::Utilities::intToString(nbr_id, 6);
+
+                  const conduit::Node& ref_win = in_windows[win_name];
+                  const conduit::Node& nbr_win = in_windows[nbr_win_name];
+                  if (nbr_win["level_id"].as_int64() < ref_win["level_id"].as_int64()) {
+
+                     int64_t ref_size_i = ref_win["dims/i"].as_int64();
+                     int64_t ref_size_j = ref_win["dims/j"].as_int64();
+                     int64_t ref_size = ref_size_i * ref_size_j;
+
+                     int64_t nbr_size_i = nbr_win["dims/i"].as_int64();
+                     int64_t nbr_size_j = nbr_win["dims/j"].as_int64();
+                     int64_t nbr_size = nbr_size_i * nbr_size_j;
+
+                     std::string nbr_name =
+                        "domain_" + tbox::Utilities::intToString(nbr_id, 6);
+
+                     if (nbr_size < ref_size && !in_parent->has_child(nbr_name)) {
+                        // do sends
+                        std::vector<double> xbuffer;
+                        std::vector<double> ybuffer;
+                        const conduit::Node& fcoords =
+                           in_coords["values"];
+                        const conduit::double_array& xarray =
+                           fcoords["x"].as_double_array();
+                        const conduit::double_array& yarray =
+                           fcoords["y"].as_double_array();
+
+                        int64_t origin_i = ref_win["origin/i"].as_int64();
+                        int64_t origin_j = ref_win["origin/j"].as_int64();
+
+                        if (ref_size_i == 1) {
+                           int icnst = origin_i - i_lo;
+                           int jstart = origin_j - j_lo;
+                           int jend = jstart + ref_size_j;
+                           for (int jidx = jstart; jidx < jend; ++jidx) {
+                              int offset = jidx * niwidth + icnst;
+                              xbuffer.push_back(xarray[offset]);
+                              ybuffer.push_back(yarray[offset]);
+                           }
+                        } else if (ref_size_j == 1) {
+                           int jcnst = origin_j - j_lo;
+                           int istart = origin_i - i_lo;
+                           int iend = istart + ref_size_i;
+                           for (int iidx = istart; iidx < iend; ++iidx) {
+                              int offset = jcnst * niwidth + iidx;
+                              xbuffer.push_back(xarray[offset]);
+                              ybuffer.push_back(yarray[offset]);
+                           }
+                        }
+                        int64_t nbr_rank = group["rank"].as_int64();
+                        MPI_Send(&xbuffer[0],
+                                 xbuffer.size(),
+                                 MPI_DOUBLE,
+                                 nbr_rank,
+                                 domain_id,
+                                 MPI_COMM_WORLD);
+                        MPI_Send(&ybuffer[0],
+                                 ybuffer.size(),
+                                 MPI_DOUBLE,
+                                 nbr_rank,
+                                 domain_id,
+                                 MPI_COMM_WORLD);
+                     }
+                  }
                }
             }
          }
       }
-*/
+   }
+
+   std::map<int, std::map<int, std::vector<double> > > dom_to_nbr_to_xbuffer;
+   std::map<int, std::map<int, std::vector<double> > > dom_to_nbr_to_ybuffer;
+
+   itr = in.children();
+   while(itr.has_next())
+   {
+      const conduit::Node& child = itr.next();
+      std::string domain_name = itr.name();
+
+      int64_t domain_id = child["state/domain_id"].as_int64();
+      std::string win_name =
+         "window_" + tbox::Utilities::intToString(domain_id, 6);
+
+      const conduit::Node* in_parent = child.parent();
+
+      auto& nbr_to_xbuffer = dom_to_nbr_to_xbuffer[domain_id];
+      auto& nbr_to_ybuffer = dom_to_nbr_to_ybuffer[domain_id];
+
+      if (child.has_path("adjsets/adjset/groups")) {
+         const conduit::Node& in_groups = child["adjsets/adjset/groups"];
+         conduit::NodeConstIterator grp_itr = in_groups.children();
+         while(grp_itr.has_next())
+         {
+            const conduit::Node& group = grp_itr.next();
+            std::string grp_name = grp_itr.name();
+
+            if (group.has_child("neighbors")) {
+               conduit::int64_array neighbors = group["neighbors"].as_int64_array();
+
+               int nbr_id = neighbors[1];
+               if (group.has_child("windows")) {
+                  const conduit::Node& in_windows = group["windows"];
+                  std::string nbr_win_name =
+                     "window_" + tbox::Utilities::intToString(nbr_id, 6);
+
+                  const conduit::Node& ref_win = in_windows[win_name];
+                  const conduit::Node& nbr_win = in_windows[nbr_win_name];
+                  if (nbr_win["level_id"].as_int64() > ref_win["level_id"].as_int64()) {
+                     int64_t ref_size_i = ref_win["dims/i"].as_int64();
+                     int64_t ref_size_j = ref_win["dims/j"].as_int64();
+                     int64_t ref_size = ref_size_i * ref_size_j;
+
+                     int64_t nbr_size_i = nbr_win["dims/i"].as_int64();
+                     int64_t nbr_size_j = nbr_win["dims/j"].as_int64();
+                     int64_t nbr_size = nbr_size_i * nbr_size_j;
+
+                     if (nbr_size > ref_size) {
+
+                        std::string nbr_name =
+                           "domain_" + tbox::Utilities::intToString(nbr_id, 6);
+
+                        auto& xbuffer = nbr_to_xbuffer[nbr_id];
+                        auto& ybuffer = nbr_to_ybuffer[nbr_id];
+
+                        if (!in_parent->has_child(nbr_name)) {
+
+                           if (nbr_size_i == 1) {
+                              xbuffer.resize(nbr_size_j);
+                              ybuffer.resize(nbr_size_j);
+                           } else if (nbr_size_j == 1) {
+                              xbuffer.resize(nbr_size_i);
+                              ybuffer.resize(nbr_size_i);
+                           }
+
+                           int64_t nbr_rank = group["rank"].as_int64();
+                           MPI_Recv(&xbuffer[0],
+                                    xbuffer.size(),
+                                    MPI_DOUBLE,
+                                    nbr_rank,
+                                    nbr_id,
+                                    MPI_COMM_WORLD,
+                                    MPI_STATUS_IGNORE);
+                           MPI_Recv(&ybuffer[0],
+                                    ybuffer.size(),
+                                    MPI_DOUBLE, nbr_rank,
+                                    nbr_id, MPI_COMM_WORLD,
+                                    MPI_STATUS_IGNORE);
+
+                        } else {
+
+                           const conduit::Node& nbr_dom =
+                              (*in_parent)[nbr_name];
+                           const conduit::Node& nbr_coords =
+                              nbr_dom["coordsets/coords"];
+
+                           const conduit::Node& ntopo =
+                              nbr_dom["topologies"][name];
+                           int64_t ni_lo =
+                              ntopo["elements/origin/i0"].as_int64();
+                           int64_t nj_lo =
+                              ntopo["elements/origin/j0"].as_int64();
+                           int64_t nbr_iwidth =
+                              ntopo["elements/dims/i"].as_int64() + 1;
+
+                           const conduit::Node& fcoords =
+                              nbr_coords["values"];
+                           const conduit::double_array& xarray =
+                              fcoords["x"].as_double_array();
+                           const conduit::double_array& yarray =
+                              fcoords["y"].as_double_array();
+
+                           int64_t origin_i = nbr_win["origin/i"].as_int64();
+                           int64_t origin_j = nbr_win["origin/j"].as_int64();
+
+                           if (nbr_size_i == 1) {
+                              int icnst = origin_i - ni_lo;
+                              int jstart = origin_j - nj_lo;
+                              int jend = jstart + nbr_size_j;
+                              for (int jidx = jstart; jidx < jend; ++jidx) {
+                                 int offset = jidx * nbr_iwidth + icnst;
+                                 xbuffer.push_back(xarray[offset]);
+                                 ybuffer.push_back(yarray[offset]);
+                              }
+                           } else if (nbr_size_j == 1) {
+                              int jcnst = origin_j - nj_lo;
+                              int istart = origin_i - ni_lo;
+                              int iend = istart + nbr_size_i;
+                              for (int iidx = istart; iidx < iend; ++iidx) {
+                                 int offset = jcnst * nbr_iwidth + iidx;
+                                 xbuffer.push_back(xarray[offset]);
+                                 ybuffer.push_back(yarray[offset]);
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+
+   itr = in.children();
+   while(itr.has_next())
+   {
+      const conduit::Node& child = itr.next();
+      std::string domain_name = itr.name();
+      conduit::Node& out_coords = out[domain_name]["coordsets/coords"];
+      const conduit::Node& in_coords = child["coordsets/coords"];
+
+      int64_t domain_id = child["state/domain_id"].as_int64();
+      std::string win_name =
+         "window_" + tbox::Utilities::intToString(domain_id, 6);
+
+      conduit::Node& out_values = out_coords["values"];
+      if (in_coords["type"].as_string() == "uniform") {
+         conduit::blueprint::mesh::coordset::uniform::to_explicit(in_coords, out_coords);
+      } else {
+         out_coords["type"] = in_coords["type"];
+         const conduit::Node& in_values = in_coords["values"];
+         out_values = in_values;
+      }
+
+      auto& nbr_to_xbuffer = dom_to_nbr_to_xbuffer[domain_id];
+      auto& nbr_to_ybuffer = dom_to_nbr_to_ybuffer[domain_id];
+
+      const conduit::Node& in_topo = child["topologies"][name];
+
+      int64_t iwidth = in_topo["elements/dims/i"].as_int64();
+      int64_t jwidth = in_topo["elements/dims/j"].as_int64();
+
+      int64_t i_lo = in_topo["elements/origin/i0"].as_int64();
+      int64_t j_lo = in_topo["elements/origin/j0"].as_int64();
+
+      std::map<int, std::vector<int64_t> >& poly_elems = poly_elems_map[domain_id];
+
+      if (child.has_path("adjsets/adjset/groups")) {
+         const conduit::Node& in_groups = child["adjsets/adjset/groups"];
+         conduit::NodeConstIterator grp_itr = in_groups.children();
+         while(grp_itr.has_next())
+         {
+            const conduit::Node& group = grp_itr.next();
+            std::string grp_name = grp_itr.name();
+
+            if (group.has_child("neighbors")) {
+               conduit::int64_array neighbors = group["neighbors"].as_int64_array();
+
+               int nbr_id = neighbors[1];
+               if (group.has_child("windows")) {
+                  const conduit::Node& in_windows = group["windows"];
+                  std::string nbr_win_name =
+                     "window_" + tbox::Utilities::intToString(nbr_id, 6);
+
+                  const conduit::Node& ref_win = in_windows[win_name]; 
+                  const conduit::Node& nbr_win = in_windows[nbr_win_name]; 
+                  if (nbr_win["level_id"].as_int64() > ref_win["level_id"].as_int64()) {
+                     int64_t ratio_i = nbr_win["ratio/i"].as_int64();
+                     int64_t ratio_j = nbr_win["ratio/j"].as_int64();
+
+                     int64_t ref_size_i = ref_win["dims/i"].as_int64();
+                     int64_t ref_size_j = ref_win["dims/j"].as_int64();
+                     int64_t ref_size = ref_size_i * ref_size_j;
+
+                     int64_t nbr_size_i = nbr_win["dims/i"].as_int64();
+                     int64_t nbr_size_j = nbr_win["dims/j"].as_int64();
+                     int64_t nbr_size = nbr_size_i * nbr_size_j;
+
+                     if (ref_size < nbr_size) {
+
+                        int64_t origin_iref = ref_win["origin/i"].as_int64();
+                        int64_t origin_jref = ref_win["origin/j"].as_int64();
+
+                        const conduit::double_array& out_x = out_values["x"].as_double_array();
+                        const conduit::double_array& out_y = out_values["y"].as_double_array();
+                        int64_t new_vertex = out_x.number_of_elements();
+
+                        if (ref_size_i == 1) {
+                           int jstart = origin_jref - j_lo;
+                           int jend = origin_jref - j_lo + ref_size_j - 1;
+                           if (origin_iref == i_lo) {
+                              for (int jidx = jstart; jidx < jend; ++jidx) {
+                                 int offset = jidx * iwidth;
+                                 std::vector<int64_t>& elem_conn = poly_elems[offset];
+                                 if (elem_conn.empty()) {
+                                    makeQuadElemConnectivity(
+                                       elem_conn,
+                                       offset,
+                                       iwidth);
+                                 }
+                              }
+                           } else {
+                              for (int jidx = jstart; jidx < jend; ++jidx) {
+                                 int offset = jidx * iwidth +
+                                    (origin_iref - i_lo - 1);
+                                 std::vector<int64_t>& elem_conn = poly_elems[offset];
+                                 if (elem_conn.empty()) {
+                                    makeQuadElemConnectivity(
+                                       elem_conn,
+                                       offset,
+                                       iwidth);
+                                 }
+                              }
+                           }
+                        } else if (ref_size_j == 1) {
+                           int istart = origin_iref - i_lo;
+                           int iend = origin_iref - i_lo + ref_size_i - 1;
+                           if (origin_jref == j_lo) {
+                              for (int iidx = istart; iidx < iend; ++iidx) {
+                                 std::vector<int64_t>& elem_conn = poly_elems[iidx];
+                                 if (elem_conn.empty()) {
+                                    makeQuadElemConnectivity(
+                                       elem_conn,
+                                       iidx,
+                                       iwidth);
+                                 }
+                              }
+                           } else {
+                              for (int iidx = istart; iidx < iend; ++iidx) {
+                                 int offset = iidx +
+                                    ((origin_jref - j_lo - 1) * iwidth);
+                                 std::vector<int64_t>& elem_conn = poly_elems[offset];
+                                 if (elem_conn.empty()) {
+                                    makeQuadElemConnectivity(
+                                       elem_conn,
+                                       offset,
+                                       iwidth);
+                                 }
+                              }
+                           }
+                        }
+
+                        int use_ratio = 0;
+                        if (nbr_size_j == 1) {
+                           use_ratio = ratio_i;
+                        }
+                        else if (nbr_size_i == 1) {
+                           use_ratio = ratio_j;
+                        }
+
+                        auto& xbuffer = nbr_to_xbuffer[nbr_id];
+                        auto& ybuffer = nbr_to_ybuffer[nbr_id];
+
+                        size_t added = 0;
+                        if (nbr_size_j == 1) {
+                           added = xbuffer.size() - ref_size_i;
+                        } else if (nbr_size_i == 1) {
+                           added = ybuffer.size() - ref_size_j;
+                        }
+
+                        size_t out_x_size = out_x.number_of_elements();
+                        size_t out_y_size = out_y.number_of_elements();
+
+                        std::vector<double> new_x;
+                        std::vector<double> new_y;
+                        new_x.reserve(out_x_size + added); 
+                        new_y.reserve(out_y_size + added); 
+                        const double* out_x_ptr = static_cast<const double*>(out_x.element_ptr(0));
+                        const double* out_y_ptr = static_cast<const double*>(out_y.element_ptr(0));
+
+                        new_x.insert(new_x.end(), out_x_ptr, out_x_ptr + out_x_size);
+                        new_y.insert(new_y.end(), out_y_ptr, out_y_ptr + out_y_size);
+
+                        if ((xbuffer.size()-1)%use_ratio) {
+                           new_x.reserve(out_x_size + added*2); 
+                        }
+                        for (unsigned int ni = 0; ni < xbuffer.size(); ++ni) {
+                           if (ni % use_ratio) {
+                              new_x.push_back(xbuffer[ni]);
+                              new_y.push_back(ybuffer[ni]);
+                           }
+                        }
+
+                        //out_values["x"].reset(); 
+                        //out_values["y"].reset(); 
+                        out_values["x"].set(new_x);
+                        out_values["y"].set(new_y);
+
+                        if (ref_size_i == 1) {
+                           int jstart = origin_jref - j_lo;
+                           int jend = origin_jref - j_lo + ref_size_j - 1;
+                           if (origin_iref == i_lo) {
+                              for (int jidx = jstart; jidx < jend; ++jidx) {
+                                 int offset = jidx * (iwidth);
+                                 auto& elem_conn = poly_elems[offset];
+                                 if (use_ratio > 1) {
+                                    for (int nr = use_ratio-1; nr > 0; --nr) {
+                                       elem_conn.push_back(new_vertex+nr-1);
+                                    }
+                                    elem_conn[0] += use_ratio - 1;
+                                    new_vertex += use_ratio - 1;
+                                 }
+                              }
+                           } else {
+                              for (int jidx = jstart; jidx < jend; ++jidx) {
+                                 int offset = jidx * iwidth +
+                                    (origin_iref - i_lo - 1);
+                                 auto& elem_conn = poly_elems[offset];
+                                 if (use_ratio > 1) {
+                                    size_t new_size = elem_conn.size() +
+                                       use_ratio - 1;
+                                    elem_conn.resize(new_size);
+                                    int corner = 2;
+                                    if (elem_conn[2] - elem_conn[1] != 1) {
+                                       int64_t ioff = offset % iwidth;
+                                       int64_t joff = offset / iwidth;
+                                       int64_t target =
+                                          (iwidth+1)*joff + ioff + 1;
+                                       for (int nr = 2; nr < 2+use_ratio; ++nr) {
+                                          if (elem_conn[nr] == target) {
+                                             corner = nr;
+                                             break;
+                                          }
+                                       }
+                                    }
+                                    for (int nr = new_size-1; nr > corner+use_ratio-1; --nr) {
+                                       elem_conn[nr] = elem_conn[nr-use_ratio+1];
+                                    }
+                                    for (int nr = corner+1; nr < corner+use_ratio; ++nr) {
+                                       elem_conn[nr] = new_vertex;
+                                       ++new_vertex;
+                                    }
+                                    elem_conn[0] += use_ratio - 1;
+                                 }
+                              }
+                           }
+                        } else if (ref_size_j == 1) {
+                           int istart = origin_iref - i_lo;
+                           int iend = origin_iref - i_lo + ref_size_i - 1;
+                           if (origin_jref == j_lo) {
+                              for (int iidx = istart; iidx < iend; ++iidx) {
+                                 auto& elem_conn = poly_elems[iidx];
+                                 if (use_ratio > 1) {
+                                    size_t new_size = elem_conn.size() +
+                                       use_ratio - 1;
+                                    elem_conn.resize(new_size);
+                                    for (int nr = new_size-1; nr > 2; --nr) {
+                                       elem_conn[nr] = elem_conn[nr-use_ratio+1];
+                                    }
+                                    for (int nr = 2; nr <= use_ratio; ++nr) {
+                                       elem_conn[nr] = (new_vertex+nr-2);  
+                                    }
+                                    elem_conn[0] += use_ratio - 1;
+                                    new_vertex += use_ratio - 1;
+                                 }
+                              }
+                           } else {
+                              for (int iidx = istart; iidx < iend; ++iidx) {
+                                 int offset = iidx +
+                                    ((origin_jref - j_lo - 1) * iwidth);
+                                 auto& elem_conn = poly_elems[offset];
+                                 if (use_ratio > 1) {
+                                    size_t new_size = elem_conn.size() +
+                                       use_ratio - 1;
+                                    elem_conn.resize(new_size);
+                                    int corner = 3;
+                                    if (elem_conn[0] != 4) {
+                                       int64_t ioff = offset % iwidth;
+                                       int64_t joff = offset / iwidth;
+                                       int64_t target =
+                                          (iwidth+1)*(joff+1) + ioff + 1;
+                                       for (int nr = 3; nr < 3+use_ratio; ++nr) {
+                                          if (elem_conn[nr] == target) {
+                                             corner = nr;
+                                             break;
+                                          }
+                                       }
+                                    }
+                                    for (int nr = new_size-1; nr > corner+use_ratio-1; --nr) {
+                                       elem_conn[nr] = elem_conn[nr-use_ratio+1];
+                                    }
+                                    for (int nr = corner+use_ratio-1; nr > corner; --nr) {
+                                       elem_conn[nr] = new_vertex;
+                                       ++new_vertex;
+                                    }
+                                    elem_conn[0] += use_ratio - 1;
+                                 }
+                              }
+                           }
+                        }
+                     } 
+                  }
+               }
+            }
+         }
+      }
 
       std::string coords =
          child["topologies"][name]["coordset"].as_string(); 
       out[domain_name]["topologies"][name]["coordset"] = coords;
 
-      const conduit::Node& in_topo = child["topologies"][name];
       conduit::Node& topo = out[domain_name]["topologies"][name];
 
       topo["type"] = "unstructured";
       topo["elements/shape"] = "polygonal";
 
-      int64_t iwidth = in_topo["elements/dims/i"].as_int64();
-      int64_t jwidth = in_topo["elements/dims/j"].as_int64();
-
-      int64_t elemsize = (iwidth)*(jwidth);
+      int64_t elemsize = iwidth*jwidth;
  
       std::vector<int64_t> connect;
       for (int elem = 0; elem < elemsize; ++elem) {
-         int64_t i = elem % iwidth;
-         int64_t j = elem / iwidth;
-         int64_t LLi = i;
-         int64_t LRi = i + 1;
-         int64_t ULi = i;
-         int64_t URi = i + 1;
-         int64_t LLj = j;
-         int64_t LRj = j;
-         int64_t ULj = j + 1;
-         int64_t URj = j + 1;
-
-         int64_t LL = (iwidth+1)*LLj + LLi;
-         int64_t LR = (iwidth+1)*LRj + LRi;
-         int64_t UL = (iwidth+1)*ULj + ULi;
-         int64_t UR = (iwidth+1)*URj + URi;
-
-         connect.push_back(4);
-         connect.push_back(LL);
-         connect.push_back(LR);
-         connect.push_back(UR);
-         connect.push_back(UL);
+         auto elem_itr = poly_elems.find(elem);
+         if (elem_itr == poly_elems.end()) {
+            makeQuadElemConnectivity(connect, elem, iwidth);
+         } else {
+            std::vector<int64_t>& poly_elem = elem_itr->second;
+            connect.insert(connect.end(), poly_elem.begin(), poly_elem.end());
+         }
       }
 
       topo["elements/connectivity"].set(connect);
 
    }
 }
+
+void makeQuadElemConnectivity(
+   std::vector<int64_t>& connect,
+   int64_t element,
+   int64_t iwidth)
+{
+   int64_t i = element % iwidth;
+   int64_t j = element / iwidth;
+   int64_t LLi = i;
+   int64_t LRi = i + 1;
+   int64_t ULi = i;
+   int64_t URi = i + 1;
+   int64_t LLj = j;
+   int64_t LRj = j;
+   int64_t ULj = j + 1;
+   int64_t URj = j + 1;
+
+   int64_t LL = (iwidth+1)*LLj + LLi;
+   int64_t LR = (iwidth+1)*LRj + LRi;
+   int64_t UL = (iwidth+1)*ULj + ULi;
+   int64_t UR = (iwidth+1)*URj + URi;
+
+   connect.push_back(4);
+   connect.push_back(LL);
+   connect.push_back(LR);
+   connect.push_back(UR);
+   connect.push_back(UL);
+}
+

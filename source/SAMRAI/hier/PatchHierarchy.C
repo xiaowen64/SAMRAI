@@ -1498,12 +1498,13 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
 
             if (!node_ovlp.empty()) {
 
-               setAdjacencyNeighbor(domain_db, "mesh", nbr_id); 
+               int nbr_rank = nbr_vis_id.getOwnerRank();
+               setAdjacencyNeighbor(domain_db, "mesh", nbr_id, nbr_rank);
 
                if (d_number_blocks > 1) {
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, node_ovlp, tnode_ovlp,
+                     domain_db, nbr_id, node_ovlp, tnode_ovlp, i, i,
                      IntVector::getOne(d_dim));
                }
             }
@@ -1571,8 +1572,8 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                }
 
                if (!fnode_ovlp.empty()) {
-
-                  setAdjacencyNeighbor(domain_db, "mesh", nbr_id);
+                  int nbr_rank = nbr_box_id.getOwnerRank();
+                  setAdjacencyNeighbor(domain_db, "mesh", nbr_id, nbr_rank);
 
                   Box node_pbox(pbox);
                   node_pbox.setUpper(node_pbox.upper()+IntVector::getOne(d_dim));
@@ -1585,7 +1586,7 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                   Box cnode_ovlp(node_pbox * node_crs_nbox);
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, cnode_ovlp, fnode_ovlp, nbr_ratio);
+                     domain_db, nbr_id, cnode_ovlp, fnode_ovlp, i, i+1, nbr_ratio);
 
                }
             }
@@ -1654,8 +1655,8 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                }
 
                if (!cnode_ovlp.empty()) {
-
-                  setAdjacencyNeighbor(domain_db, "mesh", nbr_id); 
+                  int nbr_rank = nbr_box_id.getOwnerRank();
+                  setAdjacencyNeighbor(domain_db, "mesh", nbr_id, nbr_rank); 
 
                   Box node_pbox(pbox);
                   node_pbox.setUpper(node_pbox.upper()+IntVector::getOne(d_dim));
@@ -1668,7 +1669,7 @@ PatchHierarchy::makeVisibleDomainsBlueprint(
                   Box fnode_ovlp(node_pbox * node_fine_nbox);
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, fnode_ovlp, cnode_ovlp, nbr_ratio);
+                     domain_db, nbr_id, fnode_ovlp, cnode_ovlp, i, i-1, nbr_ratio);
                }
             }
          }
@@ -2063,13 +2064,13 @@ PatchHierarchy::makeAdjacencySets(
             }
 
             if (!node_ovlp.empty()) {
-
-               setAdjacencyNeighbor(domain_db, topology_name, nbr_id);
+               int nbr_rank = nbr_box_id.getOwnerRank();
+               setAdjacencyNeighbor(domain_db, topology_name, nbr_id, nbr_rank);
 
                if (d_number_blocks > 1) {
 
                   setAdjacencyOverlaps(
-                     domain_db, nbr_id, node_ovlp, tnode_ovlp,
+                     domain_db, nbr_id, node_ovlp, tnode_ovlp, i, i,
                      IntVector::getOne(d_dim));
                }
             }
@@ -2081,7 +2082,8 @@ PatchHierarchy::makeAdjacencySets(
 void PatchHierarchy::setAdjacencyNeighbor(
    std::shared_ptr<tbox::Database>& domain_db,
    const std::string& topology_name,
-   int nbr_id) const
+   int nbr_id,
+   int nbr_rank) const
 {
    std::shared_ptr<tbox::Database> adjsets_db;
    if (domain_db->keyExists("adjsets")) {
@@ -2123,14 +2125,18 @@ void PatchHierarchy::setAdjacencyNeighbor(
    int domain_id = domain_db->getDatabase("state")->getInteger("domain_id");
 
    int neighbors[2] = {domain_id, nbr_id};
-   group_db->putIntegerArray("neighbors", neighbors, 2); 
+   group_db->putIntegerArray("neighbors", neighbors, 2);
+   group_db->putInteger("rank", nbr_rank);
 }
+
 
 void PatchHierarchy::setAdjacencyOverlaps(
    std::shared_ptr<tbox::Database>& domain_db,
    int nbr_id,
    const Box& overlap,
    const Box& nbr_overlap,
+   int level_id,
+   int nbr_level_id,
    const IntVector& ratio) const
 {
    std::string group_name =
@@ -2155,6 +2161,9 @@ void PatchHierarchy::setAdjacencyOverlaps(
       windows_db->putDatabase(window_a_name));
    std::shared_ptr<tbox::Database> window_b_db(
       windows_db->putDatabase(window_b_name));
+
+   window_a_db->putInteger("level_id", level_id);
+   window_b_db->putInteger("level_id", nbr_level_id);
 
    std::shared_ptr<tbox::Database> origin_a_db(
       window_a_db->putDatabase("origin"));
@@ -2195,7 +2204,6 @@ void PatchHierarchy::setAdjacencyOverlaps(
          orientation, rotation);
 
       group_db->putIntegerVector("orientation", orientation);
-
    }
 
    std::shared_ptr<tbox::Database> ratio_a_db(

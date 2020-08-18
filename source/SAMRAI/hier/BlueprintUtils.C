@@ -149,8 +149,9 @@ void BlueprintUtils::setFlattenedCoordset(
    const Box& box) const
 {
          if (d_strategy) {
+            //Flattened coordest has to be explicit because of coarse-fine shared nodes
             d_strategy->putCoordinatesToDatabase(
-               coords_db, patch, box, d_do_uniform);
+               coords_db, patch, box, false);
          }
 
          topo_db->putString("coordset", "coords");
