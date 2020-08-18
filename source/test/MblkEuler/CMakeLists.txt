@@ -4,20 +4,22 @@ set (mblkeuler_sources
   MblkGeometry.C
   boundaryconditions.f)
 
-set (mblkeuler_depends_on
-    testlib
-    SAMRAI_appu
-    SAMRAI_algs
-    SAMRAI_hier
-    SAMRAI_geom
-    SAMRAI_mesh
-    SAMRAI_tbox)
+set(mblkeuler_depends testlib)
+set(mblkeuler_depends ${mblkeuler_depends} ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(mblkeuler_depends ${mblkeuler_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(mblkeuler_depends ${mblkeuler_depends} cuda)
+endif ()
 
 blt_add_executable(
   NAME mblkeuler
   SOURCES ${mblkeuler_sources}
-  DEPENDS_ON
-    ${mblkeuler_depends_on})
+  DEPENDS_ON ${mblkeuler_depends})
 
 target_compile_definitions(mblkeuler PUBLIC TESTING=1)
 

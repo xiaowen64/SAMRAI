@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
@@ -15,10 +15,20 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/hier/BoxContainer.h"
+#include "SAMRAI/hier/ForAll.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
+
+#ifdef HAVE_UMPIRE
+#include "umpire/ResourceManager.hpp"
+#endif
+
+#include <utility>
+
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -28,33 +38,29 @@
 #pragma report(disable, CPPC5328)
 #endif
 
-namespace SAMRAI {
-namespace pdat {
+namespace SAMRAI
+{
+namespace pdat
+{
 
-template<class TYPE>
+template <class TYPE>
 const int ArrayData<TYPE>::PDAT_ARRAYDATA_VERSION = 1;
 
-template<class TYPE>
-bool
-ArrayData<TYPE>::canEstimateStreamSizeFromBox()
+template <class TYPE>
+bool ArrayData<TYPE>::canEstimateStreamSizeFromBox()
 {
-   if ((typeid(TYPE) == typeid(bool))
-       | (typeid(TYPE) == typeid(char))
-       | (typeid(TYPE) == typeid(double))
-       | (typeid(TYPE) == typeid(float))
-       | (typeid(TYPE) == typeid(int))
-       | (typeid(TYPE) == typeid(dcomplex))) {
+   if ((typeid(TYPE) == typeid(bool)) | (typeid(TYPE) == typeid(char)) | (typeid(TYPE) == typeid(double)) | (typeid(TYPE) == typeid(float)) | (typeid(TYPE) == typeid(int)) | (typeid(TYPE) == typeid(dcomplex))) {
       return true;
    } else {
       return false;
    }
 }
 
-template<class TYPE>
+template <class TYPE>
 size_t
 ArrayData<TYPE>::getSizeOfData(
-   const hier::Box& box,
-   unsigned int depth)
+    const hier::Box& box,
+    unsigned int depth)
 {
    return tbox::MemoryUtilities::align(box.size() * depth * sizeof(TYPE));
 }
@@ -69,14 +75,20 @@ ArrayData<TYPE>::getSizeOfData(
  *************************************************************************
  */
 
-template<class TYPE>
+template <class TYPE>
 ArrayData<TYPE>::ArrayData(
-   const hier::Box& box,
-   unsigned int depth):
-   d_depth(depth),
-   d_offset(box.size()),
-   d_box(box),
-   d_array(d_depth * d_offset)
+    const hier::Box& box,
+    unsigned int depth) : d_depth(depth),
+                          d_offset(box.size()),
+                          d_box(box)
+#if defined(HAVE_UMPIRE)
+                          ,
+                          d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+                          d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
+#else
+                          ,
+                          d_array(d_depth * d_offset)
+#endif
 {
    TBOX_ASSERT(depth > 0);
 
@@ -85,44 +97,67 @@ ArrayData<TYPE>::ArrayData(
 #endif
 }
 
+#ifdef HAVE_UMPIRE
 template<class TYPE>
+ArrayData<TYPE>::ArrayData(
+   const hier::Box& box,
+   unsigned int depth,
+   umpire::Allocator allocator):
+   d_depth(depth),
+   d_offset(box.size()),
+   d_box(box)
+   , d_allocator(allocator)
+   , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
+{
+   TBOX_ASSERT(depth > 0);
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   undefineData();
+#endif
+}
+#endif
+
+template <class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
+#if defined(HAVE_UMPIRE)
+   d_allocator.deallocate(d_array, d_depth * d_offset * sizeof(TYPE));
+#endif
 }
 
-template<class TYPE>
-bool
-ArrayData<TYPE>::isInitialized() const
+
+template <class TYPE>
+bool ArrayData<TYPE>::isInitialized() const
 {
    return d_depth * d_offset > 0;
 }
 
-template<class TYPE>
+template <class TYPE>
 const hier::Box&
 ArrayData<TYPE>::getBox() const
 {
    return d_box;
 }
 
-template<class TYPE>
+template <class TYPE>
 unsigned int
 ArrayData<TYPE>::getDepth() const
 {
    return d_depth;
 }
 
-template<class TYPE>
+template <class TYPE>
 size_t
 ArrayData<TYPE>::getOffset() const
 {
    return d_offset;
 }
 
-template<class TYPE>
+template <class TYPE>
 size_t
 ArrayData<TYPE>::getIndex(
-   const hier::Index& i,
-   unsigned int d) const
+    const hier::Index& i,
+    unsigned int d) const
 {
    TBOX_ASSERT((d < d_depth));
 
@@ -133,31 +168,49 @@ ArrayData<TYPE>::getIndex(
    return index;
 }
 
-template<class TYPE>
-TYPE *
-ArrayData<TYPE>::getPointer(
-   unsigned int d)
+template <class TYPE>
+TYPE* ArrayData<TYPE>::getPointer(
+    unsigned int d)
 {
    TBOX_ASSERT((d < d_depth));
 
    return &d_array[d * d_offset];
 }
 
-template<class TYPE>
-const TYPE *
+template <class TYPE>
+const TYPE*
 ArrayData<TYPE>::getPointer(
-   unsigned int d) const
+    unsigned int d) const
 {
    TBOX_ASSERT((d < d_depth));
 
    return &d_array[d * d_offset];
 }
 
-template<class TYPE>
-TYPE&
-ArrayData<TYPE>::operator () (
-   const hier::Index& i,
-   unsigned int d)
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename ArrayData<TYPE>::template View<DIM>
+ArrayData<TYPE>::getView(
+    int depth)
+{
+   return ArrayData<TYPE>::View<DIM>(getPointer(depth), getBox());
+}
+
+template <class TYPE>
+template <int DIM>
+typename ArrayData<TYPE>::template ConstView<DIM>
+ArrayData<TYPE>::getConstView(
+    int depth) const
+{
+   return ArrayData<TYPE>::ConstView<DIM>(getPointer(depth), getBox());
+}
+#endif
+
+template <class TYPE>
+TYPE& ArrayData<TYPE>::operator()(
+    const hier::Index& i,
+    unsigned int d)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((d < d_depth));
@@ -165,11 +218,11 @@ ArrayData<TYPE>::operator () (
    return d_array[getIndex(i, d)];
 }
 
-template<class TYPE>
+template <class TYPE>
 const TYPE&
-ArrayData<TYPE>::operator () (
-   const hier::Index& i,
-   unsigned int d) const
+ArrayData<TYPE>::operator()(
+    const hier::Index& i,
+    unsigned int d) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((d < d_depth));
@@ -191,11 +244,10 @@ ArrayData<TYPE>::operator () (
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::copy(
-   const ArrayData<TYPE>& src,
-   const hier::Box& box)
+template <class TYPE>
+void ArrayData<TYPE>::copy(
+    const ArrayData<TYPE>& src,
+    const hier::Box& box)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
@@ -209,12 +261,18 @@ ArrayData<TYPE>::copy(
        (d_box.isSpatiallyEqual(src.d_box)) &&
        (box.isSpatiallyEqual(d_box))) {
 
-      TYPE * const dst_ptr = &d_array[0];
-      const TYPE * const src_ptr = &src.d_array[0];
+      TYPE* const dst_ptr = &d_array[0];
+      const TYPE* const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
+#if defined(HAVE_RAJA)
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+         copyop(dst_ptr[i], src_ptr[i]);
+      });
+#else
       for (size_t i = 0; i < n; ++i) {
          copyop(dst_ptr[i], src_ptr[i]);
       }
+#endif
 
    } else {
 
@@ -228,19 +286,16 @@ ArrayData<TYPE>::copy(
          const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
-         doArrayDataOperationOnBox(*this,
-            src,
-            copybox,
-            src_shift,
-            dst_start_depth,
-            src_start_depth,
-            num_depth,
-            copyop);
-
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       copyop);
       }
-
    }
-
 }
 
 /*
@@ -252,12 +307,11 @@ ArrayData<TYPE>::copy(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::copy(
-   const ArrayData<TYPE>& src,
-   const hier::Box& box,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::copy(
+    const ArrayData<TYPE>& src,
+    const hier::Box& box,
+    const hier::IntVector& src_shift)
 {
 
    if (src_shift == hier::IntVector::getZero(box.getDim())) {
@@ -267,7 +321,7 @@ ArrayData<TYPE>::copy(
    } else {
 
       const hier::Box copybox =
-         box * d_box * hier::Box::shift(src.d_box, src_shift);
+          box * d_box * hier::Box::shift(src.d_box, src_shift);
 
       if (!copybox.empty()) {
 
@@ -278,31 +332,25 @@ ArrayData<TYPE>::copy(
          CopyOperation<TYPE> copyop;
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
-         doArrayDataOperationOnBox(*this,
-            src,
-            copybox,
-            src_shift,
-            dst_start_depth,
-            src_start_depth,
-            num_depth,
-            copyop);
-
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       copyop);
       }
-
    }
-
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::copy(
-   const ArrayData<TYPE>& src,
-   const hier::Box& box,
-   const hier::Transformation& transformation)
+template <class TYPE>
+void ArrayData<TYPE>::copy(
+    const ArrayData<TYPE>& src,
+    const hier::Box& box,
+    const hier::Transformation& transformation)
 {
-   if (transformation.getRotation() == hier::Transformation::NO_ROTATE
-       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())
-       && transformation.getBeginBlock() == transformation.getEndBlock()) {
+   if (transformation.getRotation() == hier::Transformation::NO_ROTATE && transformation.getOffset() == hier::IntVector::getZero(box.getDim()) && transformation.getBeginBlock() == transformation.getEndBlock()) {
 
       copy(src, box);
 
@@ -311,7 +359,7 @@ ArrayData<TYPE>::copy(
       hier::Box transformed_src(src.d_box);
       transformation.transform(transformed_src);
       const hier::Box copybox(
-         box * d_box * transformed_src);
+          box * d_box * transformed_src);
 
       if (!copybox.empty()) {
 
@@ -322,19 +370,16 @@ ArrayData<TYPE>::copy(
          CopyOperation<TYPE> copyop;
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
-         doArrayDataOperationOnBox(*this,
-            src,
-            copybox,
-            transformation.getOffset(),
-            dst_start_depth,
-            src_start_depth,
-            num_depth,
-            copyop);
-
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       transformation.getOffset(),
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       copyop);
       }
-
    }
-
 }
 
 /*
@@ -346,12 +391,11 @@ ArrayData<TYPE>::copy(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::copy(
-   const ArrayData<TYPE>& src,
-   const hier::BoxContainer& boxes,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::copy(
+    const ArrayData<TYPE>& src,
+    const hier::BoxContainer& boxes,
+    const hier::IntVector& src_shift)
 {
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
@@ -359,12 +403,11 @@ ArrayData<TYPE>::copy(
    }
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::copy(
-   const ArrayData<TYPE>& src,
-   const hier::BoxContainer& boxes,
-   const hier::Transformation& transformation)
+template <class TYPE>
+void ArrayData<TYPE>::copy(
+    const ArrayData<TYPE>& src,
+    const hier::BoxContainer& boxes,
+    const hier::Transformation& transformation)
 {
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
@@ -384,13 +427,12 @@ ArrayData<TYPE>::copy(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::copyDepth(
-   unsigned int dst_depth,
-   const ArrayData<TYPE>& src,
-   unsigned int src_depth,
-   const hier::Box& box)
+template <class TYPE>
+void ArrayData<TYPE>::copyDepth(
+    unsigned int dst_depth,
+    const ArrayData<TYPE>& src,
+    unsigned int src_depth,
+    const hier::Box& box)
 {
    TBOX_ASSERT((dst_depth <= d_depth));
    TBOX_ASSERT((src_depth <= src.d_depth));
@@ -403,15 +445,22 @@ ArrayData<TYPE>::copyDepth(
 
    if ((d_box.isSpatiallyEqual(src.d_box)) && (box.isSpatiallyEqual(d_box))) {
 
-      TYPE * const dst_ptr = &d_array[0];
-      const TYPE * const src_ptr = &src.d_array[0];
+      TYPE* const dst_ptr = &d_array[0];
+      const TYPE* const src_ptr = &src.d_array[0];
 
-      TYPE * const dst_ptr_d = dst_ptr + dst_depth * d_offset;
-      const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
+      TYPE* const dst_ptr_d = dst_ptr + dst_depth * d_offset;
+      const TYPE* const src_ptr_d = src_ptr + src_depth * d_offset;
+
+
+#if defined(HAVE_RAJA)
+      hier::parallel_for_all(0, d_offset, [=] SAMRAI_HOST_DEVICE(int i) {
+         copyop(dst_ptr_d[i], src_ptr_d[i]);
+      });
+#else
       for (size_t i = 0; i < d_offset; ++i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       }
-
+#endif
    } else {
 
       const hier::Box copybox = box * d_box * src.d_box;
@@ -424,19 +473,16 @@ ArrayData<TYPE>::copyDepth(
          const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
-         doArrayDataOperationOnBox(*this,
-            src,
-            copybox,
-            src_shift,
-            dst_start_depth,
-            src_start_depth,
-            num_depth,
-            copyop);
-
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       copyop);
       }
-
    }
-
 }
 
 /*
@@ -452,11 +498,10 @@ ArrayData<TYPE>::copyDepth(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::sum(
-   const ArrayData<TYPE>& src,
-   const hier::Box& box)
+template <class TYPE>
+void ArrayData<TYPE>::sum(
+    const ArrayData<TYPE>& src,
+    const hier::Box& box)
 {
 
    SumOperation<TYPE> sumop;
@@ -469,12 +514,19 @@ ArrayData<TYPE>::sum(
        (d_box.isSpatiallyEqual(src.d_box)) &&
        (box.isSpatiallyEqual(d_box))) {
 
-      TYPE * const dst_ptr = &d_array[0];
-      const TYPE * const src_ptr = &src.d_array[0];
+      TYPE* const dst_ptr = &d_array[0];
+      const TYPE* const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
+
+#if defined(HAVE_RAJA)
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+         sumop(dst_ptr[i], src_ptr[i]);
+      });
+#else
       for (size_t i = 0; i < n; ++i) {
          sumop(dst_ptr[i], src_ptr[i]);
       }
+#endif
 
    } else {
 
@@ -488,20 +540,81 @@ ArrayData<TYPE>::sum(
          const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, SumOperation<TYPE> >::
-         doArrayDataOperationOnBox(*this,
-            src,
-            copybox,
-            src_shift,
-            dst_start_depth,
-            src_start_depth,
-            num_depth,
-            sumop);
-
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       sumop);
       }
-
    }
-
 }
+
+////////////////////////////////
+// specialization for dcomplex
+template <>
+inline void ArrayData<dcomplex>::sum(
+    const ArrayData<dcomplex>& src,
+    const hier::Box& box)
+{
+
+   SumOperation<dcomplex> sumop;
+
+   /*
+    * Do a fast copy and add if all data aligns with copy region
+    */
+
+   if ((d_depth == src.d_depth) &&
+       (d_box.isSpatiallyEqual(src.d_box)) &&
+       (box.isSpatiallyEqual(d_box))) {
+
+      dcomplex* const dst_ptr = &d_array[0];
+      const dcomplex* const src_ptr = &src.d_array[0];
+      const size_t n = d_offset * d_depth;
+
+#if defined(HAVE_RAJA)
+      SumOperation<double> sumop_dbl;
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {   
+         double &dst_ptr_real = reinterpret_cast<double(&)[2]>(dst_ptr[i])[0];
+         double &dst_ptr_imag = reinterpret_cast<double(&)[2]>(dst_ptr[i])[1];
+         const double &src_ptr_real = reinterpret_cast<const double(&)[2]>(src_ptr[i])[0];
+         const double &src_ptr_imag = reinterpret_cast<const double(&)[2]>(src_ptr[i])[1];
+
+         sumop_dbl(dst_ptr_real, src_ptr_real);
+         sumop_dbl(dst_ptr_imag, src_ptr_imag);
+      });
+#else
+      for (size_t i = 0; i < n; ++i) {
+         sumop(dst_ptr[i], src_ptr[i]);
+      }
+#endif
+
+   } else {
+
+      const hier::Box copybox = box * d_box * src.d_box;
+
+      if (!copybox.empty()) {
+
+         const unsigned int dst_start_depth = 0;
+         const unsigned int src_start_depth = 0;
+         const unsigned int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
+         const hier::IntVector src_shift(box.getDim(), 0);
+
+         ArrayDataOperationUtilities<dcomplex, SumOperation<dcomplex> >::
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       sumop);
+      }
+   }
+}
+
 
 /*
  *************************************************************************
@@ -512,12 +625,11 @@ ArrayData<TYPE>::sum(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::sum(
-   const ArrayData<TYPE>& src,
-   const hier::Box& box,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::sum(
+    const ArrayData<TYPE>& src,
+    const hier::Box& box,
+    const hier::IntVector& src_shift)
 {
 
    if (src_shift == hier::IntVector::getZero(box.getDim())) {
@@ -527,7 +639,7 @@ ArrayData<TYPE>::sum(
    } else {
 
       const hier::Box copybox =
-         box * d_box * hier::Box::shift(src.d_box, src_shift);
+          box * d_box * hier::Box::shift(src.d_box, src_shift);
 
       if (!copybox.empty()) {
 
@@ -538,19 +650,16 @@ ArrayData<TYPE>::sum(
          SumOperation<TYPE> sumop;
 
          ArrayDataOperationUtilities<TYPE, SumOperation<TYPE> >::
-         doArrayDataOperationOnBox(*this,
-            src,
-            copybox,
-            src_shift,
-            dst_start_depth,
-            src_start_depth,
-            num_depth,
-            sumop);
-
+             doArrayDataOperationOnBox(*this,
+                                       src,
+                                       copybox,
+                                       src_shift,
+                                       dst_start_depth,
+                                       src_start_depth,
+                                       num_depth,
+                                       sumop);
       }
-
    }
-
 }
 
 /*
@@ -562,12 +671,11 @@ ArrayData<TYPE>::sum(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::sum(
-   const ArrayData<TYPE>& src,
-   const hier::BoxContainer& boxes,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::sum(
+    const ArrayData<TYPE>& src,
+    const hier::BoxContainer& boxes,
+    const hier::IntVector& src_shift)
 {
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
@@ -575,11 +683,11 @@ ArrayData<TYPE>::sum(
    }
 }
 
-template<class TYPE>
+template <class TYPE>
 size_t
 ArrayData<TYPE>::getDataStreamSize(
-   const hier::BoxContainer& boxes,
-   const hier::IntVector& source_shift) const
+    const hier::BoxContainer& boxes,
+    const hier::IntVector& source_shift) const
 {
 #ifndef DEBUG_CHECK_ASSERTIONS
    NULL_USE(source_shift);
@@ -619,26 +727,32 @@ ArrayData<TYPE>::getDataStreamSize(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::packStream(
-   tbox::MessageStream& stream,
-   const hier::Box& dest_box,
-   const hier::IntVector& src_shift) const
+template <class TYPE>
+void ArrayData<TYPE>::packStream(
+    tbox::MessageStream& stream,
+    const hier::Box& dest_box,
+    const hier::IntVector& src_shift) const
 {
+   RANGE_PUSH("ArrayData::pack", 2);
+
    const size_t size = d_depth * dest_box.size();
 
    TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
    packBuffer(&buffer[0], hier::Box::shift(dest_box, -src_shift));
+
+   // std::vector< TYPE, umpire::TypedAllocator<TYPE> > buffer(size);
+   // stream.pack(&buffer[0], size);
+
+   RANGE_POP
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::packStream(
-   tbox::MessageStream& stream,
-   const hier::BoxContainer& dest_boxes,
-   const hier::IntVector& src_shift) const
+template <class TYPE>
+void ArrayData<TYPE>::packStream(
+    tbox::MessageStream& stream,
+    const hier::BoxContainer& dest_boxes,
+    const hier::IntVector& src_shift) const
 {
+   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
    TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
@@ -651,15 +765,19 @@ ArrayData<TYPE>::packStream(
    }
 
    TBOX_ASSERT(ptr == size);
+
+   // stream.pack(&buffer[0], size);
+
+   RANGE_POP
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::packStream(
-   tbox::MessageStream& stream,
-   const hier::Box& dest_box,
-   const hier::Transformation& transformation) const
+template <class TYPE>
+void ArrayData<TYPE>::packStream(
+    tbox::MessageStream& stream,
+    const hier::Box& dest_box,
+    const hier::Transformation& transformation) const
 {
+   RANGE_PUSH("ArrayData::pack", 2);
 
    const size_t size = d_depth * dest_box.size();
    TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
@@ -667,16 +785,21 @@ ArrayData<TYPE>::packStream(
    hier::Box pack_box(dest_box);
    transformation.inverseTransform(pack_box);
    packBuffer(&buffer[0], pack_box);
-//      hier::Box::shift(dest_box, -src_shift));
+   //      hier::Box::shift(dest_box, -src_shift));
+
+   //stream.pack(&buffer[0], size);
+
+   RANGE_POP
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::packStream(
-   tbox::MessageStream& stream,
-   const hier::BoxContainer& dest_boxes,
-   const hier::Transformation& transformation) const
+template <class TYPE>
+void ArrayData<TYPE>::packStream(
+    tbox::MessageStream& stream,
+    const hier::BoxContainer& dest_boxes,
+    const hier::Transformation& transformation) const
 {
+   RANGE_PUSH("ArrayData::pack", 2);
+
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
    TYPE* buffer = stream.getWriteBuffer<TYPE>(size);
@@ -687,11 +810,15 @@ ArrayData<TYPE>::packStream(
       hier::Box pack_box(*b);
       transformation.inverseTransform(pack_box);
       packBuffer(&buffer[ptr], pack_box);
-//         hier::Box::shift(*b, -src_shift));
+      //         hier::Box::shift(*b, -src_shift));
       ptr += d_depth * b->size();
    }
 
    TBOX_ASSERT(ptr == size);
+
+   // stream.pack(&buffer[0], size);
+
+   RANGE_POP
 }
 
 /*
@@ -706,28 +833,32 @@ ArrayData<TYPE>::packStream(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::unpackStream(
-   tbox::MessageStream& stream,
-   const hier::Box& dest_box,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::unpackStream(
+    tbox::MessageStream& stream,
+    const hier::Box& dest_box,
+    const hier::IntVector& src_shift)
 {
+   RANGE_PUSH("ArrayData::unpack", 2);
+
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_box.size();
    const TYPE* buffer = stream.getReadBuffer<TYPE>(size);
 
    unpackBuffer(&buffer[0], dest_box);
+
+   RANGE_POP;
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::unpackStream(
-   tbox::MessageStream& stream,
-   const hier::BoxContainer& dest_boxes,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::unpackStream(
+    tbox::MessageStream& stream,
+    const hier::BoxContainer& dest_boxes,
+    const hier::IntVector& src_shift)
 {
+   RANGE_PUSH("ArrayData::unpack", 2);
+
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
@@ -741,6 +872,8 @@ ArrayData<TYPE>::unpackStream(
    }
 
    TBOX_ASSERT(ptr == size);
+
+   RANGE_POP;
 }
 
 /*
@@ -755,12 +888,11 @@ ArrayData<TYPE>::unpackStream(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::unpackStreamAndSum(
-   tbox::MessageStream& stream,
-   const hier::Box& dest_box,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::unpackStreamAndSum(
+    tbox::MessageStream& stream,
+    const hier::Box& dest_box,
+    const hier::IntVector& src_shift)
 {
    NULL_USE(src_shift);
 
@@ -770,14 +902,12 @@ ArrayData<TYPE>::unpackStreamAndSum(
    unpackBufferAndSum(&buffer[0], dest_box);
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::unpackStreamAndSum(
-   tbox::MessageStream& stream,
-   const hier::BoxContainer& dest_boxes,
-   const hier::IntVector& src_shift)
+template <class TYPE>
+void ArrayData<TYPE>::unpackStreamAndSum(
+    tbox::MessageStream& stream,
+    const hier::BoxContainer& dest_boxes,
+    const hier::IntVector& src_shift)
 {
-
    NULL_USE(src_shift);
 
    const size_t size = d_depth * dest_boxes.getTotalSizeOfBoxes();
@@ -802,61 +932,101 @@ ArrayData<TYPE>::unpackStreamAndSum(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::fillAll(
-   const TYPE& t)
+template <class TYPE>
+void ArrayData<TYPE>::fillAll(
+    const TYPE& t)
 {
    if (!d_box.empty()) {
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
+#if defined(HAVE_RAJA)
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+         ptr[i] = t;
+      });
+#if defined(DEBUG_INITIALIZE_UNDEFINED)      
+      tbox::parallel_synchronize();
+#endif
+#else
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
       }
+#endif
    }
+
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::fillAll(
-   const TYPE& t,
-   const hier::Box& box)
+template <class TYPE>
+void ArrayData<TYPE>::fillAll(
+    const TYPE& t,
+    const hier::Box& box)
 {
    for (tbox::Dimension::dir_t d = 0; d < d_depth; ++d) {
       fill(t, box, d);
    }
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::fill(
-   const TYPE& t,
-   const unsigned int d)
+template <class TYPE>
+void ArrayData<TYPE>::fill(
+    const TYPE& t,
+    const unsigned int d)
 {
    TBOX_ASSERT((d < d_depth));
 
+   TYPE* ptr = &d_array[d * d_offset];
+   const size_t n = d_offset;
    if (!d_box.empty()) {
-      TYPE* ptr = &d_array[d * d_offset];
-      const size_t n = d_offset;
+#if defined(HAVE_RAJA)
+      hier::parallel_for_all(0, n, [=] SAMRAI_HOST_DEVICE(int i) {
+         ptr[i] = t;
+      });
+#else
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
       }
+#endif
    }
+
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::fill(
-   const TYPE& t,
-   const hier::Box& box,
-   const unsigned int d)
+template <class TYPE>
+void ArrayData<TYPE>::fill(
+    const TYPE& t,
+    const hier::Box& box,
+    const unsigned int d)
 {
    TBOX_ASSERT((d < d_depth));
 
    const hier::Box ispace = d_box * box;
 
    if (!ispace.empty()) {
+#if defined(HAVE_RAJA)
+      switch (ispace.getDim().getValue()) {
+         case 1: {
+            auto data = getView<1>(d);
+            hier::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int k) {
+               data(k) = t;
+            });
+            break;
+         }
+         case 2: {
+            auto data = getView<2>(d);
 
+            hier::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int j, int k) {
+               data(j, k) = t;
+            });
+            break;
+         }
+         case 3: {
+            auto data = getView<3>(d);
+            hier::parallel_for_all(ispace, [=] SAMRAI_HOST_DEVICE(int i, int j, int k) {
+               data(i, j, k) = t;
+            });
+            break;
+         }
+         default:
+            TBOX_ERROR("hier::parallel_for_all undefined for dim > 3" << std::endl);
+      }
+#else
       const tbox::Dimension& dim = box.getDim();
 
       int box_w[SAMRAI::MAX_DIM_VAL];
@@ -877,7 +1047,7 @@ ArrayData<TYPE>::fill(
          dst_b[nd] = dst_counter;
       }
 
-      TYPE * const dst_ptr = &d_array[0];
+      TYPE* const dst_ptr = &d_array[0];
 
       for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
@@ -908,6 +1078,7 @@ ArrayData<TYPE>::fill(
             }
          }
       }
+#endif
    }
 }
 
@@ -921,24 +1092,29 @@ ArrayData<TYPE>::fill(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::getFromRestart(
-   const std::shared_ptr<tbox::Database>& restart_db)
+template <class TYPE>
+void ArrayData<TYPE>::getFromRestart(
+    const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
    int ver = restart_db->getInteger("PDAT_ARRAYDATA_VERSION");
    if (ver != PDAT_ARRAYDATA_VERSION) {
       TBOX_ERROR("ArrayData::getFromRestart error...\n"
-         << " : Restart file version different than class version" << std::endl);
+                 << " : Restart file version different than class version" << std::endl);
    }
 
    d_depth = restart_db->getInteger("d_depth");
    d_offset = restart_db->getInteger("d_offset");
    d_box = restart_db->getDatabaseBox("d_box");
 
+#if defined(HAVE_UMPIRE)
+   std::vector<TYPE> temp;
+   restart_db->getVector("d_array", temp);
+   std::copy(temp.begin(), temp.end(), d_array);
+#else
    restart_db->getVector("d_array", d_array);
+#endif
 }
 
 /*
@@ -950,10 +1126,9 @@ ArrayData<TYPE>::getFromRestart(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::putToRestart(
-   const std::shared_ptr<tbox::Database>& restart_db) const
+template <class TYPE>
+void ArrayData<TYPE>::putToRestart(
+    const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -963,19 +1138,22 @@ ArrayData<TYPE>::putToRestart(
    restart_db->putInteger("d_offset", static_cast<int>(d_offset));
    restart_db->putDatabaseBox("d_box", d_box);
 
+#if defined(HAVE_UMPIRE)
+   restart_db->putVector("d_array", std::vector<TYPE>(d_array, d_array + d_depth * d_offset));
+#else
    restart_db->putVector("d_array", d_array);
+#endif
 }
 
-template<class TYPE>
+template <class TYPE>
 const tbox::Dimension&
 ArrayData<TYPE>::getDim() const
 {
    return d_box.getDim();
 }
 
-template<class TYPE>
-bool
-ArrayData<TYPE>::isValid()
+template <class TYPE>
+bool ArrayData<TYPE>::isValid()
 {
    return !d_box.empty();
 }
@@ -988,9 +1166,8 @@ ArrayData<TYPE>::isValid()
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::undefineData()
+template <class TYPE>
+void ArrayData<TYPE>::undefineData()
 {
    fillAll(tbox::MathUtilities<TYPE>::getSignalingNaN());
 }
@@ -1004,11 +1181,10 @@ ArrayData<TYPE>::undefineData()
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::packBuffer(
-   TYPE* buffer,
-   const hier::Box& box) const
+template <class TYPE>
+void ArrayData<TYPE>::packBuffer(
+    TYPE* buffer,
+    const hier::Box& box) const
 {
    TBOX_ASSERT((box * d_box).isSpatiallyEqual(box));
 
@@ -1017,19 +1193,17 @@ ArrayData<TYPE>::packBuffer(
    CopyOperation<TYPE> copyop;
 
    ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
-   doArrayDataBufferOperationOnBox(*this,
-      buffer,
-      box,
-      src_is_buffer,
-      copyop);
-
+       doArrayDataBufferOperationOnBox(*this,
+                                       buffer,
+                                       box,
+                                       src_is_buffer,
+                                       copyop);
 }
 
-template<class TYPE>
-void
-ArrayData<TYPE>::unpackBuffer(
-   const TYPE* buffer,
-   const hier::Box& box)
+template <class TYPE>
+void ArrayData<TYPE>::unpackBuffer(
+    const TYPE* buffer,
+    const hier::Box& box)
 {
    TBOX_ASSERT((box * d_box).isSpatiallyEqual(box));
 
@@ -1038,11 +1212,11 @@ ArrayData<TYPE>::unpackBuffer(
    CopyOperation<TYPE> copyop;
 
    ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
-   doArrayDataBufferOperationOnBox(*this,
-      buffer,
-      box,
-      src_is_buffer,
-      copyop);
+       doArrayDataBufferOperationOnBox(*this,
+                                       buffer,
+                                       box,
+                                       src_is_buffer,
+                                       copyop);
 }
 
 /*
@@ -1054,11 +1228,10 @@ ArrayData<TYPE>::unpackBuffer(
  *************************************************************************
  */
 
-template<class TYPE>
-void
-ArrayData<TYPE>::unpackBufferAndSum(
-   const TYPE* buffer,
-   const hier::Box& box)
+template <class TYPE>
+void ArrayData<TYPE>::unpackBufferAndSum(
+    const TYPE* buffer,
+    const hier::Box& box)
 {
    TBOX_ASSERT((box * d_box).isSpatiallyEqual(box));
 
@@ -1067,15 +1240,44 @@ ArrayData<TYPE>::unpackBufferAndSum(
    SumOperation<TYPE> sumop;
 
    ArrayDataOperationUtilities<TYPE, SumOperation<TYPE> >::
-   doArrayDataBufferOperationOnBox(*this,
-      buffer,
-      box,
-      src_is_buffer,
-      sumop);
+       doArrayDataBufferOperationOnBox(*this,
+                                       buffer,
+                                       box,
+                                       src_is_buffer,
+                                       sumop);
 }
 
+#if defined(HAVE_RAJA)
+template <int DIM, typename DATA, typename... Args>
+typename DATA::template View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args)
+{
+   auto ptr = SAMRAI_SHARED_PTR_CAST<DATA, hier::PatchData>(src);
+   return ptr->template getView<DIM>(std::forward<Args>(args)...);
 }
+
+template <int DIM, typename DATA, typename... Args>
+typename DATA::template ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args)
+{
+   auto ptr = SAMRAI_SHARED_PTR_CAST<const DATA, const hier::PatchData>(src);
+   return ptr->template getConstView<DIM>(std::forward<Args>(args)...);
 }
+
+template <int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::template View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::template ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
+
+}  // namespace pdat
+}  // namespace SAMRAI
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

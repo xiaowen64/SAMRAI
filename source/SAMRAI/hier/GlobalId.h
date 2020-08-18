@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Globally unique identifier that can be locally determined.
  *
  ************************************************************************/
@@ -118,6 +118,10 @@ public:
     * owner values first; if they compare equal, compare the LocalId
     * next.
     */
+   GlobalId&
+   operator = (
+      const GlobalId& r) = default;
+
    bool
    operator == (
       const GlobalId& r) const

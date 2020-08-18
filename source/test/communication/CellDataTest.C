@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for cell-centered patch data
  *
  ************************************************************************/
@@ -26,8 +26,8 @@
 #include <vector>
 #include <iostream>
 
-namespace SAMRAI {
 
+namespace SAMRAI {
 
 CellDataTest::CellDataTest(
    const std::string& object_name,
@@ -128,7 +128,7 @@ void CellDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::CellVariable<double>(d_dim,
+         new pdat::CellVariable<CELL_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
@@ -153,7 +153,7 @@ void CellDataTest::registerVariables(
 }
 
 void CellDataTest::setLinearData(
-   std::shared_ptr<pdat::CellData<double> > data,
+   std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -200,7 +200,7 @@ void CellDataTest::setLinearData(
 }
 
 void CellDataTest::setConservativeData(
-   std::shared_ptr<pdat::CellData<double> > data,
+   std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch,
    const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -308,7 +308,7 @@ void CellDataTest::setConservativeData(
 }
 
 void CellDataTest::setPeriodicData(
-   std::shared_ptr<pdat::CellData<double> > data,
+   std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -366,8 +366,8 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::CellData<double> > cell_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -385,8 +385,8 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::CellData<double> > cell_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -405,7 +405,7 @@ void CellDataTest::initializeDataOnPatch(
 }
 
 void CellDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::CellData<double> >& data,
+   const std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
@@ -417,8 +417,8 @@ void CellDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   std::shared_ptr<pdat::CellData<double> > correct_data(
-      new pdat::CellData<double>(
+   std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > correct_data(
+      new pdat::CellData<CELL_KERNEL_TYPE>(
          data->getBox(),
          depth,
          data->getGhostCellWidth()));
@@ -432,9 +432,12 @@ void CellDataTest::checkPatchInteriorData(
    for (pdat::CellIterator ci(pdat::CellGeometry::begin(interior));
         ci != ciend; ++ci) {
       for (int d = 0; d < depth; ++d) {
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci, d),
+         if (!(tbox::MathUtilities<CELL_KERNEL_TYPE>::equalEps((*data)(*ci, d),
                   (*correct_data)(*ci, d)))) {
-            tbox::perr << "FAILED: -- patch interior not properly filled"
+            tbox::perr << "FAILED: -- patch interior not properly filled: "
+                       << (*data)(*ci,d)
+                       << " vs "
+                       << (*correct_data)(*ci,d)
                        << std::endl;
          }
       }
@@ -475,12 +478,13 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::CellData<double> > cell_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
       hier::Box patch_interior = cell_data->getBox();
+
       checkPatchInteriorData(cell_data, patch_interior, patch);
 
       /*
@@ -572,8 +576,8 @@ bool CellDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::CellData<double> > solution(
-         new pdat::CellData<double>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > solution(
+         new pdat::CellData<CELL_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
       tbox.grow(tgcw);
@@ -594,8 +598,8 @@ bool CellDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::CellData<double> > cell_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
          int depth = cell_data->getDepth();
@@ -604,10 +608,10 @@ bool CellDataTest::verifyResults(
          pdat::CellIterator ciend(pdat::CellGeometry::end(dbox));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
               ci != ciend; ++ci) {
-            double correct = (*solution)(*ci);
+            CELL_KERNEL_TYPE correct = (*solution)(*ci);
             for (int d = 0; d < depth; ++d) {
-               double result = (*cell_data)(*ci, d);
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               CELL_KERNEL_TYPE result = (*cell_data)(*ci, d);
+               if (!tbox::MathUtilities<CELL_KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : cell index = " << *ci
                              << " of L" << level_number
@@ -621,8 +625,8 @@ bool CellDataTest::verifyResults(
                   test_failed = true;
                }
             }
+            if (test_failed) break;
          }
-
       }
       if (!test_failed) {
          tbox::plog << "CellDataTest Successful!" << std::endl;
@@ -667,8 +671,8 @@ bool CellDataTest::verifyCompositeBoundaryData(
    if (d_do_refine && !is_periodic) {
       for (std::vector<std::shared_ptr<hier::PatchData> >::const_iterator
            itr = bdry_data.begin(); itr != bdry_data.end(); ++itr) {
-         std::shared_ptr<pdat::CellData<double> > cell_bdry_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(*itr));
+         std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_bdry_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(*itr));
          TBOX_ASSERT(cell_bdry_data);
 
          hier::Patch solution_patch(
@@ -679,8 +683,8 @@ bool CellDataTest::verifyCompositeBoundaryData(
             hierarchy->getPatchLevel(level_number+1)->getRatioToLevelZero(),
             hier::PatchGeometry::TwoDimBool(patch.getDim(), false));
 
-         std::shared_ptr<pdat::CellData<double> > solution(
-            new pdat::CellData<double>(
+         std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > solution(
+            new pdat::CellData<CELL_KERNEL_TYPE>(
                solution_patch.getBox(), 1,
                hier::IntVector::getZero(patch.getDim())));
 
@@ -692,10 +696,10 @@ bool CellDataTest::verifyCompositeBoundaryData(
          pdat::CellIterator ciend(pdat::CellGeometry::end(dbox));
          for (pdat::CellIterator ci(pdat::CellGeometry::begin(dbox));
               ci != ciend; ++ci) {
-            double correct = (*solution)(*ci);
+            CELL_KERNEL_TYPE correct = (*solution)(*ci);
             for (int d = 0; d < depth; ++d) {
-               double result = (*cell_bdry_data)(*ci, d);
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               CELL_KERNEL_TYPE result = (*cell_bdry_data)(*ci, d);
+               if (!tbox::MathUtilities<CELL_KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : cell index = " << *ci
                              << " on composite boundary stencil"
@@ -722,8 +726,8 @@ void CellDataTest::addFields(conduit::Node& node, int domain_id, const std::shar
    std::shared_ptr<hier::VariableContext> source =
       hier::VariableDatabase::getDatabase()->getContext("SOURCE");
 
-   std::shared_ptr<pdat::CellData<double> > cell_data(
-      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > cell_data(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<CELL_KERNEL_TYPE>, hier::PatchData>(
          patch->getPatchData(d_variables[0], source)));
 
    size_t data_size = cell_data->getGhostBox().size();

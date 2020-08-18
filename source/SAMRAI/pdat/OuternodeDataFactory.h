@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outernode data objects
  *
  ************************************************************************/
@@ -51,6 +51,23 @@ public:
    OuternodeDataFactory(
       const tbox::Dimension& dim,
       int depth);
+
+#if defined(HAVE_UMPIRE)
+   /**
+    * The constructor for the outernode data factory class.
+    * The depth (number of components) sets the default for all of
+    * the outernode data objects created with this factory.
+    *
+    * This constructor sets an Umpire allocator for the memory management
+    * of the data held within outernode data objects.
+    *
+    * @pre depth > 0
+    */
+   OuternodeDataFactory(
+      const tbox::Dimension& dim,
+      int depth,
+      umpire::Allocator allocator);
+#endif
 
    /*!
     * @brief Virtual destructor for the outernode data factory class.
@@ -146,6 +163,10 @@ public:
 private:
    int d_depth;
    hier::IntVector d_no_ghosts;
+#if defined(HAVE_UMPIRE)
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
+#endif
 
 };
 

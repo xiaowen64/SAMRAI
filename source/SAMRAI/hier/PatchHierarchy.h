@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -75,6 +75,16 @@ namespace hier {
  *      limit on patch size.  The input is given for each level n, where
  *      n (= 0, 1,..., N-1) is the level number.
  *
+ *   - \b    minimum_cell_request
+ *      A set of max_levels integers, each of which indicates a desired
+ *      minimum total cell count for the patches on each level.  This is
+ *      enforced in addition to smallest_patch_size, which sets dimension-
+ *      based minimums on the patch size.  Strict enforcement of the
+ *      minimum_cell_request is not guaranteed, as other parameters
+ *      and algorithmic restrictions may cause some patches to have a size
+ *      smaller than this requested minimum.  The input is given for each level
+ *      n, where n (= 0, 1,..., N-1) is the level number.
+ *
  *   - \b    proper_nesting_buffer
  *      A set of max_levels - 1 integer values specifying the number of coarse
  *      cells by which the next finer level is nested within the interior of
@@ -138,6 +148,14 @@ namespace hier {
  *     <td>max_levels int[]</td>
  *     <td>all values max int</td>
  *     <td>each value >=0 must be >= corresponding smallest_patch_size value</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>minimum_cell_request</td>
+ *     <td>max_levels int</td>
+ *     <td>all values 1</td>
+ *     <td>all values >0</td>
  *     <td>opt</td>
  *     <td>Parameter read from restart db may be overridden by input db</td>
  *   </tr>
@@ -711,6 +729,9 @@ public:
             d_max_levels - 1,
             d_proper_nesting_buffer.empty() ?
             1 : d_proper_nesting_buffer.back());
+         d_minimum_cells.resize(
+            d_max_levels,
+            d_minimum_cells.back());
       }
    }
 
@@ -779,6 +800,23 @@ public:
    }
 
    /*!
+    * @brief Set the requested minimum cell count.
+    *
+    * @param[in]  cells  A minimum cell count for new patches.
+    * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
+    */
+   void
+   setMinimumCellRequest(
+      size_t cells,
+      int level)
+   {
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
+      d_minimum_cells[level] = cells;
+   }
+
+   /*!
     * @brief Get the smallest patch size on the given level.
     *
     * @return The smallest patch size allowed on the given level.
@@ -793,6 +831,14 @@ public:
    {
       TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       return d_smallest_patch_size[level];
+   }
+
+   size_t
+   getMinimumCellRequest(
+      int level) const
+   {
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
+      return d_minimum_cells[level];
    }
 
    /*!
@@ -1273,6 +1319,11 @@ void setAdjacencyOverlaps(
     * unlimited.
     */
    std::vector<IntVector> d_largest_patch_size;
+
+   /*!
+    * @brief Requested minimum cell count for patches
+    */
+   std::vector<size_t> d_minimum_cells;
 
    /*!
     * @brief Whether to normally allow patches smaller than the max

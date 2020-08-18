@@ -2,7 +2,7 @@ c
 c This file is part of the SAMRAI distribution.  For full copyright
 c information, see COPYRIGHT and LICENSE.
 c
-c Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+c Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
 c Description:   m4 include file for 2d standard linear time interpolation
 c                operators.
 c
@@ -63,7 +63,7 @@ lin_time_int_subroutine_head_2d()dnl
      &  arraynew(EDGE2d$2(nilo,nihi,0)),
      &  arraydst(EDGE2d$2(dilo,dihi,0))
       integer ie0,ie1
-lin_time_int_body_2d(`ie0',`ie1',`ifirst0,ilast0+$2',`ifirst1,ilast1+$3')dnl
+lin_time_int_body_2d(`ie0',`ie1',`ifirst0,ilast0',`ifirst1,ilast1')dnl
 ')dnl
 c
 define(lin_time_int_op_face_2d,`dnl
@@ -72,8 +72,8 @@ lin_time_int_subroutine_head_2d()dnl
      &  arrayold(FACE2d$2(oilo,oihi,0)),
      &  arraynew(FACE2d$2(nilo,nihi,0)),
      &  arraydst(FACE2d$2(dilo,dihi,0))
-      integer ie$2,ic$3
-lin_time_int_body_2d(`ie$2',`ic$3',`ifirst$2,ilast$2+1',`ifirst$3,ilast$3')dnl
+      integer ie0,ic1
+lin_time_int_body_2d(`ie0',`ic1',`ifirst0,ilast0',`ifirst1,ilast1')dnl
 ')dnl
 c
 define(lin_time_int_op_node_2d,`dnl
@@ -83,7 +83,7 @@ lin_time_int_subroutine_head_2d()dnl
      &  arraynew(NODE2d(nilo,nihi,0)),
      &  arraydst(NODE2d(dilo,dihi,0))
       integer ie0,ie1
-lin_time_int_body_2d(`ie0',`ie1',`ifirst0,ilast0+1',`ifirst1,ilast1+1')dnl
+lin_time_int_body_2d(`ie0',`ie1',`ifirst0,ilast0',`ifirst1,ilast1')dnl
 ')dnl
 c
 define(lin_time_int_op_outerface_2d,`dnl
@@ -135,5 +135,5 @@ lin_time_int_subroutine_head_2d()dnl
      &  arraynew(SIDE2d$2(nilo,nihi,0)),
      &  arraydst(SIDE2d$2(dilo,dihi,0))
       integer ie0,ie1
-lin_time_int_body_2d(`ie0',`ie1',`ifirst0,ilast0+$3',`ifirst1,ilast1+$2')dnl
+lin_time_int_body_2d(`ie0',`ie1',`ifirst0,ilast0',`ifirst1,ilast1')dnl
 ')dnl

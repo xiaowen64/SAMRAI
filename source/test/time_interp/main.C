@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Test program for time interpolation
  *
  ************************************************************************/
@@ -87,6 +87,8 @@ int main(
       TBOX_ASSERT(ghosts >= 0);
       TBOX_ASSERT(frac >= 0.0 && frac <= 1.0);
 
+      bool bdry_only = main_db->getBoolWithDefault("bdry_only", false);
+
       std::string log_file_name = "time_interp.log";
       if (main_db->keyExists("log_file_name")) {
          log_file_name = main_db->getString("log_file_name");
@@ -94,6 +96,12 @@ int main(
       tbox::PIO::logOnlyNodeZero(log_file_name);
 
       double test_eps = sqrt(tbox::MathUtilities<double>::getEpsilon());
+
+      hier::Transformation zero_transformation(
+         hier::Transformation::NO_ROTATE,
+         hier::IntVector::getZero(dim),
+         hier::BlockId(0),
+         hier::BlockId(0));
 
       hier::Box box(main_db->getDatabaseBox("box"));
       box.setBlockId(hier::BlockId(0));
@@ -130,9 +138,14 @@ int main(
          }
       }
 
+      hier::BoxContainer ghost_cntnr(ghost_box);
+      pdat::CellOverlap cell_ovlp(ghost_cntnr, zero_transformation);
       pdat::CellDoubleLinearTimeInterpolateOp cell_op;
+      cell_op.timeInterpolate(cell_dst, ghost_box, cell_ovlp, cell_old, cell_new);
 
-      cell_op.timeInterpolate(cell_dst, ghost_box, cell_old, cell_new);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       for (int dd = 0; dd < data_depth; ++dd) {
          for (auto cell_itr(pdat::CellGeometry::begin(ghost_box));
@@ -154,7 +167,7 @@ int main(
             }
          }
       }
-
+#if 1
       pdat::NodeData<double> node_old(box, data_depth, ghost_vec);
       pdat::NodeData<double> node_new(box, data_depth, ghost_vec);
       pdat::NodeData<double> node_dst(box, data_depth, ghost_vec);
@@ -185,31 +198,50 @@ int main(
          }
       }
 
+      ghost_cntnr.clear();
+      if (!bdry_only) {
+         ghost_cntnr.push_back(pdat::NodeGeometry::toNodeBox(ghost_box));
+      } else {
+         hier::Box flat_box(pdat::NodeGeometry::toNodeBox(box));
+         flat_box.setUpper(0, flat_box.lower(0));
+         ghost_cntnr.push_back(flat_box);
+      }
+      pdat::NodeOverlap node_ovlp(ghost_cntnr, zero_transformation);
       pdat::NodeDoubleLinearTimeInterpolateOp node_op;
 
-      node_op.timeInterpolate(node_dst, ghost_box, node_old, node_new);
+      node_op.timeInterpolate(node_dst, ghost_box, node_ovlp, node_old, node_new);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
-      for (int dd = 0; dd < data_depth; ++dd) {
-         for (auto node_itr(pdat::NodeGeometry::begin(ghost_box));
-              node_itr != node_end; ++node_itr) {
-            double correct = node_expected(*node_itr, dd);
-            double result = node_dst(*node_itr, dd);
-            if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
-               if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
-                   tbox::MathUtilities<double>::Abs(result) < test_eps) {
-                  continue;
+      hier::BoxContainer ovlp_boxes;
+      node_ovlp.getSourceBoxContainer(ovlp_boxes);
+      for (auto bitr = ovlp_boxes.begin();
+           bitr != ovlp_boxes.end(); ++bitr) {
+         for (int dd = 0; dd < data_depth; ++dd) {
+            for (auto node_itr(pdat::NodeGeometry::begin(ghost_box));
+                 node_itr != node_end; ++node_itr) {
+               if ((*bitr).contains(*node_itr)) {
+                  double correct = node_expected(*node_itr, dd);
+                  double result = node_dst(*node_itr, dd);
+                  if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                     if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
+                         tbox::MathUtilities<double>::Abs(result) < test_eps) {
+                        continue;
+                     }
+                     tbox::perr << "Node time interp test FAILED: ...."
+                                << " : node index = " << *node_itr
+                                << " of box"
+                                << " " << ghost_box << std::endl;
+                     tbox::perr << "    result = " << result
+                                << " : correct = " << correct << std::endl;
+                     ++fail_count;
+                  }
                }
-               tbox::perr << "Node time interp test FAILED: ...."
-                          << " : node index = " << *node_itr
-                          << " of box"
-                          << " " << ghost_box << std::endl;
-               tbox::perr << "    result = " << result
-                          << " : correct = " << correct << std::endl;
-               ++fail_count;
             }
          }
       }
-
+#endif
       pdat::FaceData<double> face_old(box, data_depth, ghost_vec);
       pdat::FaceData<double> face_new(box, data_depth, ghost_vec);
       pdat::FaceData<double> face_dst(box, data_depth, ghost_vec);
@@ -220,6 +252,7 @@ int main(
       face_dst.setTime(frac);
       face_expected.setTime(frac);
 
+      std::vector<hier::BoxContainer> ghost_bxs(dim.getValue());
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          auto face_end(pdat::FaceGeometry::end(ghost_box, axis));
          for (int dd = 0; dd < data_depth; ++dd) {
@@ -242,31 +275,50 @@ int main(
                face_expected(*face_itr, dd) = old_val + frac*(new_val-old_val);
             }
          }
+         if (!bdry_only) {
+            ghost_bxs[axis].push_back(
+               pdat::FaceGeometry::toFaceBox(ghost_box, axis));
+         } else {
+            hier::Box flat_box(pdat::FaceGeometry::toFaceBox(box, axis));
+            flat_box.setUpper(axis, flat_box.lower(axis));
+            ghost_bxs[axis].push_back(flat_box); 
+         }
       }
 
+      pdat::FaceOverlap face_ovlp(ghost_bxs, zero_transformation);
       pdat::FaceDoubleLinearTimeInterpolateOp face_op;
+      face_op.timeInterpolate(face_dst, ghost_box, face_ovlp, face_old, face_new);
 
-      face_op.timeInterpolate(face_dst, ghost_box, face_old, face_new);
-
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
-         auto face_end(pdat::FaceGeometry::end(ghost_box, axis));
-         for (int dd = 0; dd < data_depth; ++dd) {
-            for (auto face_itr(pdat::FaceGeometry::begin(ghost_box, axis));
-                 face_itr != face_end; ++face_itr) {
-               double correct = face_expected(*face_itr, dd);
-               double result = face_dst(*face_itr, dd);
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
-                  if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
-                      tbox::MathUtilities<double>::Abs(result) < test_eps) {
-                     continue;
-               }
-                  tbox::perr << "Face time interp test FAILED: ...."
-                             << " : face index = " << *face_itr
-                             << " of box"
-                             << " " << ghost_box << std::endl;
-                  tbox::perr << "    result = " << result
-                             << " : correct = " << correct << std::endl;
-                  ++fail_count;
+         hier::BoxContainer ovlp_boxes;
+         int normal = axis;
+         face_ovlp.getSourceBoxContainer(ovlp_boxes, normal);
+         for (auto bitr = ovlp_boxes.begin();
+              bitr != ovlp_boxes.end(); ++bitr) {
+            auto face_end(pdat::FaceGeometry::end(ghost_box, axis));
+            for (int dd = 0; dd < data_depth; ++dd) {
+               for (auto face_itr(pdat::FaceGeometry::begin(ghost_box, axis));
+                    face_itr != face_end; ++face_itr) {
+                  if ((*bitr).contains(*face_itr)) { 
+                     double correct = face_expected(*face_itr, dd);
+                     double result = face_dst(*face_itr, dd);
+                     if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                        if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
+                            tbox::MathUtilities<double>::Abs(result) < test_eps) {
+                           continue;
+                        }
+                        tbox::perr << "Face time interp test FAILED: ...."
+                                   << " : face index = " << *face_itr
+                                   << " of box"
+                                   << " " << ghost_box << std::endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << std::endl;
+                        ++fail_count;
+                     }
+                  }
                }
             }
          }
@@ -285,8 +337,11 @@ int main(
 
       pdat::OuterfaceDoubleLinearTimeInterpolateOp oface_op;
 
-      oface_op.timeInterpolate(oface_dst, box, oface_old, oface_new);
+      oface_op.timeInterpolate(oface_dst, box, face_ovlp, oface_old, oface_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          for (int face = 0; face < 2; ++face) {
             const hier::Box& databox =
@@ -317,7 +372,6 @@ int main(
             }  
          }  
       }
-
 
       pdat::SideData<double> side_old(box, data_depth, ghost_vec);
       pdat::SideData<double> side_new(box, data_depth, ghost_vec);
@@ -351,31 +405,52 @@ int main(
                side_expected(*side_itr, dd) = old_val + frac*(new_val-old_val);
             }
          }
+         ghost_bxs[axis].clear();
+         if (!bdry_only) {
+            ghost_bxs[axis].push_back(
+               pdat::SideGeometry::toSideBox(ghost_box, axis));
+         } else {
+            hier::Box flat_box(pdat::SideGeometry::toSideBox(box, axis));
+            flat_box.setUpper(axis, flat_box.lower(axis));
+            ghost_bxs[axis].push_back(flat_box);
+         }
       }
 
+      pdat::SideOverlap side_ovlp(ghost_bxs, zero_transformation);
       pdat::SideDoubleLinearTimeInterpolateOp side_op;
 
-      side_op.timeInterpolate(side_dst, ghost_box, side_old, side_new);
+      side_op.timeInterpolate(side_dst, ghost_box, side_ovlp, side_old, side_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
-         auto side_end(pdat::SideGeometry::end(ghost_box, axis));
-         for (int dd = 0; dd < data_depth; ++dd) {
-            for (auto side_itr(pdat::SideGeometry::begin(ghost_box, axis));
-                 side_itr != side_end; ++side_itr) {
-               double correct = side_expected(*side_itr, dd);
-               double result = side_dst(*side_itr, dd);
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
-                  if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
-                      tbox::MathUtilities<double>::Abs(result) < test_eps) {
-                     continue;
-               }
-                  tbox::perr << "Side time interp test FAILED: ...."
-                             << " : side index = " << *side_itr
-                             << " of box"
-                             << " " << ghost_box << std::endl;
-                  tbox::perr << "    result = " << result
-                             << " : correct = " << correct << std::endl;
-                  ++fail_count;
+         hier::BoxContainer ovlp_boxes;
+         int normal = axis;
+         side_ovlp.getSourceBoxContainer(ovlp_boxes, normal);
+         for (auto bitr = ovlp_boxes.begin();
+              bitr != ovlp_boxes.end(); ++bitr) {
+            auto side_end(pdat::SideGeometry::end(ghost_box, axis));
+            for (int dd = 0; dd < data_depth; ++dd) {
+               for (auto side_itr(pdat::SideGeometry::begin(ghost_box, axis));
+                    side_itr != side_end; ++side_itr) {
+                  if ((*bitr).contains(*side_itr)) {
+                     double correct = side_expected(*side_itr, dd);
+                     double result = side_dst(*side_itr, dd);
+                     if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                        if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
+                            tbox::MathUtilities<double>::Abs(result) < test_eps) {
+                           continue;
+                        }
+                        tbox::perr << "Side time interp test FAILED: ...."
+                                 << " : side index = " << *side_itr
+                                 << " of box"
+                                 << " " << ghost_box << std::endl;
+                        tbox::perr << "    result = " << result
+                                 << " : correct = " << correct << std::endl;
+                        ++fail_count;
+                     }
+                  }
                }
             }
          }
@@ -394,7 +469,10 @@ int main(
 
       pdat::OutersideDoubleLinearTimeInterpolateOp oside_op;
 
-      oside_op.timeInterpolate(oside_dst, box, oside_old, oside_new);
+      oside_op.timeInterpolate(oside_dst, box, side_ovlp, oside_old, oside_new);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
          for (int side = 0; side < 2; ++side) {
@@ -459,36 +537,56 @@ int main(
                edge_expected(*edge_itr, dd) = old_val + frac*(new_val-old_val);
             }
          }
+         ghost_bxs[axis].clear();
+         if (!bdry_only) {
+            ghost_bxs[axis].push_back(
+               pdat::EdgeGeometry::toEdgeBox(ghost_box, axis));
+         } else {
+            hier::Box flat_box(pdat::EdgeGeometry::toEdgeBox(box, axis));
+            flat_box.setUpper(axis, flat_box.lower(axis));
+            ghost_bxs[axis].push_back(flat_box);
+         }
       }
 
+      pdat::EdgeOverlap edge_ovlp(ghost_bxs, zero_transformation);
       pdat::EdgeDoubleLinearTimeInterpolateOp edge_op;
 
-      edge_op.timeInterpolate(edge_dst, ghost_box, edge_old, edge_new);
+      edge_op.timeInterpolate(edge_dst, ghost_box, edge_ovlp, edge_old, edge_new);
 
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       for (unsigned short axis = 0; axis < dim.getValue(); ++axis) {
-         auto edge_end(pdat::EdgeGeometry::end(ghost_box, axis));
-         for (int dd = 0; dd < data_depth; ++dd) {
-            for (auto edge_itr(pdat::EdgeGeometry::begin(ghost_box, axis));
-                 edge_itr != edge_end; ++edge_itr) {
-               double correct = edge_expected(*edge_itr, dd);
-               double result = edge_dst(*edge_itr, dd);
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
-                  if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
-                      tbox::MathUtilities<double>::Abs(result) < test_eps) {
-                     continue;
-               }
-                  tbox::perr << "Edge time interp test FAILED: ...."
-                             << " : edge index = " << *edge_itr
-                             << " of box"
-                             << " " << ghost_box << std::endl;
-                  tbox::perr << "    result = " << result
-                             << " : correct = " << correct << std::endl;
-                  ++fail_count;
+         hier::BoxContainer ovlp_boxes;
+         int normal = axis;
+         edge_ovlp.getSourceBoxContainer(ovlp_boxes, normal);
+         for (auto bitr = ovlp_boxes.begin();
+              bitr != ovlp_boxes.end(); ++bitr) {
+            auto edge_end(pdat::EdgeGeometry::end(ghost_box, axis));
+            for (int dd = 0; dd < data_depth; ++dd) {
+               for (auto edge_itr(pdat::EdgeGeometry::begin(ghost_box, axis));
+                    edge_itr != edge_end; ++edge_itr) {
+                  if ((*bitr).contains(*edge_itr)) {
+                     double correct = edge_expected(*edge_itr, dd);
+                     double result = edge_dst(*edge_itr, dd);
+                     if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+                        if (tbox::MathUtilities<double>::Abs(correct) < test_eps &&
+                            tbox::MathUtilities<double>::Abs(result) < test_eps) {
+                           continue;
+                        }
+                        tbox::perr << "Edge time interp test FAILED: ...."
+                                   << " : edge index = " << *edge_itr
+                                   << " of box"
+                                   << " " << ghost_box << std::endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << std::endl;
+                        ++fail_count;
+                     }
+                  }
                }
             }
          }
       }
-
       if (fail_count == 0) {
          tbox::pout << "\nPASSED:  time interp test" << std::endl;
       }

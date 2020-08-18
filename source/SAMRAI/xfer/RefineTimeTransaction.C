@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
@@ -145,27 +145,37 @@ void
 RefineTimeTransaction::packStream(
    tbox::MessageStream& stream)
 {
-   hier::Box temporary_box(d_box.getDim());
-   temporary_box.initialize(d_box,
-                            d_src_patch->getBox().getLocalId(),
-                            tbox::SAMRAI_MPI::getInvalidRank());
+   const hier::PatchData& src_told_data =
+      *(d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told));
 
-   hier::Patch temporary_patch(
-      temporary_box,
-      d_src_patch->getPatchDescriptor());
+   const double& told = src_told_data.getTime();
+   if (tbox::MathUtilities<double>::equalEps(s_time, told)) {
+      src_told_data.packStream(stream, *d_overlap);
+   } else {
 
-   std::shared_ptr<hier::PatchData> temporary_patch_data(
-      d_src_patch->getPatchDescriptor()
-      ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
-      ->allocate(temporary_patch));
-   temporary_patch_data->setTime(s_time);
+      hier::Box temporary_box(d_box.getDim());
+      temporary_box.initialize(d_box,
+                               d_src_patch->getBox().getLocalId(),
+                               tbox::SAMRAI_MPI::getInvalidRank());
 
-   timeInterpolate(
-      temporary_patch_data,
-      d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told),
-      d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
+      hier::Patch temporary_patch(
+         temporary_box,
+         d_src_patch->getPatchDescriptor());
 
-   temporary_patch_data->packStream(stream, *d_overlap);
+      std::shared_ptr<hier::PatchData> temporary_patch_data(
+         d_src_patch->getPatchDescriptor()
+         ->getPatchDataFactory(d_refine_data[d_item_id]->d_src_told)
+         ->allocate(temporary_patch));
+      temporary_patch_data->setTime(s_time);
+
+      timeInterpolate(
+         *temporary_patch_data,
+         *d_overlap,
+         src_told_data,
+         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
+
+      temporary_patch_data->packStream(stream, *d_overlap);
+   }
 }
 
 void
@@ -179,19 +189,37 @@ RefineTimeTransaction::unpackStream(
 void
 RefineTimeTransaction::copyLocalData()
 {
-   /*
-    * If there is no offset between the source and destination, then
-    * time interpolate directly to the destination patchdata.  Otherwise,
-    * time interpolate into a temporary patchdata and copy the result
-    * to the destination patchdata.
-    */
-   if (d_overlap->getSourceOffset() ==
-       hier::IntVector::getZero(d_box.getDim())) {
+   hier::PatchData& scratch_data =
+      *(d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch));
+   const hier::PatchData& src_told_data =
+      *(d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told));
+   const std::shared_ptr<hier::PatchData>& src_tnew_data =
+      d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew);
 
-      timeInterpolate(
-         d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch),
-         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told),
-         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
+   const double& told = src_told_data.getTime(); 
+
+   if (tbox::MathUtilities<double>::equalEps(s_time, told)) {
+
+      /*
+       * If the destination time is same as told, do a regular copy.
+       */
+
+      scratch_data.copy(src_told_data, *d_overlap);
+
+   } else if (d_overlap->getSourceOffset() ==
+       hier::IntVector::getZero(d_box.getDim()) &&
+       d_overlap->getTransformation().getRotation() ==
+       hier::Transformation::NO_ROTATE) {
+
+
+      /*
+       * If there is no offset between the source and destination, then
+       * time interpolate directly to the destination patchdata.  Otherwise,
+       * time interpolate into a temporary patchdata and copy the result
+       * to the destination patchdata.
+       */
+
+      timeInterpolate(scratch_data, *d_overlap, src_told_data, src_tnew_data);
 
    } else {
 
@@ -211,13 +239,9 @@ RefineTimeTransaction::copyLocalData()
 
       temp->setTime(s_time);
 
-      timeInterpolate(
-         temp,
-         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_told),
-         d_src_patch->getPatchData(d_refine_data[d_item_id]->d_src_tnew));
+      timeInterpolate(*temp, *d_overlap, src_told_data, src_tnew_data);
 
-      d_dst_patch->getPatchData(d_refine_data[d_item_id]->d_scratch)
-      ->copy(*temp, *d_overlap);
+      scratch_data.copy(*temp, *d_overlap);
 
    }
 
@@ -225,27 +249,26 @@ RefineTimeTransaction::copyLocalData()
 
 void
 RefineTimeTransaction::timeInterpolate(
-   const std::shared_ptr<hier::PatchData>& pd_dst,
-   const std::shared_ptr<hier::PatchData>& pd_old,
+   hier::PatchData& pd_dst,
+   const hier::BoxOverlap& overlap,
+   const hier::PatchData& pd_old,
    const std::shared_ptr<hier::PatchData>& pd_new)
 {
-   TBOX_ASSERT(pd_old);
-   TBOX_ASSERT(pd_dst);
-   TBOX_ASSERT_OBJDIM_EQUALITY2(*pd_dst, *pd_old);
-   TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst->getTime(), s_time));
+   TBOX_ASSERT_OBJDIM_EQUALITY2(pd_dst, pd_old);
+   TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst.getTime(), s_time));
 
-   if (tbox::MathUtilities<double>::equalEps(pd_old->getTime(), s_time)) {
+   if (tbox::MathUtilities<double>::equalEps(pd_old.getTime(), s_time)) {
       d_refine_data[d_item_id]->
-      d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
+      d_optime->timeInterpolate(pd_dst, d_box, overlap, pd_old, pd_old);
    } else {
 
       TBOX_ASSERT(pd_new);
-      TBOX_ASSERT_OBJDIM_EQUALITY2(*pd_dst, *pd_new);
-      TBOX_ASSERT(pd_old->getTime() < s_time);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(pd_dst, *pd_new);
+      TBOX_ASSERT(pd_old.getTime() < s_time);
       TBOX_ASSERT(pd_new->getTime() >= s_time);
 
       d_refine_data[d_item_id]->
-      d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_new);
+      d_optime->timeInterpolate(pd_dst, d_box, overlap, pd_old, *pd_new);
    }
 }
 

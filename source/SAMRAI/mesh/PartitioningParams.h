@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Parameters in load balancing.
  *
  ************************************************************************/
@@ -35,6 +35,7 @@ public:
       const hier::IntVector& max_size,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
+      size_t minimum_cells,
       double flexible_load_tol);
 
    PartitioningParams(
@@ -63,6 +64,10 @@ public:
    const hier::IntVector& getCutFactor() const {
       return d_cut_factor;
    }
+
+   size_t getMinimumCellRequest() const {
+      return d_minimum_cells;
+   } 
 
    const tbox::Dimension& getDim() const {
       return d_min_size.getDim();
@@ -114,6 +119,11 @@ private:
    hier::IntVector d_max_size;
    hier::IntVector d_bad_interval;
    hier::IntVector d_cut_factor;
+
+   /*
+    * @brief The requested minimum for number of cells in a patch
+    */
+   size_t d_minimum_cells;
 
    /*!
     * @brief Fraction of ideal load a process can accept over and

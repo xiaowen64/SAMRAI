@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -50,7 +50,7 @@
 // Classes for run-time plotting and autotesting.
 
 #if (TESTING == 1)
-#include "AutoTester.h"
+#include "test/testlib/AutoTester.h"
 #endif
 
 using namespace SAMRAI;

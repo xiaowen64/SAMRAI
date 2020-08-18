@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for time interpolation during data
  *                refining
  *
@@ -183,8 +183,9 @@ private:
 
    void
    timeInterpolate(
-      const std::shared_ptr<hier::PatchData>& pd_dst,
-      const std::shared_ptr<hier::PatchData>& pd_old,
+      hier::PatchData& pd_dst,
+      const hier::BoxOverlap& overlap,
+      const hier::PatchData& pd_old,
       const std::shared_ptr<hier::PatchData>& pd_new);
 
    std::shared_ptr<hier::Patch> d_dst_patch;

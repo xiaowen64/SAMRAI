@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -34,6 +34,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -327,6 +328,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
 
       t_init_level_fill_data->start();
       sched->fillData(init_data_time);
+
       mpi.Barrier();
       t_init_level_fill_data->stop();
 
@@ -378,6 +380,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
 
       patch->deallocatePatchData(d_temp_var_scratch_data);
    }
+
    d_patch_strategy->clearDataContext();
    mpi.Barrier();
    t_init_level_fill_interior->stop();
@@ -489,6 +492,7 @@ HyperbolicLevelIntegrator::applyGradientDetector(
 
    t_error_bdry_fill_comm->start();
    d_bdry_sched_advance[level_number]->fillData(error_data_time);
+
    if (s_barrier_after_error_bdry_fill_comm) {
       t_barrier_after_error_bdry_fill_comm->start();
       mpi.Barrier();
@@ -816,6 +820,7 @@ HyperbolicLevelIntegrator::getLevelDt(
 
       t_advance_bdry_fill_comm->start();
       d_bdry_sched_advance[level->getLevelNumber()]->fillData(dt_time);
+
       t_advance_bdry_fill_comm->stop();
 
       for (hier::PatchLevel::iterator ip(level->begin());
@@ -1078,6 +1083,7 @@ HyperbolicLevelIntegrator::advanceLevel(
       t_advance_bdry_fill_comm->start();
    }
    fill_schedule->fillData(current_time);
+
    if (regrid_advance) {
       t_error_bdry_fill_comm->stop();
    } else {
@@ -1097,6 +1103,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       regrid_advance,
       first_step,
       last_step);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * (5) Call user-routine to pre-process state data, if needed.
@@ -1128,6 +1137,9 @@ HyperbolicLevelIntegrator::advanceLevel(
          current_time,
          dt);
       t_patch_num_kernel->stop();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
 
       bool at_syncronization = false;
 
@@ -1137,6 +1149,9 @@ HyperbolicLevelIntegrator::advanceLevel(
          dt,
          at_syncronization);
       t_patch_num_kernel->stop();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
 
       patch->deallocatePatchData(d_temp_var_scratch_data);
    }
@@ -1158,6 +1173,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       last_step,
       regrid_advance);
    t_patch_num_kernel->stop();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
    t_advance_level_integrate->stop();
@@ -1206,6 +1224,7 @@ HyperbolicLevelIntegrator::advanceLevel(
             d_patch_strategy->setDataContext(d_scratch);
             t_new_advance_bdry_fill_comm->start();
             d_bdry_sched_advance_new[level_number]->fillData(new_time);
+
             t_new_advance_bdry_fill_comm->stop();
 
          } else {
@@ -1219,6 +1238,7 @@ HyperbolicLevelIntegrator::advanceLevel(
          const std::shared_ptr<hier::Patch>& patch = *ip;
 
          patch->allocatePatchData(d_temp_var_scratch_data, new_time);
+
          // "false" argument indicates "initial_time" is false.
          t_patch_num_kernel->start();
          double patch_dt =
@@ -1244,6 +1264,9 @@ HyperbolicLevelIntegrator::advanceLevel(
       regrid_advance,
       first_step,
       last_step);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    if ( d_barrier_advance_level_sections ) level->getBoxLevel()->getMPI().Barrier();
    t_advance_level_post_integrate->stop();
@@ -1494,18 +1517,21 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
       t_coarsen_fluxsum_comm->start();
       sched->coarsenData();
+
       t_coarsen_fluxsum_comm->stop();
 
       /*
        * Repeat conservative difference on coarser level.
        */
       coarse_level->allocatePatchData(d_saved_var_scratch_data, coarse_sim_time);
+
       coarse_level->setTime(coarse_sim_time, d_flux_var_data);
 
       d_patch_strategy->setDataContext(d_scratch);
       t_advance_bdry_fill_comm->start();
       d_bdry_sched_advance[coarse_level->getLevelNumber()]->
          fillData(coarse_sim_time);
+
       t_advance_bdry_fill_comm->stop();
 
       const double reflux_dt = sync_time - coarse_sim_time;
@@ -1546,6 +1572,7 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
    t_coarsen_sync_comm->start();
    sched->coarsenData();
+
    t_coarsen_sync_comm->stop();
 
    d_patch_strategy->clearDataContext();
@@ -2123,6 +2150,7 @@ HyperbolicLevelIntegrator::preprocessFluxData(
    } else {
       if (first_step) {
          level->allocatePatchData(d_flux_var_data, new_time);
+
       }
    }
 
@@ -2163,6 +2191,9 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                ++fs_var;
             }
          }
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
 
       } else {
          level->setTime(new_time, d_fluxsum_data);
@@ -2424,10 +2455,15 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
             patch->getPatchData(*time_dep_var, dst_context));
 
          dst_data->copy(*src_data);
+
          ++time_dep_var;
       }
 
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
+
    t_copy_time_dependent_data->stop();
 
 }

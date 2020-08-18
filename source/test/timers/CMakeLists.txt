@@ -26,6 +26,11 @@ blt_add_executable(
   DEPENDS_ON
     SAMRAI_tbox)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
 
 target_compile_definitions(timer_timertest PUBLIC TESTING=1)
 target_compile_definitions(timer_statstest PUBLIC TESTING=1)
@@ -41,4 +46,5 @@ samrai_add_tests(
 
 blt_add_test(
   NAME timer_statstest
-  COMMAND timer_statstest)
+  COMMAND timer_statstest
+  NUM_MPI_TASKS ${TASKS})

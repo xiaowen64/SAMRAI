@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing edge data at patch boundaries
  *
  ************************************************************************/
@@ -17,7 +17,7 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
-
+#include "SAMRAI/tbox/Collectives.h"
 
 namespace SAMRAI {
 namespace algs {
@@ -344,9 +344,11 @@ PatchBoundaryEdgeSum::doLevelSum(
          TBOX_ASSERT(oedge_data);
 
          oedge_data->copy(*edge_data);
-
       }
    }
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    d_single_level_sum_schedule->fillData(0.0, false);
 
@@ -370,7 +372,9 @@ PatchBoundaryEdgeSum::doLevelSum(
 
       }
    }
-
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 }
 
 }

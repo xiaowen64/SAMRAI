@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -38,6 +38,21 @@ CellVariable<TYPE>::CellVariable(
                                                              hier::IntVector::getZero(dim))) // default zero ghost cells
 {
 }
+
+#if defined(HAVE_UMPIRE)
+template<class TYPE>
+CellVariable<TYPE>::CellVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   umpire::Allocator allocator,
+   int depth):
+   hier::Variable(name,
+                  std::make_shared<CellDataFactory<TYPE> >(depth,
+                                                           hier::IntVector::getZero(dim),
+                                                           allocator)) // default zero ghost cells
+{
+}
+#endif
 
 template<class TYPE>
 CellVariable<TYPE>::~CellVariable()

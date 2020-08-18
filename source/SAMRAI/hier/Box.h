@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -1484,7 +1484,7 @@ private:
  * @see Box
  */
 
-class BoxIterator
+class BoxIterator : public std::iterator<std::random_access_iterator_tag, Index>
 {
    friend class Box;
 
@@ -1587,6 +1587,13 @@ public:
       const BoxIterator& iterator) const
    {
       return d_index != iterator.d_index;
+   }
+
+   bool
+   operator < (
+       const BoxIterator& iterator) const
+   {
+     return d_index < iterator.d_index;
    }
 
 private:

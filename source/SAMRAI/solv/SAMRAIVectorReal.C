@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Vector class for data on SAMRAI hierarchy.
  *
  ************************************************************************/
@@ -281,28 +281,31 @@ SAMRAIVectorReal<TYPE>::addComponent(
    std::shared_ptr<hier::PatchDescriptor> patch_descriptor(
       var_db->getPatchDescriptor());
    if (!var_db->checkVariablePatchDataIndexType(var, comp_data_id)) {
+      auto varptr = var.get();
+      auto factory = patch_descriptor->getPatchDataFactory(comp_data_id).get();
       TBOX_ERROR("Error in SAMRAIVectorReal::addComponent : "
          << "Vector name = " << d_vector_name
          << "\nVariable " << var->getName()
          << " type does not match data type associated with"
          << " comp_data_id patch data index function argument"
-         << "\n\t var type = " << typeid(*var).name()
+         << "\n\t var type = " << typeid(*varptr).name()
          << "\n\t comp_data_id type = "
-         << typeid(*(patch_descriptor->getPatchDataFactory(comp_data_id))).name()
+         << typeid(*factory).name()
          << std::endl);
    }
 
    if (comp_vol_id >= 0) {
       if (!var_db->checkVariablePatchDataIndexType(var, comp_vol_id)) {
+         auto varptr = var.get();
+         auto factory = patch_descriptor->getPatchDataFactory(comp_vol_id).get();
          TBOX_ERROR("Error in SAMRAIVectorReal::addComponent : "
             << "Vector name = " << d_vector_name
             << "\nVariable " << var->getName()
             << " type does not match data type associated with"
             << " comp_vol_id patch data index function argument"
-            << "\n\t var type = " << typeid(*var).name()
+            << "\n\t var type = " << typeid(*varptr).name()
             << "\n\t comp_vol_id type = "
-            << typeid(*(patch_descriptor->getPatchDataFactory(
-                           comp_vol_id))).name()
+            << typeid(*factory).name()
             << std::endl);
       }
    }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Parallel I/O class buffer to manage parallel ostreams output
  *
  ************************************************************************/
@@ -107,7 +107,8 @@ public:
    void
    outputString(
       const std::string& text,
-      const int length);
+      const int length,
+      const bool recursive = false);
 
    /**
     * Synchronize the parallel buffer (called from streambuf).

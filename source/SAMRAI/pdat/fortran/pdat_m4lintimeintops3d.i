@@ -2,7 +2,7 @@ c
 c This file is part of the SAMRAI distribution.  For full copyright
 c information, see COPYRIGHT and LICENSE.
 c
-c Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+c Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
 c Description:   m4 include file for 3d standard linear time interpolation 
 c                operators.
 c
@@ -66,11 +66,11 @@ lin_time_int_subroutine_head_3d()dnl
      &  arraynew(EDGE3d$2(nilo,nihi,0)),
      &  arraydst(EDGE3d$2(dilo,dihi,0))
       integer ie0,ie1,ie2
-ifelse($2,`0',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1+1',`ifirst2,ilast2+1')dnl
+ifelse($2,`0',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ',`')dnl
-ifelse($2,`1',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0+1',`ifirst1,ilast1',`ifirst2,ilast2+1')dnl
+ifelse($2,`1',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ',`')dnl
-ifelse($2,`2',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0+1',`ifirst1,ilast1+1',`ifirst2,ilast2')dnl
+ifelse($2,`2',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ',`')dnl
 ')dnl
 c
@@ -80,8 +80,8 @@ lin_time_int_subroutine_head_3d()dnl
      &  arrayold(FACE3d$2(oilo,oihi,0)),
      &  arraynew(FACE3d$2(nilo,nihi,0)),
      &  arraydst(FACE3d$2(dilo,dihi,0))
-      integer ie$2,ic$3,ic$4
-lin_time_int_body_3d(`ie$2',`ic$3',`ic$4',`ifirst$2,ilast$2+1',`ifirst$3,ilast$3',`ifirst$4,ilast$4')dnl
+      integer ie0,ic1,ic2
+lin_time_int_body_3d(`ie0',`ic1',`ic2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ')dnl
 c
 define(lin_time_int_op_node_3d,`dnl
@@ -91,7 +91,7 @@ lin_time_int_subroutine_head_3d()dnl
      &  arraynew(NODE3d(nilo,nihi,0)),
      &  arraydst(NODE3d(dilo,dihi,0))
       integer ie0,ie1,ie2
-lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0+1',`ifirst1,ilast1+1',`ifirst2,ilast2+1')dnl
+lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ')dnl
 c
 define(lin_time_int_op_outerface_3d,`dnl
@@ -147,11 +147,11 @@ lin_time_int_subroutine_head_3d()dnl
      &  arraynew(SIDE3d$2(nilo,nihi,0)),
      &  arraydst(SIDE3d$2(dilo,dihi,0))
       integer ie0,ie1,ie2
-ifelse($2,`0',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0+1',`ifirst1,ilast1',`ifirst2,ilast2')dnl
+ifelse($2,`0',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ',`')dnl
-ifelse($2,`1',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1+1',`ifirst2,ilast2')dnl
+ifelse($2,`1',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ',`')dnl
-ifelse($2,`2',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2+1')dnl
+ifelse($2,`2',`lin_time_int_body_3d(`ie0',`ie1',`ie2',`ifirst0,ilast0',`ifirst1,ilast1',`ifirst2,ilast2')dnl
 ',`')dnl
 ')dnl
 c

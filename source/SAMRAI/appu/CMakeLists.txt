@@ -19,15 +19,24 @@ set (appu_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/appu_cartbdry2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/appu_cartbdry3d.f)
 
-set (appu_depends_on
+set_source_files_properties(
+  fortran/appu_cpdat2buf2d.f
+  fortran/appu_cpdat2buf3d.f
+  PROPERTIES
+  LANGUAGE
+  Fortran)
+
+set (appu_depends
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_tbox)
 
 if (ENABLE_HDF5)
-  set (appu_depends_on
-    hdf5
-    ${appu_depends_on})
+  set (appu_depends ${appu_depends} hdf5)
+endif ()
+
+if (ENABLE_CUDA)
+  set (appu_depends ${appu_depends} cuda)
 endif ()
 
 process_m4(NAME fortran/appu_cartbdry2d)
@@ -37,7 +46,7 @@ blt_add_library(
   NAME SAMRAI_appu
   SOURCES ${appu_sources}
   HEADERS ${appu_headers}
-  DEPENDS_ON ${appu_depends_on})
+  DEPENDS_ON ${appu_depends})
 
 set_target_properties(SAMRAI_appu PROPERTIES LINKER_LANGUAGE CXX)
 

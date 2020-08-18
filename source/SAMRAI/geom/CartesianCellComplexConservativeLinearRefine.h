@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                omplex data on a Cartesian mesh.
  *
@@ -115,6 +115,8 @@ public:
       const hier::IntVector& ratio) const;
 };
 
-}
-}
+} // end namespace geom
+} // end namespace SAMRAI
+
+#include "SAMRAI/geom/CartesianCellConservativeLinearRefine.C"
 #endif

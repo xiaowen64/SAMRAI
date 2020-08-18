@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for double outerface patch data.
  *
  ************************************************************************/
@@ -68,6 +68,7 @@ public:
    timeInterpolate(
       hier::PatchData& dst_data,
       const hier::Box& where,
+      const hier::BoxOverlap& overlap,
       const hier::PatchData& src_data_old,
       const hier::PatchData& src_data_new) const;
 

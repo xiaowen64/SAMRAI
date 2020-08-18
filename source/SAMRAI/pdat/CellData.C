@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -87,6 +87,27 @@ CellData<TYPE>::CellData(
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth));
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+CellData<TYPE>::CellData(
+   const hier::Box& box,
+   int depth,
+   const hier::IntVector& ghosts,
+   umpire::Allocator allocator):
+   hier::PatchData(box, ghosts),
+   d_depth(depth)
+{
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
+   TBOX_ASSERT(depth > 0);
+   TBOX_ASSERT(ghosts.min() >= 0);
+
+   t_copy = tbox::TimerManager::getManager()->
+      getTimer("pdat::CellData::copy");
+
+   d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth, allocator));
+}
+#endif
+
 template<class TYPE>
 CellData<TYPE>::~CellData()
 {
@@ -118,6 +139,26 @@ CellData<TYPE>::getPointer(
 
    return d_data->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+
+template<class TYPE>
+template<int DIM>
+typename CellData<TYPE>::template View<DIM>
+CellData<TYPE>::getView(int depth)
+{
+   return CellData<TYPE>::View<DIM>(getPointer(depth), getGhostBox());
+}
+
+template<class TYPE>
+template<int DIM>
+typename CellData<TYPE>::template ConstView<DIM>
+CellData<TYPE>::getConstView(int depth) const
+{
+   return CellData<TYPE>::ConstView<DIM>(getPointer(depth), getGhostBox());
+}
+
+#endif
 
 template<class TYPE>
 TYPE&
@@ -614,7 +655,7 @@ CellData<TYPE>::putBlueprintField(
    domain_node["fields"][field_name]["type"].set_string("scalar");
    domain_node["fields"][field_name]["topology"].set_string(topology_name);
 }
-#endif 
+#endif
 
 /*
  *************************************************************************
@@ -716,6 +757,20 @@ CellData<TYPE>::putToRestart(
 
    d_data->putToRestart(restart_db->putDatabase("d_data"));
 }
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template View<DIM> get_view(CellData<TYPE>& data, Args&&... args)
+{
+   return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template<int DIM, typename TYPE, typename... Args>
+typename CellData<TYPE>::template ConstView<DIM> get_const_view(const CellData<TYPE>& data, Args&&... args)
+{
+   return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

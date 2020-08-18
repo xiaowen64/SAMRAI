@@ -7,17 +7,22 @@ set (sundials_sources
 process_m4(NAME fortran/FACjacobian2d)
 process_m4(NAME fortran/FACjacobian3d)
 
+set(sundials_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(sundials_depends ${sundials_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(sundials_depends ${sundials_depends} cuda)
+endif ()
+
 
 blt_add_executable(
   NAME sundials_test
   SOURCES ${sundials_sources}
-  DEPENDS_ON
-    SAMRAI_tbox
-    SAMRAI_geom
-    SAMRAI_mesh
-    SAMRAI_hier
-    SAMRAI_appu
-    SAMRAI_solv)
+  DEPENDS_ON ${sundials_depends})
 
 target_include_directories( sundials_test
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/sundials)

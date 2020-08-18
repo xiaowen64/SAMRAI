@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated outeredge centered patch data type
  *
  ************************************************************************/
@@ -168,6 +168,29 @@ public:
       const hier::Box& box,
       int depth);
 
+#if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Constructor for an outeredge data object.
+    *
+    * Note: Outeredge data always has ghost cell width of zero.
+    *
+    * @param box const Box reference describing the interior of the
+    *            standard CELL-centered index box over which the
+    *            outeredge data object will be created.
+    * @param depth gives the number of data values for each
+    *              spatial location in the array.
+    * @param allocator An Umpire allocator to manage the allocation of the
+    *                  underlying data. 
+    *
+    *
+    * @pre depth > 0
+    */
+   OuteredgeData(
+      const hier::Box& box,
+      int depth,
+      umpire::Allocator allocator);
+#endif
+
    /*!
     * @brief Virtual destructor for a outeredge data object.
     */
@@ -266,6 +289,26 @@ public:
       int face_normal,
       int side,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+   template <int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template <int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   View<DIM> getView(int axis, int face_normal, int side, int depth = 0);
+
+   /*!
+    * @brief Get a const ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   ConstView<DIM> getConstView(int axis, int face_normal, int side, int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to data entry corresponding
@@ -756,6 +799,17 @@ private:
    std::shared_ptr<ArrayData<TYPE> >
    d_data[SAMRAI::MAX_DIM_VAL][SAMRAI::MAX_DIM_VAL][2];
 };
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OuteredgeData<TYPE>::template View<DIM> get_view(OuteredgeData<TYPE>& data,
+                                                     Args&&... args);
+
+template <int DIM, typename TYPE, typename... Args>
+typename OuteredgeData<TYPE>::template ConstView<DIM> get_const_view(
+    const OuteredgeData<TYPE>& data,
+    Args&&... args);
+#endif
 
 }
 }

@@ -1,5 +1,5 @@
-# add_subdirectory(Euler)
-# add_subdirectory(LinAdv)
+#add_subdirectory(Euler)
+#add_subdirectory(LinAdv)
 add_subdirectory(MeshGeneration)
 add_subdirectory(multiblock)
 add_subdirectory(TreeCommunication)

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Templated outeredge centered patch data type
  *
  ************************************************************************/
@@ -74,6 +74,46 @@ OuteredgeData<TYPE>::OuteredgeData(
 
 }
 
+#if defined(HAVE_UMPIRE) 
+template<class TYPE>
+OuteredgeData<TYPE>::OuteredgeData(
+   const hier::Box& box,
+   int depth,
+   umpire::Allocator allocator):
+   hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
+   d_depth(depth)
+{
+   TBOX_ASSERT(depth > 0);
+
+   for (tbox::Dimension::dir_t axis = 0; axis < getDim().getValue(); ++axis) {
+
+      for (tbox::Dimension::dir_t face_normal = 0; face_normal < getDim().getValue();
+           ++face_normal) {
+
+         if (face_normal != axis) {
+
+            for (int side = 0; side < 2; ++side) {
+
+               hier::Box oedge_data_box =
+                  OuteredgeGeometry::toOuteredgeBox(getGhostBox(),
+                     axis,
+                     face_normal,
+                     side);
+
+               d_data[axis][face_normal][side].reset(
+                  new ArrayData<TYPE>(oedge_data_box, depth, allocator));
+
+            }   // iterate over lower/upper sides
+
+         }   // data is undefined when axis == face_normal
+
+      }  // iterate over face normal directions
+
+   }  // iterate over axis directions
+
+}
+#endif
+
 template<class TYPE>
 OuteredgeData<TYPE>::~OuteredgeData()
 {
@@ -129,6 +169,33 @@ OuteredgeData<TYPE>::getPointer(
 
    return d_data[axis][face_normal][side]->getPointer(depth);
 }
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename OuteredgeData<TYPE>::template View<DIM> OuteredgeData<TYPE>::getView(
+   int axis,
+   int face_normal,
+   int side,
+   int depth)
+{
+   ArrayData<TYPE>& array_data = getArrayData(axis, face_normal, side);
+   return array_data.getView(depth);
+}
+
+template <class TYPE>
+template <int DIM>
+typename OuteredgeData<TYPE>::template ConstView<DIM>
+OuteredgeData<TYPE>::getConstView(
+   int axis,
+   int face_normal,
+   int side,
+   int depth) const
+{
+   const ArrayData<TYPE>& array_data = getArrayData(axis, face_normal, side);
+   return array_data.getConstView(depth);
+}
+#endif
 
 template<class TYPE>
 TYPE&
@@ -1471,6 +1538,24 @@ OuteredgeData<TYPE>::putToRestart(
    }  // iterate over axis directions
 
 }
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OuteredgeData<TYPE>::template View<DIM> get_view(OuteredgeData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename OuteredgeData<TYPE>::template ConstView<DIM> get_const_view(
+    const OuteredgeData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
+
 
 }
 }

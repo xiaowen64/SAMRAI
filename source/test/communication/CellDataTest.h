@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for cell-centered patch data
  *
  ************************************************************************/
@@ -28,9 +28,12 @@
 #include <memory>
 
 
+
 namespace SAMRAI {
 
 class CommTester;
+
+using CELL_KERNEL_TYPE = double; // float | double | dcomplex
 
 /**
  * Class CellDataTest provides routines to test communication operations
@@ -151,7 +154,7 @@ private:
     */
    void
    setLinearData(
-      std::shared_ptr<pdat::CellData<double> > data,
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -160,7 +163,7 @@ private:
     */
    void
    setConservativeData(
-      std::shared_ptr<pdat::CellData<double> > data,
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch,
       const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -172,13 +175,13 @@ private:
     */
    void
    setPeriodicData(
-      std::shared_ptr<pdat::CellData<double> > data,
+      std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const std::shared_ptr<pdat::CellData<double> >& data,
+      const std::shared_ptr<pdat::CellData<CELL_KERNEL_TYPE> >& data,
       const hier::Box& interior,
       const hier::Patch& patch) const;
 
@@ -210,6 +213,5 @@ private:
    std::vector<std::shared_ptr<hier::Variable> > d_variables;
 
 };
-
-}
+} // Namespace SAMRAI
 #endif

@@ -23,16 +23,14 @@ blt_add_executable(
   SOURCES ${testHDF5_sources}
   DEPENDS_ON
     SAMRAI_hier
-    SAMRAI_tbox
-    hdf5)
+    SAMRAI_tbox)
 
 blt_add_executable(
   NAME testHDF5AppFileOpen
   SOURCES ${testHDF5AppFileOpen_sources}
   DEPENDS_ON
     SAMRAI_hier
-    SAMRAI_tbox
-    hdf5)
+    SAMRAI_tbox)
 
 blt_add_executable(
   NAME testSilo
@@ -70,22 +68,33 @@ target_include_directories( testSiloAppFileOpen
 target_include_directories( testMemory
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_test(
   NAME testHDF5
-  COMMAND testHDF5)
+  COMMAND testHDF5
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_test(
   NAME testHDF5AppFileOpen
-  COMMAND testHDF5AppFileOpen)
+  COMMAND testHDF5AppFileOpen
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_test(
   NAME testSilo
-  COMMAND testSilo)
+  COMMAND testSilo
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_test(
   NAME testSiloAppFileOpen
-  COMMAND testSiloAppFileOpen)
+  COMMAND testSiloAppFileOpen
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_test(
   NAME testMemory
-  COMMAND testMemory)
+  COMMAND testMemory
+  NUM_MPI_TASKS ${TASKS})

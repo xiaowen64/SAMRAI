@@ -65,29 +65,44 @@ set (solv_sources
   fortran/solv_cellpoissonhypresolver2d.f
   fortran/solv_cellpoissonhypresolver3d.f)
 
-set (solv_depends_on
+set_source_files_properties(
+  fortran/solv_cartesianrobinbchelper2d.f
+  fortran/solv_cartesianrobinbchelper3d.f
+  fortran/solv_cellpoissonfacops2d.f
+  fortran/solv_cellpoissonfacops3d.f
+  fortran/solv_cellpoissonhypresolver2d.f
+  fortran/solv_cellpoissonhypresolver3d.f
+  PROPERTIES
+  LANGUAGE
+  Fortran)
+
+set (solv_depends
   SAMRAI_hier
   SAMRAI_math
   SAMRAI_tbox
   SAMRAI_xfer)
 
+if (ENABLE_CUDA)
+  set (solv_depends ${solv_depends} cuda)
+endif ()
+
 if (ENABLE_HYPRE)
-  list (APPEND solv_depends_on HYPRE)
+  list (APPEND solv_depends HYPRE)
 endif()
 
 if (ENABLE_SUNDIALS)
-  list (APPEND solv_depends_on SUNDIALS)
+  list (APPEND solv_depends SUNDIALS)
 endif()
 
 if (ENABLE_PETSC)
-  list (APPEND solv_depends_on PETSc)
+  list (APPEND solv_depends PETSc)
 endif()
 
 blt_add_library(
   NAME SAMRAI_solv
   SOURCES ${solv_sources}
   HEADERS ${solv_headers}
-  DEPENDS_ON ${solv_depends_on})
+  DEPENDS_ON ${solv_depends})
 
 set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
 

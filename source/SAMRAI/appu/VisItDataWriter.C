@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
@@ -4243,7 +4243,7 @@ VisItDataWriter::HDFputIntegerArray2D(
    TBOX_ASSERT(data != 0);
    TBOX_ASSERT((nelements0 > 0) && (nelements1 > 0));
 
-   herr_t errf;
+   herr_t errf = 0;
    if ((nelements0 > 0) && (nelements1 > 0)) {
       hsize_t dim[] = { static_cast<hsize_t>(nelements0),
                         static_cast<hsize_t>(nelements1) };
@@ -4276,7 +4276,6 @@ VisItDataWriter::HDFputIntegerArray2D(
             H5P_DEFAULT,
             data);
       TBOX_ASSERT(errf >= 0);
-      NULL_USE(errf);
 
       errf = H5Sclose(space);
 
@@ -4291,6 +4290,7 @@ VisItDataWriter::HDFputIntegerArray2D(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 /*
@@ -4315,7 +4315,7 @@ VisItDataWriter::HDFputDoubleArray2D(
    TBOX_ASSERT(data != 0);
    TBOX_ASSERT((nelements0 > 0) && (nelements1 > 0));
 
-   herr_t errf;
+   herr_t errf = 0;
    if ((nelements0 > 0) && (nelements1 > 0)) {
       hsize_t dim[] = { static_cast<hsize_t>(nelements0),
                         static_cast<hsize_t>(nelements1) };
@@ -4349,7 +4349,6 @@ VisItDataWriter::HDFputDoubleArray2D(
             data);
 
       TBOX_ASSERT(errf >= 0);
-      NULL_USE(errf);
 
       errf = H5Sclose(space);
       TBOX_ASSERT(errf >= 0);
@@ -4363,6 +4362,7 @@ VisItDataWriter::HDFputDoubleArray2D(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 /*
@@ -4385,7 +4385,7 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
    TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
-   herr_t errf;
+   herr_t errf = 0;
    if (nelements > 0) {
       hid_t space;
       hsize_t dim[1];
@@ -4417,7 +4417,6 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
             HOFFSET(patchExtentsStruct, lower),
             intXdType);
       TBOX_ASSERT(errf >= 0);
-      NULL_USE(errf);
 
       errf = H5Tinsert(pe_id,
             "upper",
@@ -4482,6 +4481,7 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 
@@ -4494,9 +4494,9 @@ VisItDataWriter::HDFputBoundaryTypeArray(
 {
    TBOX_ASSERT(!key.empty());
    TBOX_ASSERT(num_patches > 0);
-   TBOX_ASSERT(2*num_patches*VISIT_FIXED_DIM == data.size());
+   TBOX_ASSERT(static_cast<size_t>(2*num_patches*VISIT_FIXED_DIM) == data.size());
 
-   herr_t errf;
+   herr_t errf = 0;
    if (num_patches > 0) {
       hid_t space;
       hsize_t dim[1];
@@ -4546,6 +4546,7 @@ VisItDataWriter::HDFputBoundaryTypeArray(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 /*
@@ -4568,7 +4569,7 @@ VisItDataWriter::HDFputPatchMapStructArray(
    TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
-   herr_t errf;
+   herr_t errf = 0;
    if (nelements > 0) {
       hid_t space;
       hsize_t dim[1];
@@ -4584,7 +4585,6 @@ VisItDataWriter::HDFputPatchMapStructArray(
             HOFFSET(patchMapStruct, processor_number),
             H5T_NATIVE_INT);
       TBOX_ASSERT(errf >= 0);
-      NULL_USE(errf);
 
       errf = H5Tinsert(pm_id,
             "file_cluster_number",
@@ -4643,6 +4643,7 @@ VisItDataWriter::HDFputPatchMapStructArray(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 /*
@@ -4664,7 +4665,7 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
    TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
-   herr_t errf;
+   herr_t errf = 0;
    if (nelements > 0) {
       hid_t space;
       hsize_t dim[1];
@@ -4680,7 +4681,6 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
             HOFFSET(patchMinMaxStruct, patch_data_on_disk),
             H5T_NATIVE_CHAR);
       TBOX_ASSERT(errf >= 0);
-      NULL_USE(errf);
 
       errf = H5Tinsert(s1_tid,
             "material_composition_flag",
@@ -4747,6 +4747,7 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 /*
@@ -4771,7 +4772,7 @@ VisItDataWriter::HDFputChildParentStructArray(
    TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
-   herr_t errf;
+   herr_t errf = 0;
    if (nelements > 0) {
       hid_t space;
       hsize_t dim[1];
@@ -4787,7 +4788,6 @@ VisItDataWriter::HDFputChildParentStructArray(
             0,
             H5T_NATIVE_INT);
       TBOX_ASSERT(errf >= 0);
-      NULL_USE(errf);
 
       errf = H5Tinsert(s1_tid,
             field_name.c_str(),
@@ -4830,6 +4830,7 @@ VisItDataWriter::HDFputChildParentStructArray(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    }
+   NULL_USE(errf);
 }
 
 /*

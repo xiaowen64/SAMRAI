@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for summing outeredge data
  *
  ************************************************************************/
@@ -14,6 +14,7 @@
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/pdat/EdgeGeometry.h"
 #include "SAMRAI/pdat/OuteredgeData.h"
+#include "SAMRAI/tbox/Collectives.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -164,6 +165,10 @@ OuteredgeSumTransaction::copyLocalData()
    TBOX_ASSERT(oedge_src_data);
 
    oedge_dst_data->sum(*oedge_src_data, *d_overlap);
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
+
 }
 
 /*

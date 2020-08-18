@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating side data objects
  *
  ************************************************************************/
@@ -20,6 +20,10 @@
 #include "SAMRAI/tbox/Complex.h"
 
 #include <memory>
+
+#if defined(HAVE_UMPIRE)
+#include "umpire/Allocator.hpp"
+#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -69,12 +73,29 @@ public:
       bool fine_boundary_represents_var,
       const hier::IntVector& directions);
 
+#if defined(HAVE_UMPIRE)
+   /**
+    * Constructor for the cell data factory class that takes a specific
+    * umpire::Allocator.  The ghost cell width and depth (number of components)
+    * arguments give the defaults for all cell data objects created with this
+    * factory.
+    *
+    * @pre depth > 0 @pre ghosts.min() >= 0
+    */
+   SideDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      bool fine_boundary_represents_var,
+      const hier::IntVector& directions,
+      umpire::Allocator allocator);
+#endif
+
    /*!
     * @brief Constructor for the side data factory class setting up allocation
     * of data in all coordinate directions.
     *
     * This constructor works the same as the other constructor, but
-    * it takes no direcions argument, meaning that all directions are going
+    * it takes no directions argument, meaning that all directions are going
     * to be allocated.
     *
     * @pre depth > 0
@@ -85,6 +106,24 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
 
+#if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Constructor for the side data factory class setting up allocation
+    * of data in all coordinate directions and uses an Umpire allocator
+    *
+    * This constructor works the same as the other constructor, but
+    * it takes no directions argument, meaning that all directions are going
+    * to be allocated.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    */
+   SideDataFactory(
+      int depth,
+      const hier::IntVector& ghosts,
+      bool fine_boundary_represents_var,
+      umpire::Allocator allocator);
+#endif
    /**
     * Virtual destructor for the side data factory class.
     */
@@ -188,10 +227,14 @@ private:
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
 
+#if defined(HAVE_UMPIRE)
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
+#endif
 };
 
-}
-}
+} // Namespace pdat
+} // Namespace SAMRAI
 
 #include "SAMRAI/pdat/SideDataFactory.C"
 

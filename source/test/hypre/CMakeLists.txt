@@ -7,24 +7,25 @@ set (hypre_sources
 process_m4(NAME fortran/hyprepoisson2d)
 process_m4(NAME fortran/hyprepoisson3d)
 
-set (hypre_depends_on
-    SAMRAI_solv
-    SAMRAI_pdat
-    SAMRAI_mesh
-    SAMRAI_geom
-    SAMRAI_tbox
-    SAMRAI_appu)
+set(hypre_depends ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(hypre_depends ${hypre_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(hypre_depends ${hypre_depends} cuda)
+endif ()
 
 if (HAVE_HYPRE)
-  set (hypre_depends_on
-    ${hypre_depends_on}; hypre)
+  set (hypre_depends ${hypre_depends} hypre)
 endif ()
 
 blt_add_executable(
   NAME hypre-test
   SOURCES ${hypre_sources}
-  DEPENDS_ON
-    ${hypre_depends_on})
+  DEPENDS_ON ${hypre_depends})
 
 target_compile_definitions(hypre-test PUBLIC TESTING=1)
 

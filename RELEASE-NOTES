@@ -1,17 +1,12 @@
 *****************************************************************************
-  Copyright 1997-2019
+  Copyright 1997-2020
   Lawrence Livermore National Security, LLC.
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.14.1
+                     Release Notes for SAMRAI v4.0.1
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
-
-Version 3.14.1 is a bug-fix patch release.  This file preserves the content
-from the release notes for version 3.14.0, with notes specific to 3.14.1
-added and marked in the "Significant bug fixes" section.  Version 3.14.1
-does not change any of the C++ API. 
 
 *****************************************************************************
 
@@ -29,48 +24,39 @@ it to us so that we may fix it.
 Please send email to samrai-bugs@llnl.gov or post an issue on github.
 https://github.com/LLNL/SAMRAI
 
+Version 4.0.1 is a bugfix release.  Unless otherwise marked, the
+notes in this file are the notes from release 4.0.0.
+
 *****************************************************************************
 
 ----------------------------------------------------------------------------
                 Significant bug fixes
 ----------------------------------------------------------------------------
 
-1) (v3.14.1) The CMake build system is fixed so that the -DCONDUIT_DIR flag
-works correctly.  -DCONDUIT_DIR=[path] is now sufficient to enable building
-with Conduit, assuming that [path] is the location of a valid Conduit
-installation.
-
-2) (v3.14.1) Internal fixes have been implemented to avoid a duplicate
-definition of a #define macro that was defined by SAMRAI's build system but
-also is common in users' application codes.
+1) NEW for v. 4.0.1  Bugs in the CMake configuration that caused Conduit
+and SILO to be excluded from the build even when included in the cmake
+configuration line have been fixed.
 
 *****************************************************************************
+
+
 
 ----------------------------------------------------------------------------
                 Summary of what's new
 -----------------------------------------------------------------------------
 
-1) A new CMake-based build system has been added.  The previous autoconf-based
-system still works as well.
-
-2) tbox::ConduitDatabase is a new concrete implementation of
-tbox::Database that uses the Conduit library (https://github.com/LLNL/conduit)
-to store its data.  Conduit is a new optional dependency for SAMRAI.
-
-3) A new method createBlueprintDatabase in PatchHierarchy provides a way to
-create a code-portable description of a SAMRAI hierarchy using the Conduit
-Blueprint protocols.
+1) In v4.0.0 SAMRAI is introducing new features to support running applications
+on GPU architectures, using capabilities provided by the Umpire and RAJA
+libraries.
 
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
 -----------------------------------------------------------------------------
 
-1) Classes that use PETSc and Sundials have been updated to work with
-newer versions of these libraries.
-
-2) Support for PT-Scotch as a third-party library has been removed, and
-the GraphLoadBalancer class that relied on this library has been removed.
+1) The old autoconf-based build system has been removed.  The new system that
+uses CMake supplemented with the BLT macro library is the only supported build
+system.  (This change effective as of v. 3.15.0)
 
 
 *****************************************************************************
@@ -79,43 +65,66 @@ the GraphLoadBalancer class that relied on this library has been removed.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-1) A new CMake-based build system has been added.  The previous autoconf-based
-system still works as well.  We intend to transition fully to the CMake system
-in future releases.
+1) In v4.0.0 SAMRAI is introducing new features to support running applications
+on GPU architectures, using capabilities provided by the Umpire and RAJA
+libraries.
 
-The new system uses CMake (https://cmake.org) supplemented with the BLT macro
-library (https://github.com/LLNL/blt).  See INSTALL-NOTES-CMAKE for more
-information.
+Umpire:  https://github.com/LLNL/Umpire
+RAJA:  https://github.com/LLNL/RAJA
 
-2) tbox::ConduitDatabase is a new concrete implementation of
-tbox::Database that uses the Conduit library (https://github.com/LLNL/conduit)
-to store its data.  Conduit is a new optional dependency for SAMRAI.
+Umpire provides tools for memory management on multiple-memory architectures,
+such as GPU architectures that use storage in both host and device memory
+spaces.
 
-When SAMRAI is built with Conduit, tbox::Database also has a method to write
-out its data into an instance of Conduit's native data structure,
-conduit::Node.
+RAJA provides portable abstractions for loop execution, enabling the use of
+a single code base for multiple modes of running loop kernels on different
+architectures, ranging from ordinary serial loop execution on a CPU, to
+shared-memory multi-threading, to threaded CUDA kernel launches on a GPU.
 
-3) A new method createBlueprintDatabase in PatchHierarchy provides a way to
-create a code-portable description of a SAMRAI hierarchy using the Conduit
-Blueprint protocols.
+The key feature used from Umpire is the Allocator, an object that controls
+all aspects of memory allocation and will determine the location of
+the allocation in architectures with multiple memory spaces.  The patch data
+objects in the pdat directory have new overloaded constructors that take
+an umpire::Allocator as an argument.  Additionally a new singleton class
+tbox::AllocatorDatabase manages certain Allocators that are held
+by SAMRAI and used to control allocations that occur internally during
+SAMRAI operations.  Application codes can access these Allocators from the
+AllocatorDatabase and use them to ensure that application-allocated data
+and library-allocated data are allocated in the same way before they interact.
+See the AllocatorDatabase documentation for more information.
 
-createBlueprintDatabase creates as much of the Blueprint as possible from
-evaluating the PatchHierarchy, and then uses classes BlueprintUtils and
-BlueprintUtilsStrategy to bring in application-specific information.  See
-the Doxygen documenation for more information.
+RAJA is used to support a portable loop abstraction for looping over the
+index spaces defined by SAMRAI's hier::Box.  The hier::parallel_for_all
+and hier::for_all objects provide a way to write one code implementation
+that can be used to execute the loops as threaded CUDA kernels, threaded
+OpenMP kernels, or regular sequentially-incremented loops.  The execution
+mode for the loops depends on the configuration of the SAMRAI installation
+and the RAJA policy given to the looping structure.  See the RAJA
+documentation for more information on RAJA policies.
 
------------------------------------------------------------------------------
+To connect the RAJA loop structures with standard SAMRAI patch data types,
+a new class ArrayView has been added to provide a way to access the data
+arrays held within these types using integer (i,j,k) tuples.  The plain
+integers in the tuple are used to index the loop, and they may be threaded,
+so the ArrayView class is a convenient way to access the data for
+thread-safe operation on the arrays.
+
+Configuration with Umpire and RAJA is optional, so all previous functionality
+using MPI parallelism is still available.
+
+
                 Details about what's changed
 ----------------------------------------------------------------------------
 
-1) Classes that use PETSc and Sundials have been updated to work with
-newer versions of these libraries.  SAMRAI is now compatible with PETSc
-version 3.10.5 and Sundials version 4.1.0.
+1) The old autoconf-based build system has been removed.  The new system that
+uses CMake supplemented with the BLT macro library was introduced in version
+3.14.0 and is now the only supported build system.
 
-2) Support for PT-Scotch as a third-party library has been removed, and
-the GraphLoadBalancer class that relied on this library has been removed.
-This was never more than an experimental feature, and we decided not to
-continue support.
+The new system uses CMake (https://cmake.org) supplemented with the BLT macro
+library (https://github.com/LLNL/blt).  Updated instructions for the build
+system are in the INSTALL-NOTES file.
+
+(This change effective as of v. 3.15.0)
 
 
 =============================================================================

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -20,6 +20,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/Collectives.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 #include "SAMRAI/xfer/CoarsenCopyTransaction.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
@@ -292,6 +294,9 @@ CoarsenSchedule::coarsenData() const
       t_coarse_data_fill->start();
       d_precoarsen_refine_schedule->fillData(0.0);
       t_coarse_data_fill->stop();
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
    }
 
    /*
@@ -307,6 +312,9 @@ CoarsenSchedule::coarsenData() const
     */
 
    d_schedule->communicate();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * Deallocate the source data in the temporary patch level.
@@ -1011,10 +1019,12 @@ CoarsenSchedule::coarsenSourceData(
       /*
        * Coarsen the fine space onto the temporary coarse space
        */
-
       if (patch_strategy) {
          patch_strategy->preprocessCoarsen(*temp_patch,
             *fine_patch, box, block_ratio);
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
       }
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
@@ -1027,12 +1037,18 @@ CoarsenSchedule::coarsenSourceData(
                box, block_ratio);
          }
       }
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
 
       if (patch_strategy) {
          patch_strategy->postprocessCoarsen(*temp_patch,
             *fine_patch,
             box,
             block_ratio);
+#if defined(HAVE_RAJA)
+        tbox::parallel_synchronize();
+#endif
       }
    }
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
@@ -658,7 +658,6 @@ int main(
 #endif
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
-
       if (do_refine) {
 
          for (int n = 0; n < ntimes_run; ++n) {
@@ -712,7 +711,6 @@ int main(
       }
 
       bool test2_passed = comm_tester->verifyCommunicationResults();
-
       /*
        * Deallocate objects when done.
        */

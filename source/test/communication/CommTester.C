@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -388,6 +388,7 @@ void CommTester::performRefineOperations(
           level_number < static_cast<int>(d_fill_source_schedule.size()) - 1) {
          d_data_test_strategy->setDataContext(d_source);
          d_fill_source_schedule[level_number]->fillData(d_fake_time);
+         // synchronize is covered by RefineSchedule::recursiveFill at a finer grain
       }
       if (d_is_reset) {
          d_data_test_strategy->setDataContext(d_reset_refine_scratch);
@@ -396,6 +397,7 @@ void CommTester::performRefineOperations(
       }
       if (d_refine_schedule[level_number]) {
          d_refine_schedule[level_number]->fillData(d_fake_time);
+         // synchronize is covered by RefineSchedule::recursiveFill at a finer grain
       }
       d_data_test_strategy->clearDataContext();
    }
@@ -412,6 +414,7 @@ void CommTester::performCoarsenOperations(
       }
       if (d_coarsen_schedule[level_number]) {
          d_coarsen_schedule[level_number]->coarsenData();
+         // synchronize is provided at a finer grain in coarsenData after communicate
       }
       d_data_test_strategy->clearDataContext();
    }
@@ -434,6 +437,7 @@ bool CommTester::performCompositeBoundaryComm(
       std::shared_ptr<SAMRAI::xfer::CompositeBoundarySchedule> cbsched =
          cba.createSchedule(level_number);
       cbsched->fillData(d_fake_time);
+      // synchronize is covered at a finer grain
 
       std::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(level_number));

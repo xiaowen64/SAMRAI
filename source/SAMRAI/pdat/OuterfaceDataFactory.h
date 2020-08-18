@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outerface data objects
  *
  ************************************************************************/
@@ -40,8 +40,8 @@ class OuterfaceDataFactory:public hier::PatchDataFactory
 {
 public:
    /**
-    * The default constructor for the outerface data factory class.
-    * The depth (number of components) gives the default for all of
+    * The constructor for the outerface data factory class.
+    * The depth (number of components) sets the default for all of
     * the outerface data objects created with this factory.
     *
     * @pre depth > 0
@@ -49,6 +49,23 @@ public:
    OuterfaceDataFactory(
       const tbox::Dimension& dim,
       int depth);
+
+#if defined(HAVE_UMPIRE)
+   /**
+    * The constructor for the outerface data factory class.
+    * The depth (number of components) sets the default for all of
+    * the outerface data objects created with this factory.
+    *
+    * This constructor sets an Umpire allocator for the memory management
+    * of the data held within outerface data objects.
+    *
+    * @pre depth > 0
+    */
+   OuterfaceDataFactory(
+      const tbox::Dimension& dim,
+      int depth,
+      umpire::Allocator allocator);
+#endif
 
    /**
     * Virtual destructor for the outerface data factory class.
@@ -138,8 +155,11 @@ public:
 
 private:
    int d_depth;
-
    hier::IntVector d_no_ghosts;
+#if defined(HAVE_UMPIRE)
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
+#endif
 };
 
 }

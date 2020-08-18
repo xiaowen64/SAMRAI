@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -32,7 +32,8 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
-
+#include "SAMRAI/tbox/NVTXUtilities.h"
+#include "SAMRAI/tbox/Collectives.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -2037,6 +2038,7 @@ RefineSchedule::fillData(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
+  RANGE_PUSH("fillData", 1);
    if (s_barrier_and_time) {
       t_fill_data->barrierAndStart();
    }
@@ -2097,6 +2099,9 @@ RefineSchedule::fillData(
     */
 
    copyScratchToDestination();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * Deallocate any allocated scratch space on the destination level.
@@ -2118,6 +2123,7 @@ RefineSchedule::fillData(
    if (s_barrier_and_time) {
       t_fill_data->stop();
    }
+   RANGE_POP;
 }
 
 /*
@@ -2149,6 +2155,9 @@ RefineSchedule::recursiveFill(
     * for data where coarse data takes priority on level boundaries.
     */
    d_coarse_priority_level_schedule->communicate();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * If there is a coarser schedule stored in this object, then we will
@@ -2208,6 +2217,10 @@ RefineSchedule::recursiveFill(
       d_coarse_interp_schedule->recursiveFill(fill_time,
          do_physical_boundary_fill);
 
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
+
       /*
        * d_coarse_interp_level should now be filled.  Now interpolate
        * data from the coarse grid into the fine grid.
@@ -2218,6 +2231,7 @@ RefineSchedule::recursiveFill(
          d_dst_to_coarse_interp->getTranspose(),
          *d_coarse_interp_to_unfilled,
          d_refine_overlaps);
+
 
       /*
        * Deallocate the scratch data from the coarse grid.
@@ -2286,6 +2300,9 @@ RefineSchedule::recursiveFill(
 
       d_coarse_interp_encon_schedule->recursiveFill(fill_time,
          do_physical_boundary_fill);
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
 
       /*
        * d_coarse_interp_encon_level should now be filled.  Now interpolate
@@ -2320,6 +2337,9 @@ RefineSchedule::recursiveFill(
     * for data where fine data takes priority on level boundaries.
     */
    d_fine_priority_level_schedule->communicate();
+#if defined(HAVE_RAJA)
+   tbox::parallel_synchronize();
+#endif
 
    /*
     * Fill the physical boundaries of the scratch space on the destination
@@ -2692,6 +2712,9 @@ RefineSchedule::refineScratchData(
                *crse_patch,
                fill_boxes,
                local_ratio);
+#if defined(HAVE_RAJA)
+            tbox::parallel_synchronize();
+#endif
          }
 
          for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
@@ -2709,13 +2732,20 @@ RefineSchedule::refineScratchData(
 
             }
          }
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
 
          if (d_refine_patch_strategy) {
             d_refine_patch_strategy->postprocessRefineBoxes(*fine_patch,
                *crse_patch,
                fill_boxes,
                local_ratio);
+#if defined(HAVE_RAJA)
+            tbox::parallel_synchronize();
+#endif
          }
+
       } else {
          /*
           * This section is only entered when filling ghost regions in
@@ -2747,6 +2777,9 @@ RefineSchedule::refineScratchData(
                *crse_patch,
                fill_boxes,
                local_ratio);
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
          }
 
          for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
@@ -2765,13 +2798,20 @@ RefineSchedule::refineScratchData(
 
             }
          }
+#if defined(HAVE_RAJA)
+         tbox::parallel_synchronize();
+#endif
 
          if (d_refine_patch_strategy) {
             d_refine_patch_strategy->postprocessRefineBoxes(*nbr_fill_patch,
                *crse_patch,
                fill_boxes,
                local_ratio);
+#if defined(HAVE_RAJA)
+            tbox::parallel_synchronize();
+#endif
          }
+
 
          /*
           * Post-interpolation loop to copy data from nbr_fill_patch to
@@ -2803,6 +2843,10 @@ RefineSchedule::refineScratchData(
          *coarse_level,
          coarse_to_fine,
          coarse_to_unfilled);
+#if defined(HAVE_RAJA)
+      tbox::parallel_synchronize();
+#endif
+
    }
 
    t_refine_scratch_data->stop();

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -57,6 +57,7 @@ PatchHierarchy::PatchHierarchy(
    d_proper_nesting_buffer(d_max_levels - 1, 1),
    d_smallest_patch_size(1, IntVector(d_dim, 1)),
    d_largest_patch_size(1, IntVector(d_dim, tbox::MathUtilities<int>::getMax())),
+   d_minimum_cells(1, 1),
    d_allow_patches_smaller_than_ghostwidth(false),
    d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps(false),
    d_self_connector_widths(1, IntVector(IntVector::getOne(d_dim), geometry->getNumberBlocks())),
@@ -146,6 +147,8 @@ PatchHierarchy::getFromInput(
             d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
             d_smallest_patch_size.resize(d_max_levels,
                d_smallest_patch_size.back());
+            d_minimum_cells.resize(d_max_levels,
+               d_minimum_cells.back());
             d_largest_patch_size.resize(d_max_levels,
                d_largest_patch_size.back());
          }
@@ -253,6 +256,22 @@ PatchHierarchy::getFromInput(
             }
          }
 
+         if (input_db->isDatabase("minimum_cell_request")) {
+            const std::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("minimum_cell_request"));
+            for (int ln = 0; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  d_minimum_cells[ln] =
+                     tmp_db->getInteger(level_names[ln]);
+                  if (d_minimum_cells[ln] <= 0) {
+                     INPUT_RANGE_ERROR("minimum_cell_request");
+                  }
+               } else {
+                  d_minimum_cells[ln] = d_minimum_cells[ln - 1];
+               }
+            }
+         }
+
          // Read in largest_patch_size.
          if (input_db->isDatabase("largest_patch_size")) {
             const std::shared_ptr<tbox::Database> tmp_db(
@@ -351,6 +370,8 @@ PatchHierarchy::getFromInput(
             d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
             d_smallest_patch_size.resize(d_max_levels,
                d_smallest_patch_size.back());
+            d_minimum_cells.resize(d_max_levels,
+               d_minimum_cells.back());
             d_largest_patch_size.resize(d_max_levels,
                d_largest_patch_size.back());
          }
@@ -381,6 +402,27 @@ PatchHierarchy::getFromInput(
                }
             }
          }
+
+
+
+         if (input_db->isDatabase("minimum_cells")) {
+            const std::shared_ptr<tbox::Database> tmp_db(
+               input_db->getDatabase("minimum_cells"));
+            for (int ln = 0; ln < d_max_levels; ++ln) {
+               if (tmp_db->isInteger(level_names[ln])) {
+                  d_minimum_cells[ln] = 
+                     tmp_db->getInteger(level_names[ln]);
+                  if (d_minimum_cells[ln] < 1) {
+                     TBOX_ERROR("PatchHierarchy::getFromInput error...\n"
+                        << "minimum_cells must be > 0." << std::endl);
+                  }
+               } else {
+                  d_minimum_cells[ln] = d_minimum_cells[ln - 1];
+               }
+            }
+         }
+
+
 
          // Read in largest_patch_size.
          if (input_db->isDatabase("largest_patch_size")) {
@@ -662,6 +704,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    fine_hierarchy->d_max_levels = d_max_levels;
    fine_hierarchy->d_ratio_to_coarser = d_ratio_to_coarser;
    fine_hierarchy->d_smallest_patch_size = d_smallest_patch_size;
+   fine_hierarchy->d_minimum_cells = d_minimum_cells;
    fine_hierarchy->d_largest_patch_size = d_largest_patch_size;
    fine_hierarchy->d_individual_cwrs = d_individual_cwrs;
    fine_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
@@ -726,6 +769,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    coarse_hierarchy->d_max_levels = d_max_levels;
    coarse_hierarchy->d_ratio_to_coarser = d_ratio_to_coarser;
    coarse_hierarchy->d_smallest_patch_size = d_smallest_patch_size;
+   coarse_hierarchy->d_minimum_cells = d_minimum_cells;
    coarse_hierarchy->d_largest_patch_size = d_largest_patch_size;
    coarse_hierarchy->d_individual_cwrs = d_individual_cwrs;
    coarse_hierarchy->d_proper_nesting_buffer = d_proper_nesting_buffer;
@@ -1058,6 +1102,13 @@ PatchHierarchy::putToRestart(
       smallest_patch_db->putIntegerArray(level_names[ln],
          &d_smallest_patch_size[ln][0],
          d_dim.getValue());
+   }
+
+   std::shared_ptr<tbox::Database> minimum_cells_db(
+      restart_db->putDatabase("minimum_cell_request"));
+   for (int ln = 0; ln < d_max_levels; ++ln) {
+      minimum_cells_db->putInteger(level_names[ln],
+         d_minimum_cells[ln]);
    }
 
    std::shared_ptr<tbox::Database> largest_patch_db(
@@ -2307,6 +2358,14 @@ PatchHierarchy::getFromRestart()
       smallest_patch_db->getIntegerArray(level_names[ln],
          &d_smallest_patch_size[ln][0],
          d_dim.getValue());
+   }
+
+   std::shared_ptr<tbox::Database> minimum_cells_db(
+      database->getDatabase("minimum_cell_request"));
+   d_minimum_cells.resize(d_max_levels, d_minimum_cells.back());
+   for (int ln = 0; ln < d_max_levels; ++ln) {
+      d_minimum_cells[ln] =
+         minimum_cells_db->getInteger(level_names[ln]);
    }
 
    std::shared_ptr<tbox::Database> largest_patch_db(

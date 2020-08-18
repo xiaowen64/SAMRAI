@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Identifier for a Box.
  *
  ************************************************************************/
@@ -179,6 +179,12 @@ public:
     *
     * All comparison operators use the GlobalId and PeriodicId.
     */
+
+   BoxId&
+   operator = (
+      const BoxId& r) = default;
+
+
    bool
    operator == (
       const BoxId& r) const

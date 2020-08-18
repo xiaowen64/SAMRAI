@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2019 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2020 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for time interpolation operators.
  *
  ************************************************************************/
@@ -90,6 +90,7 @@ public:
    timeInterpolate(
       PatchData& dst_data,
       const Box& where,
+      const BoxOverlap& overlap, 
       const PatchData& src_data_old,
       const PatchData& src_data_new) const = 0;
 
