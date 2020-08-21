@@ -24,6 +24,8 @@ Main {
    // restart dump parameters
    // frequency at which to dump restart output--zero to turn off
    restart_interval     = 0
+
+   norm_baseline = 1.124437781109e-02
 }
 
 // Refer to tbox::TimerManager for input
@@ -92,7 +94,7 @@ TimeRefinementIntegrator {
    start_time            = 0.e0    // initial simulation time
    end_time              = 1.5e0    // final simulation time
    grow_dt               = 2e0     // growth factor for timesteps
-   max_integrator_steps  = 25     // max number of simulation timesteps
+   max_integrator_steps  = 5     // max number of simulation timesteps
 }
 
 // Refer to mesh::TreeLoadBalancer for input
