@@ -162,14 +162,7 @@ int main(
     const std::string viz_dump_dirname =
       main_db->getStringWithDefault("viz_dump_dirname", base_name + ".visit");
     int visit_number_procs_per_file = 1;
-
-//    const bool viz_dump_data = (viz_dump_interval > 0);
 #endif
-
-//    int restart_interval = 0;
-//    if (main_db->keyExists("restart_interval")) {
-//      restart_interval = main_db->getInteger("restart_interval");
-//    }
 
     const std::string restart_write_dirname =
       main_db->getStringWithDefault("restart_write_dirname",
@@ -183,9 +176,6 @@ int main(
         use_refined_timestepping = true;
       }
     }
-
-//    const bool write_restart = (restart_interval > 0)
-//      && !(restart_write_dirname.empty());
 
     /*
      * Get the restart manager and root restart database.  If run is from
@@ -260,7 +250,6 @@ int main(
             input_db->getDatabaseWithDefault(
               "BergerRigoutsos",
               std::shared_ptr<tbox::Database>()));
-      //box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
     }
 
     std::shared_ptr<mesh::CascadePartitioner> load_balancer(
