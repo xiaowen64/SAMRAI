@@ -24,14 +24,26 @@ target_include_directories( stencil
 set_target_properties(stencil PROPERTIES LINKER_LANGUAGE CXX)
 
 
-file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+set (test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/box2d_adv.input
+                 ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/box2d_debug.input
+                 ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/step.2d.input)
+file (GLOB perf_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*_50_*input
+                       ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*_20_*input)
 
-execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
-execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
+#execute_process(COMMAND mkdir -p ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
+#execute_process(COMMAND ln -s ${test_baselines} ${CMAKE_CURRENT_BINARY_DIR}/test_inputs)
 
-# samrai_add_tests(
-#   NAME stencil
-#   EXECUTABLE stencil
-#   INPUTS ${test_inputs}
-#  PARALLEL TRUE)
-
+if (ENABLE_PERF_TESTS)
+  samrai_add_tests(
+     NAME stencil
+     EXECUTABLE stencil
+     INPUTS ${perf_inputs}
+     PERFORMANCE TRUE
+     PARALLEL TRUE)
+else()
+  samrai_add_tests(
+     NAME stencil
+     EXECUTABLE stencil
+     INPUTS ${test_inputs}
+     PARALLEL TRUE)
+endif()

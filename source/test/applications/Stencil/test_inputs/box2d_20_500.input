@@ -1,5 +1,5 @@
 Stencil {
-  num_variables=50
+  num_variables=20
 }
 
 Main {
@@ -24,6 +24,8 @@ Main {
    // restart dump parameters
    // frequency at which to dump restart output--zero to turn off
    restart_interval     = 0
+
+   norm_baseline = 5.239520958084e-3
 }
 
 // Refer to tbox::TimerManager for input
@@ -37,7 +39,7 @@ TimerManager{
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry {
-   domain_boxes = [ (0,0) , (1000,1000) ]
+   domain_boxes = [ (0,0) , (500,500) ]
    x_lo         = 0.e0, 0.e0 // lower end of computational domain.
    x_up         = 1e0, 1e0   // upper end of computational domain.
 }

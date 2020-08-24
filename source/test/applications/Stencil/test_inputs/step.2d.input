@@ -103,6 +103,8 @@ Main {
    // restart dump parameters
    // frequency at which to dump restart output--zero to turn off
    restart_interval     = 1
+
+   norm_baseline = 3.103125e-3
 }
 
 // Refer to tbox::TimerManager for input

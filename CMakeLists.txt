@@ -56,6 +56,8 @@ option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
 
 # SAMRAI options
 option(ENABLE_SAMRAI_TESTS "Enable SAMRAI Test Programs" On)
+option(ENABLE_PERF_TESTS "Enable Performance Tests." On)
+set(NUM_PERF_PROCS 8 CACHE INT "Number of processors for performance tests.")
 option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." On)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)

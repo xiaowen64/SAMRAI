@@ -24,6 +24,8 @@ Main {
    // restart dump parameters
    // frequency at which to dump restart output--zero to turn off
    restart_interval     = 0
+
+   norm_baseline = 2.247752247752e-02
 }
 
 // Refer to tbox::TimerManager for input
@@ -37,7 +39,7 @@ TimerManager{
 
 // Refer to geom::CartesianGridGeometry and its base classes for input
 CartesianGeometry {
-   domain_boxes = [ (0,0) , (2000,2000) ]
+   domain_boxes = [ (0,0) , (1000,1000) ]
    x_lo         = 0.e0, 0.e0 // lower end of computational domain.
    x_up         = 1e0, 1e0   // upper end of computational domain.
 }
@@ -92,7 +94,7 @@ TimeRefinementIntegrator {
    start_time            = 0.e0    // initial simulation time
    end_time              = 1.5e0    // final simulation time
    grow_dt               = 2e0     // growth factor for timesteps
-   max_integrator_steps  = 25     // max number of simulation timesteps
+   max_integrator_steps  = 5     // max number of simulation timesteps
 }
 
 // Refer to mesh::TreeLoadBalancer for input

@@ -3248,8 +3248,6 @@ void LinAdv::addFields(
       SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch->getPatchData(d_uval, current)));
 
-   size_t data_size = uval->getGhostBox().size();
-
    std::string mesh_name =
       "domain_" + tbox::Utilities::intToString(domain_id, 6);
 
