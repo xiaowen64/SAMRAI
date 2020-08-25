@@ -3,6 +3,7 @@ find_path(CONDUIT_INCLUDE_DIRS NAMES conduit.hpp HINTS ${CONDUIT_DIR}/include/co
 set(CONDUIT_LIBS_LIST
   conduit
   conduit_blueprint
+  conduit_blueprint_mpi
   conduit_relay)
 
 set(CONDUIT_LIBRARIES)

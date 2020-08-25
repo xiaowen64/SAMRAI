@@ -47,6 +47,7 @@
 #ifdef SAMRAI_HAVE_CONDUIT
 #include "conduit_blueprint.hpp"
 #include "conduit_blueprint_mesh.hpp"
+#include "conduit_blueprint_mpi_mesh.hpp"
 #include "conduit_relay.hpp"
 #endif
 
@@ -604,9 +605,9 @@ int main(
       conduit::Node poly;
 
       if (dim.getValue() == 2) {
-         conduit::blueprint::mesh::to_poly(flatn, poly, "mesh");
+         conduit::blueprint::mpi::mesh::to_poly(flatn, poly, "mesh");
       } else {
-         conduit::blueprint::mesh::to_polyhedral(flatn, poly, "mesh");
+         conduit::blueprint::mpi::mesh::to_polyhedral(flatn, poly, "mesh");
       }
       //transformToPolyhedral(poly, flatn, "mesh");
       TBOX_ASSERT(conduit::blueprint::verify("mesh", poly, info));
