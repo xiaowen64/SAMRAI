@@ -1045,13 +1045,7 @@ public:
    makeNestingSets(
       const std::shared_ptr<tbox::Database>& blueprint_db,
       const std::string& topology_name) const;
-#ifdef SAMRAI_HAVE_CONDUIT
 
-   void
-   makeVisibleDomainsBlueprint(
-      const std::shared_ptr<tbox::Database>& blueprint_db,
-      const BlueprintUtils& bp_utils) const;
-#endif
    /*!
     * @brief Add Conduit blueprint's "adjsets" data to a database.
     *

@@ -1243,27 +1243,6 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
       first_patch_id.push_back(patch_count);
    }
 
-   makeVisibleDomainsBlueprint(blueprint_db, bp_utils);
-
-}
-
-
-void
-PatchHierarchy::makeVisibleDomainsBlueprint(
-   const std::shared_ptr<tbox::Database>& blueprint_db,
-   const BlueprintUtils& bp_utils) const
-{
-   TBOX_ASSERT(blueprint_db);
-
-   std::vector<int> first_patch_id;
-   first_patch_id.push_back(0);
-
-   int patch_count = 0;
-   for (int i = 1; i < d_number_levels; ++i) {
-      patch_count += d_patch_levels[i-1]->getNumberOfPatches();
-      first_patch_id.push_back(patch_count);
-   }
-
    std::vector<std::map<int, BoxId> > vis_to_patch(d_number_levels);
 
    BoxLevelConnectorUtils blcu;
