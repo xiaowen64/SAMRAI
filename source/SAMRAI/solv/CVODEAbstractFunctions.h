@@ -98,6 +98,48 @@ public:
       double delta,
       int lr) = 0;
 
+   /*!
+    * @brief User-supplied function to project the current solution and
+    * estimated error onto the constraint manifold.
+    *
+    * The function arguments are:
+    *
+    * - \b t (INPUT) {current value of the independent variable}
+    * - \b y (INPUT) {current value of the dependent variable vector}
+    * - \b corr (OUTPUT) {correction such that y+corr is on the constraint
+    *                     manifold}
+    * - \b epsProj (INPUT) {WRMS norm tolerance for a nonlinear solver
+    *                       iteration}
+    * - \b err (INPUT/OUTPUT) {input: unprojected error , output: projected
+    *                          error}
+    *
+    * IMPORTANT: This function must not modify the vector y.
+    */
+   virtual int
+   applyProjection(
+      double t,
+      SundialsAbstractVector* y,
+      SundialsAbstractVector* corr,
+      double epsProj,
+      SundialsAbstractVector* err) = 0;
+
+   /*!
+    * @brief User-supplied right-hand side function used in evaluating finite
+    * difference Jacobian -vector products.
+    *
+    * The function arguments are:
+    *
+    * - \b t (INPUT) {current value of the independent variable}
+    * - \b y (INPUT) {current value of the dependent variable vector}
+    * - \b ydot (OUTPUT) {current value of the derivative of y}
+    * 
+    * IMPORTANT: This function must not modify the vector y
+    */
+   virtual int evaluateJTimesRHSFunction(
+      double t,
+      SundialsAbstractVector* y,
+      SundialsAbstractVector* y_dot) = 0;
+
 };
 
 }
