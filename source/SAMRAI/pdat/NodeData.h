@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/pdat/ArrayData.h"
+#include "SAMRAI/pdat/ArrayView.h"
 #include "SAMRAI/pdat/NodeIndex.h"
 #include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
@@ -115,6 +116,34 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
+#if defined(HAVE_UMPIRE)
+   /*!
+    * @brief The constructor for an node data object.
+    *
+    * @param box const Box reference describing the interior of the
+    *            standard CELL-centered index box over which the
+    *            node data object will be created.
+    * @param depth gives the number of components for each
+    *              spatial location in the array.
+    * @param ghosts const IntVector reference indicating the width
+    *               of the ghost cell region around the box over which
+    *               the node data will be allocated.
+    * @param allocator An Umpire allocator to manage the allocation of the
+    *                  underlying data.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    */
+   NodeData(
+      const hier::Box& box,
+      int depth,
+      const hier::IntVector& ghosts,
+      umpire::Allocator allocator);
+#endif
+
+
+
    /*!
     * @brief The virtual destructor for a node data object.
     */
@@ -146,6 +175,30 @@ public:
    const TYPE *
    getPointer(
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+   template<int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template<int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   View<DIM>
+   getView(
+      int depth = 0);
+
+   /*!
+    * @brief Get a const ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to the data entry corresponding
@@ -484,6 +537,14 @@ private:
    std::shared_ptr<ArrayData<TYPE> > d_data;
 
 };
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template View<DIM> get_view(NodeData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename NodeData<TYPE>::template ConstView<DIM> get_const_view(const NodeData<TYPE>& data, Args&&... args);
+#endif
 
 }
 }

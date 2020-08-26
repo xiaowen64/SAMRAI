@@ -27,51 +27,52 @@
 extern "C" {
 
 #ifdef __INTEL_COMPILER
-#pragma warning (disable:1419)
+#pragma warning(disable : 1419)
 #endif
 
 // in lintimint1d.f:
-void SAMRAI_F77_FUNC(lintimeintnodedoub1d, LINTIMEINTNODEDOUB1D) (const int&,
-   const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const double&,
-   const double *, const double *,
-   double *);
+void SAMRAI_F77_FUNC(lintimeintnodedoub1d, LINTIMEINTNODEDOUB1D)(const int&,
+                                                                 const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const double&,
+                                                                 const double*, const double*,
+                                                                 double*);
 // in lintimint2d.f:
-void SAMRAI_F77_FUNC(lintimeintnodedoub2d, LINTIMEINTNODEDOUB2D) (const int&,
-   const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const int&, const int&,
-   const double&,
-   const double *, const double *,
-   double *);
+void SAMRAI_F77_FUNC(lintimeintnodedoub2d, LINTIMEINTNODEDOUB2D)(const int&,
+                                                                 const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&,
+                                                                 const double&,
+                                                                 const double*, const double*,
+                                                                 double*);
 // in lintimint3d.f:
-void SAMRAI_F77_FUNC(lintimeintnodedoub3d, LINTIMEINTNODEDOUB3D) (const int&,
-   const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const int&, const int&, const int&,
-   const double&,
-   const double *, const double *,
-   double *);
+void SAMRAI_F77_FUNC(lintimeintnodedoub3d, LINTIMEINTNODEDOUB3D)(const int&,
+                                                                 const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const int&, const int&, const int&,
+                                                                 const double&,
+                                                                 const double*, const double*,
+                                                                 double*);
 }
 
-namespace SAMRAI {
-namespace pdat {
+namespace SAMRAI
+{
+namespace pdat
+{
 
-NodeDoubleLinearTimeInterpolateOp::NodeDoubleLinearTimeInterpolateOp():
-   hier::TimeInterpolateOperator()
+NodeDoubleLinearTimeInterpolateOp::NodeDoubleLinearTimeInterpolateOp() : hier::TimeInterpolateOperator()
 {
 }
 
@@ -90,11 +91,11 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const NodeData<double>* old_dat =
-      CPP_CAST<const NodeData<double> *>(&src_data_old);
+       CPP_CAST<const NodeData<double>*>(&src_data_old);
    const NodeData<double>* new_dat =
-      CPP_CAST<const NodeData<double> *>(&src_data_new);
+       CPP_CAST<const NodeData<double>*>(&src_data_new);
    NodeData<double>* dst_dat =
-      CPP_CAST<NodeData<double> *>(&dst_data);
+       CPP_CAST<NodeData<double>*>(&dst_data);
 
    TBOX_ASSERT(old_dat != 0);
    TBOX_ASSERT(new_dat != 0);
@@ -117,8 +118,8 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
 
    TBOX_ASSERT((old_time < dst_time ||
                 tbox::MathUtilities<double>::equalEps(old_time, dst_time)) &&
-      (dst_time < new_time ||
-       tbox::MathUtilities<double>::equalEps(dst_time, new_time)));
+               (dst_time < new_time ||
+                tbox::MathUtilities<double>::equalEps(dst_time, new_time)));
 
    double tfrac = dst_time - old_time;
    double denom = new_time - old_time;
@@ -153,6 +154,16 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
                new_dat->getPointer(d),
                dst_dat->getPointer(d));
          } else if (dim == tbox::Dimension(2)) {
+#if defined(HAVE_RAJA)
+            auto old_array = old_dat->getConstView<2>(d);
+            auto new_array = new_dat->getConstView<2>(d);
+            auto dst_array = dst_dat->getView<2>(d);
+
+            hier::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int j /*fastest*/, int k) {
+               const double oldfrac = 1.0 - tfrac;
+               dst_array(j, k) = old_array(j, k) * oldfrac + new_array(j, k) * tfrac;
+            });
+#else
             SAMRAI_F77_FUNC(lintimeintnodedoub2d, LINTIMEINTNODEDOUB2D) (
                ifirst(0), ifirst(1), ilast(0), ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -162,7 +173,18 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(d),
                new_dat->getPointer(d),
                dst_dat->getPointer(d));
+#endif
          } else if (dim == tbox::Dimension(3)) {
+#if defined(HAVE_RAJA)
+            auto old_array = old_dat->getConstView<3>(d);
+            auto new_array = new_dat->getConstView<3>(d);
+            auto dst_array = dst_dat->getView<3>(d);
+
+            hier::parallel_for_all(dest_box, [=] SAMRAI_HOST_DEVICE(int i /*fastest*/, int j, int k) {
+               const double oldfrac = 1.0 - tfrac;
+               dst_array(i, j, k) = old_array(i, j, k) * oldfrac + new_array(i, j, k) * tfrac;
+            });
+#else
             SAMRAI_F77_FUNC(lintimeintnodedoub3d, LINTIMEINTNODEDOUB3D) (
                ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
@@ -176,6 +198,7 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(d),
                new_dat->getPointer(d),
                dst_dat->getPointer(d));
+#endif
          } else {
             TBOX_ERROR(
                "NodeDoubleLinearTimeInterpolateOp::TimeInterpolate dim > 3 not supported"
@@ -185,5 +208,5 @@ NodeDoubleLinearTimeInterpolateOp::timeInterpolate(
    }
 }
 
-}
-}
+}  // namespace pdat
+}  // namespace SAMRAI

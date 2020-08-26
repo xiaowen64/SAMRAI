@@ -61,7 +61,7 @@ CellMultiblockTest {
    //    Optional input:  depth              (default = 1)
    //                     src_ghosts         (default = 0,0,0)
    //                     dst_ghosts         (default = 0,0,0)
-   //                     refine_operator    (default = "NO_REFINE")
+   //                     refine_operator    (default = "CONSTANT_REFINE")
    //
    VariableData {
 

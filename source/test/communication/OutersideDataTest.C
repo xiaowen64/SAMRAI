@@ -155,13 +155,13 @@ void OutersideDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
-         new pdat::OutersideVariable<double>(
+         new pdat::OutersideVariable<OUTERSIDE_KERNEL_TYPE>(
             d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
       if (i % 2 == 0) {
          d_variables_dst[i].reset(
-            new pdat::SideVariable<double>(
+            new pdat::SideVariable<OUTERSIDE_KERNEL_TYPE>(
                d_dim,
                d_variable_dst_name[i],
                hier::IntVector::getOne(d_dim),
@@ -169,7 +169,7 @@ void OutersideDataTest::registerVariables(
                d_use_fine_value_at_interface[i]));
       } else {
          d_variables_dst[i].reset(
-            new pdat::OutersideVariable<double>(
+            new pdat::OutersideVariable<OUTERSIDE_KERNEL_TYPE>(
                d_dim,
                d_variable_dst_name[i],
                d_variable_depth[i]));
@@ -217,11 +217,11 @@ void OutersideDataTest::initializeDataOnPatch(
 
          TBOX_ASSERT(data);
 
-         std::shared_ptr<pdat::OutersideData<double> > oside_data(
-            std::dynamic_pointer_cast<pdat::OutersideData<double>,
+         std::shared_ptr<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE> > oside_data(
+            std::dynamic_pointer_cast<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
-         std::shared_ptr<pdat::SideData<double> > side_data(
-            std::dynamic_pointer_cast<pdat::SideData<double>,
+         std::shared_ptr<pdat::SideData<OUTERSIDE_KERNEL_TYPE> > side_data(
+            std::dynamic_pointer_cast<pdat::SideData<OUTERSIDE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
@@ -244,11 +244,11 @@ void OutersideDataTest::initializeDataOnPatch(
 
          TBOX_ASSERT(data);
 
-         std::shared_ptr<pdat::OutersideData<double> > oside_data(
-            std::dynamic_pointer_cast<pdat::OutersideData<double>,
+         std::shared_ptr<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE> > oside_data(
+            std::dynamic_pointer_cast<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
-         std::shared_ptr<pdat::SideData<double> > side_data(
-            std::dynamic_pointer_cast<pdat::SideData<double>,
+         std::shared_ptr<pdat::SideData<OUTERSIDE_KERNEL_TYPE> > side_data(
+            std::dynamic_pointer_cast<pdat::SideData<OUTERSIDE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
@@ -266,7 +266,7 @@ void OutersideDataTest::initializeDataOnPatch(
 }
 
 void OutersideDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::OutersideData<double> >& data,
+   const std::shared_ptr<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
@@ -310,11 +310,11 @@ void OutersideDataTest::checkPatchInteriorData(
             }
          }
 
-         double value;
+         OUTERSIDE_KERNEL_TYPE value;
          for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
 
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(*si,
+            if (!(tbox::MathUtilities<OUTERSIDE_KERNEL_TYPE>::equalEps((*data)(*si,
                                                                 d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled"
                           << std::endl;
@@ -337,7 +337,7 @@ void OutersideDataTest::setPhysicalBoundaryConditions(
 }
 
 void OutersideDataTest::setLinearData(
-   std::shared_ptr<pdat::SideData<double> > data,
+   std::shared_ptr<pdat::SideData<OUTERSIDE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -401,7 +401,7 @@ void OutersideDataTest::setLinearData(
 }
 
 void OutersideDataTest::setLinearData(
-   std::shared_ptr<pdat::OutersideData<double> > data,
+   std::shared_ptr<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -492,8 +492,8 @@ bool OutersideDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::SideData<double> > solution(
-         new pdat::SideData<double>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::SideData<OUTERSIDE_KERNEL_TYPE> > solution(
+         new pdat::SideData<OUTERSIDE_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
       tbox.grow(tgcw);
@@ -507,8 +507,8 @@ bool OutersideDataTest::verifyResults(
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
          if (i % 2 == 0) {
-            std::shared_ptr<pdat::SideData<double> > side_data(
-               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::SideData<OUTERSIDE_KERNEL_TYPE> > side_data(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<OUTERSIDE_KERNEL_TYPE>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(side_data);
             int depth = side_data->getDepth();
@@ -521,10 +521,10 @@ bool OutersideDataTest::verifyResults(
                   pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
                   for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
                        si != siend; ++si) {
-                     double correct = (*solution)(*si);
+                     OUTERSIDE_KERNEL_TYPE correct = (*solution)(*si);
                      for (int d = 0; d < depth; ++d) {
-                        double result = (*side_data)(*si, d);
-                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                        OUTERSIDE_KERNEL_TYPE result = (*side_data)(*si, d);
+                        if (!tbox::MathUtilities<OUTERSIDE_KERNEL_TYPE>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
                                       << " : side_data index = " << *si << std::endl;
@@ -540,8 +540,8 @@ bool OutersideDataTest::verifyResults(
                }
             }
          } else {
-            std::shared_ptr<pdat::OutersideData<double> > oside_data(
-               SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE> > oside_data(
+               SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<OUTERSIDE_KERNEL_TYPE>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(oside_data);
             int depth = oside_data->getDepth();
@@ -553,10 +553,10 @@ bool OutersideDataTest::verifyResults(
                hier::BoxIterator loend(dbox_lo.end());
                for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
                   pdat::SideIndex sndx(*si, id, 0);
-                  double correct = (*solution)(sndx);
+                  OUTERSIDE_KERNEL_TYPE correct = (*solution)(sndx);
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*oside_data)(sndx, 0, d);
-                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                     OUTERSIDE_KERNEL_TYPE result = (*oside_data)(sndx, 0, d);
+                     if (!tbox::MathUtilities<OUTERSIDE_KERNEL_TYPE>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
                                    << " : oside_data index = " << sndx << std::endl;
@@ -575,10 +575,10 @@ bool OutersideDataTest::verifyResults(
                hier::BoxIterator hiend(dbox_hi.end());
                for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
                   pdat::SideIndex sndx(*si, id, 1);
-                  double correct = (*solution)(sndx);
+                  OUTERSIDE_KERNEL_TYPE correct = (*solution)(sndx);
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*oside_data)(sndx, 1, d);
-                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                     OUTERSIDE_KERNEL_TYPE result = (*oside_data)(sndx, 1, d);
+                     if (!tbox::MathUtilities<OUTERSIDE_KERNEL_TYPE>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
                                    << " : oside_data index = " << sndx << std::endl;

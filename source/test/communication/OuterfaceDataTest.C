@@ -150,20 +150,20 @@ void OuterfaceDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
-         new pdat::OuterfaceVariable<double>(d_dim,
+         new pdat::OuterfaceVariable<OUTERFACE_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
       if (i % 2 == 0) {
          d_variables_dst[i].reset(
-            new pdat::FaceVariable<double>(
+            new pdat::FaceVariable<OUTERFACE_KERNEL_TYPE>(
                d_dim,
                d_variable_dst_name[i],
                d_variable_depth[i],
                d_use_fine_value_at_interface[i]));
       } else {
          d_variables_dst[i].reset(
-            new pdat::OuterfaceVariable<double>(
+            new pdat::OuterfaceVariable<OUTERFACE_KERNEL_TYPE>(
                d_dim,
                d_variable_dst_name[i],
                d_variable_depth[i]));
@@ -212,11 +212,11 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
          TBOX_ASSERT(data);
 
-         std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-            std::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+         std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> > oface_data(
+            std::dynamic_pointer_cast<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
-         std::shared_ptr<pdat::FaceData<double> > face_data(
-            std::dynamic_pointer_cast<pdat::FaceData<double>,
+         std::shared_ptr<pdat::FaceData<OUTERFACE_KERNEL_TYPE> > face_data(
+            std::dynamic_pointer_cast<pdat::FaceData<OUTERFACE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getBox();
@@ -239,11 +239,11 @@ void OuterfaceDataTest::initializeDataOnPatch(
 
          TBOX_ASSERT(data);
 
-         std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-            std::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+         std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> > oface_data(
+            std::dynamic_pointer_cast<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
-         std::shared_ptr<pdat::FaceData<double> > face_data(
-            std::dynamic_pointer_cast<pdat::FaceData<double>,
+         std::shared_ptr<pdat::FaceData<OUTERFACE_KERNEL_TYPE> > face_data(
+            std::dynamic_pointer_cast<pdat::FaceData<OUTERFACE_KERNEL_TYPE>,
                                         hier::PatchData>(data));
 
          hier::Box dbox = data->getGhostBox();
@@ -262,7 +262,7 @@ void OuterfaceDataTest::initializeDataOnPatch(
 }
 
 void OuterfaceDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::OuterfaceData<double> >& data,
+   const std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
@@ -312,10 +312,10 @@ void OuterfaceDataTest::checkPatchInteriorData(
             }
          }
 
-         double value;
+         OUTERFACE_KERNEL_TYPE value;
          for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(*fi,
+            if (!(tbox::MathUtilities<OUTERFACE_KERNEL_TYPE>::equalEps((*data)(*fi,
                                                                 d), value))) {
                tbox::perr << "FAILED: -- patch interior not properly filled"
                           << std::endl;
@@ -336,7 +336,7 @@ void OuterfaceDataTest::setPhysicalBoundaryConditions(
 }
 
 void OuterfaceDataTest::setLinearData(
-   std::shared_ptr<pdat::FaceData<double> > data,
+   std::shared_ptr<pdat::FaceData<OUTERFACE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -403,7 +403,7 @@ void OuterfaceDataTest::setLinearData(
 }
 
 void OuterfaceDataTest::setLinearData(
-   std::shared_ptr<pdat::OuterfaceData<double> > data,
+   std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -499,8 +499,8 @@ bool OuterfaceDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::FaceData<double> > solution(
-         new pdat::FaceData<double>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::FaceData<OUTERFACE_KERNEL_TYPE> > solution(
+         new pdat::FaceData<OUTERFACE_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
       tbox.grow(tgcw);
@@ -514,8 +514,8 @@ bool OuterfaceDataTest::verifyResults(
       for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
          if (i % 2 == 0) {
-            std::shared_ptr<pdat::FaceData<double> > face_data(
-               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::FaceData<OUTERFACE_KERNEL_TYPE> > face_data(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<OUTERFACE_KERNEL_TYPE>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(face_data);
             int depth = face_data->getDepth();
@@ -525,10 +525,10 @@ bool OuterfaceDataTest::verifyResults(
                pdat::FaceIterator fiend(pdat::FaceGeometry::end(dbox, id));
                for (pdat::FaceIterator fi(pdat::FaceGeometry::begin(dbox, id));
                     fi != fiend; ++fi) {
-                  double correct = (*solution)(*fi);
+                  OUTERFACE_KERNEL_TYPE correct = (*solution)(*fi);
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*face_data)(*fi, d);
-                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                     OUTERFACE_KERNEL_TYPE result = (*face_data)(*fi, d);
+                     if (!tbox::MathUtilities<OUTERFACE_KERNEL_TYPE>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
                                    << " : face_data index = " << *fi << std::endl;
@@ -543,8 +543,8 @@ bool OuterfaceDataTest::verifyResults(
                }
             }
          } else {
-            std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-               SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE> > oface_data(
+               SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<OUTERFACE_KERNEL_TYPE>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(oface_data);
             int depth = oface_data->getDepth();
@@ -556,10 +556,10 @@ bool OuterfaceDataTest::verifyResults(
                hier::BoxIterator loend(dbox_lo.end());
                for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
                   pdat::FaceIndex fndx(*si, id, 0);
-                  double correct = (*solution)(fndx);
+                  OUTERFACE_KERNEL_TYPE correct = (*solution)(fndx);
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*oface_data)(fndx, 0, d);
-                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                     OUTERFACE_KERNEL_TYPE result = (*oface_data)(fndx, 0, d);
+                     if (!tbox::MathUtilities<OUTERFACE_KERNEL_TYPE>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
                                    << " : oface_data index = " << fndx << std::endl;
@@ -578,10 +578,10 @@ bool OuterfaceDataTest::verifyResults(
                hier::BoxIterator hiend(dbox_hi.end());
                for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
                   pdat::FaceIndex fndx(*si, id, 1);
-                  double correct = (*solution)(fndx);
+                  OUTERFACE_KERNEL_TYPE correct = (*solution)(fndx);
                   for (int d = 0; d < depth; ++d) {
-                     double result = (*oface_data)(fndx, 1, d);
-                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                     OUTERFACE_KERNEL_TYPE result = (*oface_data)(fndx, 1, d);
+                     if (!tbox::MathUtilities<OUTERFACE_KERNEL_TYPE>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
                                    << " : oface_data index = " << fndx << std::endl;

@@ -198,24 +198,39 @@ Compilers:
 
   -DCMAKE_CXX_COMPILER=[C++ compiler]
   -DCMAKE_Fortran_COMPILER=[Fortran compiler]
+  -DCMAKE_CUDA_COMPILER=[CUDA compiler] (optional)
+
+In order to compile with CUDA, you must also add -DENABLE_CUDA=On to the
+CMake line.
 
 Libraries:
 
-Setting the optional third-party libraries follows a straightforward pattern.
+Setting most optional third-party libraries follows a straightforward pattern.
 
- -DHDF5_DIR=[HDF5 directory location]
- -DHYPRE_DIR=[HYPRE directory location]
- -DPETSC_DIR=[PESTC directory location]
- -DSILO_DIR=[SILO directory location]
- -DSUNDIALS_DIR=[Sundials directory location]
- -DCONDUIT_DIR=[Conduit directory location]
+ -DHDF5_DIR=[HDF5 installation location]
+ -DHYPRE_DIR=[HYPRE installation location]
+ -DPETSC_DIR=[PESTC installation location]
+ -DSILO_DIR=[SILO installation location]
+ -DSUNDIALS_DIR=[Sundials installation location]
+ -DCONDUIT_DIR=[Conduit installation location]
 
 HDF5 is the only one of these that is included by default.  CMake usually will
 be able to find an HDF5 installation without one being specified on the
 command line, but this option allows you to point explicitly to an
 installation.
 
-These libraries can also be explicitly excluded using
+Setting Umpire and RAJA requires slightly different usage, due to how these
+libraries have been set up to have their installations interact with CMake.
+Note the lower-case characters in the "umpire_DIR" symbol.  
+
+ -Dumpire_DIR=[Umpire installation location]/share/umpire/cmake
+ -DRAJA_DIR=[RAJA installation location]/share/umpire/cmake
+
+SAMRAI's current usage of RAJA depends on Umpire, so a configuration with
+RAJA but without Umpire will exit with an error.  A configuration with Umpire
+but without RAJA is allowed.
+
+All of these libraries can also be explicitly excluded using
 
  -DENABLE_HDF5=OFF
  -DENABLE_HYPRE=OFF
@@ -223,6 +238,8 @@ These libraries can also be explicitly excluded using
  -DENABLE_SILO=OFF
  -DENABLE_SUNDIALS=OFF
  -DENABLE_CONDUIT=OFF
+ -DENABLE_UMPIRE=OFF
+ -DENABLE_RAJA=OFF
 
 Build options:
 
@@ -278,6 +295,10 @@ VisIt		3.1.1
 doxygen	        1.6.1
 
 graphviz	2.26
+
+Umpire          2.1.0
+
+RAJA            0.11.0
 
 
 Visualization Tools:

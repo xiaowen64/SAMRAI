@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/NVTXUtilities.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -1080,6 +1081,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       }
       // "true" argument: bool first_step = true;
       // "false" argument: bool last_step = false;
+      RANGE_PUSH("advanceLevel", 1);
       double dt_next_level =
          d_refine_level_integrator->advanceLevel(patch_level,
             d_patch_hierarchy,
@@ -1087,6 +1089,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
             d_integrator_time + dt,
             true,
             false);
+      RANGE_POP;
 
       if (level_num == 0) {
          d_level_0_advanced = true;
@@ -1143,6 +1146,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
     */
    bool regrid_now = (d_step_level[0] % d_regrid_interval[0] == 0);
 
+   RANGE_PUSH("regrid", 1);
    if (!regrid_now) {
 
       /*
@@ -1267,7 +1271,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       }
 
    }
-
+   RANGE_POP;
    return dt_new;
 }
 

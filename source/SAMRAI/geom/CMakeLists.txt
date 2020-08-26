@@ -1,4 +1,5 @@
 set (geom_headers
+        CartesianCellConservativeLinearRefine.h
         CartesianCellComplexConservativeLinearRefine.h
         CartesianCellComplexLinearRefine.h
         CartesianCellComplexWeightedAverage.h
@@ -35,6 +36,7 @@ set (geom_headers
         GridGeometry.h)
 
 set (geom_sources
+  CartesianCellConservativeLinearRefine.C
   CartesianCellComplexConservativeLinearRefine.C
   CartesianCellComplexLinearRefine.C
   CartesianCellComplexWeightedAverage.C
@@ -77,10 +79,14 @@ set (geom_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/geom_cartrefine2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/geom_cartrefine3d.f)
 
-set (geom_depends_on
+set (geom_depends
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_tbox)
+
+if (ENABLE_CUDA)
+  set(geom_depends ${geom_depends} cuda)
+endif ()
 
 process_m4(NAME fortran/geom_cartcoarsen1d)
 process_m4(NAME fortran/geom_cartcoarsen2d)
@@ -94,7 +100,7 @@ blt_add_library(
   NAME SAMRAI_geom
   SOURCES ${geom_sources}
   HEADERS ${geom_headers}
-  DEPENDS_ON ${geom_depends_on})
+  DEPENDS_ON ${geom_depends})
 
 set_target_properties(SAMRAI_geom PROPERTIES LINKER_LANGUAGE CXX)
 

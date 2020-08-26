@@ -7,20 +7,22 @@ set (patchbdrysum_sources
 process_m4(NAME fortran/edgeops2d)
 process_m4(NAME fortran/edgeops3d)
 
-set (patchbdrysum_depends_on
-    SAMRAI_hier
-    SAMRAI_mesh
-    SAMRAI_geom
-    SAMRAI_pdat
-    SAMRAI_algs
-    SAMRAI_appu
-    SAMRAI_tbox)
+set(patchbdrysum_depends  ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(patchbdrysum_depends ${patchbdrysum_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(patchbdrysum_depends ${patchbdrysum_depends} cuda)
+endif ()
 
 blt_add_executable(
   NAME patchbdrysum-test
   SOURCES ${patchbdrysum_sources}
   DEPENDS_ON
-    ${patchbdrysum_depends_on})
+    ${patchbdrysum_depends})
 
 target_compile_definitions(patchbdrysum-test PUBLIC TESTING=1)
 

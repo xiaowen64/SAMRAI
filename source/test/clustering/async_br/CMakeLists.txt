@@ -2,15 +2,22 @@ set ( async_br_sources
   main.C
   ABRTest.C)
 
+set(async_br_depends testlib)
+set(async_br_depends ${async_br_depends} ${SAMRAI_LIBRARIES})
+
+# TODO CMake should resolve this dependency for us...
+if (ENABLE_OPENMP)
+  set(async_br_depends ${async_br_depends} openmp)
+endif ()
+
+if (ENABLE_CUDA)
+  set(async_br_depends ${async_br_depends} cuda)
+endif ()
+
 blt_add_executable(
   NAME async_br
   SOURCES ${async_br_sources}
-  DEPENDS_ON
-    testlib
-    SAMRAI_appu
-    SAMRAI_geom
-    SAMRAI_mesh
-    SAMRAI_tbox)
+  DEPENDS_ON ${async_br_depends})
 
 target_include_directories( async_br
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/clustering/async_br)

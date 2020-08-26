@@ -10,7 +10,31 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "QuarticFcn.h"
+//#include IOSTREAM_HEADER_FILE
+
 #include <iostream>
+#include <iomanip>
+#include <fstream>
+
+#ifndef LACKS_SSTREAM
+#ifndef included_sstream
+#define included_sstream
+#include <sstream>
+#endif
+#else
+#ifndef included_strstream
+#define included_strstream
+#include <strstream.h>
+#endif
+#endif
+
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include <float.h>
+
+
 #include "SAMRAI/tbox/Utilities.h"
 
 /*

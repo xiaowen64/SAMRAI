@@ -42,7 +42,7 @@ class OuteredgeDataFactory:public hier::PatchDataFactory
 public:
    /*!
     * @brief
-    * The default constructor for the outeredge data factory class.
+    * The constructor for the outeredge data factory class.
     *
     * The depth (number of components) gives the default for all of
     * the outeredge data objects created with this factory.
@@ -52,6 +52,23 @@ public:
    OuteredgeDataFactory(
       const tbox::Dimension& dim,
       int depth);
+
+#if defined(HAVE_UMPIRE)
+   /*!
+    * The constructor for the outeredge data factory class.
+    * The depth (number of components) sets the default for all of
+    * the outeredge data objects created with this factory.
+    *
+    * This constructor sets an Umpire allocator for the memory management
+    * of the data held within outeredge data objects.
+    *
+    * @pre depth > 0
+    */
+   OuteredgeDataFactory(
+      const tbox::Dimension& dim,
+      int depth,
+      umpire::Allocator allocator);
+#endif
 
    /*!
     * @brief
@@ -151,6 +168,10 @@ public:
 private:
    int d_depth;
    hier::IntVector d_no_ghosts;
+#if defined(HAVE_UMPIRE)
+   umpire::Allocator d_allocator;
+   bool d_has_allocator;
+#endif
 
 };
 

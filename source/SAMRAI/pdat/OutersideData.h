@@ -126,6 +126,28 @@ public:
       const hier::Box& box,
       int depth);
 
+#if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Constructor for an outerside data object.
+    *
+    * Note: Outerside data always has ghost cell width of zero.
+    *
+    * @param box const Box reference describing the interior of the
+    *            standard CELL-centered index box over which the
+    *            outerside data object will be created.
+    * @param depth gives the number of data values for each
+    *              spatial location in the array.
+    * @param allocator An Umpire allocator to manage the allocation of the
+    *                  underlying data.
+    *
+    * @pre depth > 0
+    */
+   OutersideData(
+      const hier::Box& box,
+      int depth,
+      umpire::Allocator allocator);
+#endif
+   
    /*!
     * @brief Virtual destructor for a outerside data object.
     */
@@ -177,6 +199,26 @@ public:
       int side_normal,
       int side,
       int depth = 0) const;
+
+#if defined(HAVE_RAJA)
+   template <int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template <int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   View<DIM> getView(int side_normal, int side, int depth = 0);
+
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   ConstView<DIM> getConstView(int side_normal, int side, int depth = 0) const;
+#endif
 
    /*!
     * @brief Return a reference to data entry corresponding
@@ -572,6 +614,18 @@ private:
 
    std::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL][2];
 };
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template View<DIM> get_view(OutersideData<TYPE>& data,
+                                                     Args&&... args);
+
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template ConstView<DIM> get_const_view(
+    const OutersideData<TYPE>& data,
+    Args&&... args);
+#endif
+
 
 }
 }

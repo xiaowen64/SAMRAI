@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.1)
 
 project(SAMRAI C CXX Fortran)
 
-set(SAMRAI_VERSION_MAJOR 3)
-set(SAMRAI_VERSION_MINOR 15)
-set(SAMRAI_VERSION_PATCHLEVEL 0)
+set(SAMRAI_VERSION_MAJOR 4)
+set(SAMRAI_VERSION_MINOR 0)
+set(SAMRAI_VERSION_PATCHLEVEL 1)
 set(SAMRAI_VERSION
   "${SAMRAI_VERSION_MAJOR}.${SAMRAI_VERSION_MINOR}.${SAMRAI_VERSION_PATCHLEVEL}")
+
 
 #------------------------------------------------------------------------------
 # Initialize BLT build system
@@ -33,13 +34,19 @@ endif()
 
 # BLT Options need to be set in the CACHE
 set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
-set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
+set(ENABLE_OPENMP Off CACHE Bool "Enable OpenMP")
+set(ENABLE_CUDA Off CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
 set(ENABLE_TESTS On CACHE Bool "Enable Tests.")
 set(ENABLE_DOCS Off CACHE Bool "Enable Docs.")
 set(BLT_CXX_STD "c++11" CACHE STRING "Version of C++ standard")
+set(gtest_disable_pthreads ON CACHE BOOL "")
+
+message(STATUS "Enable Test Flag Top: ${ENABLE_TESTS} " )
 
 # Third party libraries
+option(ENABLE_UMPIRE "Enable UMPIRE memory management" Off)
+option(ENABLE_RAJA "Enable RAJA" Off)
 option(ENABLE_CONDUIT "Enable CONDUIT" Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
@@ -48,7 +55,10 @@ option(ENABLE_SILO "Enable Silo" Off)
 option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
 
 # SAMRAI options
-option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)
+option(ENABLE_SAMRAI_TESTS "Enable SAMRAI Test Programs" On)
+option(ENABLE_PERF_TESTS "Enable Performance Tests." On)
+set(NUM_PERF_PROCS 8 CACHE INT "Number of processors for performance tests.")
+option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." On)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)
 option(ENABLE_BOX_COUNTING "Turns on box telemetry." Off)
@@ -57,7 +67,11 @@ option(ENABLE_TIMERS "Enable SAMRAI timers." On)
 option(ENABLE_TOOLS "Turns on building of executable tools." Off)
 option(DEBUG_INITIALIZE_UNDEFINED "Initialize new memory to undefined values" Off)
 set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
+option(ENABLE_NVTX_REGIONS "Enable NVTX regions with push/pop for NVVP." Off)
+set(CUDA_ARCH "sm_70" CACHE STRING "Compute architecture to pass to CUDA builds")
+set(CMAKE_CUDA_FLAGS "" CACHE STRING "")
 set(CMAKE_INSTALL_LIBDIR lib)
+#set(CMAKE_INSTALL_RPATH_USE_LINK_PATH Off CACHE Bool "Rpath uses Link path")
 
 include(GNUInstallDirs)
 
@@ -67,8 +81,11 @@ include_directories(${CMAKE_BINARY_DIR}/include)
 
 include(cmake/CMakeBasics.cmake)
 
-add_subdirectory(source)
+set(SAMRAI_LIBRARIES SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
+    SAMRAI_math SAMRAI_mesh SAMRAI_pdat SAMRAI_solv SAMRAI_tbox
+    SAMRAI_xfer)
 
+add_subdirectory(source)
 if (ENABLE_TOOLS)
   add_subdirectory(tools)
 endif()
@@ -77,12 +94,8 @@ if (ENABLE_DOCS)
   add_subdirectory(docs)
 endif()
 
-export(TARGETS SAMRAI_algs SAMRAI_appu SAMRAI_geom SAMRAI_hier
-  SAMRAI_math SAMRAI_mesh SAMRAI_pdat SAMRAI_solv SAMRAI_tbox
-  SAMRAI_xfer
-  FILE ${CMAKE_CURRENT_BINARY_DIR}/SAMRAITargets.cmake
-  )
-
+export(TARGETS ${SAMRAI_LIBRARIES}
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/SAMRAITargets.cmake)
 
 set(SAMRAI_MODULE "share/SAMRAI/cmake")
 file(RELATIVE_PATH REL_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}" "${CMAKE_INSTALL_PREFIX}/include")

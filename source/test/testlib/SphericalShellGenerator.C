@@ -289,6 +289,10 @@ void SphericalShellGenerator::computeShellsData(
 
       hier::Box fbox = tag_data->getGhostBox() * fill_box;
       tag_data->getArrayData().fill(0, fill_box);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
+
 
       pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));
@@ -319,6 +323,10 @@ void SphericalShellGenerator::computeShellsData(
    if (uval_data != 0) {
       hier::Box fbox = uval_data->getGhostBox() * fill_box;
       uval_data->fill(static_cast<double>(d_radii.size()), fbox);
+
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(fbox));
       for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(fbox));

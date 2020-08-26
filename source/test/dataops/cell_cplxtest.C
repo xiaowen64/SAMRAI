@@ -268,6 +268,9 @@ int main(
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
+#if defined(HAVE_CUDA)
+            cudaDeviceSynchronize();
+#endif
          }
       }
 
@@ -341,6 +344,9 @@ int main(
       // Test #1b: math::HierarchyCellDataOpsComplex::sumControlVolumes()
       // Expected: norm = 0.5
       double norm = cell_ops->sumControlVolumes(cvindx[0], cwgt_id);
+#if defined(HAVE_CUDA)
+            cudaDeviceSynchronize();
+#endif
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
          ++num_failures;
          tbox::perr
@@ -374,6 +380,9 @@ int main(
       // Expected: v0 = (2.0,1.5)
       dcomplex val0 = dcomplex(2.0, 1.5);
       cell_ops->setToScalar(cvindx[0], val0);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!complexDataSameAsValue(cvindx[0], val0, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -386,6 +395,9 @@ int main(
       // Expected: v1 = (4.0,3.0)
       dcomplex val1(4.0, 3.0);
       cell_ops->setToScalar(cvindx[1], val1);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!complexDataSameAsValue(cvindx[1], val1, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -397,6 +409,9 @@ int main(
       // Test #4: math::HierarchyCellDataOpsComplex::copyData()
       // Expected: v2 = v1 = (4.0, 3.0)
       cell_ops->copyData(cvindx[2], cvindx[1]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!complexDataSameAsValue(cvindx[2], val1, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -408,6 +423,9 @@ int main(
       // Test #5: math::HierarchyCellDataOpsComplex::swapData()
       // Expected: v0 = (4.0, 3.0), v1 = (2.0,1.5)
       cell_ops->swapData(cvindx[0], cvindx[1]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!complexDataSameAsValue(cvindx[0], val1, hierarchy)) {
          ++num_failures;
          tbox::perr
@@ -426,6 +444,9 @@ int main(
       // Test #6: math::HierarchyCellDataOpsComplex::scale()
       // Expected: v2 = 0.25 * v2 = (1.0,0.75)
       cell_ops->scale(cvindx[2], 0.25, cvindx[2]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_scale(1.0, 0.75);
       if (!complexDataSameAsValue(cvindx[2], val_scale, hierarchy)) {
          ++num_failures;
@@ -438,6 +459,9 @@ int main(
       // Test #7: math::HierarchyCellDataOpsComplex::add()
       // Expected: v3 = v0 + v1 = (6.0, 4.5)
       cell_ops->add(cvindx[3], cvindx[0], cvindx[1]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_add(6.0, 4.5);
       if (!complexDataSameAsValue(cvindx[3], val_add, hierarchy)) {
          ++num_failures;
@@ -449,10 +473,16 @@ int main(
 
       // Reset v0:  v0 = (0.0,4.5)
       cell_ops->setToScalar(cvindx[0], dcomplex(0.0, 4.5));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       // Test #8: math::HierarchyCellDataOpsComplex::subtract()
       // Expected: v1 = v3 - v0 = (6.0,0.0)
       cell_ops->subtract(cvindx[1], cvindx[3], cvindx[0]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_sub(6.0, 0.0);
       if (!complexDataSameAsValue(cvindx[1], val_sub, hierarchy)) {
          ++num_failures;
@@ -465,6 +495,9 @@ int main(
       // Test #9a: math::HierarchyCellDataOpsComplex::addScalar()
       // Expected: v1 = v1 + (0.0,-4.0) = (6.0,-4.0)
       cell_ops->addScalar(cvindx[1], cvindx[1], dcomplex(0.0, -4.0));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_addScalar(6.0, -4.0);
       if (!complexDataSameAsValue(cvindx[1], val_addScalar, hierarchy)) {
          ++num_failures;
@@ -477,6 +510,9 @@ int main(
       // Test #9b: math::HierarchyCellDataOpsComplex::addScalar()
       // Expected:   v2 = v2 + (0.0,0.25) = (1.0,1.0)
       cell_ops->addScalar(cvindx[2], cvindx[2], dcomplex(0.0, 0.25));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       val_addScalar = dcomplex(1.0, 1.0);
       if (!complexDataSameAsValue(cvindx[2], val_addScalar, hierarchy)) {
          ++num_failures;
@@ -489,6 +525,9 @@ int main(
       // Test #9c: math::HierarchyCellDataOpsComplex::addScalar()
       // Expected:  v2 = v2 + (3.0,-4.0) = (4.0,-3.0)
       cell_ops->addScalar(cvindx[2], cvindx[2], dcomplex(3.0, -4.0));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       val_addScalar = dcomplex(4.0, -3.0);
       if (!complexDataSameAsValue(cvindx[2], val_addScalar, hierarchy)) {
          ++num_failures;
@@ -500,10 +539,16 @@ int main(
 
       // Reset v3: v3 = (0.5, 0.0)
       cell_ops->setToScalar(cvindx[3], dcomplex(0.5, 0.0));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       // Test #10: math::HierarchyCellDataOpsComplex::multiply()
       // Expected:  v1 = v3 * v1 = (3.0,-2.0)
       cell_ops->multiply(cvindx[1], cvindx[3], cvindx[1]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_mult(3.0, -2.0);
       if (!complexDataSameAsValue(cvindx[1], val_mult, hierarchy)) {
          ++num_failures;
@@ -516,6 +561,9 @@ int main(
       // Test #11: math::HierarchyCellDataOpsComplex::divide()
       // Expected:  v0 = v2 / v1 = (1.3846153846154,-0.076923076923077)
       cell_ops->divide(cvindx[0], cvindx[2], cvindx[1]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_div(1.3846153846154, -0.076923076923077);
       if (!complexDataSameAsValue(cvindx[0], val_div, hierarchy)) {
          ++num_failures;
@@ -528,6 +576,9 @@ int main(
       // Test #12: math::HierarchyCellDataOpsComplex::reciprocal()
       // Expected:  v1 = 1 / v1 = (0.23076923076923, 0.15384615384615)
       cell_ops->reciprocal(cvindx[1], cvindx[1]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_rec(0.23076923076923, 0.15384615384615);
       if (!complexDataSameAsValue(cvindx[1], val_rec, hierarchy)) {
          ++num_failures;
@@ -612,6 +663,9 @@ int main(
       // Test #14: math::HierarchyCellDataOpsComplex::L1Norm() - w/o control weight
       // Expected:  bogus_l1_norm = 1552.00337888 in 2d, 4402.00337888 in 3d.
       double bogus_l1_norm = cell_ops->L1Norm(cvindx[2]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       {
          double compare;
@@ -634,6 +688,9 @@ int main(
       // Test #15: math::HierarchyCellDataOpsComplex::L1Norm() - w/control weight
       // Expected:  correct_l1_norm = 2.5
       double correct_l1_norm = cell_ops->L1Norm(cvindx[2], cwgt_id);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!tbox::MathUtilities<double>::equalEps(correct_l1_norm, 2.5)) {
          ++num_failures;
          tbox::perr
@@ -646,6 +703,9 @@ int main(
       // Test #16: math::HierarchyCellDataOpsComplex::L2Norm()
       // Expected:  l2_norm = 3.53553390593
       double l2_norm = cell_ops->L2Norm(cvindx[2], cwgt_id);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!tbox::MathUtilities<double>::equalEps(l2_norm, 3.53553390593)) {
          ++num_failures;
          tbox::perr
@@ -657,6 +717,9 @@ int main(
       // Test #17: math::HierarchyCellDataOpsComplex::maxNorm() - w/o control weight
       // Expected:  bogus_max_norm = 1000.19998
       double bogus_max_norm = cell_ops->maxNorm(cvindx[2]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!tbox::MathUtilities<double>::equalEps(bogus_max_norm, 1000.19998)) {
          ++num_failures;
          tbox::perr
@@ -669,6 +732,9 @@ int main(
       // Test #18: math::HierarchyCellDataOpsComplex::maxNorm() - w/control weight
       // Expected:  max_norm = 5.0
       double max_norm = cell_ops->maxNorm(cvindx[2], cwgt_id);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!tbox::MathUtilities<double>::equalEps(max_norm, 5.0)) {
          ++num_failures;
          tbox::perr
@@ -682,11 +748,17 @@ int main(
       cell_ops->setToScalar(cvindx[0], dcomplex(1.0, -3.0));
       cell_ops->setToScalar(cvindx[1], dcomplex(2.5, 3.0));
       cell_ops->setToScalar(cvindx[2], dcomplex(7.0, 0.0));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
 
       // Test #19: math::HierarchyCellDataOpsComplex::linearSum()
       // Expected:  v3 = (2.0,5.0)
       cell_ops->linearSum(cvindx[3],
          dcomplex(2.0, 0.0), cvindx[1], dcomplex(0.0, -1.0), cvindx[0]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_linearSum(2.0, 5.0);
       if (!complexDataSameAsValue(cvindx[3], val_linearSum, hierarchy)) {
          ++num_failures;
@@ -699,6 +771,9 @@ int main(
       // Test #20: math::HierarchyCellDataOpsComplex::axmy()
       // Expected:  v3 = (6.5,12.0)
       cell_ops->axmy(cvindx[3], 3.0, cvindx[1], cvindx[0]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex val_axmy(6.5, 12.0);
       if (!complexDataSameAsValue(cvindx[3], val_axmy, hierarchy)) {
          ++num_failures;
@@ -711,6 +786,9 @@ int main(
       // Test #21a: math::HierarchyCellDataOpsComplex::dot()
       // Expected:  cdot = (8.75,-10.5)
       dcomplex cdot = cell_ops->dot(cvindx[2], cvindx[1], cwgt_id);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex ans_2_dot_1(8.75, -10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot, ans_2_dot_1)) {
          ++num_failures;
@@ -723,6 +801,9 @@ int main(
       // Test #21b: math::HierarchyCellDataOpsComplex::dot()
       // Expected:  cdot = (8.75,10.5)
       dcomplex cdot2 = cell_ops->dot(cvindx[1], cvindx[2], cwgt_id);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       dcomplex ans_1_dot_2(8.75, 10.5);
       if (!tbox::MathUtilities<dcomplex>::equalEps(cdot2, ans_1_dot_2)) {
          ++num_failures;
@@ -735,7 +816,13 @@ int main(
       // Test #22: math::HierarchyCellDataOpsComplex::abs()
       // Expected:  abs(v0) = 5.0
       cell_ops->setToScalar(cvindx[0], dcomplex(4.0, -3.0));
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       cell_ops->abs(cwgt_id, cvindx[0]);
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       if (!doubleDataSameAsValue(cwgt_id, 5.0, hierarchy)) {
          ++num_failures;
          tbox::perr

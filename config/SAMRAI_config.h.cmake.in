@@ -3,6 +3,7 @@
 
 #include "SAMRAI/FC.h"
 
+
 #define SAMRAI_VERSION_MAJOR @SAMRAI_VERSION_MAJOR@
 #define SAMRAI_VERSION_MINOR @SAMRAI_VERSION_MINOR@
 #define SAMRAI_VERSION_PATCHLEVEL @SAMRAI_VERSION_PATCHLEVEL@
@@ -59,9 +60,6 @@
 
 /* BLAS library is available so use it */
 #undef HAVE_BLAS
-
-/* BOOST headers are available to use */
-#undef HAVE_BOOST_HEADERS
 
 /* HAVE_CMATH */
 #cmakedefine HAVE_CMATH
@@ -130,7 +128,19 @@
 #undef HAVE_NEW_PLACEMENT_OPERATOR
 
 /* OPENMP is available */
-#undef HAVE_OPENMP
+#cmakedefine HAVE_OPENMP
+
+/* Compiling with NVCC for CUDA */
+#cmakedefine HAVE_CUDA
+
+/* Add NVTX regions */
+#cmakedefine ENABLE_NVTX_REGIONS
+
+/* Use RAJA for loop abstractions */
+#cmakedefine HAVE_RAJA
+
+/* Use Umpire for memory management */
+#cmakedefine HAVE_UMPIRE
 
 /* PETSC library is available so use it */
 #cmakedefine HAVE_PETSC

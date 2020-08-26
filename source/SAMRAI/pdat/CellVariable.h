@@ -18,6 +18,10 @@
 
 #include <string>
 
+#if defined(HAVE_UMPIRE)
+#include "umpire/Allocator.hpp"
+#endif
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -48,6 +52,19 @@ public:
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1);
+
+#if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Create a cell-centered variable object with the given name,
+    * allocator, and depth (i.e., number of data values at each cell index
+    * location).  A default depth of one is provided.
+    */
+   CellVariable(
+      const tbox::Dimension& dim,
+      const std::string& name,
+      umpire::Allocator allocator,
+      int depth = 1);
+#endif
 
    /*!
     * @brief Virtual destructor for cell variable objects.

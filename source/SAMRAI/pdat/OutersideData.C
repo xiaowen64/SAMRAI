@@ -58,6 +58,31 @@ OutersideData<TYPE>::OutersideData(
    }
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+OutersideData<TYPE>::OutersideData(
+   const hier::Box& box,
+   int depth,
+   umpire::Allocator allocator):
+   hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
+   d_depth(depth)
+{
+
+   TBOX_ASSERT(depth > 0);
+
+   for (tbox::Dimension::dir_t d = 0; d < getDim().getValue(); ++d) {
+      const hier::Box& ghosts = getGhostBox();
+      const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
+      hier::Box outersidebox = sidebox;
+      outersidebox.setUpper(0, sidebox.lower(0));
+      d_data[d][0].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
+      outersidebox.setLower(0, sidebox.upper(0));
+      outersidebox.setUpper(0, sidebox.upper(0));
+      d_data[d][1].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
+   }
+}
+#endif
+
 template<class TYPE>
 OutersideData<TYPE>::~OutersideData()
 {
@@ -97,6 +122,119 @@ OutersideData<TYPE>::getPointer(
 
    return d_data[side_normal][side]->getPointer(depth);
 }
+
+
+#if defined(HAVE_RAJA)
+template <class TYPE>
+template <int DIM>
+typename OutersideData<TYPE>::template View<DIM> OutersideData<TYPE>::getView(
+    int side_normal,
+    int side,
+    int depth)
+{
+  const hier::Box& box = getGhostBox();
+  hier::Box outersidebox = box;
+  if(DIM < 3) { // we can get away with not transposing since the slices are 1d
+     if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side==1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+     } else if(side_normal == 1) {
+       if(side == 0 ) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }
+     } // else side_normal == 1
+  } else if(DIM == 3) {
+
+    if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side == 1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+    }
+    else if(side_normal == 1) {
+       if(side == 0) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }   
+    } else if(side_normal == 2) {
+       if(side == 0) {
+          outersidebox.setUpper(2, box.lower(2));
+       } else if (side == 1) {
+          outersidebox.setLower(2, box.upper(2));
+          outersidebox.setUpper(2, box.upper(2));
+       }
+    }
+    
+  } // if DIM == 3
+  return OutersideData<TYPE>::View<DIM>(getPointer(side_normal,side, depth), outersidebox);
+}
+
+template <class TYPE>
+template <int DIM>
+typename OutersideData<TYPE>::template ConstView<DIM> OutersideData<TYPE>::getConstView(
+    int side_normal,
+    int side,
+    int depth) const
+{
+  const hier::Box& box = getGhostBox();
+  hier::Box outersidebox = box;
+  if(DIM < 3) { // we can get away with not transposing since the slices are 1d
+     if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side==1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+     } else if(side_normal == 1) {
+       if(side == 0 ) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }
+     } // else side_normal == 1
+  } else if(DIM == 3) {
+
+    if(side_normal == 0) {
+       if(side == 0) {
+          outersidebox.setUpper(0, box.lower(0));
+       } else if (side == 1) {
+          outersidebox.setLower(0, box.upper(0));
+          outersidebox.setUpper(0, box.upper(0));
+       }
+    } else if(side_normal == 1) {
+       if(side == 0) {
+          outersidebox.setUpper(1, box.lower(1));
+       } else if (side == 1) {
+          outersidebox.setLower(1, box.upper(1));
+          outersidebox.setUpper(1, box.upper(1));
+       }   
+    } else if(side_normal == 2) {
+       if(side == 0) {
+          outersidebox.setUpper(2, box.lower(2));
+       } else if (side == 1) {
+          outersidebox.setLower(2, box.upper(2));
+          outersidebox.setUpper(2, box.upper(2));
+       }
+    }
+  } // if DIM == 3
+  return OutersideData<TYPE>::ConstView<DIM>(getPointer(side_normal, side, depth),
+                                        outersidebox);
+}
+#endif
+
 
 template<class TYPE>
 ArrayData<TYPE>&
@@ -693,6 +831,23 @@ OutersideData<TYPE>::putToRestart(
       d_data[i][1]->putToRestart(array_database);
    }
 }
+
+#if defined(HAVE_RAJA)
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template View<DIM> get_view(OutersideData<TYPE>& data,
+                                                     Args&&... args)
+{
+  return data.template getView<DIM>(std::forward<Args>(args)...);
+}
+
+template <int DIM, typename TYPE, typename... Args>
+typename OutersideData<TYPE>::template ConstView<DIM> get_const_view(
+    const OutersideData<TYPE>& data,
+    Args&&... args)
+{
+  return data.template getConstView<DIM>(std::forward<Args>(args)...);
+}
+#endif
 
 }
 }

@@ -21,6 +21,8 @@
 
 using namespace SAMRAI;
 
+using EDGE_MBLK_KERNEL_TYPE = double;
+
 EdgeMultiblockTest::EdgeMultiblockTest(
    const std::string& object_name,
    const tbox::Dimension& dim,
@@ -89,7 +91,7 @@ void EdgeMultiblockTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::EdgeVariable<double>(d_dim,
+         new pdat::EdgeVariable<EDGE_MBLK_KERNEL_TYPE>(d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
 
@@ -120,16 +122,19 @@ void EdgeMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
          hier::Box dbox = edge_data->getGhostBox();
 
-         edge_data->fillAll((double)block_id.getBlockValue());
+         edge_data->fillAll((EDGE_MBLK_KERNEL_TYPE)block_id.getBlockValue());
 
       }
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
    }
 }
 
@@ -174,8 +179,8 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE> > edge_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 
@@ -198,7 +203,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                   if (!patch_edge_box.contains(*ni)) {
                      for (int d = 0; d < edge_data->getDepth(); ++d) {
                         (*edge_data)(*ni, d) =
-                           (double)(node_bdry[nb].getLocationIndex() + 100);
+                           (EDGE_MBLK_KERNEL_TYPE)(node_bdry[nb].getLocationIndex() + 100);
                      }
                   }
                }
@@ -242,7 +247,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
                         if (use_index) {
                            for (int d = 0; d < edge_data->getDepth(); ++d) {
                               (*edge_data)(*ni, d) =
-                                 (double)(edge_bdry[eb].getLocationIndex()
+                                 (EDGE_MBLK_KERNEL_TYPE)(edge_bdry[eb].getLocationIndex()
                                           + 100);
                            }
                         }
@@ -289,7 +294,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
                         if (use_index) {
                            (*edge_data)(*ni) =
-                              (double)(face_bdry[fb].getLocationIndex() + 100);
+                              (EDGE_MBLK_KERNEL_TYPE)(face_bdry[fb].getLocationIndex() + 100);
                         }
                      }
                   }
@@ -318,8 +323,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE> > edge_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 
@@ -402,8 +407,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  std::shared_ptr<pdat::EdgeData<double> > sing_data(
-                     SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE> > sing_data(
+                     SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -507,7 +512,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                if (use_index) {
                   for (int d = 0; d < depth; ++d) {
                      (*edge_data)(*ci, d) =
-                        (double)bbox.getLocationIndex() + 200.0;
+                        (EDGE_MBLK_KERNEL_TYPE)bbox.getLocationIndex() + 200.0;
                   }
                }
             }
@@ -542,8 +547,8 @@ bool EdgeMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   std::shared_ptr<pdat::EdgeData<double> > solution(
-      new pdat::EdgeData<double>(pbox, 1, tgcw));
+   std::shared_ptr<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE> > solution(
+      new pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
@@ -563,10 +568,10 @@ bool EdgeMultiblockTest::verifyResults(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      double correct = (double)block_id.getBlockValue();
+      EDGE_MBLK_KERNEL_TYPE correct = (EDGE_MBLK_KERNEL_TYPE)block_id.getBlockValue();
 
-      std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE> > edge_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_MBLK_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
       int depth = edge_data->getDepth();
@@ -579,9 +584,9 @@ bool EdgeMultiblockTest::verifyResults(
          for (pdat::EdgeIterator ci(pdat::EdgeGeometry::begin(interior_box, axis));
               ci != ciend; ++ci) {
             for (int d = 0; d < depth; ++d) {
-               double result = (*edge_data)(*ci, d);
+               EDGE_MBLK_KERNEL_TYPE result = (*edge_data)(*ci, d);
 
-               if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
+               if (!tbox::MathUtilities<EDGE_MBLK_KERNEL_TYPE>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
                              << " : edge index = " << *ci << std::endl;
                   tbox::perr << "    Variable = " << d_variable_src_name[i]
@@ -649,9 +654,9 @@ bool EdgeMultiblockTest::verifyResults(
                   if (!patch_edge_box.contains(ei)) {
 
                      for (int d = 0; d < depth; ++d) {
-                        double result = (*edge_data)(ei, d);
+                        EDGE_MBLK_KERNEL_TYPE result = (*edge_data)(ei, d);
 
-                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                        if (!tbox::MathUtilities<EDGE_MBLK_KERNEL_TYPE>::equalEps(correct,
                                result)) {
                            tbox::perr << "Test FAILED: ...."
                                       << " : edge index = " << ei << std::endl;
@@ -705,16 +710,16 @@ bool EdgeMultiblockTest::verifyResults(
 
                if (num_sing_neighbors == 0) {
 
-                  correct = (double)bdry[k].getLocationIndex() + 200.0;
+                  correct = (EDGE_MBLK_KERNEL_TYPE)bdry[k].getLocationIndex() + 200.0;
 
                } else {
 
-                  correct /= (double)num_sing_neighbors;
+                  correct /= (EDGE_MBLK_KERNEL_TYPE)num_sing_neighbors;
 
                }
 
             } else {
-               correct = (double)(bdry[k].getLocationIndex() + 100);
+               correct = (EDGE_MBLK_KERNEL_TYPE)(bdry[k].getLocationIndex() + 100);
             }
 
             for (int axis = 0; axis < d_dim.getValue(); ++axis) {
@@ -741,9 +746,9 @@ bool EdgeMultiblockTest::verifyResults(
 
                      if (use_index) {
                         for (int d = 0; d < depth; ++d) {
-                           double result = (*edge_data)(*ci, d);
+                           EDGE_MBLK_KERNEL_TYPE result = (*edge_data)(*ci, d);
 
-                           if (!tbox::MathUtilities<double>::equalEps(correct,
+                           if (!tbox::MathUtilities<EDGE_MBLK_KERNEL_TYPE>::equalEps(correct,
                                   result)) {
                               tbox::perr << "Test FAILED: ...."
                                          << " : edge index = " << *ci << std::endl;

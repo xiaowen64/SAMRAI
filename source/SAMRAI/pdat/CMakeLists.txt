@@ -6,6 +6,8 @@ set (pdat_headers
   ArrayDataIterator.h
   ArrayDataOperationUtilities.C
   ArrayDataOperationUtilities.h
+  ArrayView.h
+  CellConstantRefine.h
   CellComplexConstantRefine.h
   CellComplexLinearTimeInterpolateOp.h
   CellData.C
@@ -201,6 +203,7 @@ set_source_files_properties(
 
 set (pdat_sources
   ArrayDataIterator.C
+  CellConstantRefine.C
   CellComplexConstantRefine.C
   CellComplexLinearTimeInterpolateOp.C
   CellDoubleConstantRefine.C
@@ -296,10 +299,18 @@ set (pdat_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/pdat_lintimint2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/pdat_lintimint3d.f)
 
-set (pdat_depends_on
+set (pdat_depends
   SAMRAI_hier
   SAMRAI_tbox
   SAMRAI_xfer)
+
+if (ENABLE_RAJA)
+  set(pdat_depends ${pdat_depends} raja)
+endif ()
+
+if (ENABLE_CUDA)
+  set(pdat_depends ${pdat_depends} cuda)
+endif ()
 
 process_m4(NAME fortran/pdat_concoarsen1d)
 process_m4(NAME fortran/pdat_concoarsen2d)
@@ -318,7 +329,7 @@ blt_add_library(
   NAME SAMRAI_pdat
   SOURCES ${pdat_sources}
   HEADERS ${pdat_headers}
-  DEPENDS_ON ${pdat_depends_on})
+  DEPENDS_ON ${pdat_depends})
 
 set_target_properties(SAMRAI_pdat PROPERTIES LINKER_LANGUAGE CXX)
 

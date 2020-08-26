@@ -12,7 +12,10 @@ simplifies the exploration of SAMR methods in new application domains.
 
 ## New Release
 
-The current release is SAMRAI v. 3.14.1.
+The current release is SAMRAI v. 4.0.1.  With the version 4 release, the
+SAMRAI project is pleased to introduce new features that support running
+applications on GPU-based architectures, using capabilities provided by the
+Umpire and RAJA libraries.
 
 ## Get Involved
 

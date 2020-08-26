@@ -160,7 +160,7 @@ void EdgeDataTest::registerVariables(
 
    for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
-         new pdat::EdgeVariable<double>(d_dim, d_variable_src_name[i],
+         new pdat::EdgeVariable<EDGE_KERNEL_TYPE>(d_dim, d_variable_src_name[i],
             d_variable_depth[i],
             d_use_fine_value_at_interface[i]));
 
@@ -185,7 +185,7 @@ void EdgeDataTest::registerVariables(
 }
 
 void EdgeDataTest::setConstantData(
-   std::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
    const hier::Box& box,
    double ndimfact,
    double axfact) const
@@ -197,7 +197,7 @@ void EdgeDataTest::setConstantData(
    if (!box.empty()) {
 
       for (int axis = 0; axis < d_dim.getValue(); ++axis) {
-         pdat::ArrayData<double>& array = data->getArrayData(axis);
+         pdat::ArrayData<EDGE_KERNEL_TYPE>& array = data->getArrayData(axis);
 
          double value = GETVALUE(d_dim.getValue(), ndimfact, axis);
          hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, axis);
@@ -208,7 +208,7 @@ void EdgeDataTest::setConstantData(
 }
 
 void EdgeDataTest::setConservativeData(
-   std::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch,
    const std::shared_ptr<hier::PatchHierarchy> hierarchy,
@@ -391,8 +391,8 @@ void EdgeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
@@ -406,8 +406,8 @@ void EdgeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
@@ -423,7 +423,7 @@ void EdgeDataTest::initializeDataOnPatch(
 }
 
 void EdgeDataTest::setConstantBoundaryData(
-   std::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
    const hier::BoundaryBox& bbox,
    double ndimfact,
    double axfact) const
@@ -580,8 +580,8 @@ bool EdgeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      std::shared_ptr<pdat::EdgeData<double> > solution(
-         new pdat::EdgeData<double>(pbox, 1, tgcw));
+      std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > solution(
+         new pdat::EdgeData<EDGE_KERNEL_TYPE>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
       tbox.grow(tgcw);
@@ -593,8 +593,8 @@ bool EdgeDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > edge_data(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_KERNEL_TYPE>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
          int depth = edge_data->getDepth();
@@ -609,10 +609,10 @@ bool EdgeDataTest::verifyResults(
             pdat::EdgeIterator siend(pdat::EdgeGeometry::end(dbox, id));
             for (pdat::EdgeIterator si(pdat::EdgeGeometry::begin(dbox, id));
                  si != siend; ++si) {
-               double correct = (*solution)(*si);
+               EDGE_KERNEL_TYPE correct = (*solution)(*si);
                for (int d = 0; d < depth; ++d) {
-                  double result = (*edge_data)(*si, d);
-                  if (!tbox::MathUtilities<double>::equalEps(correct,
+                  EDGE_KERNEL_TYPE result = (*edge_data)(*si, d);
+                  if (!tbox::MathUtilities<EDGE_KERNEL_TYPE>::equalEps(correct,
                          result)) {
                      test_failed = true;
                      tbox::perr << "Test FAILED: ...."
@@ -641,7 +641,7 @@ bool EdgeDataTest::verifyResults(
 }
 
 void EdgeDataTest::setLinearData(
-   std::shared_ptr<pdat::EdgeData<double> > data,
+   std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -702,7 +702,7 @@ void EdgeDataTest::setLinearData(
 }
 
 void EdgeDataTest::checkPatchInteriorData(
-   const std::shared_ptr<pdat::EdgeData<double> >& data,
+   const std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> >& data,
    const hier::Box& interior,
    const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
@@ -746,10 +746,10 @@ void EdgeDataTest::checkPatchInteriorData(
             }
          }
 
-         double value;
+         EDGE_KERNEL_TYPE value;
          for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-            if (!(tbox::MathUtilities<double>::equalEps((*data)(*ei,
+            if (!(tbox::MathUtilities<EDGE_KERNEL_TYPE>::equalEps((*data)(*ei,
                                                                 d), value))) {
                tbox::perr
                << "FAILED:  -- patch interior not properly filled" << std::endl;
@@ -790,12 +790,15 @@ void EdgeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::EdgeData<EDGE_KERNEL_TYPE> > edge_data(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<EDGE_KERNEL_TYPE>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 
       hier::Box patch_interior = edge_data->getBox();
+#if defined(HAVE_CUDA)
+      cudaDeviceSynchronize();
+#endif
       checkPatchInteriorData(edge_data, patch_interior, pgeom);
 
       /*

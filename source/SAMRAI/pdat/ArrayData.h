@@ -14,6 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/pdat/ArrayDataIterator.h"
+#include "SAMRAI/pdat/ArrayView.h"
+#include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
@@ -22,6 +24,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 #include "SAMRAI/tbox/MessageStream.h"
+#include "SAMRAI/tbox/AllocatorDatabase.h"
 
 #include <typeinfo>
 #include <vector>
@@ -103,6 +106,24 @@ public:
       const hier::Box& box,
       unsigned int depth);
 
+#ifdef HAVE_UMPIRE
+   /*!
+    * Construct an array data object using an Umpire allocator.
+    *
+    * @param box   Const reference to box object describing the spatial extents
+    *              of the index space associated with the array data object.
+    * @param depth Integer number of data values at each spatial location in
+    *              the array.
+    * @param allocator An Umpire allocator
+    *
+    * @pre depth > 0
+    */
+   ArrayData(
+      const hier::Box& box,
+      unsigned int depth,
+      umpire::Allocator allocator);
+#endif
+
    /*!
     * The destructor for an array data object releases all memory allocated
     * for the array elements.
@@ -166,6 +187,30 @@ public:
    const TYPE *
    getPointer(
       const unsigned int d = 0) const;
+
+#if defined(HAVE_RAJA)
+   template<int DIM>
+   using View = pdat::ArrayView<DIM, TYPE>;
+
+   template<int DIM>
+   using ConstView = pdat::ArrayView<DIM, const TYPE>;
+
+   /*!
+    * @brief Get an ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   View<DIM>
+   getView(
+      int depth = 0);
+
+   /*!
+    * @brief Get a const ArrayView that can access the array for RAJA looping.
+    */
+   template <int DIM>
+   ConstView<DIM>
+   getConstView(
+      int depth = 0) const;
+#endif
 
    /*!
     * Return reference to value in this array associated with the given
@@ -669,8 +714,27 @@ private:
    unsigned int d_depth;
    size_t d_offset;
    hier::Box d_box;
+#if defined(HAVE_UMPIRE)
+   umpire::TypedAllocator<TYPE> d_allocator;
+   TYPE* d_array;
+#else
    std::vector<TYPE> d_array;
+#endif
 };
+
+#if defined(HAVE_RAJA)
+template<int DIM, typename DATA, typename... Args>
+typename DATA::template View<DIM> get_view(std::shared_ptr<hier::PatchData> src, Args&&... args);
+
+template<int DIM, typename DATA, typename... Args>
+typename DATA::template ConstView<DIM> get_const_view(const std::shared_ptr<hier::PatchData> src, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::template View<DIM> get_view(ArrayData<TYPE>& data, Args&&... args);
+
+template<int DIM, typename TYPE, typename... Args>
+typename ArrayData<TYPE>::template ConstView<DIM> get_const_view(const ArrayData<TYPE>& data, Args&&... args);
+#endif
 
 }
 }

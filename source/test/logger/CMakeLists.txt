@@ -16,10 +16,18 @@ blt_add_executable(
         DEPENDS_ON
         SAMRAI_tbox)
 
+if(ENABLE_MPI)
+  set(TASKS 1)
+else()
+  set(TASKS 0)
+endif()
+
 blt_add_test(
   NAME defaultlogger
-  COMMAND defaultlogger)
+  COMMAND defaultlogger
+  NUM_MPI_TASKS ${TASKS})
 
 blt_add_test(
   NAME userlogger
-  COMMAND userlogger)
+  COMMAND userlogger
+  NUM_MPI_TASKS ${TASKS})

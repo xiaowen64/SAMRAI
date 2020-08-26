@@ -22,33 +22,16 @@ namespace pdat {
  */
 
 template<class TYPE>
-class CopyOperation
+struct CopyOperation
 {
-public:
-   /*!
-    * The default constructor does nothing interesting.
-    */
-   CopyOperation();
-
-   /*!
-    * The destructor does nothing interesting.
-    */
-   ~CopyOperation();
-
    /*!
     * The operator copies the source value to the destination.
     */
+   SAMRAI_HOST_DEVICE
    void
    operator () (
       TYPE& vdst,
       const TYPE& vsrc) const;
-
-private:
-   CopyOperation(
-      const CopyOperation&);              // not implemented
-   CopyOperation&
-   operator = (
-      const CopyOperation&);              // not implemented
 };
 
 }
