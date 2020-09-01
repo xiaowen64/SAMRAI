@@ -519,6 +519,13 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
                        << "caching boundary ghost cell data.\n");
    }
 #endif
+
+#ifdef HAVE_UMPIRE
+   umpire::Allocator allocator =
+      umpire::ResourceManager::getInstance().getAllocator(
+         "samrai::data_allocator");
+#endif
+
    d_dirichlet_data.clear();
    d_dirichlet_data_pos.clear();
    int ln, bn, position, n_reqd_boxes = 0;
@@ -569,7 +576,11 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
             position = d_dirichlet_data_pos[ln][box_id] + bn;
             hier::Box databox = makeSideBoundaryBox(bdry_box);
             d_dirichlet_data[position].reset(
-               new pdat::ArrayData<double>(databox, 1));
+               new pdat::ArrayData<double>(databox, 1
+#ifdef HAVE_UMPIRE
+                                           , allocator
+#endif
+                                           ));
             pdat::ArrayData<double>& array_data = *d_dirichlet_data[position];
             hier::IntVector shift_amount(d_dim, 0);
             const int location_index = bdry_box.getLocationIndex();

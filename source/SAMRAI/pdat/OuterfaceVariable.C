@@ -37,6 +37,20 @@ OuterfaceVariable<TYPE>::OuterfaceVariable(
 {
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+OuterfaceVariable<TYPE>::OuterfaceVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   umpire::Allocator allocator,
+   int depth):
+   hier::Variable(name,
+                  std::make_shared<OuterfaceDataFactory<TYPE> >(
+                     dim, depth, allocator))
+{
+}
+#endif
+
 template<class TYPE>
 OuterfaceVariable<TYPE>::~OuterfaceVariable()
 {

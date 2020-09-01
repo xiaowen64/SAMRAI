@@ -532,6 +532,10 @@ private:
     */
    SundialsAbstractVector* d_solution_vector;
 
+#ifdef HAVE_UMPIRE
+   umpire::Allocator d_allocator;
+#endif
+
    /*
     * Variables
     */

@@ -70,6 +70,12 @@ FACPoisson::FACPoisson(
     */
    d_context = vdb->getContext(d_object_name + ":Context");
 
+#ifdef HAVE_UMPIRE
+   umpire::Allocator allocator =
+      umpire::ResourceManager::getInstance().getAllocator(
+         "samrai::data_allocator");
+#endif
+
    /*
     * Register variables with hier::VariableDatabase
     * and get the descriptor indices for those variables.
@@ -78,8 +84,11 @@ FACPoisson::FACPoisson(
    std::shared_ptr<pdat::CellVariable<double> > comp_soln(
       new pdat::CellVariable<double>(
          dim,
-         object_name + ":computed solution",
-         1));
+         object_name + ":computed solution"
+#ifdef HAVE_UMPIRE
+         , allocator
+#endif
+         ));
    d_comp_soln_id =
       vdb->registerVariableAndContext(
          comp_soln,
@@ -89,7 +98,11 @@ FACPoisson::FACPoisson(
    std::shared_ptr<pdat::CellVariable<double> > exact_solution(
       new pdat::CellVariable<double>(
          dim,
-         object_name + ":exact solution"));
+         object_name + ":exact solution"
+#ifdef HAVE_UMPIRE
+         , allocator
+#endif   
+         ));
    d_exact_id =
       vdb->registerVariableAndContext(
          exact_solution,
@@ -100,7 +113,11 @@ FACPoisson::FACPoisson(
       new pdat::CellVariable<double>(
          dim,
          object_name
-         + ":linear system right hand side"));
+         + ":linear system right hand side"
+#ifdef HAVE_UMPIRE
+         , allocator
+#endif   
+         ));
    d_rhs_id =
       vdb->registerVariableAndContext(
          rhs_variable,

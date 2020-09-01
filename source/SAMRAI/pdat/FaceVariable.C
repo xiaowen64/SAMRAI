@@ -43,6 +43,26 @@ FaceVariable<TYPE>::FaceVariable(
 {
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+FaceVariable<TYPE>::FaceVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   umpire::Allocator allocator,
+   int depth,
+   const bool fine_boundary_represents_var):
+   hier::Variable(name,
+                  std::make_shared<FaceDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var,
+                     allocator)),
+   d_fine_boundary_represents_var(fine_boundary_represents_var)
+{
+}
+#endif
+
 template<class TYPE>
 FaceVariable<TYPE>::~FaceVariable()
 {

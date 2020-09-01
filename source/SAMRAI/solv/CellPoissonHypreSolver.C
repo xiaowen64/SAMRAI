@@ -291,6 +291,9 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
    d_num_post_relax_steps(1),
    d_relative_residual_norm(-1.0),
    d_use_smg(true),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+#endif
    d_grid(0),
    d_stencil(0),
    d_matrix(0),
@@ -311,7 +314,11 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
    if (!s_Ak0_var[d_dim.getValue() - 1]) {
       s_Ak0_var[d_dim.getValue() - 1].reset(
-         new pdat::OutersideVariable<double>(d_dim, d_object_name + "::Ak0", 1));
+         new pdat::OutersideVariable<double>(d_dim, d_object_name + "::Ak0",
+#ifdef HAVE_UMPIRE
+                                             d_allocator,
+#endif
+                                             1));
    }
 
    d_Ak0_id =
@@ -689,7 +696,12 @@ CellPoissonHypreSolver::copyToHypre(
       HYPRE_StructVectorSetBoxValues(
          vector, &lower[0], &upper[0], src.getPointer(depth)); 
    } else {
-      pdat::CellData<double> tmp(box, 1, hier::IntVector::getZero(d_dim));
+      pdat::CellData<double> tmp(box, 1, hier::IntVector::getZero(d_dim)
+#ifdef HAVE_UMPIRE
+                                 , d_allocator
+#endif
+                                 );
+
       tmp.copyDepth(0, src, depth);
       HYPRE_StructVectorSetBoxValues(
          vector, &lower[0], &upper[0], tmp.getPointer());
@@ -719,7 +731,12 @@ CellPoissonHypreSolver::copyFromHypre(
       HYPRE_StructVectorGetBoxValues(
          vector, &lower[0], &upper[0], dst.getPointer(depth));
    } else {
-      pdat::CellData<double> tmp(box, 1, hier::IntVector::getZero(d_dim));
+      pdat::CellData<double> tmp(box, 1, hier::IntVector::getZero(d_dim)
+#ifdef HAVE_UMPIRE
+                                 , d_allocator
+#endif
+                                 );
+
       HYPRE_StructVectorGetBoxValues(
          vector, &lower[0], &upper[0], tmp.getPointer());
       dst.copyDepth(depth,tmp,0);
@@ -812,7 +829,11 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       Ak0->fillAll(0.0);
 
-      pdat::CellData<double> diagonal(patch_box, 1, no_ghosts);
+      pdat::CellData<double> diagonal(patch_box, 1, no_ghosts
+#ifdef HAVE_UMPIRE
+                                      , d_allocator
+#endif
+                                      );
 
       /*
        * Set diagonals to zero so we can accumulate to it.
@@ -825,8 +846,11 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        * Storage for off-diagonal entries,
        * which can be variable or constant.
        */
-      pdat::SideData<double> off_diagonal(patch_box, 1, no_ghosts);
-
+      pdat::SideData<double> off_diagonal(patch_box, 1, no_ghosts
+#ifdef HAVE_UMPIRE
+                                          , d_allocator
+#endif
+                                          );
       /*
        * Compute all off-diagonal entries with no regard to BCs.
        * These off-diagonal entries are simply D/(h*h), according
@@ -899,9 +923,17 @@ CellPoissonHypreSolver::setMatrixCoefficients(
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
             std::shared_ptr<pdat::ArrayData<double> > acoef_data(
-               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1
+#ifdef HAVE_UMPIRE
+                                                          , d_allocator
+#endif
+                                                          ));
             std::shared_ptr<pdat::ArrayData<double> > bcoef_data(
-               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1
+#ifdef HAVE_UMPIRE
+                                                          , d_allocator
+#endif
+                                                          ));
             std::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
             d_physical_bc_coef_strategy->setBcCoefs(acoef_data,
@@ -959,9 +991,17 @@ CellPoissonHypreSolver::setMatrixCoefficients(
             const hier::Box bccoef_box =
                bbu.getSurfaceBoxFromBoundaryBox();
             std::shared_ptr<pdat::ArrayData<double> > acoef_data(
-               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1
+#ifdef HAVE_UMPIRE
+                                                          , d_allocator
+#endif
+                                                          ));
             std::shared_ptr<pdat::ArrayData<double> > bcoef_data(
-               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+               std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1
+#ifdef HAVE_UMPIRE
+                                                          , d_allocator
+#endif
+                                                          ));
             std::shared_ptr<pdat::ArrayData<double> > gcoef_data;
             static const double fill_time = 0.0;
             /*
@@ -1111,7 +1151,11 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
       std::shared_ptr<pdat::ArrayData<double> > acoef_data;
       std::shared_ptr<pdat::ArrayData<double> > bcoef_data;
       std::shared_ptr<pdat::ArrayData<double> > gcoef_data(
-         std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1));
+         std::make_shared<pdat::ArrayData<double> >(bccoef_box, 1
+#ifdef HAVE_UMPIRE
+                                                    , d_allocator
+#endif
+                                                    ));
       static const double fill_time = 0.0;
       robin_bc_coef->setBcCoefs(acoef_data,
          bcoef_data,
@@ -1301,7 +1345,11 @@ CellPoissonHypreSolver::solveSystem(
             patch->getPatchData(u)));
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
-      pdat::CellData<double> rhs_data(box, 1, no_ghosts);
+      pdat::CellData<double> rhs_data(box, 1, no_ghosts
+#ifdef HAVE_UMPIRE
+                                      , d_allocator
+#endif
+                                      );
 
       /*
        * Copy rhs and solution from the hierarchy into HYPRE structures.

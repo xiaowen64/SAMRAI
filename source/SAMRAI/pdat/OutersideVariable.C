@@ -37,6 +37,21 @@ OutersideVariable<TYPE>::OutersideVariable(
 {
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+OutersideVariable<TYPE>::OutersideVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   umpire::Allocator allocator,
+   int depth):
+   hier::Variable(name,
+                  std::make_shared<OutersideDataFactory<TYPE> >(dim,
+                                                                depth,
+                                                                allocator))
+{
+}
+#endif
+
 template<class TYPE>
 OutersideVariable<TYPE>::~OutersideVariable()
 {
