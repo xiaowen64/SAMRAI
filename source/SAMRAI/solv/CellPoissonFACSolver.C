@@ -78,6 +78,12 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    // Read user input.
    getFromInput(input_db);
 
+#ifdef HAVE_UMPIRE
+   umpire::Allocator allocator =
+      umpire::ResourceManager::getInstance().getAllocator(
+         "samrai::data_allocator");
+#endif
+
    /*
     * Construct integer tag variables and add to variable database.  Note that
     * variables and patch data indices are shared among all instances.
@@ -95,7 +101,11 @@ CellPoissonFACSolver::CellPoissonFACSolver(
          var_db->getVariable(weight_variable_name)));
    if (!weight) {
       weight.reset(
-         new pdat::CellVariable<double>(d_dim, weight_variable_name, 1));
+         new pdat::CellVariable<double>(d_dim, weight_variable_name
+#ifdef HAVE_UMPIRE
+                                        , allocator
+#endif
+                                        ));
    }
 
    if (s_weight_id[d_dim.getValue() - 1] < 0) {

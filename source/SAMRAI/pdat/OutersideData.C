@@ -74,10 +74,10 @@ OutersideData<TYPE>::OutersideData(
       const hier::Box& ghosts = getGhostBox();
       const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
       hier::Box outersidebox = sidebox;
-      outersidebox.setUpper(0, sidebox.lower(0));
+      outersidebox.setUpper(d, sidebox.lower(d));
       d_data[d][0].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
-      outersidebox.setLower(0, sidebox.upper(0));
-      outersidebox.setUpper(0, sidebox.upper(0));
+      outersidebox.setLower(d, sidebox.upper(d));
+      outersidebox.setUpper(d, sidebox.upper(d));
       d_data[d][1].reset(new ArrayData<TYPE>(outersidebox, depth,allocator));
    }
 }

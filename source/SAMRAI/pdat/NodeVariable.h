@@ -40,8 +40,8 @@ class NodeVariable:public hier::Variable
 {
 public:
    /*!
-    * @brief Create a cell-centered variable object with the given name and
-    * depth (i.e., number of data values at each cell index location).
+    * @brief Create a node-centered variable object with the given name and
+    * depth (i.e., number of data values at each node index location).
     * A default depth of one is provided.  The fine boundary representation
     * boolean argument indicates which values (either coarse or fine) take
     * precedence at coarse-fine mesh boundaries during coarsen and refine
@@ -53,6 +53,19 @@ public:
       const std::string& name,
       int depth = 1,
       bool fine_boundary_represents_var = true);
+
+#ifdef HAVE_UMPIRE
+   /*!
+    * @brief Constructor that also includes an Umpire allocator for
+    * allocations of the underlying data.
+    */
+   NodeVariable(
+      const tbox::Dimension& dim,
+      const std::string& name,
+      umpire::Allocator allocator,
+      int depth = 1,
+      bool fine_boundary_represents_var = true);
+#endif
 
    /*!
     * @brief Virtual destructor for node variable objects.

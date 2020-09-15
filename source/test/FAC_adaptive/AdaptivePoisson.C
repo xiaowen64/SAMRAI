@@ -68,21 +68,58 @@ AdaptivePoisson::AdaptivePoisson(
    d_dim(dim),
    d_fac_ops(fac_ops),
    d_fac_preconditioner(fac_precond),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+#endif
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
    d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef",
-                                             hier::IntVector::getOne(d_dim), 1)),
+                                             hier::IntVector::getOne(d_dim)
+#ifdef HAVE_UMPIRE
+                                             , d_allocator
+#endif
+                                             )),
    d_flux(new pdat::SideVariable<double>(d_dim, "flux",
-                                         hier::IntVector::getOne(d_dim), 1)),
-   d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar", 1)),
-   d_constant_source(new pdat::CellVariable<double>(
-                        d_dim, "poisson source", 1)),
-   d_ccoef(new pdat::CellVariable<double>(
-              d_dim, "linear source coefficient", 1)),
-   d_rhs(new pdat::CellVariable<double>(d_dim, "linear system rhs", 1)),
-   d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact", 1)),
-   d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual")),
-   d_weight(new pdat::CellVariable<double>(d_dim, "vector weight", 1)),
+                                         hier::IntVector::getOne(d_dim)
+#ifdef HAVE_UMPIRE
+                                         , d_allocator
+#endif
+                                         )),
+   d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar"
+#ifdef HAVE_UMPIRE
+                                           , d_allocator
+#endif
+                                           )),
+   d_constant_source(new pdat::CellVariable<double>(d_dim, "poisson source"
+#ifdef HAVE_UMPIRE
+                                                    , d_allocator
+#endif
+                                                    )),
+   d_ccoef(new pdat::CellVariable<double>(d_dim, "linear source coefficient"
+#ifdef HAVE_UMPIRE
+                                          , d_allocator
+#endif
+                                          )),
+   d_rhs(new pdat::CellVariable<double>(d_dim, "linear system rhs"
+#ifdef HAVE_UMPIRE
+                                        , d_allocator
+#endif
+                                        )),
+   d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact"
+#ifdef HAVE_UMPIRE
+                                          , d_allocator
+#endif
+                                          )),
+   d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual"
+#ifdef HAVE_UMPIRE
+                                          , d_allocator
+#endif
+                                          )),
+   d_weight(new pdat::CellVariable<double>(d_dim, "vector weight"
+#ifdef HAVE_UMPIRE
+                                           , d_allocator
+#endif
+                                           )),
    d_lstream(log_stream),
    d_problem_name("sine"),
    d_sps(object_name + "Poisson solver specifications"),
@@ -501,7 +538,11 @@ void AdaptivePoisson::applyGradientDetector(
       pdat::CellData<int>& tag_cell_data = *tag_cell_data_;
       pdat::CellData<double> estimate_data(patch.getBox(),
                                            1,
-                                           hier::IntVector(d_dim, 0));
+                                           hier::IntVector(d_dim, 0)
+#ifdef HAVE_UMPIRE
+ ,     tbox::AllocatorDatabase::getDatabase()->getTagAllocator()
+#endif
+                                           );
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);

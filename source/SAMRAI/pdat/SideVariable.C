@@ -65,6 +65,51 @@ SideVariable<TYPE>::SideVariable(
 {
 }
 
+#ifdef HAVE_UMPIRE
+template<class TYPE>
+SideVariable<TYPE>::SideVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   const hier::IntVector& directions,
+   umpire::Allocator allocator,
+   int depth,
+   bool fine_boundary_represents_var):
+   hier::Variable(name,
+                  std::make_shared<SideDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var,
+                     directions,
+                     allocator)),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(directions)
+{
+   TBOX_ASSERT(directions.getDim() == getDim());
+}
+
+template<class TYPE>
+SideVariable<TYPE>::SideVariable(
+   const tbox::Dimension& dim,
+   const std::string& name,
+   umpire::Allocator allocator,
+   int depth,
+   bool fine_boundary_represents_var):
+   hier::Variable(name,
+                  std::make_shared<SideDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var,
+                     hier::IntVector::getOne(dim),
+                     allocator)),
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_directions(hier::IntVector::getOne(dim))
+{
+}
+#endif
+
+
 template<class TYPE>
 SideVariable<TYPE>::~SideVariable()
 {

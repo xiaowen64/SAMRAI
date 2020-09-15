@@ -110,7 +110,14 @@ CVODEModel::CVODEModel(
    CoarsenPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
-   d_soln_var(new CellVariable<double>(dim, "soln", 1)),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+#endif
+   d_soln_var(new CellVariable<double>(dim, "soln"
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       )),
    d_FAC_solver(fac_solver),
    d_grid_geometry(grid_geom)
 {
@@ -130,7 +137,11 @@ CVODEModel::CVODEModel(
          IntVector(d_dim, 1));
 #ifdef USE_FAC_PRECONDITIONER
    d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion",
-         hier::IntVector::getOne(d_dim), 1));
+         hier::IntVector::getOne(d_dim)
+#ifdef HAVE_UMPIRE
+         , d_allocator
+#endif
+         ));
 
    d_diff_id = variable_db->registerVariableAndContext(d_diff_var,
          d_cur_cxt,
@@ -215,11 +226,19 @@ CVODEModel::CVODEModel(
     * Construct outerface variable to hold boundary flags and Neumann fluxes.
     */
    if (d_use_neumann_bcs) {
-      d_flag_var.reset(new OuterfaceVariable<int>(d_dim, "bdryflag", 1));
+      d_flag_var.reset(new OuterfaceVariable<int>(d_dim, "bdryflag"
+#ifdef HAVE_UMPIRE
+                                                  , d_allocator
+#endif
+                                                  ));
       d_flag_id = variable_db->registerVariableAndContext(d_flag_var,
             d_cur_cxt,
             IntVector(d_dim, 0));
-      d_neuf_var.reset(new OuterfaceVariable<double>(d_dim, "neuflux", 1));
+      d_neuf_var.reset(new OuterfaceVariable<double>(d_dim, "neuflux"
+#ifdef HAVE_UMPIRE
+                                                     , d_allocator
+#endif
+                                                     ));
       d_neuf_id = variable_db->registerVariableAndContext(d_neuf_var,
             d_cur_cxt,
             IntVector(d_dim, 0));

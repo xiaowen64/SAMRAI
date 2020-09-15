@@ -887,6 +887,13 @@ private:
     */
    int d_flux_id;
 
+#ifdef HAVE_UMPIRE
+   /*!
+    * Umpire Allocator for internal data allocations
+    */
+   umpire::Allocator d_allocator;
+#endif
+
 #ifdef HAVE_HYPRE
    /*!
     * @brief HYPRE coarse-level solver object.

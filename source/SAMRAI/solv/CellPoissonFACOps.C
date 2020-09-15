@@ -565,6 +565,9 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_coarse_solver_max_iterations(20),
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+#endif
    d_hypre_solver(hypre_solver),
    d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
@@ -595,6 +598,9 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_coarse_solver_max_iterations(500),
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+#endif
    d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
                 object_name + "::PRIVATE_CONTEXT")),
@@ -642,16 +648,28 @@ CellPoissonFACOps::buildObject(
       std::ostringstream ss;
       ss << "CellPoissonFACOps::private_cell_scratch" << d_dim.getValue();
       s_cell_scratch_var[d_dim.getValue() - 1].reset(
-         new pdat::CellVariable<double>(d_dim, ss.str()));
+         new pdat::CellVariable<double>(d_dim, ss.str()
+#ifdef HAVE_UMPIRE
+                                        , d_allocator
+#endif
+                                        ));
       ss.str("");
       ss << "CellPoissonFACOps::private_flux_scratch" << d_dim.getValue();
       s_flux_scratch_var[d_dim.getValue() - 1].reset(
          new pdat::SideVariable<double>(d_dim, ss.str(),
-            hier::IntVector::getOne(d_dim)));
+                                        hier::IntVector::getOne(d_dim)
+#ifdef HAVE_UMPIRE
+                                        , d_allocator
+#endif
+                                        ));
       ss.str("");
       ss << "CellPoissonFACOps::private_oflux_scratch" << d_dim.getValue();
       s_oflux_scratch_var[d_dim.getValue() - 1].reset(
-         new pdat::OutersideVariable<double>(d_dim, ss.str()));
+         new pdat::OutersideVariable<double>(d_dim, ss.str()
+#ifdef HAVE_UMPIRE
+                                             , d_allocator
+#endif
+                                             ));
    }
 
    /*

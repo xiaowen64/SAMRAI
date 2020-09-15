@@ -123,33 +123,80 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_grid_geometry(grid_geometry),
    d_lambda(tbox::MathUtilities<double>::getSignalingNaN()),
    d_input_dt(tbox::MathUtilities<double>::getSignalingNaN()),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+#endif
    d_solution(new pdat::CellVariable<double>(
-                 dim, object_name + "solution", 1)),
+                 dim, object_name + "solution"
+#ifdef HAVE_UMPIRE
+                 , d_allocator
+#endif
+              )),
    d_source_term(new pdat::CellVariable<double>(
-                    dim, object_name + "source_term", 1)),
+                    dim, object_name + "source_term"
+#ifdef HAVE_UMPIRE
+                    , d_allocator
+#endif
+                 )),
    d_exponential_term(new pdat::CellVariable<double>(
-                         dim, object_name + "exponential_term", 1)),
+                         dim, object_name + "exponential_term"
+#ifdef HAVE_UMPIRE
+                         , d_allocator
+#endif
+                      )),
    d_diffusion_coef(new pdat::SideVariable<double>(
-                       dim, object_name + "diffusion_coef", hier::IntVector::getOne(dim), 1)),
+                       dim, object_name + "diffusion_coef", hier::IntVector::getOne(dim)
+#ifdef HAVE_UMPIRE
+                       , d_allocator
+#endif
+                    )),
    d_flux(new pdat::SideVariable<double>(
-             dim, object_name + "flux", hier::IntVector::getOne(dim), 1)),
+             dim, object_name + "flux", hier::IntVector::getOne(dim)
+#ifdef HAVE_UMPIRE
+             , d_allocator
+#endif
+          )),
    d_coarse_fine_flux(new pdat::OutersideVariable<double>(
-                         dim, object_name + "coarse_fine_flux", 1)),
+                         dim, object_name + "coarse_fine_flux"
+#ifdef HAVE_UMPIRE
+                         , d_allocator
+#endif
+                      )),
    d_jacobian_a(new pdat::CellVariable<double>(
-                   dim, object_name + ":jacobian_a", 1)),
+                   dim, object_name + ":jacobian_a"
+#ifdef HAVE_UMPIRE
+                   , d_allocator
+#endif
+                )),
    d_jacobian_b(new pdat::FaceVariable<double>(
-                   dim, object_name + ":jacobian_b", 1)),
+                   dim, object_name + ":jacobian_b"
+#ifdef HAVE_UMPIRE
+                   , d_allocator
+#endif
+                )),
    d_jacobian_a_id(-1),
    d_jacobian_b_id(-1),
    d_precond_a(new pdat::CellVariable<double>(
-                  dim, object_name + "precond_a", 1)),
+                  dim, object_name + "precond_a"
+#ifdef HAVE_UMPIRE
+                  , d_allocator
+#endif
+               )),
    d_precond_b(new pdat::FaceVariable<double>(
-                  dim, object_name + "precond_b", 1)),
+                  dim, object_name + "precond_b"
+#ifdef HAVE_UMPIRE
+                  , d_allocator
+#endif
+               )),
    d_precond_a_id(-1),
    d_precond_b_id(-1),
    d_nghosts(hier::IntVector(dim, NUM_GHOSTS_U)),
    d_weight(new pdat::CellVariable<double>(
-               dim, object_name + "weight", 1)),
+               dim, object_name + "weight"
+#ifdef HAVE_UMPIRE
+                 , d_allocator
+#endif
+, 1)),
    d_fill_new_level(),
    d_soln_fill(),
    d_flux_coarsen(dim),
