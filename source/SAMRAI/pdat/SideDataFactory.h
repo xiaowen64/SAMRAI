@@ -222,6 +222,24 @@ public:
    validCopyTo(
       const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
+#if defined(HAVE_UMPIRE)
+   /*!
+    * @brief Return true if this factory has an Umpire Allocator.
+    */
+   bool hasAllocator() const
+   {
+      return d_has_allocator;
+   }
+
+   /*!
+    * @brief Get the Umpire Allocator.
+    */
+   umpire::Allocator getAllocator() const
+   {
+      return d_allocator;
+   }
+#endif
+
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;

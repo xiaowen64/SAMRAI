@@ -92,8 +92,14 @@ ConvDiff::ConvDiff(
    d_object_name(object_name),
    d_dim(dim),
    d_grid_geometry(grid_geom),
-   d_primitive_vars(new pdat::CellVariable<double>(dim, "primitive_vars", 1)),
-   d_function_eval(new pdat::CellVariable<double>(dim, "function_eval", 1)),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+   d_primitive_vars(new pdat::CellVariable<double>(dim, "primitive_vars", d_allocator)),
+   d_function_eval(new pdat::CellVariable<double>(dim, "function_eval", d_allocator)),
+#else
+   d_primitive_vars(new pdat::CellVariable<double>(dim, "primitive_vars")),
+   d_function_eval(new pdat::CellVariable<double>(dim, "function_eval")),
+#endif
    d_diffusion_coeff(1.),
    d_source_coeff(0.),
    d_cfl(0.9),

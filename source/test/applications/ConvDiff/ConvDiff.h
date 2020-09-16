@@ -350,6 +350,10 @@ private:
    std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
+#ifdef HAVE_UMPIRE
+   umpire::Allocator d_allocator;
+#endif
+
    /*
     * std::shared_ptrs to variables.  d_primitive_vars - [u]
     *                                   d_function_eval  - [F(u)]

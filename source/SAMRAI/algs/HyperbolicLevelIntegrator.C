@@ -2049,20 +2049,48 @@ HyperbolicLevelIntegrator::registerVariable(
                SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
-            fluxsum.reset(new pdat::OuterfaceVariable<double>(
-                  dim,
-                  fsum_name,
-                  fdf->getDepth()));
+#if defined(HAVE_UMPIRE)
+            umpire::Allocator allocator;
+            if (fdf->hasAllocator()) {
+               allocator = fdf->getAllocator();
+               fluxsum.reset(new pdat::OuterfaceVariable<double>(
+                     dim,
+                     fsum_name,
+                     allocator,
+                     fdf->getDepth()));
+            } else {
+#endif
+               fluxsum.reset(new pdat::OuterfaceVariable<double>(
+                     dim,
+                     fsum_name,
+                     fdf->getDepth()));
+#if defined(HAVE_UMPIRE)
+            }
+#endif
             d_flux_face_registered = true;
          } else {
             std::shared_ptr<pdat::SideDataFactory<double> > sdf(
                SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
-            fluxsum.reset(new pdat::OutersideVariable<double>(
-                  dim,
-                  fsum_name,
-                  sdf->getDepth()));
+#if defined(HAVE_UMPIRE)
+            umpire::Allocator allocator;
+            if (sdf->hasAllocator()) {
+               allocator = sdf->getAllocator();
+               fluxsum.reset(new pdat::OutersideVariable<double>(
+                     dim,
+                     fsum_name,
+                     allocator,
+                     sdf->getDepth()));
+            } else {
+#endif
+               fluxsum.reset(new pdat::OutersideVariable<double>(
+                     dim,
+                     fsum_name,
+                     sdf->getDepth()));
+#if defined(HAVE_UMPIRE)
+            }
+#endif
             d_flux_side_registered = true;
          }
 

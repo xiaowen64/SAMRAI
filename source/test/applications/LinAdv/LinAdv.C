@@ -124,8 +124,14 @@ LinAdv::LinAdv(
    d_dim(dim),
    d_grid_geometry(grid_geom),
    d_use_nonuniform_workload(false),
-   d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
-   d_flux(new pdat::FaceVariable<double>(dim, "flux", 1)),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
+   d_uval(new pdat::CellVariable<double>(dim, "uval", d_allocator)),
+   d_flux(new pdat::FaceVariable<double>(dim, "flux", d_allocator)),
+#else
+   d_uval(new pdat::CellVariable<double>(dim, "uval")),
+   d_flux(new pdat::FaceVariable<double>(dim, "flux")),
+#endif
    d_advection_velocity(dim.getValue()),
    d_source(0.0),
    d_check_fluxes(false),
@@ -411,6 +417,9 @@ void LinAdv::setupLoadBalancer(
             new pdat::CellVariable<double>(
                d_dim,
                "workload_variable",
+#ifdef HAVE_UMPIRE
+               d_allocator,
+#endif
                1));
          d_workload_data_id =
             vardb->registerVariableAndContext(d_workload_variable,
@@ -718,8 +727,16 @@ void LinAdv::computeFluxesOnPatch(
       /*
        * Allocate patch data for temporaries local to this routine.
        */
-      pdat::FaceData<double> traced_left(pbox, 1, d_nghosts);
-      pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
+      pdat::FaceData<double> traced_left(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                         , d_allocator
+#endif
+                                         );
+      pdat::FaceData<double> traced_right(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                         , d_allocator
+#endif
+                                         );
 
       if (d_dim == tbox::Dimension(2)) {
          SAMRAI_F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
@@ -907,11 +924,31 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    /*
     * Allocate patch data for temporaries local to this routine.
     */
-   pdat::FaceData<double> traced_left(pbox, 1, d_nghosts);
-   pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
-   pdat::FaceData<double> temp_flux(pbox, 1, d_fluxghosts);
-   pdat::FaceData<double> temp_traced_left(pbox, 1, d_nghosts);
-   pdat::FaceData<double> temp_traced_right(pbox, 1, d_nghosts);
+   pdat::FaceData<double> traced_left(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::FaceData<double> traced_right(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::FaceData<double> temp_flux(pbox, 1, d_fluxghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::FaceData<double> temp_traced_left(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::FaceData<double> temp_traced_right(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
 
    SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
       ifirst(0), ilast(0),
@@ -1197,10 +1234,26 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    /*
     * Allocate patch data for temporaries local to this routine.
     */
-   pdat::FaceData<double> traced_left(pbox, 1, d_nghosts);
-   pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
-   pdat::FaceData<double> temp_flux(pbox, 1, d_fluxghosts);
-   pdat::CellData<double> third_state(pbox, 1, d_nghosts);
+   pdat::FaceData<double> traced_left(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::FaceData<double> traced_right(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::FaceData<double> temp_flux(pbox, 1, d_fluxghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
+   pdat::CellData<double> third_state(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                                       , d_allocator
+#endif
+                                       );
 
    /*
     *  Initialize trace fluxes (w^R and w^L) with cell-centered values.
@@ -1901,7 +1954,11 @@ void LinAdv::tagGradientDetectorCells(
     * Create a set of temporary tags and set to untagged value.
     */
    std::shared_ptr<pdat::CellData<int> > temp_tags(
-      new pdat::CellData<int>(pbox, 1, d_nghosts));
+      new pdat::CellData<int>(pbox, 1, d_nghosts
+#ifdef HAVE_UMPIRE
+                              , d_allocator
+#endif
+                              ));
    temp_tags->fillAll(not_refine_tag_val);
 #if defined(HAVE_RAJA)
    tbox::parallel_synchronize();
