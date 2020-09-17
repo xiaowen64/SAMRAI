@@ -43,12 +43,11 @@ FaceVariable<TYPE>::FaceVariable(
 {
 }
 
-#ifdef HAVE_UMPIRE
 template<class TYPE>
 FaceVariable<TYPE>::FaceVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   umpire::Allocator allocator,
+   tbox::UmpireAllocator allocator,
    int depth,
    const bool fine_boundary_represents_var):
    hier::Variable(name,
@@ -61,7 +60,6 @@ FaceVariable<TYPE>::FaceVariable(
    d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
 }
-#endif
 
 template<class TYPE>
 FaceVariable<TYPE>::~FaceVariable()

@@ -200,13 +200,9 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          const hier::IntVector tmp_ghosts(dim, 0);
 
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
-#ifdef HAVE_UMPIRE
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
-                                         directions, alloc_db->getTagAllocator());
-#else
-         pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts, directions);
-#endif
+                                         directions, alloc_db->getTagAllocatorWrapper());
 
 #define HOIST_INTERMEDIATES 1
 //#undef HOIST_INTERMEDIATES
@@ -255,8 +251,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
             }  // test for axis and directions
          }     // end if DIM 3
-         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
-         pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
+         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+         pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
 #endif  // Hoisting
 #endif  // HAVE_RAJA
 
@@ -296,8 +292,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      slope_box.growUpper(1, 1);
                   }
 
-                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
-                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
+                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
 #endif
                   auto fine_array = fdata->getView<2>(axis, d);
                   auto coarse_array = cdata->getConstView<2>(axis, d);
@@ -398,12 +394,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
 #else   // Fortran Dimension 2
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
-#ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
-                                               directions, alloc_db->getTagAllocator());
-#else
-               pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
-#endif
+                                               directions, alloc_db->getTagAllocatorWrapper());
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0)
@@ -464,8 +456,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                      slope_box.growUpper(2, 1);
                   }
 
-                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
-                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
+                  pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+                  pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
 
 #endif
                   auto fine_array = fdata->getView<3>(axis, d);
@@ -636,15 +628,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
                std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
 
-#ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
-                                               directions, alloc_db->getTagAllocator());
+                                               directions, alloc_db->getTagAllocatorWrapper());
                pdat::SideData<double> slope2_f(cgbox, 1, tmp_ghosts,
-                                               directions, alloc_db->getTagAllocator());
-#else
-               pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
-               pdat::SideData<double> slope2_f(cgbox, 1, tmp_ghosts, directions);
-#endif
+                                               directions, alloc_db->getTagAllocatorWrapper());
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0)

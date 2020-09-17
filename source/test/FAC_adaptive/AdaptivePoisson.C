@@ -68,58 +68,29 @@ AdaptivePoisson::AdaptivePoisson(
    d_dim(dim),
    d_fac_ops(fac_ops),
    d_fac_preconditioner(fac_precond),
-#ifdef HAVE_UMPIRE
-   d_allocator(umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator")),
-#endif
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper()),
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
    d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef",
-                                             hier::IntVector::getOne(d_dim)
-#ifdef HAVE_UMPIRE
-                                             , d_allocator
-#endif
-                                             )),
+                                             hier::IntVector::getOne(d_dim),
+                                             d_allocator)),
    d_flux(new pdat::SideVariable<double>(d_dim, "flux",
-                                         hier::IntVector::getOne(d_dim)
-#ifdef HAVE_UMPIRE
-                                         , d_allocator
-#endif
-                                         )),
-   d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar"
-#ifdef HAVE_UMPIRE
-                                           , d_allocator
-#endif
-                                           )),
-   d_constant_source(new pdat::CellVariable<double>(d_dim, "poisson source"
-#ifdef HAVE_UMPIRE
-                                                    , d_allocator
-#endif
-                                                    )),
-   d_ccoef(new pdat::CellVariable<double>(d_dim, "linear source coefficient"
-#ifdef HAVE_UMPIRE
-                                          , d_allocator
-#endif
-                                          )),
-   d_rhs(new pdat::CellVariable<double>(d_dim, "linear system rhs"
-#ifdef HAVE_UMPIRE
-                                        , d_allocator
-#endif
-                                        )),
-   d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact"
-#ifdef HAVE_UMPIRE
-                                          , d_allocator
-#endif
-                                          )),
-   d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual"
-#ifdef HAVE_UMPIRE
-                                          , d_allocator
-#endif
-                                          )),
-   d_weight(new pdat::CellVariable<double>(d_dim, "vector weight"
-#ifdef HAVE_UMPIRE
-                                           , d_allocator
-#endif
-                                           )),
+                                         hier::IntVector::getOne(d_dim),
+                                         d_allocator)),
+   d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar",
+                                           d_allocator)),
+   d_constant_source(new pdat::CellVariable<double>(d_dim, "poisson source",
+                                                    d_allocator)),
+   d_ccoef(new pdat::CellVariable<double>(d_dim, "linear source coefficient",
+                                          d_allocator)),
+   d_rhs(new pdat::CellVariable<double>(d_dim, "linear system rhs",
+                                        d_allocator)),
+   d_exact(new pdat::CellVariable<double>(d_dim, "solution:exact",
+                                          d_allocator)),
+   d_resid(new pdat::CellVariable<double>(d_dim, object_name + "residual",
+                                          d_allocator)),
+   d_weight(new pdat::CellVariable<double>(d_dim, "vector weight",
+                                           d_allocator)),
    d_lstream(log_stream),
    d_problem_name("sine"),
    d_sps(object_name + "Poisson solver specifications"),
@@ -536,13 +507,11 @@ void AdaptivePoisson::applyGradientDetector(
       TBOX_ASSERT(soln_cell_data_);
       pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<int>& tag_cell_data = *tag_cell_data_;
-      pdat::CellData<double> estimate_data(patch.getBox(),
-                                           1,
-                                           hier::IntVector(d_dim, 0)
-#ifdef HAVE_UMPIRE
- ,     tbox::AllocatorDatabase::getDatabase()->getTagAllocator()
-#endif
-                                           );
+      pdat::CellData<double> estimate_data(
+         patch.getBox(),
+         1,
+         hier::IntVector(d_dim, 0),
+         tbox::AllocatorDatabase::getDatabase()->getTagAllocatorWrapper());
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);

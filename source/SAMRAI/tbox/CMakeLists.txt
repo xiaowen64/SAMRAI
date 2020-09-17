@@ -57,6 +57,7 @@ set ( tbox_headers
   TimerManager.h
   Tracer.h
   Transaction.h
+  UmpireAllocator.h
   Utilities.h)
 
 set_source_files_properties(
@@ -114,6 +115,7 @@ set (tbox_sources
   TimerManager.C
   Tracer.C
   Transaction.C
+  UmpireAllocator.C
   Utilities.C)
 
 if (ENABLE_HDF5)

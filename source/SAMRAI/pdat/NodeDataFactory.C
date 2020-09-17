@@ -38,22 +38,19 @@ NodeDataFactory<TYPE>::NodeDataFactory(
    bool fine_boundary_represents_var):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var)
-#if defined(HAVE_UMPIRE)
-   , d_has_allocator(false)
-#endif
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_has_allocator(false)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 NodeDataFactory<TYPE>::NodeDataFactory(
    int depth,
    const hier::IntVector& ghosts,
    bool fine_boundary_represents_var,
-   umpire::Allocator allocator):
+   tbox::UmpireAllocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
@@ -63,7 +60,6 @@ NodeDataFactory<TYPE>::NodeDataFactory(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
-#endif
 
 
 template<class TYPE>
@@ -86,7 +82,6 @@ NodeDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
       return
          std::make_shared<NodeDataFactory<TYPE> >(
@@ -95,15 +90,12 @@ NodeDataFactory<TYPE>::cloneFactory(
             d_fine_boundary_represents_var,
             d_allocator);
    } else {
-#endif
-   return
-      std::make_shared<NodeDataFactory<TYPE> >(
-         d_depth,
-         ghosts,
-         d_fine_boundary_represents_var);
-#if defined(HAVE_UMPIRE)
+      return
+         std::make_shared<NodeDataFactory<TYPE> >(
+            d_depth,
+            ghosts,
+            d_fine_boundary_represents_var);
    }
-#endif
 }
 
 /*
@@ -120,7 +112,6 @@ NodeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
       return std::make_shared<NodeData<TYPE> >(
          patch.getBox(),
@@ -128,14 +119,11 @@ NodeDataFactory<TYPE>::allocate(
          d_ghosts,
          d_allocator);
    } else {
-#endif
-   return std::make_shared<NodeData<TYPE> >(
-      patch.getBox(),
-      d_depth,
-      d_ghosts);
-#if defined(HAVE_UMPIRE)
+      return std::make_shared<NodeData<TYPE> >(
+         patch.getBox(),
+         d_depth,
+         d_ghosts);
    }
-#endif
 }
 
 /*

@@ -691,9 +691,7 @@ private:
     */
    bool d_use_smg;
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator d_allocator;
-#endif
+   tbox::UmpireAllocator d_allocator;
 
    //@{
    //! @name Hypre object

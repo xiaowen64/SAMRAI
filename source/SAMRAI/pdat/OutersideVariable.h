@@ -59,7 +59,6 @@ public:
       const std::string& name,
       int depth = 1);
 
-#ifdef HAVE_UMPIRE
    /*!
     * @brief Constructor that also includes an Umpire allocator for
     * allocations of the underlying data.
@@ -67,9 +66,8 @@ public:
    OutersideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
-      umpire::Allocator allocator,
+      tbox::UmpireAllocator allocator,
       int depth = 1);
-#endif
 
    /*!
     * @brief Virtual destructor for outerside variable objects.

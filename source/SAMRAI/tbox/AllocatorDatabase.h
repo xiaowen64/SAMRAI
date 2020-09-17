@@ -13,12 +13,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#ifdef HAVE_UMPIRE
-
 #include "SAMRAI/tbox/StartupShutdownManager.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
+#ifdef HAVE_UMPIRE
 #include "umpire/Allocator.hpp"
 #include "umpire/TypedAllocator.hpp"
+#endif
 
 namespace SAMRAI {
 namespace tbox {
@@ -69,17 +70,30 @@ public:
    /*!
     * @brief Get the device pool allocator.
     */
+#ifdef HAVE_UMPIRE
    umpire::Allocator getDevicePool();
+#endif
+   UmpireAllocator getDevicePoolWrapper();
 
    /*!
     * @brief Get the stream allocator.
     */
+#ifdef HAVE_UMPIRE
    umpire::TypedAllocator<char> getStreamAllocator();
+#endif
 
    /*!
     * @brief Get the allocator for tag data.
     */
+#ifdef HAVE_UMPIRE
    umpire::Allocator getTagAllocator();
+#endif
+   UmpireAllocator getTagAllocatorWrapper();
+
+#ifdef HAVE_UMPIRE
+   umpire::Allocator getDefaultAllocator();
+#endif
+   UmpireAllocator getDefaultAllocatorWrapper();
 
 protected:
    AllocatorDatabase() = default;
@@ -99,5 +113,4 @@ private:
 }
 }
 
-#endif
 #endif

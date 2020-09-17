@@ -12,8 +12,8 @@
 #define included_pdat_FaceVariable
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/hier/Variable.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <string>
 
@@ -60,7 +60,6 @@ public:
       int depth = 1,
       bool fine_boundary_represents_var = true);
 
-#ifdef HAVE_UMPIRE
    /*!
     * @brief Constructor that also includes an Umpire allocator for
     * allocations of the underlying data.
@@ -68,10 +67,9 @@ public:
    FaceVariable(
       const tbox::Dimension& dim,
       const std::string& name,
-      umpire::Allocator allocator,
+      tbox::UmpireAllocator allocator,
       int depth = 1,
       bool fine_boundary_represents_var = true);
-#endif
 
    /*!
     * @brief Virtual destructor for face variable objects.

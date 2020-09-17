@@ -460,12 +460,10 @@ private:
     */
    bool d_homogeneous_bc;
 
-#ifdef HAVE_UMPIRE
    /*!
     * Umpire allocator for internal temporary data.
     */
-   umpire::Allocator d_allocator;
-#endif
+   tbox::UmpireAllocator d_allocator;
 
    /*!
     * @brief Timers for performance measurement.

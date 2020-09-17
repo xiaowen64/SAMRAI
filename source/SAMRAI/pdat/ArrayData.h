@@ -106,7 +106,6 @@ public:
       const hier::Box& box,
       unsigned int depth);
 
-#ifdef HAVE_UMPIRE
    /*!
     * Construct an array data object using an Umpire allocator.
     *
@@ -121,8 +120,7 @@ public:
    ArrayData(
       const hier::Box& box,
       unsigned int depth,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
 
    /*!
     * The destructor for an array data object releases all memory allocated

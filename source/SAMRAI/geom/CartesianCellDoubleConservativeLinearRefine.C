@@ -177,12 +177,8 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index &ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(dim, 0);
-#ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-   pdat::ArrayData<double> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
-#else
-   pdat::ArrayData<double> slope(cgbox, dim.getValue());
-#endif
+   pdat::ArrayData<double> slope(cgbox, dim.getValue(), alloc_db->getDevicePoolWrapper());
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
@@ -204,7 +200,7 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
-         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
          auto fine_array = fdata->getView<2>(d);
          auto coarse_array = cdata->getView<2>(d);
 
@@ -287,7 +283,7 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
          diff_box.growUpper(2, 1);
-         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+         pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
 
          auto fine_array = fdata->getView<3>(d);
          auto coarse_array = cdata->getView<3>(d);

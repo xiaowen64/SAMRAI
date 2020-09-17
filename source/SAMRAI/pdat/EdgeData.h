@@ -131,7 +131,6 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief The constructor for an edge data object.
     *
@@ -154,8 +153,8 @@ public:
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
+
    /*!
     * @brief The virtual destructor for an edge data object.
     */

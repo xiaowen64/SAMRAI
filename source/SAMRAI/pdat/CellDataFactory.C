@@ -42,21 +42,18 @@ CellDataFactory<TYPE>::CellDataFactory(
    int depth,
    const hier::IntVector& ghosts):
    hier::PatchDataFactory(ghosts),
-   d_depth(depth)
-#if defined(HAVE_UMPIRE)
-   , d_has_allocator(false)
-#endif
+   d_depth(depth),
+   d_has_allocator(false)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 CellDataFactory<TYPE>::CellDataFactory(
    int depth,
    const hier::IntVector& ghosts,
-   umpire::Allocator allocator):
+   tbox::UmpireAllocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_allocator(allocator),
@@ -65,7 +62,6 @@ CellDataFactory<TYPE>::CellDataFactory(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
-#endif
 
 template<class TYPE>
 CellDataFactory<TYPE>::~CellDataFactory()
@@ -87,17 +83,13 @@ CellDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
-     return
-       std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts, d_allocator);
+      return
+         std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts, d_allocator);
    } else {
-#endif
-   return 
-     std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
-#if defined(HAVE_UMPIRE)
+      return 
+         std::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
    }
-#endif
 }
 
 /*
@@ -115,22 +107,18 @@ CellDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
-     return std::make_shared<CellData<TYPE> >(
+      return std::make_shared<CellData<TYPE> >(
                patch.getBox(),
                d_depth,
                d_ghosts,
                d_allocator);
    } else {
-#endif
-   return std::make_shared<CellData<TYPE> >(
+      return std::make_shared<CellData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts);
-#if defined(HAVE_UMPIRE)
    }
-#endif
 }
 
 /*

@@ -37,20 +37,17 @@ OuternodeDataFactory<TYPE>::OuternodeDataFactory(
    int depth):
    hier::PatchDataFactory(hier::IntVector::getZero(dim)),
    d_depth(depth),
-   d_no_ghosts(hier::IntVector::getZero(dim))
-#if defined(HAVE_UMPIRE)
-   , d_has_allocator(false)
-#endif
+   d_no_ghosts(hier::IntVector::getZero(dim)),
+   d_has_allocator(false)
 {
    TBOX_ASSERT(depth > 0);
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 OuternodeDataFactory<TYPE>::OuternodeDataFactory(
    const tbox::Dimension& dim,
    int depth,
-   umpire::Allocator allocator):
+   tbox::UmpireAllocator allocator):
    hier::PatchDataFactory(hier::IntVector::getZero(dim)),
    d_depth(depth),
    d_no_ghosts(hier::IntVector::getZero(dim)),
@@ -59,7 +56,6 @@ OuternodeDataFactory<TYPE>::OuternodeDataFactory(
 {
    TBOX_ASSERT(depth > 0);
 }
-#endif
 
 
 template<class TYPE>
@@ -82,20 +78,16 @@ OuternodeDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
       return std::make_shared<OuternodeDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth,
              d_allocator);
    } else {
-#endif
-   return std::make_shared<OuternodeDataFactory<TYPE> >(
+      return std::make_shared<OuternodeDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth);
-#if defined(HAVE_UMPIRE)
    }
-#endif
 }
 
 /*
@@ -113,15 +105,11 @@ OuternodeDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
       return std::make_shared<OuternodeData<TYPE> >(patch.getBox(), d_depth, d_allocator);
    } else {
-#endif
-   return std::make_shared<OuternodeData<TYPE> >(patch.getBox(), d_depth);
-#if defined(HAVE_UMPIRE)
+      return std::make_shared<OuternodeData<TYPE> >(patch.getBox(), d_depth);
    }
-#endif
 }
 
 /*

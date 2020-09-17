@@ -887,12 +887,10 @@ private:
     */
    int d_flux_id;
 
-#ifdef HAVE_UMPIRE
    /*!
     * Umpire Allocator for internal data allocations
     */
-   umpire::Allocator d_allocator;
-#endif
+   tbox::UmpireAllocator d_allocator;
 
 #ifdef HAVE_HYPRE
    /*!

@@ -135,7 +135,6 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
-#ifdef HAVE_UMPIRE
    /*!
     * @brief The constructor for a face data object.
     *
@@ -158,8 +157,7 @@ public:
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
 
    /*!
     * @brief The virtual destructor for a face data object.

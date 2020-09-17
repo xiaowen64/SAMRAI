@@ -126,7 +126,6 @@ public:
       const hier::Box& box,
       int depth);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief Constructor for an outerside data object.
     *
@@ -145,9 +144,8 @@ public:
    OutersideData(
       const hier::Box& box,
       int depth,
-      umpire::Allocator allocator);
-#endif
-   
+      tbox::UmpireAllocator allocator);
+
    /*!
     * @brief Virtual destructor for a outerside data object.
     */

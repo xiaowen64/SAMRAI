@@ -141,7 +141,6 @@ public:
       const hier::Box& box,
       int depth);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief Constructor for an outernode data object.
     *
@@ -160,8 +159,7 @@ public:
    OuternodeData(
       const hier::Box& box,
       int depth,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
 
    /*!
     * @brief Virtual destructor for a outernode data object.

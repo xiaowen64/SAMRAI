@@ -87,13 +87,12 @@ CellData<TYPE>::CellData(
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth));
 }
 
-#ifdef HAVE_UMPIRE
 template<class TYPE>
 CellData<TYPE>::CellData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts,
-   umpire::Allocator allocator):
+   tbox::UmpireAllocator allocator):
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
@@ -106,7 +105,6 @@ CellData<TYPE>::CellData(
 
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth, allocator));
 }
-#endif
 
 template<class TYPE>
 CellData<TYPE>::~CellData()

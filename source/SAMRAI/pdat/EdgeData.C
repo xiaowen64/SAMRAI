@@ -54,13 +54,12 @@ EdgeData<TYPE>::EdgeData(
    }
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 EdgeData<TYPE>::EdgeData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts,
-   umpire::Allocator allocator):
+   tbox::UmpireAllocator allocator):
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
@@ -75,7 +74,6 @@ EdgeData<TYPE>::EdgeData(
       d_data[d].reset(new ArrayData<TYPE>(edge_box, depth, allocator));
    }
 }
-#endif
 
 template<class TYPE>
 EdgeData<TYPE>::~EdgeData()

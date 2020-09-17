@@ -17,13 +17,9 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <memory>
-
-#if defined(HAVE_UMPIRE)
-#include "umpire/Allocator.hpp"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -57,7 +53,6 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
 
-#if defined(HAVE_UMPIRE)
    /**
     * The constructor for the edge data factory class that takes an umpire
     * allocator.  The ghost cell width, depth (number of components), and fine
@@ -71,9 +66,8 @@ public:
   EdgeDataFactory(int depth,
                   const hier::IntVector& ghosts,
                   bool fine_boundary_represents_var,
-                  umpire::Allocator allocator);
+                  tbox::UmpireAllocator allocator);
 
-#endif
    /**
     * Virtual destructor for the edge data factory class.
     */
@@ -165,10 +159,8 @@ public:
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;
-#if defined(HAVE_UMPIRE)
-  umpire::Allocator d_allocator;
-  bool d_has_allocator;
-#endif
+   tbox::UmpireAllocator d_allocator;
+   bool d_has_allocator;
 
 };
 
