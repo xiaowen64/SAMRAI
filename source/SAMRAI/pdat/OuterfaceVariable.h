@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <string>
 

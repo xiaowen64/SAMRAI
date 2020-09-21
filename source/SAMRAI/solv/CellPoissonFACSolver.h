@@ -17,7 +17,6 @@
 #include "SAMRAI/solv/PoissonSpecifications.h"
 #include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <memory>
 

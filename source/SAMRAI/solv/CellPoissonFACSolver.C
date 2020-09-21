@@ -7,10 +7,12 @@
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
-#include "SAMRAI/pdat/CellVariable.h"
+
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
+
+#include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include IOMANIP_HEADER_FILE
 

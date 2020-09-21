@@ -7,15 +7,15 @@
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
+
+#include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
+
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
-#include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/OuterfaceData.h"
 #include "SAMRAI/pdat/SideData.h"
-#include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
-#include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*

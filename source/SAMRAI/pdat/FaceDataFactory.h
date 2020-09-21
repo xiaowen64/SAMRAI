@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <memory>
 

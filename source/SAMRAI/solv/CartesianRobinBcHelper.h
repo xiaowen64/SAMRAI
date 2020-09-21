@@ -14,13 +14,10 @@
 
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
-#include "SAMRAI/pdat/ArrayData.h"
-#include "SAMRAI/pdat/CellData.h"
-#include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <memory>
 
