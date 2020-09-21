@@ -7,15 +7,15 @@
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
+
+#include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
+
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
-#include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/OuterfaceData.h"
 #include "SAMRAI/pdat/SideData.h"
-#include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
-#include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -520,11 +520,8 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
    }
 #endif
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator allocator =
-      umpire::ResourceManager::getInstance().getAllocator(
-         "samrai::data_allocator");
-#endif
+   tbox::UmpireAllocator allocator =
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    d_dirichlet_data.clear();
    d_dirichlet_data_pos.clear();
@@ -576,11 +573,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
             position = d_dirichlet_data_pos[ln][box_id] + bn;
             hier::Box databox = makeSideBoundaryBox(bdry_box);
             d_dirichlet_data[position].reset(
-               new pdat::ArrayData<double>(databox, 1
-#ifdef HAVE_UMPIRE
-                                           , allocator
-#endif
-                                           ));
+               new pdat::ArrayData<double>(databox, 1, allocator));
             pdat::ArrayData<double>& array_data = *d_dirichlet_data[position];
             hier::IntVector shift_amount(d_dim, 0);
             const int location_index = bdry_box.getLocationIndex();

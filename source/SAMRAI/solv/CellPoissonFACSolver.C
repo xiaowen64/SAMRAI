@@ -7,10 +7,12 @@
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
-#include "SAMRAI/pdat/CellVariable.h"
+
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
+
+#include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include IOMANIP_HEADER_FILE
 
@@ -78,11 +80,8 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    // Read user input.
    getFromInput(input_db);
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator allocator =
-      umpire::ResourceManager::getInstance().getAllocator(
-         "samrai::data_allocator");
-#endif
+   tbox::UmpireAllocator allocator =
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    /*
     * Construct integer tag variables and add to variable database.  Note that
@@ -101,11 +100,9 @@ CellPoissonFACSolver::CellPoissonFACSolver(
          var_db->getVariable(weight_variable_name)));
    if (!weight) {
       weight.reset(
-         new pdat::CellVariable<double>(d_dim, weight_variable_name
-#ifdef HAVE_UMPIRE
-                                        , allocator
-#endif
-                                        ));
+         new pdat::CellVariable<double>(d_dim,
+                                        weight_variable_name,
+                                        allocator));
    }
 
    if (s_weight_id[d_dim.getValue() - 1] < 0) {

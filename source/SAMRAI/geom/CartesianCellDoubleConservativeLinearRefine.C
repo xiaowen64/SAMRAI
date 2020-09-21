@@ -177,12 +177,8 @@ void CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Index &ilastf = fine_box.upper();
 
    const hier::IntVector tmp_ghosts(dim, 0);
-#ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
    pdat::ArrayData<double> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
-#else
-   pdat::ArrayData<double> slope(cgbox, dim.getValue());
-#endif
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant

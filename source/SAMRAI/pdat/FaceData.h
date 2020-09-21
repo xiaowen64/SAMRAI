@@ -18,8 +18,8 @@
 #include "SAMRAI/pdat/FaceIterator.h"
 #include "SAMRAI/pdat/FaceOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
-#include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -135,7 +135,6 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
-#ifdef HAVE_UMPIRE
    /*!
     * @brief The constructor for a face data object.
     *
@@ -158,8 +157,7 @@ public:
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
 
    /*!
     * @brief The virtual destructor for a face data object.

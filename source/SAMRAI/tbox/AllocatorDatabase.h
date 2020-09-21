@@ -13,12 +13,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#ifdef HAVE_UMPIRE
-
 #include "SAMRAI/tbox/StartupShutdownManager.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
+#ifdef HAVE_UMPIRE
 #include "umpire/Allocator.hpp"
 #include "umpire/TypedAllocator.hpp"
+#endif
 
 namespace SAMRAI {
 namespace tbox {
@@ -45,11 +46,20 @@ namespace tbox {
  * Tag allocator--Allocator for memory for the tag data object created and
  * owned by GriddingAlgorithm and provided to applications.
  *
+ * Default allocator--Allocator for a default location for memory for problem
+ * application data.
+ *
  * These allocators can be overriden by creating Umpire allocators with the
  * appropriate name prior to calling tbox::SAMRAIManager::initialize().
  * The names are samrai::temporary_data_allocator, samrai::stream_allocator,
- * and samrai::tag_allocator.  Please see the Umpire documentation for details
- * on how to create new allocators.
+ * samrai::tag_allocator, and samrai::data_allocator.  Please see the Umpire
+ * documentation for details on how to create new allocators.
+ *
+ * The accessor methods for all except the Stream allocator return the type
+ * tbox::UmpireAllocator, which is an alias for the type umpire::Allocator.
+ * tbox::UmpireAllocator is defined as an empty struct when SAMRAI is built
+ * without Umpire, so these methods may be still called from codes that are not
+ * built with Umpire.
  */
 
 class AllocatorDatabase
@@ -69,17 +79,25 @@ public:
    /*!
     * @brief Get the device pool allocator.
     */
-   umpire::Allocator getDevicePool();
+   UmpireAllocator getDevicePool();
 
    /*!
     * @brief Get the stream allocator.
     */
+#ifdef HAVE_UMPIRE
    umpire::TypedAllocator<char> getStreamAllocator();
+#endif
 
    /*!
     * @brief Get the allocator for tag data.
     */
-   umpire::Allocator getTagAllocator();
+   UmpireAllocator getTagAllocator();
+
+   /*!
+    * @brief Get the default allocator, unified memory for CUDA-based builds
+    * and CPU host memory for non-CUDA builds.
+    */
+   UmpireAllocator getDefaultAllocator();
 
 protected:
    AllocatorDatabase() = default;
@@ -99,5 +117,4 @@ private:
 }
 }
 
-#endif
 #endif

@@ -17,13 +17,9 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/UmpireAllocator.h"
 
 #include <memory>
-
-#if defined(HAVE_UMPIRE)
-#include "umpire/Allocator.hpp"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -73,10 +69,9 @@ public:
       bool fine_boundary_represents_var,
       const hier::IntVector& directions);
 
-#if defined(HAVE_UMPIRE)
    /**
     * Constructor for the cell data factory class that takes a specific
-    * umpire::Allocator.  The ghost cell width and depth (number of components)
+    * tbox::UmpireAllocator.  The ghost cell width and depth (number of components)
     * arguments give the defaults for all cell data objects created with this
     * factory.
     *
@@ -87,8 +82,7 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,
       const hier::IntVector& directions,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
 
    /*!
     * @brief Constructor for the side data factory class setting up allocation
@@ -106,7 +100,6 @@ public:
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief Constructor for the side data factory class setting up allocation
     * of data in all coordinate directions and uses an Umpire allocator
@@ -122,8 +115,8 @@ public:
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,
-      umpire::Allocator allocator);
-#endif
+      tbox::UmpireAllocator allocator);
+
    /**
     * Virtual destructor for the side data factory class.
     */
@@ -245,10 +238,8 @@ private:
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
 
-#if defined(HAVE_UMPIRE)
-   umpire::Allocator d_allocator;
+   tbox::UmpireAllocator d_allocator;
    bool d_has_allocator;
-#endif
 };
 
 } // Namespace pdat

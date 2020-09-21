@@ -57,6 +57,7 @@ set ( tbox_headers
   TimerManager.h
   Tracer.h
   Transaction.h
+  UmpireAllocator.h
   Utilities.h)
 
 set_source_files_properties(

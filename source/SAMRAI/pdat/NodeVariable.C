@@ -44,12 +44,11 @@ NodeVariable<TYPE>::NodeVariable(
 {
 }
 
-#ifdef HAVE_UMPIRE
 template<class TYPE>
 NodeVariable<TYPE>::NodeVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   umpire::Allocator allocator,
+   tbox::UmpireAllocator allocator,
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
@@ -63,7 +62,6 @@ NodeVariable<TYPE>::NodeVariable(
    d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
 }
-#endif
 
 template<class TYPE>
 NodeVariable<TYPE>::~NodeVariable()

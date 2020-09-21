@@ -38,23 +38,19 @@ FaceDataFactory<TYPE>::FaceDataFactory(
    bool fine_boundary_represents_var):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var)
-#if defined(HAVE_UMPIRE)
-      ,
-      d_has_allocator(false)
-#endif
+   d_fine_boundary_represents_var(fine_boundary_represents_var),
+   d_has_allocator(false)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
 }
 
-#if defined(HAVE_UMPIRE)
 template <class TYPE>
 FaceDataFactory<TYPE>::FaceDataFactory(int depth,
                                        const hier::IntVector& ghosts,
                                        bool fine_boundary_represents_var,
-                                       umpire::Allocator allocator)
+                                       tbox::UmpireAllocator allocator)
     : hier::PatchDataFactory(ghosts),
       d_depth(depth),
       d_fine_boundary_represents_var(fine_boundary_represents_var),
@@ -64,7 +60,6 @@ FaceDataFactory<TYPE>::FaceDataFactory(int depth,
   TBOX_ASSERT(depth > 0);
   TBOX_ASSERT(ghosts.min() >= 0);
 }
-#endif
 
 template<class TYPE>
 FaceDataFactory<TYPE>::~FaceDataFactory()
@@ -86,21 +81,17 @@ FaceDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-#if defined(HAVE_UMPIRE)
-  if (d_has_allocator) {
-    return std::make_shared<FaceDataFactory>(d_depth,
+   if (d_has_allocator) {
+      return std::make_shared<FaceDataFactory>(d_depth,
                                            ghosts,
                                            d_fine_boundary_represents_var,
                                            d_allocator);
-  } else {
-#endif
-   return std::make_shared<FaceDataFactory>(
+   } else {
+      return std::make_shared<FaceDataFactory>(
              d_depth,
              ghosts,
              d_fine_boundary_represents_var);
-#if defined(HAVE_UMPIRE)
-  }
-#endif
+   }
 }
 
 /*
@@ -118,18 +109,14 @@ FaceDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-#if defined(HAVE_UMPIRE)
-  if (d_has_allocator) {
-    return std::make_shared<FaceData<TYPE> >(patch.getBox(), d_depth, d_ghosts, d_allocator);
-  } else {
-#endif
-   return std::make_shared<FaceData<TYPE> >(
+   if (d_has_allocator) {
+      return std::make_shared<FaceData<TYPE> >(patch.getBox(), d_depth, d_ghosts, d_allocator);
+   } else {
+      return std::make_shared<FaceData<TYPE> >(
              patch.getBox(),
              d_depth,
              d_ghosts);
-#if defined(HAVE_UMPIRE)
-  }
-#endif
+   }
 }
 
 /*
