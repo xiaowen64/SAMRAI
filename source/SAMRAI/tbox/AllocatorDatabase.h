@@ -46,11 +46,20 @@ namespace tbox {
  * Tag allocator--Allocator for memory for the tag data object created and
  * owned by GriddingAlgorithm and provided to applications.
  *
+ * Default allocator--Allocator for a default location for memory for problem
+ * application data.
+ *
  * These allocators can be overriden by creating Umpire allocators with the
  * appropriate name prior to calling tbox::SAMRAIManager::initialize().
  * The names are samrai::temporary_data_allocator, samrai::stream_allocator,
- * and samrai::tag_allocator.  Please see the Umpire documentation for details
- * on how to create new allocators.
+ * samrai::tag_allocator, and samrai::data_allocator.  Please see the Umpire
+ * documentation for details on how to create new allocators.
+ *
+ * The accessor methods for all except the Stream allocator return the type
+ * tbox::UmpireAllocator, which is an alias for the type umpire::Allocator.
+ * tbox::UmpireAllocator is defined as an empty struct when SAMRAI is built
+ * without Umpire, so these methods may be still called from codes that are not
+ * built with Umpire.
  */
 
 class AllocatorDatabase
@@ -85,7 +94,8 @@ public:
    UmpireAllocator getTagAllocator();
 
    /*!
-    * @brief Get a default allocator.
+    * @brief Get the default allocator, unified memory for CUDA-based builds
+    * and CPU host memory for non-CUDA builds.
     */
    UmpireAllocator getDefaultAllocator();
 
