@@ -115,7 +115,6 @@ set (tbox_sources
   TimerManager.C
   Tracer.C
   Transaction.C
-  UmpireAllocator.C
   Utilities.C)
 
 if (ENABLE_HDF5)

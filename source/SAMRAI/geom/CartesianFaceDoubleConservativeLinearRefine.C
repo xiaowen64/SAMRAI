@@ -198,7 +198,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
 
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-         pdat::FaceData<double> slope0_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocatorWrapper());
+         pdat::FaceData<double> slope0_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
@@ -246,8 +246,8 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                // so that we have for 2d two components with the same box extents namely diff0, diff1
                // Lifetime of this Array data exits just for a given depth component being processed
                // We may want to redo this approach to avoid alloc/dealloc redundancies
-               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
-               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
                auto fine_array = fdata->getView<2>(axis, d);
                auto coarse_array = cdata->getConstView<2>(axis, d);
@@ -352,7 +352,7 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
 
 #else  // Fortran Dimension 2
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
-               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocatorWrapper());
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub2d0, CARTCLINREFFACEDOUB2D0)
@@ -432,8 +432,8 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                diff_box.growUpper(1, 1);
                diff_box.growUpper(2, 1);
 
-               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
-               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+               pdat::ArrayData<double> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
+               pdat::ArrayData<double> slope(slope_box, dim.getValue(), alloc_db->getDevicePool());
 
                auto fine_array = fdata->getView<3>(axis, d);
                auto coarse_array = cdata->getConstView<3>(axis, d);
@@ -632,8 +632,8 @@ void CartesianFaceDoubleConservativeLinearRefine::refine(
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
                std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
 
-               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocatorWrapper());
-               pdat::FaceData<double> slope2_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocatorWrapper());
+               pdat::FaceData<double> slope1_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
+               pdat::FaceData<double> slope2_f(cgbox, 1, tmp_ghosts, alloc_db->getTagAllocator());
 
                if (axis == 0) {
                   SAMRAI_F77_FUNC(cartclinreffacedoub3d0, CARTCLINREFFACEDOUB3D0)

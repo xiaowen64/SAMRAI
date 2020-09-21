@@ -291,7 +291,7 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
    d_num_post_relax_steps(1),
    d_relative_residual_norm(-1.0),
    d_use_smg(true),
-   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper()),
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator()),
    d_grid(0),
    d_stencil(0),
    d_matrix(0),

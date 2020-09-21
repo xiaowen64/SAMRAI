@@ -15,55 +15,31 @@
 
 #ifdef HAVE_UMPIRE
 #include "umpire/Allocator.hpp"
-#include "umpire/TypedAllocator.hpp"
 #endif
 
 namespace SAMRAI {
 namespace tbox {
 
 /**
- * Class UmpireAllocator is a wrapper class for umpire::Allocator that
- * can also serve as a no-op class when the library is built without Umpire,
- * so that code bases do not need to use ifdef blocks to differentiate calls
- * that use Umpire and calls that don't.
+ * UmpireAllocator a type alias for umpire::Allocator that enables API
+ * consistency when SAMRAI is built with or without the Umpire library.
+ * When Umpire is availalbe UmpireAllocator is an alias for umpire::Allocator,
+ * so calling codes can pass in an umpire::Allocator anywhere that
+ * UmpireAllocator is required in the SAMRAI API.  If Umpire is not
+ * available, UmpireAllocator is an empty struct.
  */
 
-class UmpireAllocator
+#ifdef HAVE_UMPIRE
+
+using UmpireAllocator = umpire::Allocator;
+
+#else
+
+struct UmpireAllocator
 {
-public:
-   /**
-    */
-   UmpireAllocator();
-
-#ifdef HAVE_UMPIRE
-   explicit UmpireAllocator(const umpire::Allocator& allocator);
-#endif
-
-
-
-   /**
-    */
-   virtual ~UmpireAllocator();
-
-#ifdef HAVE_UMPIRE
-   umpire::Allocator getAllocator() const
-   {
-      return d_allocator;
-   }
-#endif
-
-private:
-//   UmpireAllocator(
-//      const UmpireAllocator&);             // not implemented
-//   UmpireAllocator&
-//   operator = (
-//      const UmpireAllocator&);             // not implemented
-
-#ifdef HAVE_UMPIRE
-   umpire::Allocator d_allocator;
-#endif
-
 };
+
+#endif
 
 }
 }

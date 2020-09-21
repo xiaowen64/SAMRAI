@@ -71,7 +71,7 @@ FACPoisson::FACPoisson(
    d_context = vdb->getContext(d_object_name + ":Context");
 
    tbox::UmpireAllocator allocator =
-      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper();
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    /*
     * Register variables with hier::VariableDatabase

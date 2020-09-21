@@ -123,7 +123,7 @@ ModifiedBratuProblem::ModifiedBratuProblem(
    d_grid_geometry(grid_geometry),
    d_lambda(tbox::MathUtilities<double>::getSignalingNaN()),
    d_input_dt(tbox::MathUtilities<double>::getSignalingNaN()),
-   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper()),
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator()),
    d_solution(new pdat::CellVariable<double>(
                  dim, object_name + "solution", d_allocator)),
    d_source_term(new pdat::CellVariable<double>(

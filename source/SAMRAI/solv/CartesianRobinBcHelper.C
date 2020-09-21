@@ -97,7 +97,7 @@ CartesianRobinBcHelper::CartesianRobinBcHelper(
    NULL_USE(coef_strategy);
 
    d_allocator =
-      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper();
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    t_set_boundary_values_in_cells = tbox::TimerManager::getManager()->
       getTimer("solv::CartesianRobinBcHelper::setBoundaryValuesInCells()");

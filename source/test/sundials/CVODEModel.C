@@ -110,7 +110,7 @@ CVODEModel::CVODEModel(
    CoarsenPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
-   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper()),
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator()),
    d_soln_var(new CellVariable<double>(dim, "soln", d_allocator)),
    d_FAC_solver(fac_solver),
    d_grid_geometry(grid_geom)

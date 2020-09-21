@@ -121,7 +121,7 @@ void CartesianCellConservativeLinearRefine<T>::refine(
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-   pdat::ArrayData<T> slope_f(cgbox, dim.getValue(), alloc_db->getTagAllocatorWrapper());
+   pdat::ArrayData<T> slope_f(cgbox, dim.getValue(), alloc_db->getTagAllocator());
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
@@ -144,8 +144,8 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
-         pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePoolWrapper());
-         pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+         pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
+         pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          auto fine_array = fdata->template getView<2>(d);
          auto coarse_array = cdata->template getView<2>(d);
 
@@ -227,8 +227,8 @@ void CartesianCellConservativeLinearRefine<T>::refine(
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
          diff_box.growUpper(2, 1);
-         pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePoolWrapper());
-         pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+         pdat::ArrayData<T> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
+         pdat::ArrayData<T> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
 
          auto fine_array = fdata->template getView<3>(d);
          auto coarse_array = cdata->template getView<3>(d);
@@ -392,7 +392,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-   pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue(), alloc_db->getDevicePoolWrapper());
+   pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
@@ -415,7 +415,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          SAMRAI::hier::Box diff_box = coarse_box;
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
-         pdat::ArrayData<dcomplex> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+         pdat::ArrayData<dcomplex> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
          auto fine_array = fdata->template getView<2>(d);
          auto coarse_array = cdata->template getView<2>(d);
 
@@ -569,7 +569,7 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
          diff_box.growUpper(0, 1);
          diff_box.growUpper(1, 1);
          diff_box.growUpper(2, 1);
-         pdat::ArrayData<dcomplex> diff(diff_box, dim.getValue(), alloc_db->getDevicePoolWrapper());
+         pdat::ArrayData<dcomplex> diff(diff_box, dim.getValue(), alloc_db->getDevicePool());
 
          auto fine_array = fdata->template getView<3>(d);
          auto coarse_array = cdata->template getView<3>(d);

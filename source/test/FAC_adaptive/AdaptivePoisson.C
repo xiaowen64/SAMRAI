@@ -68,7 +68,7 @@ AdaptivePoisson::AdaptivePoisson(
    d_dim(dim),
    d_fac_ops(fac_ops),
    d_fac_preconditioner(fac_precond),
-   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper()),
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator()),
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
    d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef",
@@ -511,7 +511,7 @@ void AdaptivePoisson::applyGradientDetector(
          patch.getBox(),
          1,
          hier::IntVector(d_dim, 0),
-         tbox::AllocatorDatabase::getDatabase()->getTagAllocatorWrapper());
+         tbox::AllocatorDatabase::getDatabase()->getTagAllocator());
       computeAdaptionEstimate(estimate_data,
          soln_cell_data);
       tag_cell_data.fill(0);

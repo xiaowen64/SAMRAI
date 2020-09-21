@@ -79,7 +79,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    getFromInput(input_db);
 
    tbox::UmpireAllocator allocator =
-      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper();
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    /*
     * Construct integer tag variables and add to variable database.  Note that

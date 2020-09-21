@@ -521,7 +521,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
 #endif
 
    tbox::UmpireAllocator allocator =
-      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper();
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    d_dirichlet_data.clear();
    d_dirichlet_data_pos.clear();

@@ -70,10 +70,7 @@ public:
    /*!
     * @brief Get the device pool allocator.
     */
-#ifdef HAVE_UMPIRE
-   umpire::Allocator getDevicePool();
-#endif
-   UmpireAllocator getDevicePoolWrapper();
+   UmpireAllocator getDevicePool();
 
    /*!
     * @brief Get the stream allocator.
@@ -85,15 +82,12 @@ public:
    /*!
     * @brief Get the allocator for tag data.
     */
-#ifdef HAVE_UMPIRE
-   umpire::Allocator getTagAllocator();
-#endif
-   UmpireAllocator getTagAllocatorWrapper();
+   UmpireAllocator getTagAllocator();
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator getDefaultAllocator();
-#endif
-   UmpireAllocator getDefaultAllocatorWrapper();
+   /*!
+    * @brief Get a default allocator.
+    */
+   UmpireAllocator getDefaultAllocator();
 
 protected:
    AllocatorDatabase() = default;

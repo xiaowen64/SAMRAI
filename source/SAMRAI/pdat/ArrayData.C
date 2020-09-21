@@ -106,7 +106,7 @@ ArrayData<TYPE>::ArrayData(
    d_offset(box.size()),
    d_box(box),
 #if defined(HAVE_UMPIRE)
-   d_allocator(allocator.getAllocator()),
+   d_allocator(allocator),
    d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
 #else
    d_array(d_depth * d_offset)
