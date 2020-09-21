@@ -596,7 +596,7 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_coarse_solver_max_iterations(500),
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
-   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocatorWrapper()),
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator()),
    d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
                 object_name + "::PRIVATE_CONTEXT")),
