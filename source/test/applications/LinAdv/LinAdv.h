@@ -464,9 +464,7 @@ private:
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator d_allocator;
-#endif
+   tbox::UmpireAllocator d_allocator;
 
    /**
     * std::shared_ptr to state variable vector - [u]
