@@ -532,7 +532,7 @@ private:
     */
    SundialsAbstractVector* d_solution_vector;
 
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
 
    /*
     * Variables

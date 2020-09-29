@@ -15,7 +15,7 @@
 #include "SAMRAI/pdat/OuterfaceData.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -520,7 +520,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
    }
 #endif
 
-   tbox::UmpireAllocator allocator =
+   tbox::ResourceAllocator allocator =
       tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    d_dirichlet_data.clear();

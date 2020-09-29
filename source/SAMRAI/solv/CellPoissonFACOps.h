@@ -40,7 +40,7 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <string>
 #include <memory>
@@ -887,7 +887,7 @@ private:
    /*!
     * Umpire Allocator for internal data allocations
     */
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
 
 #ifdef HAVE_HYPRE
    /*!

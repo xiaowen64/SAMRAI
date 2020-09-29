@@ -12,7 +12,7 @@
 
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include IOMANIP_HEADER_FILE
 
@@ -80,7 +80,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    // Read user input.
    getFromInput(input_db);
 
-   tbox::UmpireAllocator allocator =
+   tbox::ResourceAllocator allocator =
       tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    /*

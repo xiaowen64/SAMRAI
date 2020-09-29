@@ -67,7 +67,7 @@ SideData<TYPE>::SideData(
    int depth,
    const hier::IntVector& ghosts,
    const hier::IntVector& directions,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchData(box, ghosts),
    d_depth(depth),
    d_directions(directions)
@@ -94,7 +94,7 @@ SideData<TYPE>::SideData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchData(box, ghosts),
    d_depth(depth),
    d_directions(hier::IntVector::getOne(box.getDim()))

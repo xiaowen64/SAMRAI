@@ -58,7 +58,7 @@ template <class TYPE>
 FaceData<TYPE>::FaceData(const hier::Box& box,
                          int depth,
                          const hier::IntVector& ghosts,
-                         tbox::UmpireAllocator allocator)
+                         tbox::ResourceAllocator allocator)
     : hier::PatchData(box, ghosts), d_depth(depth)
 {
   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);

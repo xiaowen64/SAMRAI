@@ -92,7 +92,7 @@ CellData<TYPE>::CellData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {

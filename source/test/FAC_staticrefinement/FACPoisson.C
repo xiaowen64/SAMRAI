@@ -70,7 +70,7 @@ FACPoisson::FACPoisson(
     */
    d_context = vdb->getContext(d_object_name + ":Context");
 
-   tbox::UmpireAllocator allocator =
+   tbox::ResourceAllocator allocator =
       tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    /*

@@ -20,7 +20,7 @@
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -137,7 +137,7 @@ public:
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief The virtual destructor for a cell data object.

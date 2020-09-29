@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -63,7 +63,7 @@ public:
    OuterfaceDataFactory(
       const tbox::Dimension& dim,
       int depth,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /**
     * Virtual destructor for the outerface data factory class.
@@ -154,7 +154,7 @@ public:
 private:
    int d_depth;
    hier::IntVector d_no_ghosts;
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
    bool d_has_allocator;
 };
 

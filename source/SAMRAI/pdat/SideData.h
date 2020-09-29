@@ -19,7 +19,7 @@
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -178,7 +178,7 @@ public:
       int depth,
       const hier::IntVector& ghosts,
       const hier::IntVector& directions,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief Same as previous constructor but with all directions allocated.
@@ -204,7 +204,7 @@ public:
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
       
    /*!
     * @brief The virtual destructor for a side data object.

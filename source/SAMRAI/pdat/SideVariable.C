@@ -70,7 +70,7 @@ SideVariable<TYPE>::SideVariable(
    const tbox::Dimension& dim,
    const std::string& name,
    const hier::IntVector& directions,
-   tbox::UmpireAllocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
@@ -91,7 +91,7 @@ template<class TYPE>
 SideVariable<TYPE>::SideVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::UmpireAllocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,

@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -53,7 +53,7 @@ public:
 
    /**
     * Constructor for the cell data factory class that takes a specific
-    * tbox::UmpireAllocator.  The ghost cell width and depth (number of components)
+    * tbox::ResourceAllocator.  The ghost cell width and depth (number of components)
     * arguments give the defaults for all cell data objects created with this
     * factory.
     *
@@ -62,7 +62,7 @@ public:
    CellDataFactory(
       int depth,
       const hier::IntVector& ghosts,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /**
     * Virtual destructor for the cell data factory class.
@@ -156,7 +156,7 @@ public:
 private:
    int d_depth;
 
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
    bool d_has_allocator;
 };
 
