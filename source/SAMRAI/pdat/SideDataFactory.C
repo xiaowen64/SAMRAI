@@ -69,7 +69,7 @@ SideDataFactory<TYPE>::SideDataFactory(
    const hier::IntVector& ghosts,
    bool fine_boundary_represents_var,
    const hier::IntVector& directions,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
@@ -88,7 +88,7 @@ SideDataFactory<TYPE>::SideDataFactory(
    int depth,
    const hier::IntVector& ghosts,
    bool fine_boundary_represents_var,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),

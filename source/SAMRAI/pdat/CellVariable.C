@@ -43,7 +43,7 @@ template<class TYPE>
 CellVariable<TYPE>::CellVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::UmpireAllocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth):
    hier::Variable(name,
                   std::make_shared<CellDataFactory<TYPE> >(depth,

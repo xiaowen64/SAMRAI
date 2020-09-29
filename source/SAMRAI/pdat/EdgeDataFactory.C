@@ -51,7 +51,7 @@ EdgeDataFactory<TYPE>::EdgeDataFactory(
    int depth,
    const hier::IntVector& ghosts,
    bool fine_boundary_represents_var,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),

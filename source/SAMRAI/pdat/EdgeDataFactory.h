@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -66,7 +66,7 @@ public:
   EdgeDataFactory(int depth,
                   const hier::IntVector& ghosts,
                   bool fine_boundary_represents_var,
-                  tbox::UmpireAllocator allocator);
+                  tbox::ResourceAllocator allocator);
 
    /**
     * Virtual destructor for the edge data factory class.
@@ -159,7 +159,7 @@ public:
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
    bool d_has_allocator;
 
 };

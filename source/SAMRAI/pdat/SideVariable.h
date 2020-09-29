@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <string>
 
@@ -86,7 +86,7 @@ public:
       const tbox::Dimension& dim,
       const std::string& name,
       const hier::IntVector& directions,
-      tbox::UmpireAllocator allocator,
+      tbox::ResourceAllocator allocator,
       int depth = 1,
       bool fine_boundary_represents_var = true);
 
@@ -98,7 +98,7 @@ public:
    SideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
-      tbox::UmpireAllocator allocator,
+      tbox::ResourceAllocator allocator,
       int depth = 1,
       bool fine_boundary_represents_var = true);
 

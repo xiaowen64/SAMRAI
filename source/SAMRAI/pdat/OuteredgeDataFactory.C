@@ -47,7 +47,7 @@ template<class TYPE>
 OuteredgeDataFactory<TYPE>::OuteredgeDataFactory(
    const tbox::Dimension& dim,
    int depth,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchDataFactory(hier::IntVector::getZero(dim)),
    d_depth(depth),
    d_no_ghosts(hier::IntVector::getZero(dim)),

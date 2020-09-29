@@ -8,8 +8,8 @@
  *
  ************************************************************************/
 
-#ifndef included_tbox_UmpireAllocator
-#define included_tbox_UmpireAllocator
+#ifndef included_tbox_ResourceAllocator
+#define included_tbox_ResourceAllocator
 
 #include "SAMRAI/SAMRAI_config.h"
 
@@ -21,21 +21,21 @@ namespace SAMRAI {
 namespace tbox {
 
 /**
- * UmpireAllocator a type alias for umpire::Allocator that enables API
- * consistency when SAMRAI is built with or without the Umpire library.
- * When Umpire is availalbe UmpireAllocator is an alias for umpire::Allocator,
+ * ResourceAllocator a type alias for umpire::Allocator that enables API
+ * consistency when SAMRAI is built with or without the Resource library.
+ * When Umpire is available ResourceAllocator is an alias for umpire::Allocator,
  * so calling codes can pass in an umpire::Allocator anywhere that
- * UmpireAllocator is required in the SAMRAI API.  If Umpire is not
- * available, UmpireAllocator is an empty struct.
+ * ResourceAllocator is required in the SAMRAI API.  If Umpire is not
+ * available, ResourceAllocator is an empty struct.
  */
 
 #ifdef HAVE_UMPIRE
 
-using UmpireAllocator = umpire::Allocator;
+using ResourceAllocator = umpire::Allocator;
 
 #else
 
-struct UmpireAllocator
+struct ResourceAllocator
 {
 };
 

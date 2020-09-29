@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -66,7 +66,7 @@ public:
    OuteredgeDataFactory(
       const tbox::Dimension& dim,
       int depth,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief
@@ -166,7 +166,7 @@ public:
 private:
    int d_depth;
    hier::IntVector d_no_ghosts;
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
    bool d_has_allocator;
 
 };

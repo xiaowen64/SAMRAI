@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #ifdef HAVE_UMPIRE
 #include "umpire/Allocator.hpp"
@@ -56,8 +56,8 @@ namespace tbox {
  * documentation for details on how to create new allocators.
  *
  * The accessor methods for all except the Stream allocator return the type
- * tbox::UmpireAllocator, which is an alias for the type umpire::Allocator.
- * tbox::UmpireAllocator is defined as an empty struct when SAMRAI is built
+ * tbox::ResourceAllocator, which is an alias for the type umpire::Allocator.
+ * tbox::ResourceAllocator is defined as an empty struct when SAMRAI is built
  * without Umpire, so these methods may be still called from codes that are not
  * built with Umpire.
  */
@@ -79,7 +79,7 @@ public:
    /*!
     * @brief Get the device pool allocator.
     */
-   UmpireAllocator getDevicePool();
+   ResourceAllocator getDevicePool();
 
    /*!
     * @brief Get the stream allocator.
@@ -91,13 +91,13 @@ public:
    /*!
     * @brief Get the allocator for tag data.
     */
-   UmpireAllocator getTagAllocator();
+   ResourceAllocator getTagAllocator();
 
    /*!
     * @brief Get the default allocator, unified memory for CUDA-based builds
     * and CPU host memory for non-CUDA builds.
     */
-   UmpireAllocator getDefaultAllocator();
+   ResourceAllocator getDefaultAllocator();
 
 protected:
    AllocatorDatabase() = default;

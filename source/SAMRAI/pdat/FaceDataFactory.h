@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -55,7 +55,7 @@ public:
 
    /**
     * Constructor for the face data factory class that takes a specific
-    * tbox::UmpireAllocator.  The ghost cell width and depth (number of components)
+    * tbox::ResourceAllocator.  The ghost cell width and depth (number of components)
     * arguments give the defaults for all face data objects created with this
     * factory.
     *
@@ -65,7 +65,7 @@ public:
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /**
     * Virtual destructor for the face data factory class.
@@ -157,7 +157,7 @@ public:
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
    bool d_has_allocator;
 
 };

@@ -20,11 +20,12 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
+#include "SAMRAI/tbox/AllocatorDatabase.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 #include "SAMRAI/tbox/MessageStream.h"
-#include "SAMRAI/tbox/AllocatorDatabase.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <typeinfo>
 #include <vector>
@@ -120,7 +121,7 @@ public:
    ArrayData(
       const hier::Box& box,
       unsigned int depth,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /*!
     * The destructor for an array data object releases all memory allocated

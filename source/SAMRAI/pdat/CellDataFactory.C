@@ -53,7 +53,7 @@ template<class TYPE>
 CellDataFactory<TYPE>::CellDataFactory(
    int depth,
    const hier::IntVector& ghosts,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_allocator(allocator),

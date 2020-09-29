@@ -194,7 +194,7 @@ int main(
       hierarchy->makeNewPatchLevel(0, layer0);
       hierarchy->makeNewPatchLevel(1, layer1);
 
-      tbox::UmpireAllocator allocator =
+      tbox::ResourceAllocator allocator =
          tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
       // Create instance of hier::Variable database

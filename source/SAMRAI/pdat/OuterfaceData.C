@@ -63,7 +63,7 @@ template<class TYPE>
 OuterfaceData<TYPE>::OuterfaceData(
    const hier::Box& box,
    int depth,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
    d_depth(depth)
 {

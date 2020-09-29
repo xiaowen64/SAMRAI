@@ -19,7 +19,7 @@
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -159,7 +159,7 @@ public:
    OuternodeData(
       const hier::Box& box,
       int depth,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief Virtual destructor for a outernode data object.

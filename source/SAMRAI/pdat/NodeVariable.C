@@ -48,7 +48,7 @@ template<class TYPE>
 NodeVariable<TYPE>::NodeVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::UmpireAllocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,

@@ -114,14 +114,14 @@ AllocatorDatabase::initialize()
 #endif
 }
 
-UmpireAllocator
+ResourceAllocator
 AllocatorDatabase::getDevicePool()
 {
 #if defined(HAVE_UMPIRE)
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
   return rm.getAllocator("samrai::temporary_data_allocator");
 #else
-  return UmpireAllocator();
+  return ResourceAllocator();
 #endif
 }
 
@@ -135,25 +135,25 @@ AllocatorDatabase::getStreamAllocator()
 }
 #endif
 
-UmpireAllocator
+ResourceAllocator
 AllocatorDatabase::getTagAllocator()
 {
 #if defined(HAVE_UMPIRE)
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
   return rm.getAllocator("samrai::tag_allocator");
 #else
-  return UmpireAllocator();
+  return ResourceAllocator();
 #endif
 }
 
-UmpireAllocator
+ResourceAllocator
 AllocatorDatabase::getDefaultAllocator()
 {
 #if defined(HAVE_UMPIRE)
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
   return rm.getAllocator("samrai::data_allocator");
 #else
-  return UmpireAllocator();
+  return ResourceAllocator();
 #endif
 }
 

@@ -234,7 +234,7 @@ private:
 
    //@}
 
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
 
    //@{
 

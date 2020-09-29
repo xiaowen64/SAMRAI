@@ -42,6 +42,7 @@ set ( tbox_headers
   RankGroup.h
   RankTreeStrategy.h
   ReferenceCounter.h
+  ResourceAllocator.h
   RestartManager.h
   SAMRAI_MPI.h
   SAMRAIManager.h
@@ -57,7 +58,6 @@ set ( tbox_headers
   TimerManager.h
   Tracer.h
   Transaction.h
-  UmpireAllocator.h
   Utilities.h)
 
 set_source_files_properties(

@@ -41,7 +41,7 @@ template<class TYPE>
 OuterfaceVariable<TYPE>::OuterfaceVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::UmpireAllocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth):
    hier::Variable(name,
                   std::make_shared<OuterfaceDataFactory<TYPE> >(

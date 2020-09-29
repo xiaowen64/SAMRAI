@@ -47,7 +47,7 @@ template<class TYPE>
 FaceVariable<TYPE>::FaceVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   tbox::UmpireAllocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth,
    const bool fine_boundary_represents_var):
    hier::Variable(name,

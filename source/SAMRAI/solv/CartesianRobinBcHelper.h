@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -460,7 +460,7 @@ private:
    /*!
     * Umpire allocator for internal temporary data.
     */
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
 
    /*!
     * @brief Timers for performance measurement.

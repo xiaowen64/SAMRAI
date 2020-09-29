@@ -19,7 +19,7 @@
 #include "SAMRAI/pdat/SideIndex.h"
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -144,7 +144,7 @@ public:
    OutersideData(
       const hier::Box& box,
       int depth,
-      tbox::UmpireAllocator allocator);
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief Virtual destructor for a outerside data object.

@@ -101,7 +101,7 @@ template<class TYPE>
 ArrayData<TYPE>::ArrayData(
    const hier::Box& box,
    unsigned int depth,
-   tbox::UmpireAllocator allocator):
+   tbox::ResourceAllocator allocator):
    d_depth(depth),
    d_offset(box.size()),
    d_box(box),

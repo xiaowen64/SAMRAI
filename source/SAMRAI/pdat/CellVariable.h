@@ -15,7 +15,7 @@
 
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/UmpireAllocator.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <string>
 
@@ -58,7 +58,7 @@ public:
    CellVariable(
       const tbox::Dimension& dim,
       const std::string& name,
-      tbox::UmpireAllocator allocator,
+      tbox::ResourceAllocator allocator,
       int depth = 1);
 
    /*!
