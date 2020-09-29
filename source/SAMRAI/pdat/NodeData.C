@@ -50,13 +50,12 @@ NodeData<TYPE>::NodeData(
    d_data.reset(new ArrayData<TYPE>(node, depth));
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 NodeData<TYPE>::NodeData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts,
-   umpire::Allocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchData(box, ghosts),
    d_depth(depth)
 {
@@ -67,7 +66,6 @@ NodeData<TYPE>::NodeData(
    const hier::Box node = NodeGeometry::toNodeBox(getGhostBox());
    d_data.reset(new ArrayData<TYPE>(node, depth, allocator));
 }
-#endif
 
 template<class TYPE>
 NodeData<TYPE>::~NodeData()

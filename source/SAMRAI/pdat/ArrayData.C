@@ -97,25 +97,31 @@ ArrayData<TYPE>::ArrayData(
 #endif
 }
 
-#ifdef HAVE_UMPIRE
 template<class TYPE>
 ArrayData<TYPE>::ArrayData(
    const hier::Box& box,
    unsigned int depth,
-   umpire::Allocator allocator):
+   tbox::ResourceAllocator allocator):
    d_depth(depth),
    d_offset(box.size()),
-   d_box(box)
-   , d_allocator(allocator)
-   , d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
+   d_box(box),
+#if defined(HAVE_UMPIRE)
+   d_allocator(allocator),
+   d_array(d_allocator.allocate(d_depth * d_offset * sizeof(TYPE)))
+#else
+   d_array(d_depth * d_offset)
+#endif
 {
+#ifndef HAVE_UMPIRE
+   NULL_USE(allocator);
+#endif
+
    TBOX_ASSERT(depth > 0);
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
 #endif
 }
-#endif
 
 template <class TYPE>
 ArrayData<TYPE>::~ArrayData()

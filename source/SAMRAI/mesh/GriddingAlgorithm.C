@@ -147,11 +147,8 @@ GriddingAlgorithm::GriddingAlgorithm(
          new pdat::CellVariable<int>(
            dim,
            tag_interior_variable_name,
-#if defined(HAVE_UMPIRE)
            tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
-#endif
-           1
-           ));
+           1));
    }
 
    d_saved_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
@@ -160,11 +157,8 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_saved_tag.reset(
          new pdat::CellVariable<int>(dim,
            tag_saved_variable_name,
-#if defined(HAVE_UMPIRE)
            tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
-#endif
-           1
-           ));
+           1));
    }
 
    d_boolean_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
@@ -173,11 +167,8 @@ GriddingAlgorithm::GriddingAlgorithm(
       d_boolean_tag.reset(
          new pdat::CellVariable<int>(dim,
            tag_algorithm_variable_name,
-#if defined(HAVE_UMPIRE)
            tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
-#endif
-           1
-           ));
+           1));
    }
 
    d_buf_tag = std::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
@@ -185,11 +176,8 @@ GriddingAlgorithm::GriddingAlgorithm(
    if (!d_buf_tag) {
       d_buf_tag.reset(new pdat::CellVariable<int>(dim,
             tag_buffer_variable_name,
-#if defined(HAVE_UMPIRE)
-           tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
-#endif
-            1
-            ));
+            tbox::AllocatorDatabase::getDatabase()->getTagAllocator(),
+            1));
    }
 
    d_user_tag_indx = var_db->registerInternalSAMRAIVariable(d_user_tag,

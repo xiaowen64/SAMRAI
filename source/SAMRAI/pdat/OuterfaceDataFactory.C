@@ -37,21 +37,17 @@ OuterfaceDataFactory<TYPE>::OuterfaceDataFactory(
    int depth):
    hier::PatchDataFactory(hier::IntVector::getZero(dim)),
    d_depth(depth),
-   d_no_ghosts(hier::IntVector::getZero(dim))
-#if defined(HAVE_UMPIRE)
-      ,
-      d_has_allocator(false)
-#endif
+   d_no_ghosts(hier::IntVector::getZero(dim)),
+   d_has_allocator(false)
 {
    TBOX_ASSERT(depth > 0);
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 OuterfaceDataFactory<TYPE>::OuterfaceDataFactory(
    const tbox::Dimension& dim,
    int depth,
-   umpire::Allocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchDataFactory(hier::IntVector::getZero(dim)),
    d_depth(depth),
    d_no_ghosts(hier::IntVector::getZero(dim)),
@@ -60,7 +56,6 @@ OuterfaceDataFactory<TYPE>::OuterfaceDataFactory(
 {
    TBOX_ASSERT(depth > 0);
 }
-#endif
 
 template<class TYPE>
 OuterfaceDataFactory<TYPE>::~OuterfaceDataFactory()
@@ -82,20 +77,16 @@ OuterfaceDataFactory<TYPE>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
       return std::make_shared<OuterfaceDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth,
              d_allocator);
    } else {
-#endif
-   return std::make_shared<OuterfaceDataFactory<TYPE> >(
+      return std::make_shared<OuterfaceDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth);
-#if defined(HAVE_UMPIRE)
    }
-#endif
 }
 
 /*
@@ -113,15 +104,11 @@ OuterfaceDataFactory<TYPE>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-#if defined(HAVE_UMPIRE)
    if (d_has_allocator) {
       return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth, d_allocator);
    } else {
-#endif
-   return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth);
-#if defined(HAVE_UMPIRE)
+      return std::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth);
    }
-#endif
 }
 
 /*

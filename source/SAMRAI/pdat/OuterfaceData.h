@@ -17,8 +17,8 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/pdat/FaceIndex.h"
 #include "SAMRAI/pdat/FaceData.h"
-#include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -127,7 +127,6 @@ public:
       const hier::Box& box,
       int depth);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief Constructor for an outerface data object.
     *
@@ -146,8 +145,7 @@ public:
    OuterfaceData(
       const hier::Box& box,
       int depth,
-      umpire::Allocator allocator);
-#endif
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief Virtual destructor for a outerface data object.

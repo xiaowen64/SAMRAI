@@ -19,8 +19,8 @@
 #include "SAMRAI/pdat/EdgeIndex.h"
 #include "SAMRAI/pdat/EdgeOverlap.h"
 #include "SAMRAI/pdat/OuteredgeGeometry.h"
-#include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -168,7 +168,6 @@ public:
       const hier::Box& box,
       int depth);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief Constructor for an outeredge data object.
     *
@@ -188,8 +187,7 @@ public:
    OuteredgeData(
       const hier::Box& box,
       int depth,
-      umpire::Allocator allocator);
-#endif
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief Virtual destructor for a outeredge data object.

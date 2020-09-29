@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <memory>
 
@@ -53,7 +53,6 @@ public:
       const tbox::Dimension& dim,
       int depth);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * The constructor for the outeredge data factory class.
     * The depth (number of components) sets the default for all of
@@ -67,8 +66,7 @@ public:
    OuteredgeDataFactory(
       const tbox::Dimension& dim,
       int depth,
-      umpire::Allocator allocator);
-#endif
+      tbox::ResourceAllocator allocator);
 
    /*!
     * @brief
@@ -168,10 +166,8 @@ public:
 private:
    int d_depth;
    hier::IntVector d_no_ghosts;
-#if defined(HAVE_UMPIRE)
-   umpire::Allocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
    bool d_has_allocator;
-#endif
 
 };
 

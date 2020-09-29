@@ -14,7 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <string>
 
@@ -59,7 +59,6 @@ public:
       const std::string& name,
       int depth = 1);
 
-#ifdef HAVE_UMPIRE
    /*!
     * @brief Constructor that also includes an Umpire allocator for
     * allocations of the underlying data.
@@ -67,9 +66,8 @@ public:
    OuterfaceVariable(
       const tbox::Dimension& dim,
       const std::string& name,
-      umpire::Allocator allocator,
+      tbox::ResourceAllocator allocator,
       int depth = 1);
-#endif
 
    /*!
     * @brief Virtual destructor for outerface variable objects.

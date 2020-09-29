@@ -200,13 +200,9 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
          const hier::IntVector tmp_ghosts(dim, 0);
 
          std::vector<double> diff0_f(cgbox.numberCells(0) + 2);
-#ifdef HAVE_UMPIRE
          tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
          pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts,
                                          directions, alloc_db->getTagAllocator());
-#else
-         pdat::SideData<double> slope0_f(cgbox, 1, tmp_ghosts, directions);
-#endif
 
 #define HOIST_INTERMEDIATES 1
 //#undef HOIST_INTERMEDIATES
@@ -398,12 +394,8 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                }
 #else   // Fortran Dimension 2
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
-#ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getTagAllocator());
-#else
-               pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
-#endif
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub2d0, CARTCLINREFSIDEDOUB2D0)
@@ -636,15 +628,10 @@ void CartesianSideDoubleConservativeLinearRefine::refine(
                std::vector<double> diff1_f(cgbox.numberCells(1) + 2);
                std::vector<double> diff2_f(cgbox.numberCells(2) + 2);
 
-#ifdef HAVE_UMPIRE
                pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getTagAllocator());
                pdat::SideData<double> slope2_f(cgbox, 1, tmp_ghosts,
                                                directions, alloc_db->getTagAllocator());
-#else
-               pdat::SideData<double> slope1_f(cgbox, 1, tmp_ghosts, directions);
-               pdat::SideData<double> slope2_f(cgbox, 1, tmp_ghosts, directions);
-#endif
 
                if (axis == 0 && directions(0)) {
                   SAMRAI_F77_FUNC(cartclinrefsidedoub3d0, CARTCLINREFSIDEDOUB3D0)

@@ -29,18 +29,17 @@
 #endif
 
 #include "SAMRAI/solv/GhostCellRobinBcCoefs.h"
-#include "SAMRAI/solv/RobinBcCoefStrategy.h"
 #include "SAMRAI/solv/PoissonSpecifications.h"
+#include "SAMRAI/solv/RobinBcCoefStrategy.h"
 #include "SAMRAI/solv/SimpleCellRobinBcCoefs.h"
 #include "SAMRAI/pdat/CellData.h"
-#include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideVariable.h"
+#include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <string>
 #include <vector>
@@ -691,9 +690,7 @@ private:
     */
    bool d_use_smg;
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator d_allocator;
-#endif
+   tbox::ResourceAllocator d_allocator;
 
    //@{
    //! @name Hypre object

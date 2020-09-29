@@ -42,6 +42,7 @@ set ( tbox_headers
   RankGroup.h
   RankTreeStrategy.h
   ReferenceCounter.h
+  ResourceAllocator.h
   RestartManager.h
   SAMRAI_MPI.h
   SAMRAIManager.h

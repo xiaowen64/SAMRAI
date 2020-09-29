@@ -74,12 +74,11 @@ OuteredgeData<TYPE>::OuteredgeData(
 
 }
 
-#if defined(HAVE_UMPIRE) 
 template<class TYPE>
 OuteredgeData<TYPE>::OuteredgeData(
    const hier::Box& box,
    int depth,
-   umpire::Allocator allocator):
+   tbox::ResourceAllocator allocator):
    hier::PatchData(box, hier::IntVector::getZero(box.getDim())),
    d_depth(depth)
 {
@@ -112,7 +111,6 @@ OuteredgeData<TYPE>::OuteredgeData(
    }  // iterate over axis directions
 
 }
-#endif
 
 template<class TYPE>
 OuteredgeData<TYPE>::~OuteredgeData()

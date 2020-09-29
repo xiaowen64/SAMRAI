@@ -19,8 +19,8 @@
 #include "SAMRAI/pdat/NodeIterator.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/hier/PatchData.h"
-#include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <iostream>
 #include <memory>
@@ -116,7 +116,6 @@ public:
       int depth,
       const hier::IntVector& ghosts);
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief The constructor for an node data object.
     *
@@ -139,8 +138,7 @@ public:
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
-      umpire::Allocator allocator);
-#endif
+      tbox::ResourceAllocator allocator);
 
 
 

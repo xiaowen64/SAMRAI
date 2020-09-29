@@ -65,13 +65,12 @@ SideVariable<TYPE>::SideVariable(
 {
 }
 
-#ifdef HAVE_UMPIRE
 template<class TYPE>
 SideVariable<TYPE>::SideVariable(
    const tbox::Dimension& dim,
    const std::string& name,
    const hier::IntVector& directions,
-   umpire::Allocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
@@ -92,7 +91,7 @@ template<class TYPE>
 SideVariable<TYPE>::SideVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   umpire::Allocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth,
    bool fine_boundary_represents_var):
    hier::Variable(name,
@@ -107,7 +106,6 @@ SideVariable<TYPE>::SideVariable(
    d_directions(hier::IntVector::getOne(dim))
 {
 }
-#endif
 
 
 template<class TYPE>

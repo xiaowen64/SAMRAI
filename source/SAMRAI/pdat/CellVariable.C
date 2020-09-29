@@ -39,12 +39,11 @@ CellVariable<TYPE>::CellVariable(
 {
 }
 
-#if defined(HAVE_UMPIRE)
 template<class TYPE>
 CellVariable<TYPE>::CellVariable(
    const tbox::Dimension& dim,
    const std::string& name,
-   umpire::Allocator allocator,
+   tbox::ResourceAllocator allocator,
    int depth):
    hier::Variable(name,
                   std::make_shared<CellDataFactory<TYPE> >(depth,
@@ -52,7 +51,6 @@ CellVariable<TYPE>::CellVariable(
                                                            allocator)) // default zero ghost cells
 {
 }
-#endif
 
 template<class TYPE>
 CellVariable<TYPE>::~CellVariable()

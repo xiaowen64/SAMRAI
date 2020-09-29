@@ -13,37 +13,34 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/solv/CartesianRobinBcHelper.h"
+#include "SAMRAI/solv/CellPoissonHypreSolver.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 #include "SAMRAI/solv/RobinBcCoefStrategy.h"
-#include "SAMRAI/solv/CellPoissonHypreSolver.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/solv/PoissonSpecifications.h"
 #include "SAMRAI/math/HierarchyCellDataOpsReal.h"
 #include "SAMRAI/math/HierarchySideDataOpsReal.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellVariable.h"
-#include "SAMRAI/pdat/CellDoubleConstantRefine.h"
-#include "SAMRAI/pdat/OutersideData.h"
 #include "SAMRAI/pdat/OutersideVariable.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/SideVariable.h"
-#include "SAMRAI/xfer/CoarsenSchedule.h"
-#include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
-#include "SAMRAI/hier/CoarsenOperator.h"
+#include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
-#include "SAMRAI/hier/RefineOperator.h"
+#include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/hier/CoarseFineBoundary.h"
+#include "SAMRAI/hier/CoarsenOperator.h"
+#include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/tbox/ResourceAllocator.h"
 
 #include <string>
 #include <memory>
@@ -887,12 +884,10 @@ private:
     */
    int d_flux_id;
 
-#ifdef HAVE_UMPIRE
    /*!
     * Umpire Allocator for internal data allocations
     */
-   umpire::Allocator d_allocator;
-#endif
+   tbox::ResourceAllocator d_allocator;
 
 #ifdef HAVE_HYPRE
    /*!

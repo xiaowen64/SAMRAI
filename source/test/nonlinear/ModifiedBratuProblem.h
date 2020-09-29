@@ -516,9 +516,7 @@ private:
    double d_lambda;      // factor multiplying exponential term
    double d_input_dt;    // time increment
 
-#ifdef HAVE_UMPIRE
-   umpire::Allocator d_allocator;
-#endif
+   tbox::ResourceAllocator d_allocator;
 
    /*
     * *hier::Variable data management.

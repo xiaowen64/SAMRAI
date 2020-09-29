@@ -96,9 +96,8 @@ CartesianRobinBcHelper::CartesianRobinBcHelper(
 
    NULL_USE(coef_strategy);
 
-#ifdef HAVE_UMPIRE
-   d_allocator = umpire::ResourceManager::getInstance().getAllocator("samrai::data_allocator");
-#endif
+   d_allocator =
+      tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator();
 
    t_set_boundary_values_in_cells = tbox::TimerManager::getManager()->
       getTimer("solv::CartesianRobinBcHelper::setBoundaryValuesInCells()");
@@ -233,24 +232,12 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
          const hier::Index& upper = boundary_box.getBox().upper();
          const hier::Box coefbox = makeFaceBoundaryBox(boundary_box);
          std::shared_ptr<pdat::ArrayData<double> > acoef_data(
-            std::make_shared<pdat::ArrayData<double> >(coefbox, 1
-#ifdef HAVE_UMPIRE
-                                                       , d_allocator
-#endif
-                                                       ));
+            std::make_shared<pdat::ArrayData<double> >(coefbox, 1, d_allocator));
          std::shared_ptr<pdat::ArrayData<double> > bcoef_data(
-            std::make_shared<pdat::ArrayData<double> >(coefbox, 1
-#ifdef HAVE_UMPIRE
-                                                       , d_allocator
-#endif
-                                                       ));
+            std::make_shared<pdat::ArrayData<double> >(coefbox, 1, d_allocator));
          std::shared_ptr<pdat::ArrayData<double> > gcoef_data(
             homogeneous_bc ? 0 :
-            new pdat::ArrayData<double>(coefbox, 1
-#ifdef HAVE_UMPIRE
-                                        , d_allocator
-#endif
-                                        ));
+            new pdat::ArrayData<double>(coefbox, 1, d_allocator));
          t_use_set_bc_coefs->start();
          d_coef_strategy->setBcCoefs(acoef_data,
             bcoef_data,

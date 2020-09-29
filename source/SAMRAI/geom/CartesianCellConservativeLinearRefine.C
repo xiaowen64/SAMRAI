@@ -120,12 +120,8 @@ void CartesianCellConservativeLinearRefine<T>::refine(
    SAMRAI::hier::Box diff_box = coarse_box;
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
-#ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
    pdat::ArrayData<T> slope_f(cgbox, dim.getValue(), alloc_db->getTagAllocator());
-#else
-   pdat::ArrayData<T> slope_f(cgbox, dim.getValue());
-#endif
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
@@ -395,13 +391,8 @@ inline void CartesianCellConservativeLinearRefine<dcomplex>::refine(
    SAMRAI::hier::Box diff_box = coarse_box;
    diff_box.growUpper(SAMRAI::hier::IntVector::getOne(dim));
 
-#ifdef HAVE_UMPIRE
    tbox::AllocatorDatabase *alloc_db = tbox::AllocatorDatabase::getDatabase();
-
    pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue(), alloc_db->getDevicePool());
-#else
-   pdat::ArrayData<dcomplex> slope(cgbox, dim.getValue());
-#endif
 
    for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {  // need to generate a test for 1D variant
