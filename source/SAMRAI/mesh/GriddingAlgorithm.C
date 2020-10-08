@@ -1390,7 +1390,7 @@ GriddingAlgorithm::regridFinerLevel(
          /*
           * Tagging stuff have been factored out to shorten this method.
           */
-        RANGE_PUSH("doTaggingAfter", 3);
+         RANGE_PUSH("doTaggingAfter", 3);
          regridFinerLevel_doTaggingAfterRecursiveRegrid(
             tag_to_finer,
             tag_ln,
@@ -1476,7 +1476,6 @@ GriddingAlgorithm::regridFinerLevel(
             tag_ln,
             regrid_time,
             tag_to_new,
-            tag_to_finer,
             new_box_level);
 
          if (d_log_metadata_statistics) {
@@ -1797,12 +1796,8 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    const int tag_ln,
    const double regrid_time,
    std::shared_ptr<hier::Connector>& tag_to_new,
-   std::shared_ptr<const hier::Connector> tag_to_finer,
    std::shared_ptr<hier::BoxLevel> new_box_level)
 {
-#ifndef DEBUG_CHECK_ASSERTIONS
-   NULL_USE(tag_to_finer);
-#endif
    TBOX_ASSERT(tag_to_new && tag_to_new->hasTranspose());
    TBOX_ASSERT(new_box_level);
 
@@ -1822,8 +1817,6 @@ GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
    const int new_ln = tag_ln + 1;
-   TBOX_ASSERT(!d_hierarchy->levelExists(new_ln + 1) || tag_to_finer);
-   TBOX_ASSERT(!d_hierarchy->levelExists(new_ln + 1) || tag_to_finer->hasTranspose());
    const std::shared_ptr<hier::PatchLevel>& tag_level(
       d_hierarchy->getPatchLevel(tag_ln));
 
