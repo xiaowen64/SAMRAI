@@ -111,6 +111,9 @@ public:
       const std::string& rootfile_name,
       const std::string& io_protocol) const;
 
+   void flattenFields(conduit::Node& flat_node,
+                      const conduit::Node& amr_node);
+
 private:
 
    BlueprintUtilsStrategy* d_strategy;

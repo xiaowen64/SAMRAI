@@ -1260,21 +1260,6 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
          box_level->getGridGeometry(),
          box_level->getMPI());
 
-//      std::shared_ptr<Connector> level_to_visible(new Connector(
-//         *box_level,
-//         *visible_box_level[i],
-//         IntVector::getZero(box_level->getDim())));
-
- //     std::shared_ptr<Connector> visible_to_level(new Connector(
- //        *visible_box_level[i],
-  //       *box_level,
-   //      IntVector::getZero(box_level->getDim())));
-
-//      std::shared_ptr<Connector> visible_to_visible(new Connector(
-//         *visible_box_level[i],
-//         *visible_box_level[i],
-//         getRequiredConnectorWidth(i,i)));
-
       for (PatchLevel::Iterator p(level->begin()); p != level->end();
            ++p) {
 
@@ -1288,69 +1273,12 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
          for (BoxContainer::const_iterator itr =
               visible_boxes.begin(); itr != visible_boxes.end(); ++itr) {
 
-//            int patch_id = first_patch_id[i] + local_id.getValue();
-/*
-            int domain_id = visible_ctr;
-            std::string domain_name =
-               "domain_" + tbox::Utilities::intToString(domain_id, 6);
-
-            std::shared_ptr<tbox::Database> domain_db(
-               blueprint_db->putDatabase(domain_name));
-
-            std::shared_ptr<tbox::Database> state_db(
-               domain_db->putDatabase("state"));
-
-            state_db->putInteger("domain_id", domain_id);
-            state_db->putInteger("real_patch_id", patch_id);
-            state_db->putInteger("level_id", i);
-
-            std::shared_ptr<tbox::Database> coordsets_db(
-               domain_db->putDatabase("coordsets"));
-
-            std::shared_ptr<tbox::Database> coords_db(
-               coordsets_db->putDatabase("coords"));
-
-            std::shared_ptr<tbox::Database> topologies_db(
-               domain_db->putDatabase("topologies"));
-
-            std::shared_ptr<tbox::Database> topo_db(
-               topologies_db->putDatabase("mesh"));
-
-            std::shared_ptr<tbox::Database> elem_db(
-               topo_db->putDatabase("elements"));
-            std::shared_ptr<tbox::Database> origin_db(
-               elem_db->putDatabase("origin"));
-            origin_db->putInteger("i0", pbox.lower(0));
-            if (d_dim.getValue() > 1) {
-               origin_db->putInteger("j0", pbox.lower(1));
-            }
-            if (d_dim.getValue() > 2) {
-               origin_db->putInteger("k0", pbox.lower(2));
-            }
-
-            std::shared_ptr<tbox::Database> dims_db(
-               elem_db->putDatabase("dims"));
-
-            dims_db->putInteger("i", patch->getBox().numberCells(0));
-            if (d_dim.getValue() > 1) {
-               dims_db->putInteger("j", patch->getBox().numberCells(1));
-            }
-            if (d_dim.getValue() > 2) {
-               dims_db->putInteger("k", patch->getBox().numberCells(2));
-            }
-*/
             BoxId vis_id(LocalId(visible_ctr), box_id.getOwnerRank());
             Box vis_box(*itr);
             vis_box.setId(vis_id);
  
             visible_box_level[i]->addBoxWithoutUpdate(vis_box);
             vis_to_patch[i][visible_ctr] = box_id;
-
-//            bp_utils.setFlattenedCoordset(coords_db, topo_db, *patch, vis_box);
-
-//            level_to_visible->insertLocalNeighbor(vis_box, box_id);
-//            visible_to_level->insertLocalNeighbor(pbox, vis_id);
-            //visible_to_visible->insertLocalNeighbor(vis_box, vis_id);
 
             ++visible_ctr;
 
@@ -1369,8 +1297,6 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
 
       BoxLevel::swap(*visible_box_level[i], *seq_box_level);
 
-//      level_to_visible->setTranspose(visible_to_level.get(), false);
-//      box_level->cacheConnector(level_to_visible);
    }
 
    std::vector<int> first_vis_id;
@@ -1389,13 +1315,6 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
 
       std::shared_ptr<hier::BoxLevel> box_level(
          level->getBoxLevel());
-
-//      const Connector& level_to_level =
-//         box_level->findConnector(
-//            *box_level,
-//            getRequiredConnectorWidth(i,i),
-//            CONNECTOR_CREATE,
-//            true);
 
       const Connector& visible_to_visible =
          visible_box_level[i]->findConnector(
@@ -1428,6 +1347,8 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
 
          state_db->putInteger("domain_id", domain_id);
          state_db->putInteger("real_patch_id", patch_id.getLocalId().getValue());
+         state_db->putInteger("amr_domain_id",
+                              first_patch_id[i]+patch_id.getLocalId().getValue());
          state_db->putInteger("level_id", i);
 
          std::shared_ptr<tbox::Database> coordsets_db(
@@ -1466,6 +1387,10 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
          }
 
          bp_utils.setFlattenedCoordset(coords_db, topo_db, *patch, vbox);
+
+         if (domain_db->isDatabase("fields")) {
+            //bp_utils.setFlattenedFields(*patch
+         } 
 
          Connector::ConstNeighborhoodIterator nbh =
             visible_to_visible.findLocal(vis_id);
@@ -1707,6 +1632,7 @@ PatchHierarchy::makeFlattenedBlueprintDatabase(
    }
 }
 #endif
+
 void
 PatchHierarchy::makeNestingSets(
    const std::shared_ptr<tbox::Database>& blueprint_db,

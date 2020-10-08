@@ -13,6 +13,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 #include "conduit_blueprint.hpp"
+#include "conduit_blueprint_mpi.hpp"
 #include "conduit_relay.hpp"
 
 namespace SAMRAI {
@@ -184,12 +185,13 @@ void BlueprintUtils::writeBlueprintMesh(
    conduit::Node index;
    int my_rank = samrai_mpi.getRank();
 
-   if (my_rank == 0) {
-      conduit::Node &bpindex = index["blueprint_index"];
-         conduit::blueprint::mesh::generate_index(
-            blueprint["domain_000000"], "",
-            num_global_domains, bpindex[mesh_name]);
+   conduit::Node &bpindex = index["blueprint_index"];
+   conduit::blueprint::mpi::mesh::generate_index(
+            blueprint, "",
+            bpindex[mesh_name],
+            samrai_mpi.getCommunicator());
 
+   if (my_rank == 0) {
       std::string file_pattern = data_name + "%06d." + io_protocol;
       index["protocol/name"].set(io_protocol);
       index["protocol/version"].set(CONDUIT_VERSION);
@@ -206,6 +208,103 @@ void BlueprintUtils::writeBlueprintMesh(
 
    blueprint.save(file_name, io_protocol);
 }
+
+void BlueprintUtils::flattenFields(conduit::Node& flat_node,
+                   const conduit::Node& amr_node)
+{
+
+   conduit::NodeIterator itr = flat_node.children();
+
+   while(itr.has_next())
+   {
+      conduit::Node& domain = itr.next();
+//      std::string domain_name = itr.name();
+
+      int64_t amr_domain_id = domain["state/amr_domain_id"].as_int64();
+
+      std::ostringstream dom_oss;
+      dom_oss << "domain_" << std::setw(6) << std::setfill('0') << amr_domain_id;
+      std::string amr_domain_name = dom_oss.str();
+
+      const conduit::Node& amr_domain = amr_node[amr_domain_name];
+
+      conduit::Node& fields = domain["fields"];
+      const conduit::Node& amr_fields = amr_domain["fields"];
+
+      conduit::NodeConstIterator flds_itr = amr_fields.children();
+
+      while(flds_itr.has_next())
+      {
+         const conduit::Node& amr_field = flds_itr.next();
+         std::string fld_name = flds_itr.name();
+
+         conduit::NodeConstIterator fld_itr = amr_field.children();
+         while(fld_itr.has_next())
+         {
+            const conduit::Node& subfld = fld_itr.next();
+            std::string sub_name = fld_itr.name();
+
+            if (sub_name != "values") {
+               fields[fld_name][sub_name] = subfld;
+            }
+         }
+
+         std::string topo_name = fields[fld_name]["topology"].as_string();
+         const conduit::Node& topo = domain["topologies"][topo_name];
+         const conduit::Node& amr_topo = amr_domain["topologies"][topo_name];
+
+         int64_t amr_isize = amr_topo["elements/dims/i"].as_int64();
+         int64_t amr_jsize = amr_topo["elements/dims/j"].as_int64();
+         int64_t amr_ksize = 1;
+         int64_t dom_isize = topo["elements/dims/i"].as_int64();
+         int64_t dom_jsize = topo["elements/dims/j"].as_int64();
+         int64_t dom_ksize = 1;
+         if (amr_topo.has_child("elements/dims/k")) {
+            amr_ksize = amr_topo["elements/dims/k"].as_int64();
+            dom_ksize = topo["elements/dims/k"].as_int64(); 
+         }
+
+         int64_t array_size = dom_isize*dom_jsize*dom_ksize;
+         std::vector<double> fld_vec(array_size);
+
+         int64_t amr_i0 = amr_topo["elements/origin/i0"].as_int64();
+         int64_t amr_j0 = amr_topo["elements/origin/j0"].as_int64();
+         int64_t amr_k0 = 1;
+         int64_t dom_i0 = topo["elements/origin/i0"].as_int64();
+         int64_t dom_j0 = topo["elements/origin/j0"].as_int64();
+         int64_t dom_k0 = 1;
+         if (amr_topo.has_child("elements/origin/k0")) {
+            amr_k0 = amr_topo["elements/origin/k0"].as_int64();
+            dom_k0 = topo["elements/origin/k0"].as_int64();
+         }
+
+         conduit::double_array amr_vals = amr_field["values"].as_double_array();
+
+         int64_t ioffset = dom_i0 - amr_i0;
+         int64_t joffset = dom_j0 - amr_j0;
+         int64_t koffset = dom_k0 - amr_k0;
+
+         for (int64_t k = 0; k < dom_ksize; ++k) {
+            for (int64_t j = 0; j < dom_jsize; ++j) {
+               for (int64_t i = 0; i < dom_isize; ++i) {
+
+                  int64_t dom_offset = i + j*dom_isize + k*dom_isize*dom_ksize; 
+                  int64_t amr_offset = (i+ioffset) +
+                                       (j+joffset)*amr_isize +
+                                       (k+koffset)*amr_isize*amr_jsize;
+
+
+                  fld_vec[dom_offset] = amr_vals[amr_offset];
+               }
+            }
+         }
+
+         fields[fld_name]["values"].set(fld_vec); 
+
+      }
+   }
+}
+
 
 }
 }

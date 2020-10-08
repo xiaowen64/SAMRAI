@@ -540,8 +540,8 @@ int main(
       patch_hierarchy->makeBlueprintDatabase(conduit_db, bp_utils);
       patch_hierarchy->makeFlattenedBlueprintDatabase(flat_db, bp_utils);
 
-      conduit::Node n;
-      conduit_db->toConduitNode(n);
+      conduit::Node bp_node;
+      conduit_db->toConduitNode(bp_node);
       conduit::Node flatn;
       flat_db->toConduitNode(flatn);
 
@@ -571,24 +571,28 @@ int main(
             if (test_to_run == "CellDataTest") {
                CellDataTest* cell_test = (CellDataTest*)patch_data_test;
 
-               cell_test->addFields(n, mesh_id, patch); 
+               cell_test->addFields(bp_node, mesh_id, patch); 
             } else if (test_to_run == "NodeDataTest") {
                NodeDataTest* node_test = (NodeDataTest*)patch_data_test;
 
-               node_test->addFields(n, mesh_id, patch);
+               node_test->addFields(bp_node, mesh_id, patch);
             }
          }
       }
 
+      if (test_to_run == "CellDataTest") {
+         bp_utils.flattenFields(flatn, bp_node);
+      }
+
       bp_utils.writeBlueprintMesh(
-         n,
+         bp_node,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          num_hier_patches,
          "amr_mesh",
          "celldata",
          "bpindex.root",
          "json");
-
+/*
       bp_utils.writeBlueprintMesh(
          flatn,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
@@ -597,9 +601,9 @@ int main(
          "flat",
          "flat.root",
          "json");
-
+*/
       conduit::Node info;
-      TBOX_ASSERT(conduit::blueprint::verify("mesh", n, info));
+      TBOX_ASSERT(conduit::blueprint::verify("mesh", bp_node, info));
       TBOX_ASSERT(conduit::blueprint::verify("mesh", flatn, info));
 
       conduit::Node poly;
@@ -621,7 +625,7 @@ int main(
          "poly.root",
          "json");
 
-
+/*
       conduit::Node polyuni = poly;
 
       conduit::NodeConstIterator itr = poly.children();
@@ -656,6 +660,7 @@ int main(
          "polystruct",
          "polystruct.root",
          "json");
+*/
 #endif
 
       bool test1_passed = comm_tester->verifyCommunicationResults();
