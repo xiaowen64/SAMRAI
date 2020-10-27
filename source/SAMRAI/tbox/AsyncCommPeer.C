@@ -18,6 +18,12 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
+
+#ifdef HAVE_UMPIRE
+#include "umpire/strategy/DynamicPool.hpp"
+#include "umpire/ResourceManager.hpp"
+#endif
+
 #include <cstring>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -73,6 +79,9 @@ AsyncCommPeer<TYPE>::AsyncCommPeer():
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
    d_tag1(-1),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator(umpire::resource::Host)),
+#endif
    t_send_timer(t_default_send_timer),
    t_recv_timer(t_default_recv_timer),
    t_wait_timer(t_default_wait_timer)
@@ -113,6 +122,9 @@ AsyncCommPeer<TYPE>::AsyncCommPeer(
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_tag0(-1),
    d_tag1(-1),
+#ifdef HAVE_UMPIRE
+   d_allocator(umpire::ResourceManager::getInstance().getAllocator(umpire::resource::Host)),
+#endif
    t_send_timer(t_default_send_timer),
    t_recv_timer(t_default_recv_timer),
    t_wait_timer(t_default_wait_timer)
@@ -145,7 +157,12 @@ AsyncCommPeer<TYPE>::~AsyncCommPeer()
    }
 
    if (d_internal_buf) {
+#ifdef HAVE_UMPIRE
+      d_allocator.deallocate(
+         (char*)d_internal_buf, d_internal_buf_size * sizeof(FlexData));
+#else
       free(d_internal_buf);
+#endif
       d_internal_buf = 0;
    }
 
@@ -274,9 +291,21 @@ AsyncCommPeer<TYPE>::resizeBuffer(
 
    if (d_internal_buf_size < size) {
       if (d_internal_buf) {
-         d_internal_buf = (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
+#ifdef HAVE_UMPIRE
+         d_internal_buf =
+            (FlexData *)umpire::ResourceManager::getInstance().reallocate(
+               d_internal_buf, size * sizeof(FlexData));
+#else
+         d_internal_buf =
+            (FlexData *)realloc(d_internal_buf, size * sizeof(FlexData));
+#endif
       } else {
+#ifdef HAVE_UMPIRE
+         d_internal_buf =
+            (FlexData *)d_allocator.allocate(size * sizeof(FlexData));
+#else
          d_internal_buf = (FlexData *)malloc(size * sizeof(FlexData));
+#endif
       }
       d_internal_buf_size = size;
    }
@@ -934,7 +963,12 @@ AsyncCommPeer<TYPE>::clearRecvData()
          << "operation.");
    }
    if (d_internal_buf) {
+#ifdef HAVE_UMPIRE
+      d_allocator.deallocate(
+         (char*)d_internal_buf, d_internal_buf_size * sizeof(FlexData));
+#else
       free(d_internal_buf);
+#endif
       d_internal_buf = 0;
    }
 }
