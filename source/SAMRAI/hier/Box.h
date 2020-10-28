@@ -586,21 +586,6 @@ public:
    /*!
     * @brief Return whether the box is ``empty''.
     *
-    * Archaic syntax.  Synonymous with empty().  Retained for backward
-    * compatibility.
-    *
-    * @see empty()
-    */
-   DEPRECATED(
-      bool
-      isEmpty() const)
-   {
-      return empty();
-   }
-
-   /*!
-    * @brief Return whether the box is ``empty''.
-    *
     * This version follows the naming standards used in STL.
     *
     * A box is empty if any of the lower bounds is greater than the

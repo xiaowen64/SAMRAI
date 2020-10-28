@@ -73,6 +73,9 @@ policies (Policy1D, Policy2D, Policy3D) for CUDA kernels in
 tbox::ExecutionPolicy have been set to a fixed value of 256,
 which is the product of the tile count in each dimensional direction.
 
+3) NEW for v. 4.0.3 The deprecated method isEmpty() has been removed from
+classes Box and BoxContainer.
+
 *****************************************************************************
 
 -----------------------------------------------------------------------------
@@ -161,6 +164,11 @@ defined in hier/ForAll.h.  hier::for_all is templated on the policy, so
 users who do not wish to used the policies from tbox::ExecutionPolicy may
 define their own policies and provide them to the hier::for_all<policy>
 template.
+
+3) NEW for v. 4.0.3 The deprecated method isEmpty() has been removed from
+classes Box and BoxContainer.  The method empty() provides this functionality.
+Also, there is no longer a DEPRECATED macro defined in SAMRAI.
+
 
 =============================================================================
 =============================================================================
