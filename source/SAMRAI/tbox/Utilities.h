@@ -366,18 +366,6 @@ typedef int mode_t;
 #endif
 
 /*
- * Macro to indicate deprecated function.  If syntax is known for other
- * preprocessors please add to this list.
- */
-#ifdef __GNUC__
-#define DEPRECATED(func) func __attribute__ ((deprecated))
-#elif defined(_MSC_VER)
-#define DEPRECATED(func) __declspec(deprecated) func
-#else
-#define DEPRECATED(func) func
-#endif
-
-/*
  * Macros defined for host-device compilation.
  */
 #define SAMRAI_INLINE inline

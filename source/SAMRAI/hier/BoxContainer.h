@@ -672,21 +672,6 @@ private:
    /*!
     * @brief Returns true if there are no boxes in the container.
     *
-    * Archaic syntax.  Synonymous with empty().  Retained for backward
-    * compatibility.
-    *
-    * @see empty()
-    */
-   DEPRECATED(
-      bool
-      isEmpty() const)
-   {
-      return empty();
-   }
-
-   /*!
-    * @brief Returns true if there are no boxes in the container.
-    *
     * This version follows the naming standards used in STL.
     *
     * @return True if the container is empty.
