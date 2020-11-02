@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v4.0.3
+                     Release Notes for SAMRAI v4.0.1
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -12,14 +12,6 @@
 
 Please direct any questions related to these notes to the SAMRAI development
 team by sending email to samrai@llnl.gov.
-
-*****************************************************************************
-
-VERSION 4.0.3
-
-Version 4.0.3 is a minor release update.  This file reproduces to content of
-the release notes since 4.0.0, and new content for version 4.0.3 is
-specfically labeled.
 
 *****************************************************************************
 
@@ -32,7 +24,8 @@ it to us so that we may fix it.
 Please send email to samrai-bugs@llnl.gov or post an issue on github.
 https://github.com/LLNL/SAMRAI
 
-
+Version 4.0.1 is a bugfix release.  Unless otherwise marked, the
+notes in this file are the notes from release 4.0.0.
 
 *****************************************************************************
 
@@ -56,9 +49,6 @@ configuration line have been fixed.
 on GPU architectures, using capabilities provided by the Umpire and RAJA
 libraries.
 
-2) NEW for v. 4.0.3 AsyncCommPeer has a new method to set an Umpire
-Allocator to be used for internal buffer allocations.
- 
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -68,13 +58,6 @@ Allocator to be used for internal buffer allocations.
 uses CMake supplemented with the BLT macro library is the only supported build
 system.  (This change effective as of v. 3.15.0)
 
-2) NEW for v. 4.0.3 The number of threads launched by dimensional RAJA
-policies (Policy1D, Policy2D, Policy3D) for CUDA kernels in
-tbox::ExecutionPolicy have been set to a fixed value of 256,
-which is the product of the tile count in each dimensional direction.
-
-3) NEW for v. 4.0.3 The deprecated method isEmpty() has been removed from
-classes Box and BoxContainer.
 
 *****************************************************************************
 
@@ -129,13 +112,6 @@ thread-safe operation on the arrays.
 Configuration with Umpire and RAJA is optional, so all previous functionality
 using MPI parallelism is still available.
 
-2) NEW for v. 4.0.3 AsyncCommPeer has a new method to set an Umpire
-Allocator to be used for internal buffer allocations.  This is not likely
-to be directly used by users, but it enables some internal library
-changes which ensure that MessageStreams which are provided to user codes
-during execution of RefineSchedule and CoarsenSchedule operations contain
-buffers that are allocated by the stream Allocator from AllocatorDatabase.  
-
 
                 Details about what's changed
 ----------------------------------------------------------------------------
@@ -149,25 +125,6 @@ library (https://github.com/LLNL/blt).  Updated instructions for the build
 system are in the INSTALL-NOTES file.
 
 (This change effective as of v. 3.15.0)
-
-2) NEW for v. 4.0.3 The number of threads launched by dimensional RAJA 
-policies (Policy1D, Policy2D, Policy3D) for CUDA kernels in
-tbox::ExecutionPolicy have been set to a fixed value of 256,
-which is the product of the tile count in each dimensional direction.
-
-This change protects against compile errors that may occur involving
-functions inside of kernels having register counts greater than the number
-of threads.
-
-These policies are used by default in the hier::for_all looping structures
-defined in hier/ForAll.h.  hier::for_all is templated on the policy, so
-users who do not wish to used the policies from tbox::ExecutionPolicy may
-define their own policies and provide them to the hier::for_all<policy>
-template.
-
-3) NEW for v. 4.0.3 The deprecated method isEmpty() has been removed from
-classes Box and BoxContainer.  The method empty() provides this functionality.
-Also, there is no longer a DEPRECATED macro defined in SAMRAI.
 
 
 =============================================================================

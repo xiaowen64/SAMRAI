@@ -8,6 +8,7 @@
  *
  ************************************************************************/
 #include "SAMRAI/tbox/Schedule.h"
+#include "SAMRAI/tbox/AllocatorDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -538,6 +539,9 @@ Schedule::allocateCommunicationObjects()
       d_coms[counter].setMPITag(d_first_tag, d_second_tag);
       d_coms[counter].setMPI(d_mpi);
       d_coms[counter].limitFirstDataLength(d_first_message_length);
+#ifdef HAVE_UMPIRE
+      d_coms[counter].setAllocator(AllocatorDatabase::getDatabase()->getStreamAllocator());
+#endif
       ++counter;
    }
    for (TransactionSets::iterator ti = d_send_sets.begin();
@@ -548,6 +552,9 @@ Schedule::allocateCommunicationObjects()
       d_coms[counter].setMPITag(d_first_tag, d_second_tag);
       d_coms[counter].setMPI(d_mpi);
       d_coms[counter].limitFirstDataLength(d_first_message_length);
+#ifdef HAVE_UMPIRE
+      d_coms[counter].setAllocator(AllocatorDatabase::getDatabase()->getStreamAllocator());
+#endif
       ++counter;
    }
 }
