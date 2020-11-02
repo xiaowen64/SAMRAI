@@ -350,7 +350,7 @@ private:
    std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
-   tbox::UmpireAllocator d_allocator;
+   tbox::ResourceAllocator d_allocator;
 
    /*
     * std::shared_ptrs to variables.  d_primitive_vars - [u]
