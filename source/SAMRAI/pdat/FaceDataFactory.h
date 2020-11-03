@@ -154,7 +154,6 @@ public:
    validCopyTo(
       const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
-#if defined(HAVE_UMPIRE)
    /*!
     * @brief Return true if this factory has an Umpire Allocator.
     */
@@ -164,13 +163,12 @@ public:
    }
 
    /*!
-    * @brief Get the Umpire Allocator.
+    * @brief Get the ResourceAllocator.
     */
-   umpire::Allocator getAllocator() const
+   tbox::ResourceAllocator getAllocator() const
    {
       return d_allocator;
    }
-#endif
 
 private:
    int d_depth;
