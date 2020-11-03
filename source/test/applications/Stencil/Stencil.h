@@ -165,6 +165,8 @@ class Stencil :
 
     const tbox::Dimension d_dim;
 
+    tbox::ResourceAllocator d_allocator;
+
     std::vector<std::shared_ptr<pdat::CellVariable<double> > > d_rho_variables;
     std::shared_ptr<pdat::CellVariable<double> > d_rho_update;
 

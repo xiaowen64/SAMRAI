@@ -25,6 +25,7 @@ Stencil::Stencil(
    d_grid_geometry(grid_geom),
    d_velocity({1.0,0.0}),
    d_dim(dim),
+   d_allocator(tbox::AllocatorDatabase::getDatabase()->getDefaultAllocator()),
    d_rho_variables(),
    d_rho_update(),
    d_nghosts(hier::IntVector(dim, 2))
@@ -33,14 +34,14 @@ Stencil::Stencil(
 
    d_tag_threshold = input_db->getDoubleWithDefault("tag_threshold", 0.5);
 
-   d_rho_update = std::make_shared<pdat::CellVariable<double> >(dim, "update", 1);
+   d_rho_update = std::make_shared<pdat::CellVariable<double> >(dim, "update", d_allocator, 1);
 
    for (int i = 0; i < num_variables; ++i) {
       std::ostringstream oss;
       oss << "rho_" << i;
       std::string var_name = oss.str();
 
-      d_rho_variables.push_back( std::make_shared<pdat::CellVariable<double> >(dim, var_name, 1));
+      d_rho_variables.push_back( std::make_shared<pdat::CellVariable<double> >(dim, var_name, d_allocator, 1));
    }
 }
 
