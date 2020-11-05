@@ -56,7 +56,6 @@ public:
     *
     * @param dim
     */
-   SAMRAI_HOST_DEVICE
    explicit IntVector(
       const tbox::Dimension& dim);
 
@@ -68,7 +67,6 @@ public:
     * @param num_blocks
     * @param dim
     */
-   SAMRAI_HOST_DEVICE
    IntVector(
       size_t num_blocks,
       const tbox::Dimension& dim);
@@ -83,7 +81,6 @@ public:
     * @param value
     * @param num_blocks
     */
-   SAMRAI_HOST_DEVICE
    IntVector(
       const tbox::Dimension& dim,
       int value,
@@ -124,7 +121,6 @@ public:
     *               at a length equal to dim.getValue()
     * @param num_blocks
     */
-   SAMRAI_HOST_DEVICE
    IntVector(
       const tbox::Dimension& dim,
       const int array[],
@@ -135,7 +131,6 @@ public:
     *
     * @pre rhs.getNumBlocks() >= 1
     */
-   SAMRAI_HOST_DEVICE
    IntVector(
       const IntVector& rhs);
 
@@ -156,7 +151,6 @@ public:
     * @param rhs
     * @param num_blocks
     */
-   SAMRAI_HOST_DEVICE
    IntVector(
       const IntVector& rhs,
       size_t num_blocks);
@@ -176,7 +170,6 @@ public:
     * @param rhs
     * @param num_blocks
     */
-   SAMRAI_HOST_DEVICE
    IntVector(
       const Index& rhs,
       size_t num_blocks = 1);
@@ -254,7 +247,6 @@ public:
     * @pre (i >= 0) && (i < getDim().getValue())
     * @pre getNumBlocks() == 1
     */
-   SAMRAI_HOST_DEVICE
    int&
    operator [] (
       const unsigned int i)
@@ -271,7 +263,6 @@ public:
     * @pre (i >= 0) && (i < getDim().getValue())
     * @pre getNumBlocks() == 1
     */
-   SAMRAI_HOST_DEVICE
    const int&
    operator [] (
       const unsigned int i) const
@@ -288,7 +279,6 @@ public:
     * @pre (i >= 0) && (i < getDim().getValue())
     * @pre getNumBlocks() == 1
     */
-   SAMRAI_HOST_DEVICE
    int&
    operator () (
       const unsigned int i)
@@ -305,7 +295,6 @@ public:
     * @pre (i >= 0) && (i < getDim().getValue())
     * @pre getNumBlocks() == 1
     */
-   SAMRAI_HOST_DEVICE
    const int&
    operator () (
       const unsigned int i) const
