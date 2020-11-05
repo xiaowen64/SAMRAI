@@ -464,6 +464,8 @@ private:
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
+   tbox::ResourceAllocator d_allocator;
+
    /**
     * std::shared_ptr to state variable vector - [u]
     */

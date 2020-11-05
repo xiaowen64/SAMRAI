@@ -2049,20 +2049,36 @@ HyperbolicLevelIntegrator::registerVariable(
                SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
-            fluxsum.reset(new pdat::OuterfaceVariable<double>(
-                  dim,
-                  fsum_name,
-                  fdf->getDepth()));
+            if (fdf->hasAllocator()) {
+               fluxsum.reset(new pdat::OuterfaceVariable<double>(
+                     dim,
+                     fsum_name,
+                     fdf->getAllocator(),
+                     fdf->getDepth()));
+            } else {
+               fluxsum.reset(new pdat::OuterfaceVariable<double>(
+                     dim,
+                     fsum_name,
+                     fdf->getDepth()));
+            }
             d_flux_face_registered = true;
          } else {
             std::shared_ptr<pdat::SideDataFactory<double> > sdf(
                SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
-            fluxsum.reset(new pdat::OutersideVariable<double>(
-                  dim,
-                  fsum_name,
-                  sdf->getDepth()));
+            if (sdf->hasAllocator()) {
+               fluxsum.reset(new pdat::OutersideVariable<double>(
+                     dim,
+                     fsum_name,
+                     sdf->getAllocator(),
+                     sdf->getDepth()));
+            } else {
+               fluxsum.reset(new pdat::OutersideVariable<double>(
+                     dim,
+                     fsum_name,
+                     sdf->getDepth()));
+            }
             d_flux_side_registered = true;
          }
 

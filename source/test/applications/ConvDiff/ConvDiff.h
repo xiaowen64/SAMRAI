@@ -350,6 +350,8 @@ private:
    std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
+   tbox::ResourceAllocator d_allocator;
+
    /*
     * std::shared_ptrs to variables.  d_primitive_vars - [u]
     *                                   d_function_eval  - [F(u)]
