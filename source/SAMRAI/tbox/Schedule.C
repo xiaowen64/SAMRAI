@@ -374,7 +374,16 @@ Schedule::postSends()
       }
 
       // Pack outgoing data into a message.
-      MessageStream outgoing_stream(byte_count, MessageStream::Write);
+      MessageStream outgoing_stream(
+         byte_count,
+         MessageStream::Write,
+         nullptr,
+         true
+#ifdef HAVE_UMPIRE
+         , AllocatorDatabase::getDatabase()->getStreamAllocator()
+#endif
+         );
+
       d_object_timers->t_pack_stream->start();
       for (ConstIterator pack = transactions.begin();
            pack != transactions.end(); ++pack) {
@@ -452,7 +461,11 @@ Schedule::processCompletedCommunications()
             static_cast<size_t>(completed_comm.getRecvSize()) * sizeof(char),
             MessageStream::Read,
             completed_comm.getRecvData(),
-            false /* don't use deep copy */);
+            false /* don't use deep copy */
+#ifdef HAVE_UMPIRE
+            , AllocatorDatabase::getDatabase()->getStreamAllocator()
+#endif
+            );
 
          d_object_timers->t_unpack_stream->start();
          for (Iterator recv = d_recv_sets[sender].begin();
@@ -494,7 +507,11 @@ Schedule::processCompletedCommunications()
                static_cast<size_t>(completed_comm->getRecvSize()) * sizeof(char),
                MessageStream::Read,
                completed_comm->getRecvData(),
-               false /* don't use deep copy */);
+               false /* don't use deep copy */
+#ifdef HAVE_UMPIRE
+               , AllocatorDatabase::getDatabase()->getStreamAllocator()
+#endif
+               );
 
             d_object_timers->t_unpack_stream->start();
             for (Iterator recv = d_recv_sets[sender].begin();

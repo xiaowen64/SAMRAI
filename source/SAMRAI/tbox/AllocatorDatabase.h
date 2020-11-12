@@ -89,6 +89,13 @@ public:
 #endif
 
    /*!
+    * @brief Get a host allocator.
+    */
+#ifdef HAVE_UMPIRE
+   umpire::TypedAllocator<char> getInternalHostAllocator();
+#endif
+
+   /*!
     * @brief Get the allocator for tag data.
     */
    ResourceAllocator getTagAllocator();
