@@ -133,6 +133,13 @@ AllocatorDatabase::getStreamAllocator()
   umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
   return umpire::TypedAllocator<char>(rm.getAllocator("samrai::stream_allocator"));
 }
+
+umpire::TypedAllocator<char>
+AllocatorDatabase::getInternalHostAllocator()
+{
+  umpire::ResourceManager& rm = umpire::ResourceManager::getInstance();
+  return umpire::TypedAllocator<char>(rm.getAllocator(umpire::resource::Host));
+}
 #endif
 
 ResourceAllocator

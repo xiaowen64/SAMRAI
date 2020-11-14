@@ -27,14 +27,21 @@ MessageStream::MessageStream(
    const size_t num_bytes,
    const StreamMode mode,
    const void* data_to_read,
-   bool deep_copy):
+   bool deep_copy
+#ifdef HAVE_UMPIRE
+   , umpire::TypedAllocator<char> allocator
+#endif
+   ):
    d_mode(mode),
 #ifdef HAVE_UMPIRE
-   d_write_buffer(AllocatorDatabase::getDatabase()->getStreamAllocator()),
+   d_write_buffer(allocator),
 #else
    d_write_buffer(),
 #endif
    d_read_buffer(0),
+#ifdef HAVE_UMPIRE
+   d_allocator(allocator),
+#endif
    d_buffer_size(0),
    d_buffer_index(0),
    d_grow_as_needed(false),
@@ -48,7 +55,11 @@ MessageStream::MessageStream(
             << "No data_to_read was given to a Read-mode MessageStream.\n");
       }
       if (deep_copy) {
+#ifdef HAVE_UMPIRE
+         d_read_buffer = allocator.allocate(num_bytes);
+#else
          d_read_buffer = new char[num_bytes];
+#endif
          memcpy(const_cast<char *>(d_read_buffer), data_to_read, num_bytes);
       } else {
          d_read_buffer = static_cast<const char *>(data_to_read);
@@ -59,14 +70,32 @@ MessageStream::MessageStream(
    }
 }
 
+#ifdef HAVE_UMPIRE
+MessageStream::MessageStream(umpire::TypedAllocator<char> allocator):
+   d_mode(Write),
+   d_write_buffer(allocator),
+   d_read_buffer(0),
+   d_allocator(allocator),
+   d_buffer_size(0),
+   d_buffer_index(0),
+   d_grow_as_needed(true),
+   d_deep_copy_read(false)
+{
+   d_write_buffer.reserve(10);
+}
+#endif
+
 MessageStream::MessageStream():
    d_mode(Write),
 #ifdef HAVE_UMPIRE
-   d_write_buffer(AllocatorDatabase::getDatabase()->getStreamAllocator()),
+   d_write_buffer(AllocatorDatabase::getDatabase()->getInternalHostAllocator()),
 #else
    d_write_buffer(),
 #endif
    d_read_buffer(0),
+#ifdef HAVE_UMPIRE
+   d_allocator(AllocatorDatabase::getDatabase()->getInternalHostAllocator()),
+#endif
    d_buffer_size(0),
    d_buffer_index(0),
    d_grow_as_needed(true),
@@ -78,7 +107,11 @@ MessageStream::MessageStream():
 MessageStream::~MessageStream()
 {
    if (d_mode == Read && d_deep_copy_read) {
+#ifdef HAVE_UMPIRE
+      d_allocator.deallocate((char*)d_read_buffer, d_buffer_size);   
+#else
       delete[] d_read_buffer;
+#endif
    }
    d_read_buffer = 0;
 }
