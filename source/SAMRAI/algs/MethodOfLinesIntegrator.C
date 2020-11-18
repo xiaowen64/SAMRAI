@@ -240,16 +240,21 @@ MethodOfLinesIntegrator::advanceHierarchy(
     */
    for (int rkstep = 0; rkstep < d_order; ++rkstep) {
 
+
+      /*
+       * Fill ghost cells for all levels
+       */
+      for (int ln = 0; ln < nlevels; ++ln) {
+
+         d_bdry_sched_advance[ln]->fillData(time);
+
+      }
+
       /*
        * Loop through levels in the patch hierarchy and advance data on
        * each level by a single RK step.
        */
       for (int ln = 0; ln < nlevels; ++ln) {
-
-         /*
-          * Fill ghost cells of all patches in level
-          */
-         d_bdry_sched_advance[ln]->fillData(time);
 
          /*
           * Loop through patches in current level and "singleStep" on each
@@ -271,12 +276,14 @@ MethodOfLinesIntegrator::advanceHierarchy(
                d_beta[rkstep]);
 
          }  // patch loop
-
-         if (ln > 0) {
-            d_coarsen_schedule[ln]->coarsenData();
-         }
-
       }  // levels loop
+
+      /*
+       * Coarsen data from finest to coarsest
+       */
+      for (int ln = nlevels-1; ln > 0; --ln) {
+         d_coarsen_schedule[ln]->coarsenData();
+      }
 
    }  // rksteps loop
 
