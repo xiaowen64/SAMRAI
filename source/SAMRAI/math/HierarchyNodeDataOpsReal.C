@@ -1528,6 +1528,8 @@ int64_t HierarchyNodeDataOpsReal<TYPE>::getLength(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
+   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+
    int64_t length = 0;
    hier::Box data_box(d_hierarchy->getDim());
 
@@ -1553,7 +1555,11 @@ int64_t HierarchyNodeDataOpsReal<TYPE>::getLength(
       }
    }
 
-   return length;
+   int64_t global_length = length;
+   if (mpi.getSize() > 1) {
+      mpi.Allreduce(&length, &global_length, 1, MPI_INT64_T, MPI_SUM);
+   }
+   return global_length;
 }
 
 

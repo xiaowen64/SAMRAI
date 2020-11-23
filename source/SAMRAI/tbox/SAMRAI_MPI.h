@@ -50,6 +50,7 @@ enum {
    MPI_DOUBLE,
    MPI_FLOAT,
    MPI_INT,
+   MPI_INT64_T,
    MPI_LONG,
    MPI_C_DOUBLE_COMPLEX,
    MPI_2INT,
