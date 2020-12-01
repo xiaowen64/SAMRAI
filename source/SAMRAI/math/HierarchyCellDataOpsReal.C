@@ -1489,6 +1489,8 @@ int64_t HierarchyCellDataOpsReal<TYPE>::getLength(
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
+   const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
+
    int64_t length = 0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
@@ -1514,7 +1516,12 @@ int64_t HierarchyCellDataOpsReal<TYPE>::getLength(
       }
    }
 
-   return length;
+   int64_t global_length = length;
+   if (mpi.getSize() > 1) {
+      mpi.Allreduce(&length, &global_length, 1, MPI_INT64_T, MPI_SUM);
+   }
+   return global_length;
+
 }
 
 
