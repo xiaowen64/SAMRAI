@@ -178,6 +178,9 @@ target_include_directories( SAMRAI_tbox
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/source>
   $<INSTALL_INTERFACE:include>)
 
+blt_print_target_properties(
+  TARGET SAMRAI_tbox)
+
 
 install(TARGETS SAMRAI_tbox
   EXPORT SAMRAITargets
