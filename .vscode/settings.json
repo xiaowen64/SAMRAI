@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.F03": "FortranFreeForm",
+        "*.C": "cpp"
+    },
+    "cmake.buildDirectory": "d:/home/build/samrai",
+    "cmake.mingwSearchDirs": [
+        "C:\\msys64"
+    ]
+}

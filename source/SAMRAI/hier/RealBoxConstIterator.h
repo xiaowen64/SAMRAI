@@ -64,6 +64,8 @@ public:
       return *this;
    }
 
+   RealBoxConstIterator(const RealBoxConstIterator&) = default;
+
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */

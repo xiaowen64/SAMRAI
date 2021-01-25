@@ -81,6 +81,8 @@ struct Clock {
    {
 #ifdef HAVE_SYS_TIMES_H
       clock = times(&s_tms_buffer);
+#else
+      (void) clock;
 #endif
    }
 
@@ -110,6 +112,10 @@ struct Clock {
       wall = SAMRAI_MPI::Wtime();
       sys = s_tms_buffer.tms_stime;
       user = s_tms_buffer.tms_utime;
+#else
+   (void) user;
+   (void) sys;
+   (void) wall;
 #endif
    }
 

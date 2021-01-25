@@ -305,7 +305,7 @@ int main(
     * Randomize the random number generator to avoid funny looking
     * first random number.
     */
-   srand48(samrai_mpi.getRank() + 10 + samrai_mpi.getSize());
+   srand(samrai_mpi.getRank() + 10 + samrai_mpi.getSize());
 
    int total_err_count = 0;
 

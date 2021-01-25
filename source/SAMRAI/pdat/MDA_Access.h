@@ -1031,6 +1031,8 @@ public:
       setPtr1();
    }
 
+   MDA_Access& operator=(const MDA_Access&) = default;
+
    /*!
     * @brief Virtual destructor to support inheritance.
     */

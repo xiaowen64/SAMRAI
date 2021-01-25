@@ -40,8 +40,9 @@ Utilities::recursiveMkdir(
    bool only_node_zero_creates)
 {
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__MINGW32__)
    const char seperator = '/';
+   (void) mode;
 #define mkdir(path, mode) mkdir(path)
 #else
    const char seperator = '/';

@@ -47,6 +47,8 @@ public:
       return *this;
    }
 
+   BoxContainerSingleOwnerIterator (const BoxContainerSingleOwnerIterator&) = default;
+
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */

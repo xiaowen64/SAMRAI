@@ -750,7 +750,7 @@ SAMRAI_MPI::Attr_get(
    }
 #ifdef HAVE_MPI
    else {
-      rval = MPI_Attr_get(d_comm, keyval, attribute_val, flag);
+      rval = MPI_Comm_get_attr(d_comm, keyval, attribute_val, flag);
    }
 #endif
    return rval;

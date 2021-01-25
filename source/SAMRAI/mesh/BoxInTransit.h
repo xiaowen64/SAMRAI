@@ -95,6 +95,8 @@ struct BoxInTransit {
       return *this;
    }
 
+   BoxInTransit(const BoxInTransit&) = default;
+
    //! @brief Return the owner rank.
    int getOwnerRank() const {
       return d_box.getOwnerRank();

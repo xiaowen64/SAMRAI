@@ -48,6 +48,8 @@ public:
       return *this;
    }
 
+   BoxContainerSingleBlockIterator(const BoxContainerSingleBlockIterator&) = default;
+
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */

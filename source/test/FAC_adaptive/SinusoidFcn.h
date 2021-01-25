@@ -135,6 +135,8 @@ public:
    operator = (
       const SinusoidFcn& r);
 
+   SinusoidFcn(const SinusoidFcn& r) = default;
+
    //@{
    /*!
     * @name IO operators.

@@ -231,7 +231,7 @@ MathUtilities<bool>::Rand(
 {
    NULL_USE(low);
    NULL_USE(width);
-   return mrand48() > 0 ? true : false;
+   return rand() > (RAND_MAX / 2) ? true : false;
 }
 
 template<>
@@ -246,7 +246,7 @@ MathUtilities<char>::Rand(
 #pragma warning (disable:810)
 #endif
 
-   return static_cast<char>(static_cast<double>(width) * drand48() + static_cast<double>(low));
+   return static_cast<char>(static_cast<double>(width) * rand() / RAND_MAX + static_cast<double>(low));
 }
 
 template<>
@@ -259,7 +259,7 @@ MathUtilities<int>::Rand(
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:810)
 #endif
-   return static_cast<int>(static_cast<double>(width) * drand48()) + low;
+   return static_cast<int>(static_cast<double>(width) * rand() / RAND_MAX) + low;
 }
 
 template<>
@@ -272,7 +272,7 @@ MathUtilities<float>::Rand(
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:810)
 #endif
-   return static_cast<float>(static_cast<double>(width) * drand48()) + low;
+   return static_cast<float>(static_cast<double>(width) * rand() / RAND_MAX) + low;
 }
 
 template<>
@@ -281,7 +281,7 @@ MathUtilities<double>::Rand(
    const double& low,
    const double& width)
 {
-   return width * drand48() + low;
+   return width * rand() / RAND_MAX + low;
 }
 
 template<>
@@ -290,8 +290,8 @@ MathUtilities<dcomplex>::Rand(
    const dcomplex& low,
    const dcomplex& width)
 {
-   double real_part = real(width) * drand48() + real(low);
-   double imag_part = imag(width) * drand48() + imag(low);
+   double real_part = real(width) * rand() / RAND_MAX + real(low);
+   double imag_part = imag(width) * rand() / RAND_MAX + imag(low);
    return dcomplex(real_part, imag_part);
 }
 

@@ -58,7 +58,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    const hier::Box& dst_box(dst.getBox());
    const hier::Box& src_box(src.getBox());
 
-   int box_w[SAMRAI::MAX_DIM_VAL];
+   int box_w[SAMRAI::MAX_DIM_VAL] = {0};
    int dst_w[SAMRAI::MAX_DIM_VAL];
    int src_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
@@ -247,7 +247,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 #if !defined(HAVE_RAJA)
    const hier::Box& array_d_box(arraydata.getBox());
 
-   int box_w[SAMRAI::MAX_DIM_VAL];
+   int box_w[SAMRAI::MAX_DIM_VAL] = {0};
    int dat_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
    for (tbox::Dimension::dir_t i = 0; i < dim.getValue(); ++i) {
@@ -413,7 +413,7 @@ inline void ArrayDataOperationUtilities<dcomplex,SumOperation<dcomplex> >::doArr
    const hier::Box& dst_box(dst.getBox());
    const hier::Box& src_box(src.getBox());
 
-   int box_w[SAMRAI::MAX_DIM_VAL];
+   int box_w[SAMRAI::MAX_DIM_VAL] = {0};
    int dst_w[SAMRAI::MAX_DIM_VAL];
    int src_w[SAMRAI::MAX_DIM_VAL];
    int dim_counter[SAMRAI::MAX_DIM_VAL];
